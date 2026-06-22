@@ -1,0 +1,23 @@
+{
+  "name": "email-inquiry-system",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Email inquiry processing system monorepo.",
+  "packageManager": "pnpm@11.5.2",
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=11.0.0"
+  },
+  "scripts": {
+    "dev:api": "pnpm --filter @email-inquiry/api dev",
+    "dev:demo": "pnpm --filter @email-inquiry/api demo:imap",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "clean": "pnpm -r clean"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.29",
+    "typescript": "^5.8.3"
+  }
+}
