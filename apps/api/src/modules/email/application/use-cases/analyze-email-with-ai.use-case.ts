@@ -13,6 +13,8 @@ export interface AnalyzeEmailWithAiSuccess {
   analysis: EmailAiAnalysis;
   rawOutput: string;
   contextSnapshotId?: string;
+  estimatedContextTokens?: number;
+  contextMessages?: AiChatMessage[];
 }
 
 export interface AnalyzeEmailWithAiFailure {
@@ -21,6 +23,9 @@ export interface AnalyzeEmailWithAiFailure {
   message: string;
   rawOutput?: string;
   humanReviewRequired: true;
+  contextSnapshotId?: string;
+  estimatedContextTokens?: number;
+  contextMessages?: AiChatMessage[];
 }
 
 export type AnalyzeEmailWithAiResult = AnalyzeEmailWithAiSuccess | AnalyzeEmailWithAiFailure;
@@ -50,6 +55,9 @@ export class AnalyzeEmailWithAiUseCase {
         errorCode: 'ai_empty_output',
         message: 'AI returned empty output.',
         humanReviewRequired: true,
+        contextSnapshotId: context.contextSnapshotId,
+        estimatedContextTokens: context.estimatedTokens,
+        contextMessages: context.messages,
       };
     }
 
@@ -61,6 +69,9 @@ export class AnalyzeEmailWithAiUseCase {
         message: 'AI output did not contain a JSON object.',
         rawOutput,
         humanReviewRequired: true,
+        contextSnapshotId: context.contextSnapshotId,
+        estimatedContextTokens: context.estimatedTokens,
+        contextMessages: context.messages,
       };
     }
 
@@ -74,6 +85,9 @@ export class AnalyzeEmailWithAiUseCase {
         message: error instanceof Error ? error.message : String(error),
         rawOutput,
         humanReviewRequired: true,
+        contextSnapshotId: context.contextSnapshotId,
+        estimatedContextTokens: context.estimatedTokens,
+        contextMessages: context.messages,
       };
     }
 
@@ -87,6 +101,9 @@ export class AnalyzeEmailWithAiUseCase {
           .join('; '),
         rawOutput,
         humanReviewRequired: true,
+        contextSnapshotId: context.contextSnapshotId,
+        estimatedContextTokens: context.estimatedTokens,
+        contextMessages: context.messages,
       };
     }
 
@@ -95,13 +112,15 @@ export class AnalyzeEmailWithAiUseCase {
       analysis: validation.data,
       rawOutput,
       contextSnapshotId: context.contextSnapshotId,
+      estimatedContextTokens: context.estimatedTokens,
+      contextMessages: context.messages,
     };
   }
 
   private async buildMessages(
     emailMessage: EmailMessage,
     options: AnalyzeEmailWithAiOptions,
-  ): Promise<{ messages: AiChatMessage[]; contextSnapshotId?: string }> {
+  ): Promise<{ messages: AiChatMessage[]; contextSnapshotId?: string; estimatedTokens?: number }> {
     if (this.buildAiContextUseCase && options.inquiryCase) {
       const result = await this.buildAiContextUseCase.execute({
         inquiryCase: options.inquiryCase,
@@ -116,6 +135,7 @@ export class AnalyzeEmailWithAiUseCase {
       return {
         messages: result.messages,
         contextSnapshotId: result.contextSnapshotId,
+        estimatedTokens: result.estimatedTokens,
       };
     }
 

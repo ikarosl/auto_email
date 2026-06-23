@@ -288,6 +288,14 @@ async function run(): Promise<void> {
         console.log(`Inquiry status: ${result.inquiryCase?.status}`);
         console.log(`Subject: ${result.emailMessage?.subject}`);
 
+        if (result.aiAnalysisResult?.contextMessages) {
+          console.log('--- AI CONTEXT SENT START ---');
+          console.log(`ContextSnapshot ID: ${result.aiAnalysisResult.contextSnapshotId || '(none)'}`);
+          console.log(`Estimated context tokens: ${result.aiAnalysisResult.estimatedContextTokens ?? '(unknown)'}`);
+          console.log(JSON.stringify(result.aiAnalysisResult.contextMessages, null, 2));
+          console.log('--- AI CONTEXT SENT END ---');
+        }
+
         if (result.aiAnalysisResult?.success) {
           console.log('AI analysis:');
           console.log(JSON.stringify(result.aiAnalysisResult.analysis, null, 2));
