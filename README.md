@@ -23,6 +23,7 @@ pnpm install
 pnpm dev:api
 pnpm --filter @email-inquiry/api demo:imap
 pnpm --filter @email-inquiry/api demo:imap-to-inquiry
+pnpm --filter @email-inquiry/api demo:poll-inbox
 pnpm --filter @email-inquiry/api demo:deepseek
 pnpm build
 pnpm typecheck
@@ -72,6 +73,30 @@ pnpm --filter @email-inquiry/api demo:imap-to-inquiry
 ```
 
 该命令会读取邮箱中的最新一封邮件，转换为内部 `EmailMessage`，再创建一条初始状态为 `new` 的 `InquiryCase`。当前使用内存 Repository，不会写入数据库。
+
+## IMAP 轮询与 AI 结构化建议 Demo
+
+补充 `.env` 中的 IMAP 与 DeepSeek 配置后运行：
+
+```bash
+pnpm --filter @email-inquiry/api demo:poll-inbox
+```
+
+默认按 `IMAP_POLL_INTERVAL_MS=10000` 每 10 秒轮询一次。`IMAP_POLL_BOOTSTRAP_MODE=mark_existing_seen` 时，启动会先把邮箱已有邮件标记为已见，只处理启动后的新邮件。
+
+只执行一次轮询检查可运行：
+
+```bash
+pnpm --filter @email-inquiry/api demo:poll-inbox -- --once
+```
+
+新邮件处理流程：
+
+```text
+IMAP 新邮件 -> EmailMessage -> InquiryCase(status = new) -> AI 结构化分析 -> zod 校验 -> 打印建议
+```
+
+AI 分析只生成建议，不会自动修改询盘状态，也不会自动回复邮件。
 
 ## DeepSeek 读取回复 Demo
 
