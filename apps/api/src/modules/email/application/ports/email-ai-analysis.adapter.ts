@@ -1,5 +1,5 @@
-import { EmailMessage } from '../../domain/entities/email-message.entity.js';
+import { AiChatMessage } from '../../../context/domain/value-objects/ai-chat-message.vo.js';
 
 export interface EmailAiAnalysisAdapter {
-  analyze(emailMessage: EmailMessage): Promise<string>;
+  analyze(messages: AiChatMessage[]): Promise<string>;
 }

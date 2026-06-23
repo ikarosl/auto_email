@@ -17,6 +17,10 @@ import { InMemoryEmailMessageRepository } from '../repositories/in-memory-email-
 import { InMemoryProcessedEmailTracker } from '../repositories/in-memory-processed-email-tracker.js';
 import { CreateInquiryFromEmailUseCase } from '../../../inquiry/application/use-cases/create-inquiry-from-email.use-case.js';
 import { InMemoryInquiryRepository } from '../../../inquiry/infrastructure/repositories/in-memory-inquiry.repository.js';
+import { BuildAiContextUseCase } from '../../../context/application/use-cases/build-ai-context.use-case.js';
+import { NoopRagRetrieverAdapter } from '../../../context/infrastructure/adapters/noop-rag-retriever.adapter.js';
+import { SimpleTokenEstimator } from '../../../context/infrastructure/adapters/simple-token-estimator.js';
+import { InMemoryContextSnapshotRepository } from '../../../context/infrastructure/repositories/in-memory-context-snapshot.repository.js';
 
 interface ImapPollConfig {
   host: string;
@@ -211,8 +215,13 @@ async function run(): Promise<void> {
     emailRepository,
     createInquiryFromEmailUseCase,
   );
+  const buildAiContextUseCase = new BuildAiContextUseCase(
+    new InMemoryContextSnapshotRepository(),
+    new SimpleTokenEstimator(),
+    new NoopRagRetrieverAdapter(),
+  );
   const analyzeEmailWithAiUseCase = config.aiEnabled
-    ? new AnalyzeEmailWithAiUseCase(new DeepseekEmailAnalysisAdapter())
+    ? new AnalyzeEmailWithAiUseCase(new DeepseekEmailAnalysisAdapter(), buildAiContextUseCase)
     : undefined;
   const pollEmailInboxUseCase = new PollEmailInboxUseCase(
     tracker,

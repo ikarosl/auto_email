@@ -1,12 +1,18 @@
+import { BuildAiContextUseCase } from '../../../context/application/use-cases/build-ai-context.use-case.js';
+import { ContextPurpose } from '../../../context/domain/enums/context-purpose.enum.js';
+import { AiChatMessage } from '../../../context/domain/value-objects/ai-chat-message.vo.js';
+import { InquiryCase } from '../../../inquiry/domain/entities/inquiry-case.entity.js';
 import { EmailMessage } from '../../domain/entities/email-message.entity.js';
 import { EmailAiAnalysis } from '../../domain/value-objects/email-ai-analysis.vo.js';
 import { emailAiAnalysisSchema } from '../dto/email-ai-analysis.schema.js';
 import { EmailAiAnalysisAdapter } from '../ports/email-ai-analysis.adapter.js';
+import { EMAIL_ANALYSIS_SYSTEM_PROMPT } from '../prompts/email-analysis.prompt.js';
 
 export interface AnalyzeEmailWithAiSuccess {
   success: true;
   analysis: EmailAiAnalysis;
   rawOutput: string;
+  contextSnapshotId?: string;
 }
 
 export interface AnalyzeEmailWithAiFailure {
@@ -19,11 +25,24 @@ export interface AnalyzeEmailWithAiFailure {
 
 export type AnalyzeEmailWithAiResult = AnalyzeEmailWithAiSuccess | AnalyzeEmailWithAiFailure;
 
-export class AnalyzeEmailWithAiUseCase {
-  constructor(private readonly emailAiAnalysisAdapter: EmailAiAnalysisAdapter) {}
+export interface AnalyzeEmailWithAiOptions {
+  inquiryCase?: InquiryCase;
+  recentEmailMessages?: EmailMessage[];
+  recentOurReplies?: EmailMessage[];
+}
 
-  async execute(emailMessage: EmailMessage): Promise<AnalyzeEmailWithAiResult> {
-    const rawOutput = (await this.emailAiAnalysisAdapter.analyze(emailMessage)).trim();
+export class AnalyzeEmailWithAiUseCase {
+  constructor(
+    private readonly emailAiAnalysisAdapter: EmailAiAnalysisAdapter,
+    private readonly buildAiContextUseCase?: BuildAiContextUseCase,
+  ) {}
+
+  async execute(
+    emailMessage: EmailMessage,
+    options: AnalyzeEmailWithAiOptions = {},
+  ): Promise<AnalyzeEmailWithAiResult> {
+    const context = await this.buildMessages(emailMessage, options);
+    const rawOutput = (await this.emailAiAnalysisAdapter.analyze(context.messages)).trim();
 
     if (!rawOutput) {
       return {
@@ -75,8 +94,61 @@ export class AnalyzeEmailWithAiUseCase {
       success: true,
       analysis: validation.data,
       rawOutput,
+      contextSnapshotId: context.contextSnapshotId,
     };
   }
+
+  private async buildMessages(
+    emailMessage: EmailMessage,
+    options: AnalyzeEmailWithAiOptions,
+  ): Promise<{ messages: AiChatMessage[]; contextSnapshotId?: string }> {
+    if (this.buildAiContextUseCase && options.inquiryCase) {
+      const result = await this.buildAiContextUseCase.execute({
+        inquiryCase: options.inquiryCase,
+        currentEmailMessage: emailMessage,
+        purpose: ContextPurpose.EMAIL_ANALYSIS,
+        systemPrompt: EMAIL_ANALYSIS_SYSTEM_PROMPT,
+        outputFormatInstruction: 'Return only valid JSON. Do not include markdown fences or explanatory text.',
+        recentEmailMessages: options.recentEmailMessages,
+        recentOurReplies: options.recentOurReplies,
+      });
+
+      return {
+        messages: result.messages,
+        contextSnapshotId: result.contextSnapshotId,
+      };
+    }
+
+    return {
+      messages: [
+        {
+          role: 'system',
+          content: EMAIL_ANALYSIS_SYSTEM_PROMPT,
+        },
+        {
+          role: 'user',
+          content: formatEmailForAnalysis(emailMessage),
+        },
+      ],
+    };
+  }
+}
+
+function formatEmailForAnalysis(emailMessage: EmailMessage): string {
+  return [
+    `From: ${emailMessage.fromName || ''} <${emailMessage.fromEmail}>`,
+    `To: ${emailMessage.toEmails.join(', ')}`,
+    `Subject: ${emailMessage.subject}`,
+    `ReceivedAt: ${emailMessage.receivedAt.toISOString()}`,
+    '',
+    'Plain text body:',
+    emailMessage.bodyText || '(empty)',
+    '',
+    'HTML body:',
+    emailMessage.bodyHtml || '(empty)',
+    '',
+    'Return only valid JSON. Do not include markdown fences or explanatory text.',
+  ].join('\n');
 }
 
 function extractJsonText(rawOutput: string): string | undefined {

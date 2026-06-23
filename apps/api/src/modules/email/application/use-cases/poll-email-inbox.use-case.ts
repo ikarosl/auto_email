@@ -47,7 +47,9 @@ export class PollEmailInboxUseCase {
 
     const receiveResult = await this.receiveInboundEmailUseCase.execute(candidate.inboundEmail);
     const aiAnalysisResult = this.analyzeEmailWithAiUseCase
-      ? await this.analyzeEmailWithAiUseCase.execute(receiveResult.emailMessage)
+      ? await this.analyzeEmailWithAiUseCase.execute(receiveResult.emailMessage, {
+        inquiryCase: receiveResult.inquiryCase,
+      })
       : undefined;
 
     await this.processedEmailTracker.markProcessed(candidate.identity);
