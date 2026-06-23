@@ -31,6 +31,28 @@ pnpm test
 
 API 默认启动在 `http://localhost:3000`。
 
+## HTTP 接口
+
+启动 API：
+
+```bash
+pnpm dev:api
+```
+
+当前已支持：
+
+```text
+GET  /health
+POST /webhooks/email/inbound
+POST /inquiries
+GET  /inquiries
+GET  /inquiries/:id
+GET  /inquiries/:id/allowed-transitions
+POST /inquiries/:id/transitions
+```
+
+当前使用内存 Repository，服务重启后数据会清空。
+
 ## IMAP 拉取 Demo
 
 复制 `.env.example` 为 `.env`，补充 `IMAP_HOST`、`IMAP_USER`、`IMAP_PASS` 等配置后运行：

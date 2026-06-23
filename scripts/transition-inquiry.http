@@ -1,1 +1,15 @@
-### Placeholder for the next stage: POST /inquiries/:id/transitions
+### List inquiries
+GET http://localhost:3000/inquiries
+
+### Get allowed transitions
+GET http://localhost:3000/inquiries/inquiry_id_here/allowed-transitions
+
+### Transition inquiry status
+POST http://localhost:3000/inquiries/inquiry_id_here/transitions
+Content-Type: application/json
+
+{
+  "toStatus": "need_clarification",
+  "reason": "Customer did not provide full technical parameters.",
+  "operatorType": "human"
+}

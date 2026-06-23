@@ -1,1 +1,17 @@
-### Placeholder for the next stage: POST /webhooks/email/inbound
+### Receive inbound email and create inquiry
+POST http://localhost:3000/webhooks/email/inbound
+Content-Type: application/json
+
+{
+  "messageId": "mock-message-001",
+  "threadId": "mock-thread-001",
+  "fromEmail": "buyer@example.com",
+  "fromName": "John Smith",
+  "toEmails": ["sales@example.com"],
+  "ccEmails": [],
+  "subject": "Inquiry for 12-15GHz microstrip circulator",
+  "bodyText": "We need a 12-15GHz microstrip circulator, small size, 10 pcs.",
+  "bodyHtml": null,
+  "receivedAt": "2026-06-22T10:00:00.000Z",
+  "source": "webhook"
+}
