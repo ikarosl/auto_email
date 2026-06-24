@@ -304,7 +304,10 @@ async function run(): Promise<void> {
           console.log('--- AI CONTEXT SENT START ---');
           console.log(`ContextSnapshot ID: ${result.aiAnalysisResult.contextSnapshotId || '(none)'}`);
           console.log(`Estimated context tokens: ${result.aiAnalysisResult.estimatedContextTokens ?? '(unknown)'}`);
-          console.log(JSON.stringify(result.aiAnalysisResult.contextMessages, null, 2));
+          result.aiAnalysisResult.contextMessages.forEach((message, index) => {
+            console.log(`--- Message ${index + 1} | role=${message.role} ---`);
+            console.log(message.content);
+          });
           console.log('--- AI CONTEXT SENT END ---');
         }
 

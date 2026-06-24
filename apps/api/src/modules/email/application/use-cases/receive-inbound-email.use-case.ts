@@ -9,6 +9,7 @@ import { EmailMessage } from '../../domain/entities/email-message.entity.js';
 import { EmailDirection } from '../../domain/enums/email-direction.enum.js';
 import { InboundEmail } from '../../domain/value-objects/inbound-email.vo.js';
 import { EmailMessageRepository } from '../ports/email-message.repository.js';
+import { EmailContentSanitizer } from '../services/email-content-sanitizer.js';
 
 export interface ReceiveInboundEmailResult {
   emailMessage: EmailMessage;
@@ -21,6 +22,7 @@ export class ReceiveInboundEmailUseCase {
     private readonly createInquiryFromEmailUseCase: CreateInquiryFromEmailUseCase,
     private readonly findInquiryForInboundEmailUseCase?: FindInquiryForInboundEmailUseCase,
     private readonly inquiryMessageRepository?: InquiryMessageRepository,
+    private readonly emailContentSanitizer = new EmailContentSanitizer(),
   ) {}
 
   async execute(inboundEmail: InboundEmail): Promise<ReceiveInboundEmailResult> {
@@ -33,6 +35,10 @@ export class ReceiveInboundEmailUseCase {
       };
     }
 
+    const cleanedBodyText = this.emailContentSanitizer.sanitize(
+      inboundEmail.bodyText,
+      inboundEmail.bodyHtml,
+    );
     const emailMessage: EmailMessage = {
       id: `email_${randomUUID()}`,
       externalMessageId: inboundEmail.messageId,
@@ -44,7 +50,7 @@ export class ReceiveInboundEmailUseCase {
       toEmails: inboundEmail.toEmails,
       ccEmails: inboundEmail.ccEmails,
       subject: inboundEmail.subject,
-      bodyText: inboundEmail.bodyText,
+      bodyText: cleanedBodyText,
       bodyHtml: inboundEmail.bodyHtml,
       receivedAt: inboundEmail.receivedAt,
       raw: inboundEmail.raw,

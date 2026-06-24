@@ -41,6 +41,34 @@ describe('ReceiveInboundEmailUseCase', () => {
     assert.equal((await inquiryRepository.list()).length, 1);
   });
 
+  it('cleans inbound email content before storing it', async () => {
+    const emailRepository = new InMemoryEmailMessageRepository();
+    const inquiryRepository = new InMemoryInquiryRepository();
+    const receiveInboundEmailUseCase = new ReceiveInboundEmailUseCase(
+      emailRepository,
+      new CreateInquiryFromEmailUseCase(inquiryRepository),
+    );
+
+    const result = await receiveInboundEmailUseCase.execute({
+      messageId: 'mock-message-html',
+      fromEmail: 'buyer@example.com',
+      toEmails: ['sales@example.com'],
+      ccEmails: [],
+      subject: 'Parameter supplement',
+      bodyHtml: [
+        '<p>Frequency: 12-15GHz</p>',
+        '<p>Quantity: 50 pcs</p>',
+        '<div>On Tue, Jun 23, 2026 at 10:00 AM Sales wrote:</div>',
+        '<blockquote>Which frequency range do you need?</blockquote>',
+      ].join(''),
+      receivedAt: new Date('2026-06-22T10:00:00.000Z'),
+      source: EmailSource.MOCK,
+    });
+
+    assert.equal(result.emailMessage.bodyText, 'Frequency: 12-15GHz\nQuantity: 50 pcs');
+    assert.ok(result.emailMessage.bodyHtml?.includes('<blockquote>'));
+  });
+
   it('merges an inbound email into an inquiry matched by threadId', async () => {
     const { receiveInboundEmailUseCase, inquiryRepository, inquiryMessageRepository } = createUseCaseWithMatcher();
 
