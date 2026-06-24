@@ -10,6 +10,8 @@ import {
   ProcessedEmailTracker,
 } from '../ports/processed-email-tracker.js';
 import { InquiryCase } from '../../../inquiry/domain/entities/inquiry-case.entity.js';
+import { InquiryMessageRepository } from '../../../inquiry/application/ports/inquiry-message.repository.js';
+import { EmailMessageRepository } from '../ports/email-message.repository.js';
 
 export interface PollEmailCandidate {
   identity: ProcessedEmailIdentity;
@@ -29,6 +31,8 @@ export class PollEmailInboxUseCase {
     private readonly processedEmailTracker: ProcessedEmailTracker,
     private readonly receiveInboundEmailUseCase: ReceiveInboundEmailUseCase,
     private readonly analyzeEmailWithAiUseCase?: AnalyzeEmailWithAiUseCase,
+    private readonly inquiryMessageRepository?: InquiryMessageRepository,
+    private readonly emailMessageRepository?: EmailMessageRepository,
   ) {}
 
   async markExistingSeen(candidates: PollEmailCandidate[]): Promise<void> {
@@ -46,9 +50,11 @@ export class PollEmailInboxUseCase {
     }
 
     const receiveResult = await this.receiveInboundEmailUseCase.execute(candidate.inboundEmail);
+    const recentEmailMessages = await this.listInquiryEmailMessages(receiveResult.inquiryCase.id);
     const aiAnalysisResult = this.analyzeEmailWithAiUseCase
       ? await this.analyzeEmailWithAiUseCase.execute(receiveResult.emailMessage, {
         inquiryCase: receiveResult.inquiryCase,
+        recentEmailMessages,
       })
       : undefined;
 
@@ -61,5 +67,22 @@ export class PollEmailInboxUseCase {
       inquiryCase: receiveResult.inquiryCase,
       aiAnalysisResult,
     };
+  }
+
+  private async listInquiryEmailMessages(inquiryCaseId: string): Promise<EmailMessage[]> {
+    if (!this.inquiryMessageRepository || !this.emailMessageRepository) {
+      return [];
+    }
+
+    const inquiryMessages = await this.inquiryMessageRepository.listByInquiryCaseId(inquiryCaseId);
+    const emailMessages = await Promise.all(
+      inquiryMessages.map((inquiryMessage) =>
+        this.emailMessageRepository?.findById(inquiryMessage.emailMessageId),
+      ),
+    );
+
+    return emailMessages
+      .filter((emailMessage): emailMessage is EmailMessage => Boolean(emailMessage))
+      .sort((a, b) => a.receivedAt.getTime() - b.receivedAt.getTime());
   }
 }

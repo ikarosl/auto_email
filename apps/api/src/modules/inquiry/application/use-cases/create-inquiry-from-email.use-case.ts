@@ -30,4 +30,8 @@ export class CreateInquiryFromEmailUseCase {
       inquiryCase: await this.inquiryRepository.save(inquiryCase),
     };
   }
+
+  async saveExistingInquiry(inquiryCase: InquiryCase): Promise<InquiryCase> {
+    return this.inquiryRepository.save(inquiryCase);
+  }
 }

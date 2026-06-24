@@ -13,6 +13,15 @@ export class InMemoryInquiryRepository implements InquiryRepository {
     return this.inquiryCases.get(id);
   }
 
+  async listOpenByCustomerEmail(customerEmail: string): Promise<InquiryCase[]> {
+    return Array.from(this.inquiryCases.values())
+      .filter((inquiryCase) =>
+        inquiryCase.customerEmail.toLowerCase() === customerEmail.toLowerCase() &&
+        inquiryCase.status !== 'closed',
+      )
+      .sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime());
+  }
+
   async list(): Promise<InquiryCase[]> {
     return Array.from(this.inquiryCases.values());
   }

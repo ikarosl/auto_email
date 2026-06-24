@@ -20,6 +20,12 @@ export class InMemoryEmailMessageRepository implements EmailMessageRepository {
     return id ? this.findById(id) : undefined;
   }
 
+  async listByThreadId(threadId: string): Promise<EmailMessage[]> {
+    return Array.from(this.emailMessages.values()).filter(
+      (emailMessage) => emailMessage.threadId === threadId,
+    );
+  }
+
   async list(): Promise<EmailMessage[]> {
     return Array.from(this.emailMessages.values());
   }

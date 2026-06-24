@@ -15,7 +15,9 @@ import { InboundEmail } from '../../domain/value-objects/inbound-email.vo.js';
 import { DeepseekEmailAnalysisAdapter } from './deepseek-email-analysis.adapter.js';
 import { InMemoryEmailMessageRepository } from '../repositories/in-memory-email-message.repository.js';
 import { InMemoryProcessedEmailTracker } from '../repositories/in-memory-processed-email-tracker.js';
+import { FindInquiryForInboundEmailUseCase } from '../../../inquiry/application/use-cases/find-inquiry-for-inbound-email.use-case.js';
 import { CreateInquiryFromEmailUseCase } from '../../../inquiry/application/use-cases/create-inquiry-from-email.use-case.js';
+import { InMemoryInquiryMessageRepository } from '../../../inquiry/infrastructure/repositories/in-memory-inquiry-message.repository.js';
 import { InMemoryInquiryRepository } from '../../../inquiry/infrastructure/repositories/in-memory-inquiry.repository.js';
 import { BuildAiContextUseCase } from '../../../context/application/use-cases/build-ai-context.use-case.js';
 import { NoopRagRetrieverAdapter } from '../../../context/infrastructure/adapters/noop-rag-retriever.adapter.js';
@@ -209,11 +211,19 @@ async function run(): Promise<void> {
 
   const emailRepository = new InMemoryEmailMessageRepository();
   const inquiryRepository = new InMemoryInquiryRepository();
+  const inquiryMessageRepository = new InMemoryInquiryMessageRepository();
   const tracker = new InMemoryProcessedEmailTracker();
   const createInquiryFromEmailUseCase = new CreateInquiryFromEmailUseCase(inquiryRepository);
+  const findInquiryForInboundEmailUseCase = new FindInquiryForInboundEmailUseCase(
+    inquiryRepository,
+    inquiryMessageRepository,
+    emailRepository,
+  );
   const receiveInboundEmailUseCase = new ReceiveInboundEmailUseCase(
     emailRepository,
     createInquiryFromEmailUseCase,
+    findInquiryForInboundEmailUseCase,
+    inquiryMessageRepository,
   );
   const buildAiContextUseCase = new BuildAiContextUseCase(
     new InMemoryContextSnapshotRepository(),
@@ -227,6 +237,8 @@ async function run(): Promise<void> {
     tracker,
     receiveInboundEmailUseCase,
     analyzeEmailWithAiUseCase,
+    inquiryMessageRepository,
+    emailRepository,
   );
 
   await client.connect();
