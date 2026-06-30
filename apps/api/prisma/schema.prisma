@@ -1,0 +1,294 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model MailboxAccount {
+  id              String             @id @default(dbgenerated("'mailbox_' || gen_random_uuid()::TEXT"))
+  emailAddress    String             @unique @map("email_address")
+  provider        String?
+  imapHost        String?            @map("imap_host")
+  imapPort        Int                @default(993) @map("imap_port")
+  imapSecure      Boolean            @default(true) @map("imap_secure")
+  status          String             @default("active")
+  createdAt       DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime           @default(now()) @map("updated_at") @db.Timestamptz(6)
+  syncStates      MailboxSyncState[]
+  emailThreads    EmailThread[]
+  emailMessages   EmailMessage[]
+  processedEmails ProcessedEmail[]
+
+  @@map("mailbox_accounts")
+}
+
+model MailboxSyncState {
+  id                   String         @id @default(dbgenerated("'mailbox_sync_' || gen_random_uuid()::TEXT"))
+  mailboxAccountId     String         @map("mailbox_account_id")
+  mailboxName          String         @default("INBOX") @map("mailbox_name")
+  uidValidity          BigInt?        @map("uid_validity")
+  lastSeenUid          BigInt?        @map("last_seen_uid")
+  lastProcessedUid     BigInt?        @map("last_processed_uid")
+  bootstrapCompletedAt DateTime?      @map("bootstrap_completed_at") @db.Timestamptz(6)
+  createdAt            DateTime       @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt            DateTime       @default(now()) @map("updated_at") @db.Timestamptz(6)
+  mailboxAccount       MailboxAccount @relation(fields: [mailboxAccountId], references: [id], onDelete: Cascade)
+
+  @@unique([mailboxAccountId, mailboxName])
+  @@map("mailbox_sync_states")
+}
+
+model Customer {
+  id           String        @id @default(dbgenerated("'customer_' || gen_random_uuid()::TEXT"))
+  email        String        @unique
+  name         String?
+  domain       String?
+  companyName  String?       @map("company_name")
+  country      String?
+  source       String        @default("email")
+  remark       String?
+  createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime      @default(now()) @map("updated_at") @db.Timestamptz(6)
+  deletedAt    DateTime?     @map("deleted_at") @db.Timestamptz(6)
+  inquiryCases InquiryCase[]
+
+  @@map("customers")
+}
+
+model EmailThread {
+  id                String         @id @default(dbgenerated("'thread_' || gen_random_uuid()::TEXT"))
+  mailboxAccountId  String         @map("mailbox_account_id")
+  threadKey         String         @map("thread_key")
+  externalThreadId  String?        @map("external_thread_id")
+  subjectNormalized String?        @map("subject_normalized")
+  customerEmail     String?        @map("customer_email")
+  latestMessageAt   DateTime?      @map("latest_message_at") @db.Timestamptz(6)
+  createdAt         DateTime       @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime       @default(now()) @map("updated_at") @db.Timestamptz(6)
+  mailboxAccount    MailboxAccount @relation(fields: [mailboxAccountId], references: [id], onDelete: Cascade)
+  emailMessages     EmailMessage[]
+
+  @@unique([mailboxAccountId, threadKey])
+  @@map("email_threads")
+}
+
+model EmailMessage {
+  id                   String              @id @default(dbgenerated("'email_' || gen_random_uuid()::TEXT"))
+  mailboxAccountId     String?             @map("mailbox_account_id")
+  emailThreadId        String?             @map("email_thread_id")
+  direction            String
+  mailboxName          String              @default("INBOX") @map("mailbox_name")
+  uidValidity          BigInt?             @map("uid_validity")
+  uid                  BigInt?
+  messageId            String?             @map("message_id")
+  inReplyTo            String?             @map("in_reply_to")
+  referencesJson       Json                @default("[]") @map("references_json")
+  fromEmail            String              @map("from_email")
+  fromName             String?             @map("from_name")
+  toEmails             Json                @default("[]") @map("to_emails")
+  ccEmails             Json                @default("[]") @map("cc_emails")
+  subject              String?
+  bodyText             String?             @map("body_text")
+  bodyHtml             String?             @map("body_html")
+  rawSource            String?             @map("raw_source")
+  receivedAt           DateTime            @map("received_at") @db.Timestamptz(6)
+  source               String              @default("imap")
+  createdAt            DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt            DateTime            @default(now()) @map("updated_at") @db.Timestamptz(6)
+  deletedAt            DateTime?           @map("deleted_at") @db.Timestamptz(6)
+  mailboxAccount       MailboxAccount?     @relation(fields: [mailboxAccountId], references: [id], onDelete: SetNull)
+  emailThread          EmailThread?        @relation(fields: [emailThreadId], references: [id], onDelete: SetNull)
+  inquiryMessages      InquiryMessage[]
+  aiDecisions          AiDecision[]
+  sourceReplyDrafts    ReplyDraft[]        @relation("ReplyDraftSourceEmail")
+  sentReplyDrafts      ReplyDraft[]        @relation("ReplyDraftSentEmail")
+  contextSnapshots     AiContextSnapshot[]
+  updatedStructuredFacts InquiryStructuredFact[]
+
+  @@index([emailThreadId])
+  @@index([fromEmail])
+  @@index([receivedAt])
+  @@index([direction])
+  @@map("email_messages")
+}
+
+model InquiryCase {
+  id              String                  @id @default(dbgenerated("'inquiry_' || gen_random_uuid()::TEXT"))
+  customerId      String                  @map("customer_id")
+  status          String                  @default("new")
+  subject         String?
+  productType     String?                 @map("product_type")
+  latestMessageAt DateTime?               @map("latest_message_at") @db.Timestamptz(6)
+  closedAt        DateTime?               @map("closed_at") @db.Timestamptz(6)
+  createdAt       DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime                @default(now()) @map("updated_at") @db.Timestamptz(6)
+  deletedAt       DateTime?               @map("deleted_at") @db.Timestamptz(6)
+  customer        Customer                @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  inquiryMessages InquiryMessage[]
+  aiDecisions     AiDecision[]
+  structuredFacts InquiryStructuredFact?
+  replyDrafts     ReplyDraft[]
+  contextSnapshots AiContextSnapshot[]
+  statusLogs      InquiryStatusLog[]
+
+  @@index([customerId])
+  @@index([status])
+  @@index([latestMessageAt])
+  @@map("inquiry_cases")
+}
+
+model InquiryMessage {
+  id             String       @id @default(dbgenerated("'inquiry_message_' || gen_random_uuid()::TEXT"))
+  inquiryCaseId String       @map("inquiry_case_id")
+  emailMessageId String      @map("email_message_id")
+  relationType   String      @default("reply") @map("relation_type")
+  direction      String
+  createdAt      DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  inquiryCase    InquiryCase @relation(fields: [inquiryCaseId], references: [id], onDelete: Cascade)
+  emailMessage   EmailMessage @relation(fields: [emailMessageId], references: [id], onDelete: Cascade)
+
+  @@unique([inquiryCaseId, emailMessageId])
+  @@index([inquiryCaseId])
+  @@index([emailMessageId])
+  @@map("inquiry_messages")
+}
+
+model ProcessedEmail {
+  id               String         @id @default(dbgenerated("'processed_email_' || gen_random_uuid()::TEXT"))
+  mailboxAccountId String         @map("mailbox_account_id")
+  mailboxName      String         @default("INBOX") @map("mailbox_name")
+  uidValidity      BigInt         @map("uid_validity")
+  uid              BigInt
+  messageId        String?        @map("message_id")
+  seenAt           DateTime       @default(now()) @map("seen_at") @db.Timestamptz(6)
+  processedAt      DateTime?      @map("processed_at") @db.Timestamptz(6)
+  createdAt        DateTime       @default(now()) @map("created_at") @db.Timestamptz(6)
+  mailboxAccount   MailboxAccount @relation(fields: [mailboxAccountId], references: [id], onDelete: Cascade)
+
+  @@unique([mailboxAccountId, mailboxName, uidValidity, uid])
+  @@index([messageId])
+  @@map("processed_emails")
+}
+
+model AiDecision {
+  id                    String        @id @default(dbgenerated("'ai_decision_' || gen_random_uuid()::TEXT"))
+  emailMessageId         String?       @map("email_message_id")
+  inquiryCaseId          String?       @map("inquiry_case_id")
+  classification         String?
+  suggestedStatus        String?       @map("suggested_status")
+  confidence             Decimal?      @db.Decimal(5, 4)
+  riskLevel              String?       @map("risk_level")
+  reason                 String?
+  missingFields          Json          @default("[]") @map("missing_fields")
+  extractedRequirements  Json          @default("{}") @map("extracted_requirements")
+  quoteBoundaryDetected  Boolean       @default(false) @map("quote_boundary_detected")
+  humanReviewRequired    Boolean       @default(true) @map("human_review_required")
+  nextAction             String?       @map("next_action")
+  rawResult              Json          @default("{}") @map("raw_result")
+  modelName              String?       @map("model_name")
+  success                Boolean       @default(true)
+  errorCode              String?       @map("error_code")
+  errorMessage           String?       @map("error_message")
+  createdAt              DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  emailMessage           EmailMessage? @relation(fields: [emailMessageId], references: [id], onDelete: SetNull)
+  inquiryCase            InquiryCase?  @relation(fields: [inquiryCaseId], references: [id], onDelete: SetNull)
+
+  @@index([emailMessageId])
+  @@index([inquiryCaseId])
+  @@index([createdAt])
+  @@map("ai_decisions")
+}
+
+model InquiryStructuredFact {
+  id                         String        @id @default(dbgenerated("'facts_' || gen_random_uuid()::TEXT"))
+  inquiryCaseId              String        @unique @map("inquiry_case_id")
+  productType                String?       @map("product_type")
+  structureType              String?       @map("structure_type")
+  frequencyRange             String?       @map("frequency_range")
+  power                      String?
+  insertionLoss              String?       @map("insertion_loss")
+  isolation                  String?
+  vswr                       String?
+  connector                  String?
+  sizeRequirement            String?       @map("size_requirement")
+  quantity                   String?
+  application                String?
+  deliveryRequirement        String?       @map("delivery_requirement")
+  specialRequirements        Json          @default("{}") @map("special_requirements")
+  missingFields              Json          @default("[]") @map("missing_fields")
+  confirmedFields            Json          @default("[]") @map("confirmed_fields")
+  uncertainFields            Json          @default("{}") @map("uncertain_fields")
+  sourceEmailMessageIds      Json          @default("[]") @map("source_email_message_ids")
+  confidence                 Decimal?      @db.Decimal(5, 4)
+  lastUpdatedBy              String        @default("system") @map("last_updated_by")
+  updatedFromEmailMessageId  String?       @map("updated_from_email_message_id")
+  createdAt                  DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                  DateTime      @default(now()) @map("updated_at") @db.Timestamptz(6)
+  inquiryCase                InquiryCase   @relation(fields: [inquiryCaseId], references: [id], onDelete: Cascade)
+  updatedFromEmailMessage    EmailMessage? @relation(fields: [updatedFromEmailMessageId], references: [id], onDelete: SetNull)
+
+  @@index([productType])
+  @@map("inquiry_structured_facts")
+}
+
+model ReplyDraft {
+  id                   String        @id @default(dbgenerated("'draft_' || gen_random_uuid()::TEXT"))
+  inquiryCaseId        String        @map("inquiry_case_id")
+  sourceEmailMessageId String?       @map("source_email_message_id")
+  sentEmailMessageId   String?       @map("sent_email_message_id")
+  draftType            String        @map("draft_type")
+  status               String        @default("pending_review")
+  subject              String?
+  bodyText             String        @map("body_text")
+  modelName            String?       @map("model_name")
+  createdByType        String        @default("ai") @map("created_by_type")
+  createdAt            DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt            DateTime      @default(now()) @map("updated_at") @db.Timestamptz(6)
+  inquiryCase          InquiryCase   @relation(fields: [inquiryCaseId], references: [id], onDelete: Cascade)
+  sourceEmailMessage   EmailMessage? @relation("ReplyDraftSourceEmail", fields: [sourceEmailMessageId], references: [id], onDelete: SetNull)
+  sentEmailMessage     EmailMessage? @relation("ReplyDraftSentEmail", fields: [sentEmailMessageId], references: [id], onDelete: SetNull)
+
+  @@index([inquiryCaseId])
+  @@index([status])
+  @@index([sourceEmailMessageId])
+  @@index([sentEmailMessageId])
+  @@map("reply_drafts")
+}
+
+model AiContextSnapshot {
+  id               String        @id @default(dbgenerated("'context_snapshot_' || gen_random_uuid()::TEXT"))
+  inquiryCaseId    String?       @map("inquiry_case_id")
+  emailMessageId   String?       @map("email_message_id")
+  purpose          String
+  messagesJson     Json          @default("[]") @map("messages_json")
+  sourceReferences Json          @default("[]") @map("source_references")
+  estimatedTokens  Int?          @map("estimated_tokens")
+  modelName        String?       @map("model_name")
+  createdAt        DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  inquiryCase      InquiryCase?  @relation(fields: [inquiryCaseId], references: [id], onDelete: SetNull)
+  emailMessage     EmailMessage? @relation(fields: [emailMessageId], references: [id], onDelete: SetNull)
+
+  @@index([inquiryCaseId])
+  @@index([emailMessageId])
+  @@index([createdAt])
+  @@map("ai_context_snapshots")
+}
+
+model InquiryStatusLog {
+  id             String      @id @default(dbgenerated("'status_log_' || gen_random_uuid()::TEXT"))
+  inquiryCaseId  String      @map("inquiry_case_id")
+  fromStatus     String?     @map("from_status")
+  toStatus       String      @map("to_status")
+  reason         String?
+  changedBy      String?     @map("changed_by")
+  changedByType  String      @map("changed_by_type")
+  createdAt      DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  inquiryCase    InquiryCase @relation(fields: [inquiryCaseId], references: [id], onDelete: Cascade)
+
+  @@index([inquiryCaseId])
+  @@index([createdAt])
+  @@map("inquiry_status_logs")
+}
