@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 
+import { PrismaService } from '../../common/database/prisma.service.js';
 import { CreateInquiryUseCase } from './application/use-cases/create-inquiry.use-case.js';
 import { CreateInquiryFromEmailUseCase } from './application/use-cases/create-inquiry-from-email.use-case.js';
 import { GetInquiryUseCase } from './application/use-cases/get-inquiry.use-case.js';
@@ -8,8 +9,8 @@ import { ListAllowedTransitionsUseCase } from './application/use-cases/list-allo
 import { ListInquiriesUseCase } from './application/use-cases/list-inquiries.use-case.js';
 import { TransitionInquiryStatusUseCase } from './application/use-cases/transition-inquiry-status.use-case.js';
 import { InquiryStateMachine } from './domain/state-machine/inquiry-state-machine.js';
-import { InMemoryInquiryMessageRepository } from './infrastructure/repositories/in-memory-inquiry-message.repository.js';
-import { InMemoryInquiryRepository } from './infrastructure/repositories/in-memory-inquiry.repository.js';
+import { PrismaInquiryMessageRepository } from './infrastructure/repositories/prisma-inquiry-message.repository.js';
+import { PrismaInquiryRepository } from './infrastructure/repositories/prisma-inquiry.repository.js';
 import { InquiryController } from './presentation/inquiry.controller.js';
 import { INQUIRY_MESSAGE_REPOSITORY, INQUIRY_REPOSITORY } from './inquiry.tokens.js';
 import { InquiryRepository } from './application/ports/inquiry.repository.js';
@@ -20,11 +21,13 @@ import { InquiryRepository } from './application/ports/inquiry.repository.js';
     InquiryStateMachine,
     {
       provide: INQUIRY_REPOSITORY,
-      useClass: InMemoryInquiryRepository,
+      useFactory: (prisma: PrismaService) => new PrismaInquiryRepository(prisma),
+      inject: [PrismaService],
     },
     {
       provide: INQUIRY_MESSAGE_REPOSITORY,
-      useClass: InMemoryInquiryMessageRepository,
+      useFactory: (prisma: PrismaService) => new PrismaInquiryMessageRepository(prisma),
+      inject: [PrismaService],
     },
     {
       provide: CreateInquiryUseCase,

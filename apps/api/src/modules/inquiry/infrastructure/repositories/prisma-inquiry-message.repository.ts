@@ -1,0 +1,66 @@
+import { PrismaService } from '../../../../common/database/prisma.service.js';
+import { InquiryMessageRepository } from '../../application/ports/inquiry-message.repository.js';
+import { InquiryMessage } from '../../domain/entities/inquiry-message.entity.js';
+
+export class PrismaInquiryMessageRepository implements InquiryMessageRepository {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async save(inquiryMessage: InquiryMessage): Promise<InquiryMessage> {
+    const data = {
+      id: inquiryMessage.id,
+      inquiryCaseId: inquiryMessage.inquiryCaseId,
+      emailMessageId: inquiryMessage.emailMessageId,
+      direction: inquiryMessage.direction,
+      relationType: inquiryMessage.relationType,
+      createdAt: inquiryMessage.createdAt,
+    };
+
+    await this.prisma.inquiryMessage.upsert({
+      where: { id: inquiryMessage.id },
+      create: data,
+      update: data,
+    });
+
+    return inquiryMessage;
+  }
+
+  async findByEmailMessageId(emailMessageId: string): Promise<InquiryMessage | undefined> {
+    const record = await this.prisma.inquiryMessage.findFirst({
+      where: { emailMessageId },
+    });
+    return record ? toDomain(record) : undefined;
+  }
+
+  async listByInquiryCaseId(inquiryCaseId: string): Promise<InquiryMessage[]> {
+    const records = await this.prisma.inquiryMessage.findMany({
+      where: { inquiryCaseId },
+      orderBy: { createdAt: 'asc' },
+    });
+    return records.map(toDomain);
+  }
+
+  async list(): Promise<InquiryMessage[]> {
+    const records = await this.prisma.inquiryMessage.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
+    return records.map(toDomain);
+  }
+}
+
+function toDomain(record: {
+  id: string;
+  inquiryCaseId: string;
+  emailMessageId: string;
+  direction: string;
+  relationType: string;
+  createdAt: Date;
+}): InquiryMessage {
+  return {
+    id: record.id,
+    inquiryCaseId: record.inquiryCaseId,
+    emailMessageId: record.emailMessageId,
+    direction: record.direction as InquiryMessage['direction'],
+    relationType: record.relationType as InquiryMessage['relationType'],
+    createdAt: record.createdAt,
+  };
+}

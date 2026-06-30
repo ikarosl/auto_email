@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 
+import { PrismaService } from '../../common/database/prisma.service.js';
 import { BuildAiContextUseCase } from '../context/application/use-cases/build-ai-context.use-case.js';
 import { ContextModule } from '../context/context.module.js';
 import { FindInquiryForInboundEmailUseCase } from '../inquiry/application/use-cases/find-inquiry-for-inbound-email.use-case.js';
@@ -15,8 +16,10 @@ import { EmailMessageRepository } from './application/ports/email-message.reposi
 import { EmailAiAnalysisAdapter } from './application/ports/email-ai-analysis.adapter.js';
 import { ProcessedEmailTracker } from './application/ports/processed-email-tracker.js';
 import { DeepseekEmailAnalysisAdapter } from './infrastructure/adapters/deepseek-email-analysis.adapter.js';
-import { InMemoryEmailMessageRepository } from './infrastructure/repositories/in-memory-email-message.repository.js';
-import { InMemoryProcessedEmailTracker } from './infrastructure/repositories/in-memory-processed-email-tracker.js';
+import { PrismaEmailMessageRepository } from './infrastructure/repositories/prisma-email-message.repository.js';
+import { PrismaProcessedEmailTracker } from './infrastructure/repositories/prisma-processed-email-tracker.js';
+import { MailboxSyncService } from './infrastructure/services/mailbox-sync.service.js';
+import { ImapPollService } from './infrastructure/services/imap-poll.service.js';
 import { EmailWebhookController } from './presentation/email-webhook.controller.js';
 import { EMAIL_AI_ANALYSIS_ADAPTER, EMAIL_MESSAGE_REPOSITORY, PROCESSED_EMAIL_TRACKER } from './email.tokens.js';
 
@@ -26,15 +29,19 @@ import { EMAIL_AI_ANALYSIS_ADAPTER, EMAIL_MESSAGE_REPOSITORY, PROCESSED_EMAIL_TR
   providers: [
     {
       provide: EMAIL_MESSAGE_REPOSITORY,
-      useClass: InMemoryEmailMessageRepository,
+      useFactory: (prisma: PrismaService) => new PrismaEmailMessageRepository(prisma),
+      inject: [PrismaService],
     },
+    MailboxSyncService,
+    ImapPollService,
     {
       provide: EMAIL_AI_ANALYSIS_ADAPTER,
       useClass: DeepseekEmailAnalysisAdapter,
     },
     {
       provide: PROCESSED_EMAIL_TRACKER,
-      useClass: InMemoryProcessedEmailTracker,
+      useFactory: (prisma: PrismaService) => new PrismaProcessedEmailTracker(prisma),
+      inject: [PrismaService],
     },
     {
       provide: ReceiveInboundEmailUseCase,

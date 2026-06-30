@@ -13,11 +13,12 @@ type DeepSeekChatCompletionCreateParams = ChatCompletionCreateParamsNonStreaming
 };
 
 export class DeepseekEmailAnalysisAdapter implements EmailAiAnalysisAdapter {
-  private readonly client: OpenAI;
+  private readonly client: OpenAI | null;
 
   constructor() {
     if (!env.DEEPSEEK_API_KEY) {
-      throw new Error('Missing required DeepSeek config: DEEPSEEK_API_KEY');
+      this.client = null;
+      return;
     }
 
     this.client = new OpenAI({
@@ -27,6 +28,10 @@ export class DeepseekEmailAnalysisAdapter implements EmailAiAnalysisAdapter {
   }
 
   async analyze(messages: AiChatMessage[]): Promise<string> {
+    if (!this.client) {
+      return '';
+    }
+
     const request: DeepSeekChatCompletionCreateParams = {
       messages,
       model: env.AI_EMAIL_ANALYSIS_MODEL || env.DEEPSEEK_MODEL || 'deepseek-v4-pro',

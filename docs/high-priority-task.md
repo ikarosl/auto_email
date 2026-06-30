@@ -1,852 +1,347 @@
-# 项目目录结构规划
+当前项目已经从“验证邮件 + AI 可用性”的阶段，正式进入 **数据库持久化与真实后端服务化阶段**。
 
-## 1. 文件定位
-
-本文档用于规划邮件询盘自动处理系统当前阶段的项目目录结构。
-
-当前阶段目标：
+前面已经完成的是：
 
 ```text
-不做前端。
-不做 RAG。
-不做 AI 自动回复。
-不做报价。
-不做研发评审。
-重点完成：
-1. 后端项目骨架
-2. 询盘状态机
-3. 邮件接收入口
-4. 邮件转询盘的基础流程
-5. 可选的数据持久化接口
+1. Monorepo + NestJS API 框架
+2. IMAP 邮件读取 demo
+3. DeepSeek / OpenAI SDK 调用 demo
+4. 询盘状态机
+5. 邮件接收 HTTP 入口
+6. IMAP 轮询新邮件
+7. AI 邮件分析与结构化输出校验
+8. Context Manager 骨架
+9. 邮件归并 / 询盘匹配初版
+10. 邮件正文解析、HTML 清洗、引用历史清洗
+11. 数据库方案设计
+12. PostgreSQL 建表
+13. Prisma 7 schema 与 client 生成基础配置
 ```
 
-本阶段核心不是把系统做完整，而是先搭好后端骨架，让后续模块能稳稳接上。
+现在项目所处阶段：
+
+```text
+阶段：持久化落地阶段
+目标：把当前 InMemory 流程迁移为真实 PostgreSQL 存储，让邮件、询盘、上下文、AI 分析结果、结构化事实、回复草稿都能在服务重启后保留。
+```
+
+### 架构变更说明（阶段 3 完成时）
+
+`imap-poll.service.ts` 已被重写为 NestJS `OnApplicationBootstrap` 生命周期服务，**与 HTTP 服务器在同一进程中运行**。`pnpm dev` 启动后：
+
+```
+启动 NestJS → Prisma 连接 DB → HTTP 监听 :3000 → 同时 IMAP 异步连接
+→ 首次启动拉取全网箱 UID → 与 DB 比对去重 → UID 升序逐封入库 → AI 分析
+→ 后续按 IMAP_POLL_INTERVAL_MS 定时轮询新邮件
+```
+
+不再有"独立进程"的设计 —— 整个后端是统一服务。
 
 ---
 
-# 2. 当前阶段建设原则
+**阶段 1：DatabaseModule 基础接入** ✅ 已完成
 
-## 2.1 状态机优先
+目标：让 NestJS 可以通过 DI 使用 Prisma。
 
-询盘状态机是当前阶段最重要的模块。
-
-状态机必须：
-
-* 独立于数据库
-* 独立于邮件服务
-* 独立于 AI
-* 独立于前端
-* 可以单独写单元测试
-* 不依赖 NestJS Controller
-* 不依赖第三方邮件服务
-
-也就是说，状态机应该是纯业务逻辑。
-
----
-
-## 2.2 邮件接收可替换
-
-第一版邮件接收不要绑死某一个邮箱服务。
-
-可以先支持：
+小点：
 
 ```text
-POST /webhooks/email/inbound
+1. 安装 @prisma/adapter-pg
+2. 实现 PrismaService
+3. 实现 DatabaseModule
+4. AppModule 引入 DatabaseModule
+5. 增加数据库连接健康检查
+6. 确认 typecheck / build 通过
 ```
-
-用于模拟或接收外部邮件服务推送。
-
-后续再接：
-
-* Gmail API
-* Outlook API
-* IMAP
-* Mailgun
-* SendGrid Inbound Parse
-* 企业邮箱 webhook
-
-邮件接收模块只负责把外部邮件转换成系统内部统一格式。
-
----
-
-## 2.3 数据库存储可选
-
-当前阶段邮件是否入库都可以。
-
-但代码结构上必须提前留好 Repository 接口。
-
-第一版可以用：
-
-```text
-InMemoryInquiryRepository
-InMemoryEmailMessageRepository
-```
-
-后续再替换为：
-
-```text
-MySqlInquiryRepository
-MySqlEmailMessageRepository
-```
-
-这样不会因为后面接数据库而重写业务逻辑。
-
----
-
-## 2.4 不做前端
-
-当前阶段不建设 Vue 管理后台。
-
-验证方式使用：
-
-* curl
-* Postman
-* Swagger
-* 单元测试
-* 简单日志
-
----
-
-# 3. 推荐项目结构
-
-如果当前项目是 NestJS 后端，推荐结构如下：
-
-```text
-email-inquiry-system/
-├── docs/
-│   ├── 01-business-flow.md
-│   ├── 02-implementation-plan.md
-│   ├── 03-data-model.md
-│   ├── 04-status-rules.md
-│   ├── 05-ai-rules.md
-│   ├── 06-current-task.md
-│   └── 07-project-structure.md
-│
-├── apps/
-│   └── api/
-│       ├── src/
-│       │   ├── main.ts
-│       │   ├── app.module.ts
-│       │   │
-│       │   ├── config/
-│       │   │   ├── app.config.ts
-│       │   │   ├── mail.config.ts
-│       │   │   └── database.config.ts
-│       │   │
-│       │   ├── common/
-│       │   │   ├── errors/
-│       │   │   │   ├── business-error.ts
-│       │   │   │   └── invalid-transition.error.ts
-│       │   │   ├── decorators/
-│       │   │   ├── filters/
-│       │   │   ├── guards/
-│       │   │   ├── interceptors/
-│       │   │   └── utils/
-│       │   │
-│       │   ├── modules/
-│       │   │   ├── inquiry/
-│       │   │   │   ├── inquiry.module.ts
-│       │   │   │   │
-│       │   │   │   ├── domain/
-│       │   │   │   │   ├── entities/
-│       │   │   │   │   │   └── inquiry-case.entity.ts
-│       │   │   │   │   ├── enums/
-│       │   │   │   │   │   ├── inquiry-status.enum.ts
-│       │   │   │   │   │   ├── inquiry-event.enum.ts
-│       │   │   │   │   │   └── inquiry-priority.enum.ts
-│       │   │   │   │   ├── state-machine/
-│       │   │   │   │   │   ├── inquiry-state-machine.ts
-│       │   │   │   │   │   ├── inquiry-transitions.ts
-│       │   │   │   │   │   ├── inquiry-transition.guard.ts
-│       │   │   │   │   │   └── inquiry-state-machine.spec.ts
-│       │   │   │   │   └── events/
-│       │   │   │   │       └── inquiry-status-changed.event.ts
-│       │   │   │   │
-│       │   │   │   ├── application/
-│       │   │   │   │   ├── use-cases/
-│       │   │   │   │   │   ├── create-inquiry.use-case.ts
-│       │   │   │   │   │   ├── create-inquiry-from-email.use-case.ts
-│       │   │   │   │   │   ├── transition-inquiry-status.use-case.ts
-│       │   │   │   │   │   ├── get-inquiry.use-case.ts
-│       │   │   │   │   │   └── list-inquiries.use-case.ts
-│       │   │   │   │   ├── ports/
-│       │   │   │   │   │   ├── inquiry.repository.ts
-│       │   │   │   │   │   └── inquiry-status-log.repository.ts
-│       │   │   │   │   └── dto/
-│       │   │   │   │       ├── create-inquiry.dto.ts
-│       │   │   │   │       ├── transition-inquiry-status.dto.ts
-│       │   │   │   │       └── inquiry-response.dto.ts
-│       │   │   │   │
-│       │   │   │   ├── infrastructure/
-│       │   │   │   │   ├── repositories/
-│       │   │   │   │   │   ├── in-memory-inquiry.repository.ts
-│       │   │   │   │   │   └── in-memory-inquiry-status-log.repository.ts
-│       │   │   │   │   └── mappers/
-│       │   │   │   │       └── inquiry.mapper.ts
-│       │   │   │   │
-│       │   │   │   └── presentation/
-│       │   │   │       └── inquiry.controller.ts
-│       │   │   │
-│       │   │   ├── email/
-│       │   │   │   ├── email.module.ts
-│       │   │   │   │
-│       │   │   │   ├── domain/
-│       │   │   │   │   ├── entities/
-│       │   │   │   │   │   └── email-message.entity.ts
-│       │   │   │   │   ├── value-objects/
-│       │   │   │   │   │   └── inbound-email.vo.ts
-│       │   │   │   │   └── enums/
-│       │   │   │   │       ├── email-source.enum.ts
-│       │   │   │   │       └── email-direction.enum.ts
-│       │   │   │   │
-│       │   │   │   ├── application/
-│       │   │   │   │   ├── use-cases/
-│       │   │   │   │   │   ├── receive-inbound-email.use-case.ts
-│       │   │   │   │   │   ├── normalize-inbound-email.use-case.ts
-│       │   │   │   │   │   └── get-email-message.use-case.ts
-│       │   │   │   │   ├── ports/
-│       │   │   │   │   │   └── email-message.repository.ts
-│       │   │   │   │   └── dto/
-│       │   │   │   │       ├── inbound-email-webhook.dto.ts
-│       │   │   │   │       └── email-message-response.dto.ts
-│       │   │   │   │
-│       │   │   │   ├── infrastructure/
-│       │   │   │   │   ├── repositories/
-│       │   │   │   │   │   └── in-memory-email-message.repository.ts
-│       │   │   │   │   └── adapters/
-│       │   │   │   │       ├── generic-email-webhook.adapter.ts
-│       │   │   │   │       └── mock-email.adapter.ts
-│       │   │   │   │
-│       │   │   │   └── presentation/
-│       │   │   │       └── email-webhook.controller.ts
-│       │   │   │
-│       │   │   └── health/
-│       │   │       ├── health.module.ts
-│       │   │       └── health.controller.ts
-│       │   │
-│       │   └── test/
-│       │       ├── inquiry-state-machine.e2e-spec.ts
-│       │       └── email-inbound.e2e-spec.ts
-│       │
-│       ├── package.json
-│       ├── tsconfig.json
-│       └── nest-cli.json
-│
-├── packages/
-│   └── shared/
-│       └── src/
-│           ├── types/
-│           └── constants/
-│
-├── scripts/
-│   ├── send-mock-email.http
-│   └── transition-inquiry.http
-│
-├── .env.example
-├── package.json
-├── pnpm-workspace.yaml
-└── README.md
-```
-
----
-
-# 4. 当前阶段最重要的模块
-
-## 4.1 inquiry 模块
-
-`inquiry` 是当前阶段的核心模块。
-
-它负责：
-
-* 创建询盘
-* 查询询盘
-* 修改询盘状态
-* 校验状态流转是否合法
-* 记录状态变化
-* 提供状态机能力
-
-当前阶段不负责：
-
-* 报价
-* 研发评审
-* AI 回复
-* RAG
-* 前端展示
-
----
-
-## 4.2 email 模块
-
-`email` 模块负责接收邮件。
-
-当前阶段只需要做到：
-
-* 接收外部传入的邮件数据
-* 统一转换为内部邮件格式
-* 可选保存邮件
-* 可选根据邮件创建询盘
-* 返回处理结果
-
-当前阶段不需要做到：
-
-* 自动登录 Gmail
-* 自动拉取 Outlook
-* 复杂 IMAP 同步
-* 附件深度解析
-* 邮件发送
-* 邮件回复
-
----
-
-## 4.3 状态机模块
-
-状态机建议放在：
-
-```text
-apps/api/src/modules/inquiry/domain/state-machine/
-```
-
-不要放在 controller 里。
-
-不要放在 repository 里。
-
-不要放在 database entity 里。
-
-状态机应该只处理一件事：
-
-```text
-给定当前状态和目标状态，判断是否允许流转。
-```
-
----
-
-# 5. 状态机设计
-
-## 5.1 第一版状态枚举
-
-第一版只使用简化状态：
-
-```text
-new
-invalid
-need_clarification
-need_engineer_review
-waiting_customer
-ready_for_quote
-closed
-```
-
-对应文件：
-
-```text
-apps/api/src/modules/inquiry/domain/enums/inquiry-status.enum.ts
-```
-
-示例：
-
-```ts
-export enum InquiryStatus {
-  NEW = 'new',
-  INVALID = 'invalid',
-  NEED_CLARIFICATION = 'need_clarification',
-  NEED_ENGINEER_REVIEW = 'need_engineer_review',
-  WAITING_CUSTOMER = 'waiting_customer',
-  READY_FOR_QUOTE = 'ready_for_quote',
-  CLOSED = 'closed',
-}
-```
-
----
-
-## 5.2 第一版状态流转
-
-第一版推荐允许：
-
-```text
-new
-  → invalid
-  → need_clarification
-  → need_engineer_review
-  → closed
-
-need_clarification
-  → waiting_customer
-  → need_engineer_review
-  → closed
-
-waiting_customer
-  → need_clarification
-  → need_engineer_review
-  → ready_for_quote
-  → closed
-
-need_engineer_review
-  → need_clarification
-  → waiting_customer
-  → ready_for_quote
-  → closed
-
-ready_for_quote
-  → closed
-
-closed
-  不允许自动流转
-```
-
-注意：
-
-```text
-ready_for_quote 是 AI 停止接手的边界。
-closed 默认不允许自动恢复。
-```
-
----
-
-## 5.3 状态机文件职责
-
-### inquiry-status.enum.ts
-
-定义状态枚举。
-
-### inquiry-event.enum.ts
-
-定义业务事件。
-
-例如：
-
-```text
-MARK_INVALID
-REQUEST_CLARIFICATION
-SUBMIT_ENGINEER_REVIEW
-WAIT_CUSTOMER
-MARK_READY_FOR_QUOTE
-CLOSE
-```
-
-### inquiry-transitions.ts
-
-定义允许流转表。
-
-### inquiry-transition.guard.ts
-
-定义特殊规则。
-
-例如：
-
-* 进入 `invalid` 必须提供原因
-* 进入 `closed` 必须提供原因
-* 进入 `ready_for_quote` 必须人工操作
-* `closed` 不允许系统自动恢复
-
-### inquiry-state-machine.ts
-
-暴露核心方法：
-
-```ts
-canTransition(from, to, context)
-transition(from, to, context)
-getAllowedNextStatuses(from, context)
-```
-
----
-
-# 6. 邮件接收设计
-
-## 6.1 第一版接收方式
-
-第一版先做通用 webhook：
-
-```text
-POST /webhooks/email/inbound
-```
-
-请求示例：
-
-```json
-{
-  "messageId": "mock-message-001",
-  "threadId": "mock-thread-001",
-  "fromEmail": "buyer@example.com",
-  "fromName": "John Smith",
-  "toEmails": ["sales@company.com"],
-  "ccEmails": [],
-  "subject": "Inquiry for 12-15GHz microstrip circulator",
-  "bodyText": "We need a 12-15GHz microstrip circulator, small size, 10 pcs.",
-  "bodyHtml": null,
-  "receivedAt": "2026-06-22T10:00:00.000Z",
-  "source": "mock"
-}
-```
-
-返回示例：
-
-```json
-{
-  "success": true,
-  "emailMessageId": "email_001",
-  "inquiryCaseId": "inquiry_001",
-  "inquiryStatus": "new"
-}
-```
-
----
-
-## 6.2 邮件是否入库
-
-当前阶段可以有两种模式。
-
-### 模式 A：不接数据库
-
-使用内存保存。
-
-适合：
-
-* 快速验证状态机
-* 快速验证邮件接收
-* 写单元测试
-* 写接口测试
-
-缺点：
-
-* 重启后数据丢失
-
-### 模式 B：接数据库
-
-保存到：
-
-```text
-email_messages
-inquiry_cases
-inquiry_messages
-```
-
-适合：
-
-* 需要真实留痕
-* 需要后续接 AI
-* 需要后续接后台
-
-建议：
-
-```text
-第一版可以先用内存 Repository。
-但目录结构必须保留 Repository 接口，方便后续替换成 MySQL。
-```
-
----
-
-# 7. 当前阶段推荐接口
-
-## 7.1 健康检查
-
-```text
-GET /health
-```
-
-作用：
-
-```text
-检查服务是否启动。
-```
-
----
-
-## 7.2 接收邮件
-
-```text
-POST /webhooks/email/inbound
-```
-
-作用：
-
-```text
-接收一封外部邮件。
-```
-
-当前处理逻辑：
-
-```text
-接收邮件
-↓
-标准化邮件字段
-↓
-保存邮件，或暂存内存
-↓
-创建询盘
-↓
-询盘状态为 new
-↓
-返回 emailMessageId 和 inquiryCaseId
-```
-
----
-
-## 7.3 创建询盘
-
-```text
-POST /inquiries
-```
-
-作用：
-
-```text
-手动创建询盘。
-```
-
----
-
-## 7.4 查询询盘详情
-
-```text
-GET /inquiries/:id
-```
-
----
-
-## 7.5 查询询盘列表
-
-```text
-GET /inquiries
-```
-
----
-
-## 7.6 修改询盘状态
-
-```text
-POST /inquiries/:id/transitions
-```
-
-请求示例：
-
-```json
-{
-  "toStatus": "need_clarification",
-  "reason": "Customer did not provide power, isolation, VSWR and size requirements.",
-  "operatorType": "human"
-}
-```
-
-返回示例：
-
-```json
-{
-  "success": true,
-  "inquiryCaseId": "inquiry_001",
-  "fromStatus": "new",
-  "toStatus": "need_clarification"
-}
-```
-
----
-
-## 7.7 查看允许的下一状态
-
-```text
-GET /inquiries/:id/allowed-transitions
-```
-
-返回示例：
-
-```json
-{
-  "currentStatus": "new",
-  "allowedNextStatuses": [
-    "invalid",
-    "need_clarification",
-    "need_engineer_review",
-    "closed"
-  ]
-}
-```
-
----
-
-# 8. 当前阶段不要建设的目录
-
-当前阶段不要创建这些复杂目录：
-
-```text
-modules/ai/
-modules/rag/
-modules/quote/
-modules/engineer-review/
-modules/product-knowledge/
-modules/reply-template/
-modules/frontend/
-```
-
-这些后续再加。
-
-否则第一版会失焦。
-
----
-
-# 9. 最小可运行闭环
-
-当前阶段最小闭环如下：
-
-```text
-启动后端服务
-↓
-POST 一封模拟邮件到 /webhooks/email/inbound
-↓
-系统接收邮件
-↓
-系统创建 inquiry_case
-↓
-inquiry_case 初始状态为 new
-↓
-调用 /inquiries/:id/allowed-transitions 查看可流转状态
-↓
-调用 /inquiries/:id/transitions 修改状态
-↓
-状态机校验是否合法
-↓
-合法则更新状态
-↓
-非法则返回错误
-```
-
----
-
-# 10. 当前阶段验收标准
-
-完成后应满足：
-
-```text
-1. 后端服务可以启动。
-2. 可以通过接口接收一封模拟邮件。
-3. 系统可以根据邮件创建一条询盘。
-4. 新询盘默认状态为 new。
-5. 可以查询询盘详情。
-6. 可以查询询盘列表。
-7. 可以查看某个询盘允许流转到哪些状态。
-8. 可以执行合法状态流转。
-9. 非法状态流转会被拒绝。
-10. 进入 invalid 或 closed 时必须提供 reason。
-11. ready_for_quote 不能由 system 或 ai 自动进入，只能 human 操作。
-12. closed 状态默认不可自动恢复。
-13. 状态机有单元测试。
-14. 邮件接收有基础接口测试。
-15. 不包含前端代码。
-16. 不包含 AI、RAG、报价、研发评审代码。
-```
-
----
-
-# 11. 推荐开发顺序
-
-当前阶段建议按以下顺序开发：
-
-```text
-1. 初始化后端项目结构
-2. 创建 inquiry 模块
-3. 定义 InquiryStatus 枚举
-4. 定义状态流转表
-5. 实现 InquiryStateMachine
-6. 编写状态机单元测试
-7. 创建 InquiryCase 实体
-8. 创建 InquiryRepository 接口
-9. 实现 InMemoryInquiryRepository
-10. 实现 CreateInquiryUseCase
-11. 实现 TransitionInquiryStatusUseCase
-12. 创建 InquiryController
-13. 创建 email 模块
-14. 定义 InboundEmail 输入 DTO
-15. 实现 ReceiveInboundEmailUseCase
-16. 实现 InMemoryEmailMessageRepository
-17. 实现 EmailWebhookController
-18. 写接口测试或 HTTP 测试文件
-19. 补充 README 验证步骤
-```
-
----
-
-# 12. 给 AI 写代码时的任务边界
-
-让 AI 写代码时应明确：
-
-```text
-本次只实现后端。
-本次不做前端。
-本次不做数据库也可以，优先用 InMemory Repository。
-本次重点是状态机、邮件接收、邮件创建询盘。
-本次不实现 AI 分类。
-本次不实现 RAG。
-本次不实现回复草稿。
-本次不实现报价。
-本次不实现研发评审。
-```
-
----
-
-# 13. 当前任务推荐描述
-
-可以把 `docs/06-current-task.md` 调整为：
-
-```text
-本次开发任务：实现后端基础骨架、询盘状态机和邮件接收入口。
-
-目标：
-不做前端，不做 AI，不做 RAG，不做报价，不做研发评审。
-先完成一个可运行的后端闭环：接收邮件 → 创建询盘 → 状态机管理询盘状态。
-
-本次必须实现：
-1. inquiry 模块
-2. inquiry 状态机
-3. email 模块
-4. 通用邮件接收 webhook
-5. 邮件创建询盘 use case
-6. in-memory repository
-7. 状态流转接口
-8. 状态机单元测试
-
-本次可以暂不实现：
-1. MySQL 持久化
-2. 邮件附件解析
-3. AI 参数提取
-4. AI 回复草稿
-5. 前端页面
-6. RAG
-7. 报价流程
-8. 研发评审
 
 验收：
-1. 可以 POST 一封模拟邮件。
-2. 系统返回 emailMessageId 和 inquiryCaseId。
-3. 新询盘状态为 new。
-4. 可以查询询盘。
-5. 可以修改询盘状态。
-6. 非法状态流转会报错。
-7. ready_for_quote 只能由 human 操作进入。
-8. closed 状态默认不可自动恢复。
+
+```text
+NestJS 启动时可以连接 PostgreSQL。
+PrismaClient 可以通过 DI 注入。
 ```
 
 ---
 
-# 14. 总结
+**阶段 2：Repository 持久化迁移** ✅ 已完成
 
-当前阶段项目目录应围绕三个核心建设：
+目标：把当前 InMemory repository 替换为 Prisma repository。
 
-```text
-inquiry：询盘与状态机
-email：邮件接收与标准化
-common：通用错误、配置、工具
-```
-
-第一版不要把系统做大。
-
-最小闭环是：
+优先顺序：
 
 ```text
-收到邮件 → 创建询盘 → 状态机流转
+1. PrismaEmailMessageRepository
+2. PrismaInquiryRepository
+3. PrismaInquiryMessageRepository
+4. PrismaProcessedEmailTracker
+5. PrismaContextSnapshotRepository
 ```
 
-这条线跑通后，再接数据库、AI、RAG、草稿、研发评审和报价交接。
-
-当前阶段最重要的一句话：
+小点：
 
 ```text
-状态机是骨架，邮件接收是入口，数据库只是容器。
+1. 保留现有 Repository Port 不变
+2. 新增 Prisma 实现
+3. EmailModule / InquiryModule / ContextModule 切换 provider
+4. 单元测试继续使用 InMemory
+5. 集成测试或手动测试使用 Prisma
 ```
+
+验收：
+
+```text
+邮件入库进入 email_messages。
+询盘进入 inquiry_cases。
+邮件询盘关联进入 inquiry_messages。
+已处理邮件进入 processed_emails。
+AI 上下文快照进入 ai_context_snapshots。
+```
+
+---
+
+**阶段 3：IMAP 轮询命令服务化** ✅ 已完成
+
+目标：让 `demo:poll-inbox` 不再手工 new InMemory，而是使用 Nest DI 和真实数据库。
+
+小点：
+
+```text
+1. 改造 imap-poll-inbox-demo.ts
+2. 使用 Nest ApplicationContext 启动
+3. 从容器中获取 PollEmailInboxUseCase
+4. 使用 Prisma repository
+5. 使用 processed_emails 做 UID 幂等
+6. 使用 mailbox_sync_states 保存同步进度
+```
+
+验收：
+
+```text
+服务重启后不会重复处理旧邮件。
+新邮件可以持续入库。
+同一封邮件不会重复创建询盘。
+```
+
+---
+
+**阶段 4：结构化事实模块**
+
+目标：把 AI 每次提取的参数沉淀到 `inquiry_structured_facts`。
+
+模块建议：
+
+```text
+apps/api/src/modules/inquiry/application/ports/inquiry-structured-facts.repository.ts
+apps/api/src/modules/inquiry/application/use-cases/update-inquiry-structured-facts.use-case.ts
+apps/api/src/modules/inquiry/infrastructure/repositories/prisma-inquiry-structured-facts.repository.ts
+```
+
+小点：
+
+```text
+1. 定义 InquiryStructuredFacts domain entity
+2. 定义 repository port
+3. 实现 Prisma repository
+4. AI 分析成功后合并 extractedRequirements
+5. 更新 missingFields / confirmedFields / sourceEmailMessageIds
+6. 遇到冲突写入 uncertainFields，不直接覆盖
+```
+
+验收：
+
+```text
+第一次邮件只提取 productType。
+第二次补参数后 facts 被合并。
+第三次补 connector/application 后 facts 完整。
+```
+
+---
+
+**阶段 5：AI Decision 持久化**
+
+目标：每次 AI 判断都落库，作为审计记录。
+
+模块建议：
+
+```text
+apps/api/src/modules/email/application/ports/ai-decision.repository.ts
+apps/api/src/modules/email/infrastructure/repositories/prisma-ai-decision.repository.ts
+```
+
+小点：
+
+```text
+1. 成功分析写入 ai_decisions
+2. schema 校验失败也写入失败记录
+3. 保存 rawResult / errorCode / errorMessage
+4. 保存 suggestedStatus，但不自动执行
+```
+
+验收：
+
+```text
+每封被 AI 分析过的邮件都有 ai_decisions 记录。
+失败也有记录。
+```
+
+---
+
+**阶段 6：Reply Draft 回复草稿模块**
+
+目标：AI 不直接发邮件，但可以生成待审核回复草稿。
+
+模块建议：
+
+```text
+apps/api/src/modules/reply/domain/entities/reply-draft.entity.ts
+apps/api/src/modules/reply/application/ports/reply-draft.repository.ts
+apps/api/src/modules/reply/application/use-cases/create-reply-draft.use-case.ts
+apps/api/src/modules/reply/infrastructure/repositories/prisma-reply-draft.repository.ts
+```
+
+小点：
+
+```text
+1. 根据 AI 分析结果生成 reply_drafts
+2. 缺参数时生成 clarification_request
+3. 参数完整时生成 engineer_review_notice
+4. 无效询盘生成 invalid_notice
+5. 草稿状态为 pending_review
+6. 不自动发送
+```
+
+验收：
+
+```text
+客户询盘缺参数 -> 生成澄清草稿。
+客户补齐参数 -> 生成研发确认通知草稿。
+广告邮件 -> 可生成不处理或 invalid_notice 草稿。
+```
+
+---
+
+**阶段 7：Outbound 邮件入库与草稿关联**
+
+目标：管理人员手动发送邮件并抄送 AI 邮箱后，系统能识别为我方回复。
+
+小点：
+
+```text
+1. 识别 from_email 是否属于我方邮箱
+2. 将邮件 direction 标记为 outbound
+3. 匹配原 inquiry_case
+4. 写入 email_messages
+5. 写入 inquiry_messages
+6. 如果内容匹配 pending reply_draft，则更新为 sent_manually
+7. 状态推进到 waiting_customer
+```
+
+验收：
+
+```text
+管理发送邮件并抄送 AI 邮箱后，系统能把这封邮件纳入上下文。
+reply_drafts.sentEmailMessageId 被填充。
+询盘状态进入 waiting_customer。
+```
+
+---
+
+**阶段 8：状态变更日志**
+
+目标：所有状态变化都有记录。
+
+小点：
+
+```text
+1. 实现 inquiry_status_logs repository
+2. 状态机 transition 成功后写日志
+3. 记录 fromStatus / toStatus / reason / changedByType
+4. AI 建议不写状态日志，只有真实状态变化才写
+```
+
+验收：
+
+```text
+new -> waiting_customer 有日志。
+waiting_customer -> need_engineer_review 有日志。
+need_engineer_review -> ready_for_quote 有日志。
+```
+
+---
+
+**阶段 9：Context Manager 增强**
+
+目标：让 AI 上下文从“邮件窗口拼接”升级为“结构化上下文”。
+
+顺序：
+
+```text
+1. 将 inquiry_structured_facts 加入上下文
+2. 将最近 outbound 邮件加入上下文
+3. 将 reply_drafts 状态加入上下文
+4. 执行 token budget 分区裁剪
+5. 加入滚动摘要 inquiry_context_summaries
+```
+
+验收：
+
+```text
+AI 能看到当前已确认参数。
+AI 能看到我方最近回复。
+AI 能避免重复询问已经确认过的字段。
+```
+
+---
+
+**阶段 10：初始化历史邮箱映射**
+
+目标：运行一条命令，把邮箱历史邮件归纳入库。
+
+小点：
+
+```text
+1. 新增 init-mailbox 命令
+2. 扫描历史邮件
+3. 按 UID / Message-ID 去重
+4. 解析客户
+5. 解析线程
+6. 创建或匹配询盘
+7. 提取结构化事实
+8. 生成上下文快照和 AI 判断记录
+```
+
+验收：
+
+```text
+已有历史邮件可以一次性入库。
+客户、线程、询盘、邮件关系完整。
+重复运行不会重复建数据。
+```
+
+---
+
+**推荐下一步**
+
+最合理的下一步是：
+
+```text
+阶段 1：DatabaseModule 基础接入
+```
+
+因为后面的所有 Prisma Repository 都依赖它。
+
+在这之前你需要先安装：
+
+```bash
+pnpm --filter @email-inquiry/api add @prisma/adapter-pg
+```
+
+装完后，我就可以继续实现：
+
+```text
+PrismaService
+DatabaseModule
+数据库健康检查
+```
+
+然后进入 Repository 持久化迁移。
