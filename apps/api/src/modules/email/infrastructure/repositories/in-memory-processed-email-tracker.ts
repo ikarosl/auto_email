@@ -42,7 +42,13 @@ export class InMemoryProcessedEmailTracker implements ProcessedEmailTracker {
 
 function getIdentityKey(identity: ProcessedEmailIdentity): string {
   if (identity.uid !== undefined) {
-    return `uid:${identity.mailbox}:${identity.uid}`;
+    return [
+      'uid',
+      identity.mailboxAccountId ?? 'default-account',
+      identity.mailbox,
+      String(identity.uidValidity ?? BigInt(0)),
+      String(identity.uid),
+    ].join(':');
   }
 
   if (identity.messageId) {

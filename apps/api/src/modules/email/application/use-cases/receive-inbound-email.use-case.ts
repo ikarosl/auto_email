@@ -13,7 +13,8 @@ import { EmailContentSanitizer } from '../services/email-content-sanitizer.js';
 
 export interface ReceiveInboundEmailResult {
   emailMessage: EmailMessage;
-  inquiryCase: InquiryCase;
+  inquiryCase?: InquiryCase;
+  skippedReason?: 'own_email_without_matching_inquiry';
 }
 
 export class ReceiveInboundEmailUseCase {
@@ -31,7 +32,8 @@ export class ReceiveInboundEmailUseCase {
       const inquiryCase = await this.findOrCreateInquiryForEmail(existingEmail);
       return {
         emailMessage: existingEmail,
-        inquiryCase,
+        inquiryCase: inquiryCase ?? undefined,
+        skippedReason: inquiryCase ? undefined : 'own_email_without_matching_inquiry',
       };
     }
 
@@ -43,7 +45,7 @@ export class ReceiveInboundEmailUseCase {
       id: `email_${randomUUID()}`,
       externalMessageId: inboundEmail.messageId,
       threadId: inboundEmail.threadId,
-      direction: EmailDirection.INBOUND,
+      direction: resolveEmailDirection(inboundEmail),
       source: inboundEmail.source,
       fromEmail: inboundEmail.fromEmail,
       fromName: inboundEmail.fromName,
@@ -62,11 +64,12 @@ export class ReceiveInboundEmailUseCase {
 
     return {
       emailMessage: savedEmailMessage,
-      inquiryCase,
+      inquiryCase: inquiryCase ?? undefined,
+      skippedReason: inquiryCase ? undefined : 'own_email_without_matching_inquiry',
     };
   }
 
-  private async findOrCreateInquiryForEmail(emailMessage: EmailMessage): Promise<InquiryCase> {
+  private async findOrCreateInquiryForEmail(emailMessage: EmailMessage): Promise<InquiryCase | undefined> {
     if (this.findInquiryForInboundEmailUseCase && this.inquiryMessageRepository) {
       const match = await this.findInquiryForInboundEmailUseCase.execute(emailMessage);
       if (match.matched && match.inquiryCase) {
@@ -84,6 +87,10 @@ export class ReceiveInboundEmailUseCase {
         );
         return updatedInquiryCase;
       }
+    }
+
+    if (emailMessage.direction === EmailDirection.OUTBOUND) {
+      return undefined;
     }
 
     const { inquiryCase } = await this.createInquiryFromEmailUseCase.execute(emailMessage);
@@ -113,4 +120,38 @@ export class ReceiveInboundEmailUseCase {
       createdAt: new Date(),
     });
   }
+}
+
+function resolveEmailDirection(inboundEmail: InboundEmail): EmailDirection {
+  if (!isOwnEmail(inboundEmail.fromEmail)) {
+    return EmailDirection.INBOUND;
+  }
+
+  const aiMailbox = process.env.AI_MAILBOX?.trim().toLowerCase();
+  const recipients = [...inboundEmail.toEmails, ...inboundEmail.ccEmails]
+    .map((email) => email.trim().toLowerCase());
+
+  if (aiMailbox && recipients.includes(aiMailbox)) {
+    return EmailDirection.OUTBOUND;
+  }
+
+  return EmailDirection.INBOUND;
+}
+
+function isOwnEmail(email: string): boolean {
+  const domain = email.split('@')[1]?.toLowerCase();
+  if (!domain) {
+    return false;
+  }
+
+  return getOwnEmailDomains().some((ownDomain) =>
+    domain === ownDomain || domain.endsWith(`.${ownDomain}`),
+  );
+}
+
+function getOwnEmailDomains(): string[] {
+  return (process.env.OUR_EMAIL_DOMAINS ?? 'hzbeat.com')
+    .split(',')
+    .map((domain) => domain.trim().toLowerCase())
+    .filter(Boolean);
 }

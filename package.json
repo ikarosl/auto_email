@@ -10,6 +10,7 @@
   },
   "scripts": {
     "dev:api": "pnpm --filter @email-inquiry/api dev",
+    "start:api": "pnpm --filter @email-inquiry/api start",
     "dev:demo": "pnpm --filter @email-inquiry/api demo:imap",
     "build": "pnpm -r build",
     "typecheck": "pnpm -r typecheck",

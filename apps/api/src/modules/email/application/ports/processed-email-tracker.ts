@@ -1,5 +1,7 @@
 export interface ProcessedEmailIdentity {
+  mailboxAccountId?: string;
   mailbox: string;
+  uidValidity?: bigint;
   uid?: number;
   messageId?: string;
 }

@@ -191,8 +191,11 @@ async function run(): Promise<void> {
 
     console.log('Created inquiry from IMAP email.');
     console.log(`EmailMessage ID: ${result.emailMessage.id}`);
-    console.log(`InquiryCase ID: ${result.inquiryCase.id}`);
-    console.log(`Inquiry status: ${result.inquiryCase.status}`);
+    console.log(`InquiryCase ID: ${result.inquiryCase?.id ?? '(none)'}`);
+    console.log(`Inquiry status: ${result.inquiryCase?.status ?? '(none)'}`);
+    if (result.skippedReason) {
+      console.log(`Skipped reason: ${result.skippedReason}`);
+    }
     console.log(`From: ${result.emailMessage.fromName || result.emailMessage.fromEmail} <${result.emailMessage.fromEmail}>`);
     console.log(`Subject: ${result.emailMessage.subject}`);
   } finally {

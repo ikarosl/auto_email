@@ -479,3 +479,130 @@ reply_drafts
 7. 保留 InMemory repository 用于单元测试。
 ```
 
+## 6. 2026-07-01 持久化联调修正
+
+### 6.1 邮件线程字段分离
+
+运行联调时发现，不能把邮件头里的线程线索直接写入 `email_messages.email_thread_id`。
+
+字段语义必须分开：
+
+```text
+externalThreadId / threadId
+来自邮件头，例如 In-Reply-To、References 或服务商 thread id。
+它只是外部线程线索，不是数据库主键。
+
+emailThreadId
+数据库 email_threads.id。
+email_messages.email_thread_id 必须写这个值。
+```
+
+后端领域对象当前采用：
+
+```ts
+interface EmailMessage {
+  threadId?: string;      // 外部邮件线程线索
+  emailThreadId?: string; // 数据库 email_threads.id
+}
+```
+
+入库规则：
+
+```text
+1. 收到邮件后，先读取 messageId / In-Reply-To / References。
+2. 如果 In-Reply-To 或 References 命中已有 email_messages.message_id，则复用该邮件的 email_thread_id。
+3. 如果无法命中，则按 mailbox_account_id + thread_key 创建或复用 email_threads。
+4. 保存 email_messages 时，只能把 email_threads.id 写入 email_messages.email_thread_id。
+5. 询盘匹配优先使用 emailThreadId；内存测试环境可继续兼容旧 threadId。
+```
+
+原因：
+
+```text
+email_messages.email_thread_id 是外键，必须引用 email_threads.id。
+外部邮件头字段不是数据库 ID，直接写入会触发外键错误。
+```
+
+### 6.2 IMAP 自动轮询安全开关
+
+API 服务启动时默认不应自动连接真实邮箱。
+
+新增配置：
+
+```text
+IMAP_POLL_ENABLED=false
+```
+
+规则：
+
+```text
+1. HTTP API 默认只启动接口和数据库连接。
+2. 只有 IMAP_POLL_ENABLED=true 时，ImapPollService 才随 NestJS 生命周期自动启动。
+3. demo:poll-inbox 命令不受此开关限制，它是显式轮询命令。
+```
+
+原因：
+
+```text
+开发或联调 API 时，如果 .env 中存在真实 IMAP 配置，自动轮询可能误处理真实邮件。
+轮询邮箱必须是显式行为。
+```
+
+### 6.3 ProcessedEmailIdentity 幂等字段
+
+`processed_emails` 的真实唯一键是：
+
+```text
+mailbox_account_id + mailbox_name + uid_validity + uid
+```
+
+因此应用层 identity 也必须携带这些字段：
+
+```ts
+interface ProcessedEmailIdentity {
+  mailboxAccountId?: string;
+  mailbox: string;
+  uidValidity?: bigint;
+  uid?: number;
+  messageId?: string;
+}
+```
+
+规则：
+
+```text
+1. IMAP 调度层负责解析 mailboxAccountId。
+2. IMAP 调度层尽量读取 UIDVALIDITY 并传入 tracker。
+3. PrismaProcessedEmailTracker 不应自行猜测邮箱账号。
+4. 如果 uidValidity 暂时不可得，第一版允许 fallback 为 0，但后续应优先使用真实 UIDVALIDITY。
+```
+
+原因：
+
+```text
+IMAP UID 只在同一邮箱账号、同一 mailbox、同一 UIDVALIDITY 下可靠。
+如果只用 mailbox + uid，会在多邮箱或 UIDVALIDITY 变化时误判重复。
+```
+
+### 6.4 默认启动配置
+
+`.env.example` 当前推荐：
+
+```text
+API_PORT=3000
+IMAP_POLL_ENABLED=false
+IMAP_POLL_BOOTSTRAP_MODE=mark_existing_seen
+```
+
+含义：
+
+```text
+API_PORT=3000
+保持 API 默认端口稳定。
+
+IMAP_POLL_ENABLED=false
+避免 API 启动时自动处理真实邮箱。
+
+IMAP_POLL_BOOTSTRAP_MODE=mark_existing_seen
+首次启动跳过历史邮件，只处理后续新邮件。需要全量导入时再显式改为 process_existing。
+```

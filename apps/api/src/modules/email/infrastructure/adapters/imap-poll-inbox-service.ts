@@ -125,7 +125,7 @@ async function listMessageSummaries(
   range: string,
 ): Promise<ImapMessageSummary[]> {
   const summaries: ImapMessageSummary[] = [];
-  for await (const message of client.fetch(range, { uid: true })) {
+  for await (const message of client.fetch(range, { uid: true }, { uid: true })) {
     if (typeof message.uid === 'number') {
       summaries.push({ uid: message.uid });
     }
@@ -173,6 +173,12 @@ async function fetchInboundEmail(
   };
 }
 
+function getStatusUidValidity(status: unknown): bigint | null {
+  const value = (status as { uidValidity?: number | bigint | string }).uidValidity;
+  if (value === undefined || value === null) return null;
+  return BigInt(value);
+}
+
 // ---------------------------------------------------------------------------
 // 主流程
 // ---------------------------------------------------------------------------
@@ -214,6 +220,7 @@ async function run(): Promise<void> {
   try {
     const status = await client.status(mailboxName, { messages: true, uidNext: true });
     const uidNext = status.uidNext ? Number(status.uidNext) : 0;
+    const uidValidity = getStatusUidValidity(status);
 
     if (config.bootstrapMode === 'mark_existing_seen') {
       if (existingSync?.lastSeenUid !== null && existingSync?.lastSeenUid !== undefined) {
@@ -223,7 +230,7 @@ async function run(): Promise<void> {
         // 首次启动：将已有邮件标记为已见，lastKnownUid = uidNext - 1
         lastKnownUid = Math.max(0, uidNext - 1);
         await syncService.updateLastSeenUid(
-          mailboxAccountId, mailboxName, BigInt(lastKnownUid), null,
+          mailboxAccountId, mailboxName, BigInt(lastKnownUid), uidValidity,
         );
         await syncService.markBootstrapCompleted(mailboxAccountId, mailboxName);
         console.log(`Bootstrapped: marked ${lastKnownUid} existing messages as seen.`);
@@ -245,6 +252,7 @@ async function run(): Promise<void> {
     try {
       const status = await client.status(mailboxName, { messages: true, uidNext: true });
       const uidNext = status.uidNext ? Number(status.uidNext) : 0;
+      const uidValidity = getStatusUidValidity(status);
 
       if (uidNext <= lastKnownUid + 1) {
         return false; // 无新邮件
@@ -252,16 +260,31 @@ async function run(): Promise<void> {
 
       const range = `${lastKnownUid + 1}:*`;
       const summaries = await listMessageSummaries(client, range);
+      if (summaries.length === 0) {
+        console.warn(
+          `IMAP reported uidNext=${uidNext} after lastKnownUid=${lastKnownUid}, but no UID-range messages were fetched. Sync cursor was not advanced.`,
+        );
+        return false;
+      }
 
+      let lastHandledUid = lastKnownUid;
       for (const summary of summaries) {
-        const identity = { mailbox: mailboxName, uid: summary.uid };
+        const identity = {
+          mailboxAccountId,
+          mailbox: mailboxName,
+          uidValidity: uidValidity ?? undefined,
+          uid: summary.uid,
+        };
 
         const inboundEmail = await fetchInboundEmail(client, mailboxName, summary.uid);
         const candidate = { identity, inboundEmail };
 
         const result = await pollUseCase.processCandidate(candidate);
 
-        if (result.skipped) continue;
+        if (result.skipped) {
+          lastHandledUid = summary.uid;
+          continue;
+        }
 
         console.log('--- New email processed ---');
         console.log(`EmailMessage ID: ${result.emailMessage?.id}`);
@@ -282,12 +305,17 @@ async function run(): Promise<void> {
         await syncService.updateLastProcessedUid(
           mailboxAccountId, mailboxName, BigInt(summary.uid),
         );
+        lastHandledUid = summary.uid;
+      }
+
+      if (lastHandledUid <= lastKnownUid) {
+        return false;
       }
 
       // 更新 lastSeenUid
-      lastKnownUid = uidNext - 1;
+      lastKnownUid = lastHandledUid;
       await syncService.updateLastSeenUid(
-        mailboxAccountId, mailboxName, BigInt(lastKnownUid), null,
+        mailboxAccountId, mailboxName, BigInt(lastKnownUid), uidValidity,
       );
 
       return summaries.length > 0;

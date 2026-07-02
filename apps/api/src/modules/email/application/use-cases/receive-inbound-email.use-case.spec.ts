@@ -34,9 +34,10 @@ describe('ReceiveInboundEmailUseCase', () => {
     });
 
     assert.equal(result.emailMessage.externalMessageId, 'mock-message-001');
-    assert.equal(result.inquiryCase.sourceEmailMessageId, result.emailMessage.id);
-    assert.equal(result.inquiryCase.customerEmail, 'buyer@example.com');
-    assert.equal(result.inquiryCase.status, InquiryStatus.NEW);
+    const inquiryCase = expectInquiryCase(result);
+    assert.equal(inquiryCase.sourceEmailMessageId, result.emailMessage.id);
+    assert.equal(inquiryCase.customerEmail, 'buyer@example.com');
+    assert.equal(inquiryCase.status, InquiryStatus.NEW);
     assert.equal((await emailRepository.list()).length, 1);
     assert.equal((await inquiryRepository.list()).length, 1);
   });
@@ -96,7 +97,7 @@ describe('ReceiveInboundEmailUseCase', () => {
       source: EmailSource.MOCK,
     });
 
-    assert.equal(second.inquiryCase.id, first.inquiryCase.id);
+    assert.equal(expectInquiryCase(second).id, expectInquiryCase(first).id);
     assert.equal((await inquiryRepository.list()).length, 1);
     assert.equal((await inquiryMessageRepository.list()).length, 2);
   });
@@ -128,7 +129,7 @@ describe('ReceiveInboundEmailUseCase', () => {
       source: EmailSource.MOCK,
     });
 
-    assert.equal(second.inquiryCase.id, first.inquiryCase.id);
+    assert.equal(expectInquiryCase(second).id, expectInquiryCase(first).id);
     assert.equal((await inquiryRepository.list()).length, 1);
   });
 
@@ -167,8 +168,9 @@ describe('ReceiveInboundEmailUseCase', () => {
       source: EmailSource.MOCK,
     });
 
-    assert.notEqual(result.inquiryCase.id, 'inquiry_001');
-    assert.notEqual(result.inquiryCase.id, 'inquiry_002');
+    const inquiryCase = expectInquiryCase(result);
+    assert.notEqual(inquiryCase.id, 'inquiry_001');
+    assert.notEqual(inquiryCase.id, 'inquiry_002');
     assert.equal((await inquiryRepository.list()).length, 3);
   });
 
@@ -199,10 +201,56 @@ describe('ReceiveInboundEmailUseCase', () => {
       source: EmailSource.MOCK,
     });
 
-    assert.equal(second.inquiryCase.customerEmail, 'second@example.com');
+    assert.equal(expectInquiryCase(second).customerEmail, 'second@example.com');
     assert.equal((await inquiryRepository.list()).length, 2);
   });
+
+  it('stores own copied email without creating a new inquiry when no match is found', async () => {
+    const previousDomains = process.env.OUR_EMAIL_DOMAINS;
+    const previousAiMailbox = process.env.AI_MAILBOX;
+    process.env.OUR_EMAIL_DOMAINS = 'hzbeat.com';
+    process.env.AI_MAILBOX = 'silent@hzbeat.com';
+
+    try {
+      const { receiveInboundEmailUseCase, inquiryRepository } = createUseCaseWithMatcher();
+
+      const result = await receiveInboundEmailUseCase.execute({
+        messageId: 'own-message-001',
+        fromEmail: 'shira@hzbeat.com',
+        toEmails: ['buyer@example.com'],
+        ccEmails: ['silent@hzbeat.com'],
+        subject: 'Re: RF inquiry',
+        bodyText: 'We will check and reply tomorrow.',
+        receivedAt: new Date(),
+        source: EmailSource.MOCK,
+      });
+
+      assert.equal(result.emailMessage.direction, 'outbound');
+      assert.equal(result.inquiryCase, undefined);
+      assert.equal(result.skippedReason, 'own_email_without_matching_inquiry');
+      assert.equal((await inquiryRepository.list()).length, 0);
+    } finally {
+      restoreEnv('OUR_EMAIL_DOMAINS', previousDomains);
+      restoreEnv('AI_MAILBOX', previousAiMailbox);
+    }
+  });
 });
+
+function expectInquiryCase(
+  result: Awaited<ReturnType<ReceiveInboundEmailUseCase['execute']>>,
+) {
+  assert.ok(result.inquiryCase);
+  return result.inquiryCase;
+}
+
+function restoreEnv(key: string, value: string | undefined): void {
+  if (value === undefined) {
+    delete process.env[key];
+    return;
+  }
+
+  process.env[key] = value;
+}
 
 function createUseCaseWithMatcher() {
   const emailRepository = new InMemoryEmailMessageRepository();

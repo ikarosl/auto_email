@@ -27,8 +27,9 @@ export class EmailWebhookController {
     return {
       success: true,
       emailMessageId: result.emailMessage.id,
-      inquiryCaseId: result.inquiryCase.id,
-      inquiryStatus: result.inquiryCase.status,
+      inquiryCaseId: result.inquiryCase?.id,
+      inquiryStatus: result.inquiryCase?.status,
+      skippedReason: result.skippedReason,
     };
   }
 }

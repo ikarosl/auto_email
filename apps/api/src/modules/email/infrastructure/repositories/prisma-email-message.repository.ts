@@ -1,3 +1,5 @@
+import { env } from 'node:process';
+
 import { PrismaService } from '../../../../common/database/prisma.service.js';
 import { EmailMessageRepository } from '../../application/ports/email-message.repository.js';
 import { EmailMessage } from '../../domain/entities/email-message.entity.js';
@@ -6,10 +8,13 @@ export class PrismaEmailMessageRepository implements EmailMessageRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async save(emailMessage: EmailMessage): Promise<EmailMessage> {
+    const mailboxAccountId = await this.resolveMailboxAccountId();
+    const emailThreadId = await this.resolveEmailThreadId(emailMessage, mailboxAccountId);
     const data = {
       id: emailMessage.id,
       messageId: emailMessage.externalMessageId,
-      emailThreadId: emailMessage.threadId ?? null,
+      mailboxAccountId,
+      emailThreadId,
       direction: emailMessage.direction,
       source: emailMessage.source,
       fromEmail: emailMessage.fromEmail,
@@ -31,7 +36,10 @@ export class PrismaEmailMessageRepository implements EmailMessageRepository {
       update: data,
     });
 
-    return emailMessage;
+    return {
+      ...emailMessage,
+      emailThreadId: emailThreadId ?? undefined,
+    };
   }
 
   async findById(id: string): Promise<EmailMessage | undefined> {
@@ -60,6 +68,96 @@ export class PrismaEmailMessageRepository implements EmailMessageRepository {
     });
     return records.map(toDomain);
   }
+
+  private async resolveEmailThreadId(
+    emailMessage: EmailMessage,
+    mailboxAccountId: string,
+  ): Promise<string | null> {
+    if (emailMessage.emailThreadId) {
+      return emailMessage.emailThreadId;
+    }
+
+    const externalThreadId = emailMessage.threadId ?? emailMessage.externalMessageId;
+    const referencedMessage = emailMessage.threadId
+      ? await this.prisma.emailMessage.findFirst({
+        where: {
+          mailboxAccountId,
+          messageId: emailMessage.threadId,
+          emailThreadId: { not: null },
+        },
+        select: { emailThreadId: true },
+      })
+      : null;
+
+    if (referencedMessage?.emailThreadId) {
+      await this.touchEmailThread(referencedMessage.emailThreadId, emailMessage.receivedAt);
+      return referencedMessage.emailThreadId;
+    }
+
+    const threadKey = externalThreadId || emailMessage.externalMessageId || emailMessage.id;
+    const thread = await this.prisma.emailThread.upsert({
+      where: {
+        mailboxAccountId_threadKey: {
+          mailboxAccountId,
+          threadKey,
+        },
+      },
+      create: {
+        mailboxAccountId,
+        threadKey,
+        externalThreadId: emailMessage.threadId ?? null,
+        subjectNormalized: normalizeSubject(emailMessage.subject),
+        customerEmail: emailMessage.fromEmail.toLowerCase().trim(),
+        latestMessageAt: emailMessage.receivedAt,
+      },
+      update: {
+        latestMessageAt: emailMessage.receivedAt,
+        subjectNormalized: normalizeSubject(emailMessage.subject),
+      },
+      select: { id: true },
+    });
+
+    return thread.id;
+  }
+
+  private async touchEmailThread(emailThreadId: string, latestMessageAt: Date): Promise<void> {
+    await this.prisma.emailThread.update({
+      where: { id: emailThreadId },
+      data: { latestMessageAt },
+    });
+  }
+
+  private async resolveMailboxAccountId(): Promise<string> {
+    const imapUser = env.IMAP_USER;
+    const imapHost = env.IMAP_HOST;
+
+    if (imapUser && imapHost) {
+      const existing = await this.prisma.mailboxAccount.findFirst({
+        where: { emailAddress: imapUser, imapHost },
+      });
+      if (existing) return existing.id;
+    }
+
+    const system = await this.prisma.mailboxAccount.findFirst({
+      where: { status: 'active' },
+      orderBy: { createdAt: 'asc' },
+    });
+    if (system) return system.id;
+
+    const created = await this.prisma.mailboxAccount.create({
+      data: {
+        emailAddress: imapUser ?? 'system@local',
+        provider: 'imap',
+        imapHost: imapHost ?? 'localhost',
+        imapPort: Number(env.IMAP_PORT || 993),
+        imapSecure: env.IMAP_SECURE !== 'false',
+        status: 'active',
+      },
+      select: { id: true },
+    });
+
+    return created.id;
+  }
 }
 
 type PrismaEmailMessage = Awaited<ReturnType<PrismaEmailMessageRepository['list']>>[number];
@@ -84,7 +182,8 @@ function toDomain(record: {
   return {
     id: record.id,
     externalMessageId: record.messageId ?? record.id,
-    threadId: record.emailThreadId ?? undefined,
+    threadId: undefined,
+    emailThreadId: record.emailThreadId ?? undefined,
     direction: record.direction as EmailMessage['direction'],
     source: record.source as EmailMessage['source'],
     fromEmail: record.fromEmail,
@@ -98,4 +197,11 @@ function toDomain(record: {
     receivedAt: record.receivedAt,
     createdAt: record.createdAt,
   };
+}
+
+function normalizeSubject(subject: string): string {
+  return subject
+    .replace(/^\s*(re|fw|fwd)\s*:\s*/i, '')
+    .trim()
+    .toLowerCase();
 }

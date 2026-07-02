@@ -11,22 +11,23 @@ export class PrismaProcessedEmailTracker implements ProcessedEmailTracker {
   constructor(private readonly prisma: PrismaService) {}
 
   async markSeen(identity: ProcessedEmailIdentity): Promise<void> {
-    const mailboxAccountId = await this.resolveMailboxAccountId();
+    const mailboxAccountId = await this.resolveMailboxAccountId(identity);
     const mailboxName = identity.mailbox;
+    const uidValidity = identity.uidValidity ?? BigInt(0);
 
     await this.prisma.processedEmail.upsert({
       where: {
         mailboxAccountId_mailboxName_uidValidity_uid: {
           mailboxAccountId,
           mailboxName,
-          uidValidity: BigInt(0),
+          uidValidity,
           uid: BigInt(identity.uid ?? 0),
         },
       },
       create: {
         mailboxAccountId,
         mailboxName,
-        uidValidity: BigInt(0),
+        uidValidity,
         uid: BigInt(identity.uid ?? 0),
         messageId: identity.messageId ?? null,
         seenAt: new Date(),
@@ -38,22 +39,23 @@ export class PrismaProcessedEmailTracker implements ProcessedEmailTracker {
   }
 
   async markProcessed(identity: ProcessedEmailIdentity): Promise<void> {
-    const mailboxAccountId = await this.resolveMailboxAccountId();
+    const mailboxAccountId = await this.resolveMailboxAccountId(identity);
     const mailboxName = identity.mailbox;
+    const uidValidity = identity.uidValidity ?? BigInt(0);
 
     await this.prisma.processedEmail.upsert({
       where: {
         mailboxAccountId_mailboxName_uidValidity_uid: {
           mailboxAccountId,
           mailboxName,
-          uidValidity: BigInt(0),
+          uidValidity,
           uid: BigInt(identity.uid ?? 0),
         },
       },
       create: {
         mailboxAccountId,
         mailboxName,
-        uidValidity: BigInt(0),
+        uidValidity,
         uid: BigInt(identity.uid ?? 0),
         messageId: identity.messageId ?? null,
         seenAt: new Date(),
@@ -83,6 +85,8 @@ export class PrismaProcessedEmailTracker implements ProcessedEmailTracker {
 
     return records.map((record) => ({
       mailbox: record.mailboxName,
+      mailboxAccountId: record.mailboxAccountId,
+      uidValidity: record.uidValidity,
       uid: Number(record.uid),
       messageId: record.messageId ?? undefined,
       seenAt: record.seenAt,
@@ -95,17 +99,18 @@ export class PrismaProcessedEmailTracker implements ProcessedEmailTracker {
       return null;
     }
 
-    const mailboxAccountId = await this.resolveMailboxAccountId();
+    const mailboxAccountId = await this.resolveMailboxAccountId(identity);
     const mailboxName = identity.mailbox;
+    const uidValidity = identity.uidValidity ?? BigInt(0);
 
     try {
       return await this.prisma.processedEmail.findUnique({
         where: {
           mailboxAccountId_mailboxName_uidValidity_uid: {
-            mailboxAccountId,
-            mailboxName,
-            uidValidity: BigInt(0),
-            uid: BigInt(identity.uid),
+          mailboxAccountId,
+          mailboxName,
+          uidValidity,
+          uid: BigInt(identity.uid),
           },
         },
       });
@@ -114,7 +119,11 @@ export class PrismaProcessedEmailTracker implements ProcessedEmailTracker {
     }
   }
 
-  private async resolveMailboxAccountId(): Promise<string> {
+  private async resolveMailboxAccountId(identity: ProcessedEmailIdentity): Promise<string> {
+    if (identity.mailboxAccountId) {
+      return identity.mailboxAccountId;
+    }
+
     const imapUser = env.IMAP_USER;
     const imapHost = env.IMAP_HOST;
 

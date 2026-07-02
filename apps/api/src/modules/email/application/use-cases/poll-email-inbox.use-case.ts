@@ -12,6 +12,7 @@ import {
 import { InquiryCase } from '../../../inquiry/domain/entities/inquiry-case.entity.js';
 import { InquiryMessageRepository } from '../../../inquiry/application/ports/inquiry-message.repository.js';
 import { EmailMessageRepository } from '../ports/email-message.repository.js';
+import { EmailDirection } from '../../domain/enums/email-direction.enum.js';
 
 export interface PollEmailCandidate {
   identity: ProcessedEmailIdentity;
@@ -24,6 +25,7 @@ export interface PollEmailProcessResult {
   emailMessage?: EmailMessage;
   inquiryCase?: InquiryCase;
   aiAnalysisResult?: AnalyzeEmailWithAiResult;
+  skippedReason?: string;
 }
 
 export class PollEmailInboxUseCase {
@@ -50,11 +52,38 @@ export class PollEmailInboxUseCase {
     }
 
     const receiveResult = await this.receiveInboundEmailUseCase.execute(candidate.inboundEmail);
+    if (!receiveResult.inquiryCase) {
+      await this.processedEmailTracker.markProcessed(candidate.identity);
+
+      return {
+        skipped: false,
+        identity: candidate.identity,
+        emailMessage: receiveResult.emailMessage,
+        skippedReason: receiveResult.skippedReason ?? 'email_without_matching_inquiry',
+      };
+    }
+
+    if (receiveResult.emailMessage.direction === EmailDirection.OUTBOUND) {
+      await this.processedEmailTracker.markProcessed(candidate.identity);
+
+      return {
+        skipped: false,
+        identity: candidate.identity,
+        emailMessage: receiveResult.emailMessage,
+        inquiryCase: receiveResult.inquiryCase,
+        skippedReason: 'outbound_email_stored_as_context',
+      };
+    }
+
     const recentEmailMessages = await this.listInquiryEmailMessages(receiveResult.inquiryCase.id);
+    const recentOurReplies = recentEmailMessages.filter(
+      (emailMessage) => emailMessage.direction === 'outbound',
+    );
     const aiAnalysisResult = this.analyzeEmailWithAiUseCase
       ? await this.analyzeEmailWithAiUseCase.execute(receiveResult.emailMessage, {
         inquiryCase: receiveResult.inquiryCase,
         recentEmailMessages,
+        recentOurReplies,
       })
       : undefined;
 

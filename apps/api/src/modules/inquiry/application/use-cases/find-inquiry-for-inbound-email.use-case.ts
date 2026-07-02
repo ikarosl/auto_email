@@ -1,5 +1,6 @@
 import { EmailMessageRepository } from '../../../email/application/ports/email-message.repository.js';
 import { EmailMessage } from '../../../email/domain/entities/email-message.entity.js';
+import { EmailDirection } from '../../../email/domain/enums/email-direction.enum.js';
 import { InquiryRepository } from '../ports/inquiry.repository.js';
 import { InquiryMessageRepository } from '../ports/inquiry-message.repository.js';
 import { INQUIRY_MATCHING_POLICY } from '../../domain/matching/inquiry-matching-policy.js';
@@ -26,7 +27,11 @@ export class FindInquiryForInboundEmailUseCase {
       };
     }
 
-    const openInquiries = await this.inquiryRepository.listOpenByCustomerEmail(emailMessage.fromEmail);
+    const participantEmails = resolveCustomerCandidateEmails(emailMessage);
+    const openInquiriesNested = await Promise.all(
+      participantEmails.map((email) => this.inquiryRepository.listOpenByCustomerEmail(email)),
+    );
+    const openInquiries = uniqueInquiries(openInquiriesNested.flat());
     const recentOpenInquiries = openInquiries.filter((inquiryCase) =>
       isWithinRecentWindow(inquiryCase.updatedAt),
     );
@@ -56,11 +61,12 @@ export class FindInquiryForInboundEmailUseCase {
   }
 
   private async findByThreadId(emailMessage: EmailMessage) {
-    if (!emailMessage.threadId) {
+    const threadId = emailMessage.emailThreadId ?? emailMessage.threadId;
+    if (!threadId) {
       return undefined;
     }
 
-    const threadEmails = await this.emailMessageRepository.listByThreadId(emailMessage.threadId);
+    const threadEmails = await this.emailMessageRepository.listByThreadId(threadId);
     for (const threadEmail of threadEmails) {
       if (threadEmail.id === emailMessage.id) {
         continue;
@@ -79,6 +85,39 @@ export class FindInquiryForInboundEmailUseCase {
 
     return undefined;
   }
+}
+
+function resolveCustomerCandidateEmails(emailMessage: EmailMessage): string[] {
+  if (emailMessage.direction === EmailDirection.OUTBOUND) {
+    return [...emailMessage.toEmails, ...emailMessage.ccEmails]
+      .filter((email) => !isOwnEmail(email));
+  }
+
+  return [emailMessage.fromEmail];
+}
+
+function uniqueInquiries<T extends { id: string }>(inquiries: T[]): T[] {
+  const seen = new Set<string>();
+  return inquiries.filter((inquiry) => {
+    if (seen.has(inquiry.id)) {
+      return false;
+    }
+    seen.add(inquiry.id);
+    return true;
+  });
+}
+
+function isOwnEmail(email: string): boolean {
+  const domain = email.split('@')[1]?.toLowerCase();
+  if (!domain) {
+    return false;
+  }
+
+  return (process.env.OUR_EMAIL_DOMAINS ?? 'hzbeat.com')
+    .split(',')
+    .map((value) => value.trim().toLowerCase())
+    .filter(Boolean)
+    .some((ownDomain) => domain === ownDomain || domain.endsWith(`.${ownDomain}`));
 }
 
 function isWithinRecentWindow(updatedAt: Date): boolean {

@@ -22,7 +22,7 @@ export class InMemoryEmailMessageRepository implements EmailMessageRepository {
 
   async listByThreadId(threadId: string): Promise<EmailMessage[]> {
     return Array.from(this.emailMessages.values()).filter(
-      (emailMessage) => emailMessage.threadId === threadId,
+      (emailMessage) => emailMessage.emailThreadId === threadId || emailMessage.threadId === threadId,
     );
   }
 

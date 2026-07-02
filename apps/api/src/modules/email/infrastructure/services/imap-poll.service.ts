@@ -16,6 +16,7 @@ import { ImapFlow } from 'imapflow';
 import { simpleParser } from 'mailparser';
 
 import { PrismaService } from '../../../../common/database/prisma.service.js';
+import { InquiryStatus } from '../../../inquiry/domain/enums/inquiry-status.enum.js';
 import {
   AnalyzeEmailWithAiResult,
   AnalyzeEmailWithAiUseCase,
@@ -67,6 +68,11 @@ export class ImapPollService implements OnApplicationBootstrap, OnApplicationShu
   // -----------------------------------------------------------------------
 
   async onApplicationBootstrap(): Promise<void> {
+    if (!parseBoolean(process.env.IMAP_POLL_ENABLED, false)) {
+      this.logger.warn('IMAP_POLL_ENABLED=false - skipping automatic mailbox polling.');
+      return;
+    }
+
     this.config = this.readConfig();
     if (!this.config) {
       this.logger.warn('IMAP 未配置 — 跳过邮箱轮询（请设置 IMAP_HOST/USER/PASS 环境变量）');
@@ -181,8 +187,9 @@ export class ImapPollService implements OnApplicationBootstrap, OnApplicationShu
       const status = await this.client!.status(this.config!.mailbox, { uidNext: true });
       const uidNext = status.uidNext ? Number(status.uidNext) : 0;
       const lastUid = Math.max(0, uidNext - 1);
+      const uidValidity = await this.getUidValidity();
       await this.syncService.updateLastSeenUid(
-        this.mailboxAccountId, this.config!.mailbox, BigInt(lastUid), null,
+        this.mailboxAccountId, this.config!.mailbox, BigInt(lastUid), uidValidity,
       );
       this.logger.log(`跳过历史邮件: 已标记 UID≤${lastUid} 为已见`);
     } finally {
@@ -243,30 +250,41 @@ export class ImapPollService implements OnApplicationBootstrap, OnApplicationShu
       // 获取新邮件 UID 列表
       const range = `${lastSeenUid + 1}:*`;
       const newUids: number[] = [];
-      for await (const msg of this.client.fetch(range, { uid: true })) {
+      for await (const msg of this.client.fetch(range, { uid: true }, { uid: true })) {
         if (typeof msg.uid === 'number') newUids.push(msg.uid);
       }
 
       newUids.sort((a, b) => a - b); // 升序
+      if (newUids.length === 0) {
+        this.logger.warn(
+          `IMAP reported uidNext=${uidNext} after lastSeenUid=${lastSeenUid}, but no UID-range messages were fetched. Sync cursor was not advanced.`,
+        );
+        return;
+      }
 
+      let lastHandledUid = lastSeenUid;
       for (const uid of newUids) {
         if (this.shutdownRequested) break;
         try {
           await this.processSingleEmail(uid, this.config!.mailbox);
+          lastHandledUid = uid;
         } catch (error) {
           this.logger.error(
             `轮询处理 UID ${uid} 失败: ${error instanceof Error ? error.message : String(error)}`,
           );
+          break;
         }
       }
 
+      if (lastHandledUid <= lastSeenUid) return;
+
       // 更新同步进度
-      const newLastSeen = uidNext - 1;
+      const uidValidity = getStatusUidValidity(status);
       await this.syncService.updateLastSeenUid(
         this.mailboxAccountId,
         this.config!.mailbox,
-        BigInt(newLastSeen),
-        null,
+        BigInt(lastHandledUid),
+        uidValidity,
       );
     } finally {
       lock.release();
@@ -279,7 +297,12 @@ export class ImapPollService implements OnApplicationBootstrap, OnApplicationShu
 
   private async processSingleEmail(uid: number, mailbox: string): Promise<void> {
     // 1. 幂等检查：processed_emails 表中是否已存在
-    const identity = { mailbox, uid };
+    const identity = {
+      mailboxAccountId: this.mailboxAccountId,
+      mailbox,
+      uidValidity: (await this.getUidValidity()) ?? undefined,
+      uid,
+    };
 
     // 2. 从 IMAP 拉取完整邮件
     const inboundEmail = await this.fetchEmailFromImap(mailbox, uid);
@@ -293,16 +316,30 @@ export class ImapPollService implements OnApplicationBootstrap, OnApplicationShu
       return;
     }
 
-    const inquiryId = result.inquiryCase?.id ?? 'unknown';
+    const inquiryId = result.inquiryCase?.id ?? 'none';
     const emailId = result.emailMessage?.id ?? 'unknown';
-    const status = result.inquiryCase?.status ?? 'unknown';
+    const status = result.inquiryCase?.status ?? 'none';
 
     this.logger.log(
       `邮件入库: email=${emailId} inquiry=${inquiryId} status=${status} from=${inboundEmail.fromEmail}`,
     );
 
     // 4. 输出 AI 分析结果
-    this.logAiResult(result.aiAnalysisResult);
+    if (!result.inquiryCase) {
+      this.logger.warn(
+        `Email stored without inquiry; AI analysis skipped. reason=${result.skippedReason ?? 'unknown'} email=${emailId}`,
+      );
+      return;
+    }
+
+    if (result.skippedReason) {
+      this.logger.log(
+        `Email stored as inquiry context; AI analysis skipped. reason=${result.skippedReason} email=${emailId} inquiry=${inquiryId}`,
+      );
+      return;
+    }
+
+    this.logAiResultV2(result.aiAnalysisResult, result.inquiryCase.status);
   }
 
   // -----------------------------------------------------------------------
@@ -318,10 +355,12 @@ export class ImapPollService implements OnApplicationBootstrap, OnApplicationShu
   }
 
   private async getProcessedUids(): Promise<Set<number>> {
+    const uidValidity = await this.getUidValidity();
     const records = await this.prisma.processedEmail.findMany({
       where: {
         mailboxAccountId: this.mailboxAccountId,
         mailboxName: this.config!.mailbox,
+        ...(uidValidity ? { uidValidity } : {}),
       },
       select: { uid: true },
     });
@@ -387,7 +426,7 @@ export class ImapPollService implements OnApplicationBootstrap, OnApplicationShu
     const pass = process.env.IMAP_PASS;
     if (!host || !user || !pass) return null;
 
-    const mode = process.env.IMAP_POLL_BOOTSTRAP_MODE || 'process_existing';
+    const mode = process.env.IMAP_POLL_BOOTSTRAP_MODE || 'mark_existing_seen';
     return {
       host,
       port: Number(process.env.IMAP_PORT || 993),
@@ -398,6 +437,56 @@ export class ImapPollService implements OnApplicationBootstrap, OnApplicationShu
       pollIntervalMs: Number(process.env.IMAP_POLL_INTERVAL_MS || 30000),
       bootstrapMode: (mode === 'mark_existing_seen' ? 'mark_existing_seen' : 'process_existing') as ImapConfig['bootstrapMode'],
     };
+  }
+
+  private logAiResultV2(result?: AnalyzeEmailWithAiResult, currentInquiryStatus?: string): void {
+    if (!result) return;
+    if (result.success) {
+      const {
+        classification,
+        suggestedStatus,
+        confidence,
+        reason,
+        missingFields,
+        humanReviewRequired,
+        quoteBoundaryDetected,
+      } = result.analysis;
+      const suspiciousAiSuggestion = suggestedStatus === InquiryStatus.READY_FOR_QUOTE &&
+        missingFields.length > 0;
+
+      this.logger.log(
+        [
+          'AI suggestion only:',
+          `currentStatus=${currentInquiryStatus ?? 'unknown'}`,
+          `classification=${classification}`,
+          `suggestedStatus=${suggestedStatus}`,
+          `confidence=${Math.round(confidence * 100)}%`,
+          `humanReviewRequired=${humanReviewRequired}`,
+          `quoteBoundaryDetected=${quoteBoundaryDetected}`,
+          `contextSnapshotId=${result.contextSnapshotId ?? 'none'}`,
+          'statusTransitionApplied=false',
+        ].join(' '),
+      );
+      this.logger.log(`AI reason: ${reason}`);
+      if (missingFields.length > 0) {
+        this.logger.log(`AI missingFields: ${missingFields.join(', ')}`);
+      }
+      if (suspiciousAiSuggestion) {
+        this.logger.warn(
+          `Suspicious AI suggestion: suggestedStatus=ready_for_quote but missingFields=${missingFields.join(', ')}`,
+        );
+      }
+    } else {
+      this.logger.warn(
+        [
+          'AI analysis failed:',
+          `errorCode=${result.errorCode}`,
+          `message=${result.message}`,
+          `contextSnapshotId=${result.contextSnapshotId ?? 'none'}`,
+          'humanReviewRequired=true',
+        ].join(' '),
+      );
+    }
   }
 
   private logAiResult(result?: AnalyzeEmailWithAiResult): void {
@@ -414,6 +503,11 @@ export class ImapPollService implements OnApplicationBootstrap, OnApplicationShu
     } else {
       this.logger.warn(`AI 分析失败: [${result.errorCode}] ${result.message}`);
     }
+  }
+
+  private async getUidValidity(): Promise<bigint | null> {
+    const status = await this.client!.status(this.config!.mailbox, { uidNext: true });
+    return getStatusUidValidity(status);
   }
 }
 
@@ -434,4 +528,15 @@ function firstAddress(addresses: { address?: string; name?: string }[] | undefin
 
 function toAddressList(addresses: { address?: string }[] | undefined): string[] {
   return addresses?.map((a) => a.address).filter((a): a is string => Boolean(a)) ?? [];
+}
+
+function parseBoolean(value: string | undefined, fallback: boolean): boolean {
+  if (value === undefined || value === '') return fallback;
+  return ['1', 'true', 'yes', 'on'].includes(value.toLowerCase());
+}
+
+function getStatusUidValidity(status: unknown): bigint | null {
+  const value = (status as { uidValidity?: number | bigint | string }).uidValidity;
+  if (value === undefined || value === null) return null;
+  return BigInt(value);
 }

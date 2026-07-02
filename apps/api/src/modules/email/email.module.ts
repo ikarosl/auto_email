@@ -15,11 +15,13 @@ import { PollEmailInboxUseCase } from './application/use-cases/poll-email-inbox.
 import { EmailMessageRepository } from './application/ports/email-message.repository.js';
 import { EmailAiAnalysisAdapter } from './application/ports/email-ai-analysis.adapter.js';
 import { ProcessedEmailTracker } from './application/ports/processed-email-tracker.js';
+import { AiInteractionDebugLogger } from './application/ports/ai-interaction-debug-logger.js';
 import { DeepseekEmailAnalysisAdapter } from './infrastructure/adapters/deepseek-email-analysis.adapter.js';
 import { PrismaEmailMessageRepository } from './infrastructure/repositories/prisma-email-message.repository.js';
 import { PrismaProcessedEmailTracker } from './infrastructure/repositories/prisma-processed-email-tracker.js';
 import { MailboxSyncService } from './infrastructure/services/mailbox-sync.service.js';
 import { ImapPollService } from './infrastructure/services/imap-poll.service.js';
+import { FileAiInteractionDebugLogger } from './infrastructure/services/file-ai-interaction-debug-logger.js';
 import { EmailWebhookController } from './presentation/email-webhook.controller.js';
 import { EMAIL_AI_ANALYSIS_ADAPTER, EMAIL_MESSAGE_REPOSITORY, PROCESSED_EMAIL_TRACKER } from './email.tokens.js';
 
@@ -32,11 +34,28 @@ import { EMAIL_AI_ANALYSIS_ADAPTER, EMAIL_MESSAGE_REPOSITORY, PROCESSED_EMAIL_TR
       useFactory: (prisma: PrismaService) => new PrismaEmailMessageRepository(prisma),
       inject: [PrismaService],
     },
-    MailboxSyncService,
-    ImapPollService,
+    {
+      provide: MailboxSyncService,
+      useFactory: (prisma: PrismaService) => new MailboxSyncService(prisma),
+      inject: [PrismaService],
+    },
+    {
+      provide: ImapPollService,
+      useFactory: (
+        prisma: PrismaService,
+        pollUseCase: PollEmailInboxUseCase,
+        syncService: MailboxSyncService,
+        analyzeEmailWithAiUseCase: AnalyzeEmailWithAiUseCase,
+      ) => new ImapPollService(prisma, pollUseCase, syncService, analyzeEmailWithAiUseCase),
+      inject: [PrismaService, PollEmailInboxUseCase, MailboxSyncService, AnalyzeEmailWithAiUseCase],
+    },
     {
       provide: EMAIL_AI_ANALYSIS_ADAPTER,
       useClass: DeepseekEmailAnalysisAdapter,
+    },
+    {
+      provide: FileAiInteractionDebugLogger,
+      useClass: FileAiInteractionDebugLogger,
     },
     {
       provide: PROCESSED_EMAIL_TRACKER,
@@ -76,8 +95,13 @@ import { EMAIL_AI_ANALYSIS_ADAPTER, EMAIL_MESSAGE_REPOSITORY, PROCESSED_EMAIL_TR
       useFactory: (
         emailAiAnalysisAdapter: EmailAiAnalysisAdapter,
         buildAiContextUseCase: BuildAiContextUseCase,
-      ) => new AnalyzeEmailWithAiUseCase(emailAiAnalysisAdapter, buildAiContextUseCase),
-      inject: [EMAIL_AI_ANALYSIS_ADAPTER, BuildAiContextUseCase],
+        aiInteractionDebugLogger: AiInteractionDebugLogger,
+      ) => new AnalyzeEmailWithAiUseCase(
+        emailAiAnalysisAdapter,
+        buildAiContextUseCase,
+        aiInteractionDebugLogger,
+      ),
+      inject: [EMAIL_AI_ANALYSIS_ADAPTER, BuildAiContextUseCase, FileAiInteractionDebugLogger],
     },
     {
       provide: PollEmailInboxUseCase,

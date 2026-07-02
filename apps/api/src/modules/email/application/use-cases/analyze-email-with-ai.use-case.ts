@@ -6,6 +6,7 @@ import { EmailMessage } from '../../domain/entities/email-message.entity.js';
 import { EmailAiAnalysis } from '../../domain/value-objects/email-ai-analysis.vo.js';
 import { emailAiAnalysisSchema } from '../dto/email-ai-analysis.schema.js';
 import { EmailAiAnalysisAdapter } from '../ports/email-ai-analysis.adapter.js';
+import { AiInteractionDebugLogger } from '../ports/ai-interaction-debug-logger.js';
 import { EMAIL_ANALYSIS_SYSTEM_PROMPT } from '../prompts/email-analysis.prompt.js';
 
 export interface AnalyzeEmailWithAiSuccess {
@@ -40,6 +41,7 @@ export class AnalyzeEmailWithAiUseCase {
   constructor(
     private readonly emailAiAnalysisAdapter: EmailAiAnalysisAdapter,
     private readonly buildAiContextUseCase?: BuildAiContextUseCase,
+    private readonly aiInteractionDebugLogger?: AiInteractionDebugLogger,
   ) {}
 
   async execute(
@@ -50,6 +52,11 @@ export class AnalyzeEmailWithAiUseCase {
     const rawOutput = (await this.emailAiAnalysisAdapter.analyze(context.messages)).trim();
 
     if (!rawOutput) {
+      await this.logAiInteraction(emailMessage, options, context, {
+        errorCode: 'ai_empty_output',
+        message: 'AI returned empty output.',
+      });
+
       return {
         success: false,
         errorCode: 'ai_empty_output',
@@ -63,6 +70,11 @@ export class AnalyzeEmailWithAiUseCase {
 
     const jsonText = extractJsonText(rawOutput);
     if (!jsonText) {
+      await this.logAiInteraction(emailMessage, options, context, {
+        errorCode: 'ai_json_parse_failed',
+        message: 'AI output did not contain a JSON object.',
+      }, rawOutput);
+
       return {
         success: false,
         errorCode: 'ai_json_parse_failed',
@@ -79,10 +91,16 @@ export class AnalyzeEmailWithAiUseCase {
     try {
       parsed = JSON.parse(jsonText);
     } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      await this.logAiInteraction(emailMessage, options, context, {
+        errorCode: 'ai_json_parse_failed',
+        message,
+      }, rawOutput);
+
       return {
         success: false,
         errorCode: 'ai_json_parse_failed',
-        message: error instanceof Error ? error.message : String(error),
+        message,
         rawOutput,
         humanReviewRequired: true,
         contextSnapshotId: context.contextSnapshotId,
@@ -93,12 +111,18 @@ export class AnalyzeEmailWithAiUseCase {
 
     const validation = emailAiAnalysisSchema.safeParse(parsed);
     if (!validation.success) {
+      const message = validation.error.issues
+        .map((issue) => `${issue.path.join('.') || '(root)'}: ${issue.message}`)
+        .join('; ');
+      await this.logAiInteraction(emailMessage, options, context, {
+        errorCode: 'ai_validation_failed',
+        message,
+      }, rawOutput);
+
       return {
         success: false,
         errorCode: 'ai_validation_failed',
-        message: validation.error.issues
-          .map((issue) => `${issue.path.join('.') || '(root)'}: ${issue.message}`)
-          .join('; '),
+        message,
         rawOutput,
         humanReviewRequired: true,
         contextSnapshotId: context.contextSnapshotId,
@@ -106,6 +130,8 @@ export class AnalyzeEmailWithAiUseCase {
         contextMessages: context.messages,
       };
     }
+
+    await this.logAiInteraction(emailMessage, options, context, undefined, rawOutput, validation.data);
 
     return {
       success: true,
@@ -151,6 +177,35 @@ export class AnalyzeEmailWithAiUseCase {
         },
       ],
     };
+  }
+
+  private async logAiInteraction(
+    emailMessage: EmailMessage,
+    options: AnalyzeEmailWithAiOptions,
+    context: { messages: AiChatMessage[]; contextSnapshotId?: string; estimatedTokens?: number },
+    validationError?: { errorCode: string; message: string },
+    rawOutput?: string,
+    analysis?: EmailAiAnalysis,
+  ): Promise<void> {
+    if (!this.aiInteractionDebugLogger) {
+      return;
+    }
+
+    try {
+      await this.aiInteractionDebugLogger.log({
+        occurredAt: new Date(),
+        emailMessage,
+        inquiryCase: options.inquiryCase,
+        contextSnapshotId: context.contextSnapshotId,
+        estimatedContextTokens: context.estimatedTokens,
+        messages: context.messages,
+        rawOutput,
+        analysis,
+        validationError,
+      });
+    } catch {
+      // Debug logging must never block the email processing pipeline.
+    }
   }
 }
 
