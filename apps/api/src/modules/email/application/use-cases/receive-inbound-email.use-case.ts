@@ -5,6 +5,7 @@ import { FindInquiryForInboundEmailUseCase } from '../../../inquiry/application/
 import { InquiryMessageRepository } from '../../../inquiry/application/ports/inquiry-message.repository.js';
 import { InquiryCase } from '../../../inquiry/domain/entities/inquiry-case.entity.js';
 import { InquiryMessageRelationType } from '../../../inquiry/domain/enums/inquiry-message-relation-type.enum.js';
+import { isOwnEmail } from '../../../../common/email/own-email-address.js';
 import { EmailMessage } from '../../domain/entities/email-message.entity.js';
 import { EmailDirection } from '../../domain/enums/email-direction.enum.js';
 import { InboundEmail } from '../../domain/value-objects/inbound-email.vo.js';
@@ -37,12 +38,20 @@ export class ReceiveInboundEmailUseCase {
       };
     }
 
+    const emailMessageId = `email_${randomUUID()}`;
     const cleanedBodyText = this.emailContentSanitizer.sanitize(
       inboundEmail.bodyText,
       inboundEmail.bodyHtml,
+      {
+        emailMessageId,
+        externalMessageId: inboundEmail.messageId,
+        fromEmail: inboundEmail.fromEmail,
+        subject: inboundEmail.subject,
+        sourceKind: inboundEmail.source,
+      },
     );
     const emailMessage: EmailMessage = {
-      id: `email_${randomUUID()}`,
+      id: emailMessageId,
       externalMessageId: inboundEmail.messageId,
       threadId: inboundEmail.threadId,
       direction: resolveEmailDirection(inboundEmail),
@@ -127,31 +136,5 @@ function resolveEmailDirection(inboundEmail: InboundEmail): EmailDirection {
     return EmailDirection.INBOUND;
   }
 
-  const aiMailbox = process.env.AI_MAILBOX?.trim().toLowerCase();
-  const recipients = [...inboundEmail.toEmails, ...inboundEmail.ccEmails]
-    .map((email) => email.trim().toLowerCase());
-
-  if (aiMailbox && recipients.includes(aiMailbox)) {
-    return EmailDirection.OUTBOUND;
-  }
-
-  return EmailDirection.INBOUND;
-}
-
-function isOwnEmail(email: string): boolean {
-  const domain = email.split('@')[1]?.toLowerCase();
-  if (!domain) {
-    return false;
-  }
-
-  return getOwnEmailDomains().some((ownDomain) =>
-    domain === ownDomain || domain.endsWith(`.${ownDomain}`),
-  );
-}
-
-function getOwnEmailDomains(): string[] {
-  return (process.env.OUR_EMAIL_DOMAINS ?? 'hzbeat.com')
-    .split(',')
-    .map((domain) => domain.trim().toLowerCase())
-    .filter(Boolean);
+  return EmailDirection.OUTBOUND;
 }

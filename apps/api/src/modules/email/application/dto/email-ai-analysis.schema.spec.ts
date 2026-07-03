@@ -27,6 +27,34 @@ describe('emailAiAnalysisSchema', () => {
     assert.equal(result.success, true);
   });
 
+  it('coerces numeric extracted requirement values to strings', () => {
+    const result = emailAiAnalysisSchema.safeParse({
+      isInquiry: true,
+      classification: 'valid_inquiry',
+      suggestedStatus: InquiryStatus.NEED_ENGINEER_REVIEW,
+      confidence: 0.9,
+      riskLevel: 'low',
+      reason: 'Customer provided clear requirements.',
+      missingFields: [],
+      extractedRequirements: {
+        productType: 'isolator',
+        power: 20,
+        quantity: 50,
+        application: 123,
+      },
+      quoteBoundaryDetected: false,
+      humanReviewRequired: true,
+      nextAction: 'Send to engineering review.',
+    });
+
+    assert.equal(result.success, true);
+    if (result.success) {
+      assert.equal(result.data.extractedRequirements.power, '20');
+      assert.equal(result.data.extractedRequirements.quantity, '50');
+      assert.equal(result.data.extractedRequirements.application, '123');
+    }
+  });
+
   it('rejects quote boundary output without human review', () => {
     const result = emailAiAnalysisSchema.safeParse({
       isInquiry: true,

@@ -206,9 +206,9 @@ describe('ReceiveInboundEmailUseCase', () => {
   });
 
   it('stores own copied email without creating a new inquiry when no match is found', async () => {
-    const previousDomains = process.env.OUR_EMAIL_DOMAINS;
+    const previousImapUser = process.env.IMAP_USER;
     const previousAiMailbox = process.env.AI_MAILBOX;
-    process.env.OUR_EMAIL_DOMAINS = 'hzbeat.com';
+    process.env.IMAP_USER = 'silent@hzbeat.com';
     process.env.AI_MAILBOX = 'silent@hzbeat.com';
 
     try {
@@ -230,8 +230,35 @@ describe('ReceiveInboundEmailUseCase', () => {
       assert.equal(result.skippedReason, 'own_email_without_matching_inquiry');
       assert.equal((await inquiryRepository.list()).length, 0);
     } finally {
-      restoreEnv('OUR_EMAIL_DOMAINS', previousDomains);
+      restoreEnv('IMAP_USER', previousImapUser);
       restoreEnv('AI_MAILBOX', previousAiMailbox);
+    }
+  });
+
+  it('stores public mailbox sent email as outbound even without ai mailbox copied', async () => {
+    const previousImapUser = process.env.IMAP_USER;
+    process.env.IMAP_USER = 'silent@hzbeat.com';
+
+    try {
+      const { receiveInboundEmailUseCase, inquiryRepository } = createUseCaseWithMatcher();
+
+      const result = await receiveInboundEmailUseCase.execute({
+        messageId: 'own-message-002',
+        fromEmail: 'silent@hzbeat.com',
+        toEmails: ['buyer@example.com'],
+        ccEmails: [],
+        subject: 'Re: RF inquiry',
+        bodyText: 'Please see the attached contract.',
+        receivedAt: new Date(),
+        source: EmailSource.MOCK,
+      });
+
+      assert.equal(result.emailMessage.direction, 'outbound');
+      assert.equal(result.inquiryCase, undefined);
+      assert.equal(result.skippedReason, 'own_email_without_matching_inquiry');
+      assert.equal((await inquiryRepository.list()).length, 0);
+    } finally {
+      restoreEnv('IMAP_USER', previousImapUser);
     }
   });
 });

@@ -120,6 +120,10 @@ function toAddressList(addresses: MailAddress[] | undefined): string[] {
   return addresses?.map((item) => item.address).filter((a): a is string => Boolean(a)) ?? [];
 }
 
+function formatRawSource(source: Buffer): string {
+  return `base64:${source.toString('base64')}`;
+}
+
 async function listMessageSummaries(
   client: ImapFlow,
   range: string,
@@ -169,7 +173,7 @@ async function fetchInboundEmail(
       ? message.internalDate
       : new Date(message.internalDate || Date.now()),
     source: EmailSource.IMAP,
-    raw: sourceBuffer.toString('utf8'),
+    raw: formatRawSource(sourceBuffer),
   };
 }
 

@@ -16,6 +16,18 @@ export interface AiInteractionDebugLogEntry {
     errorCode: string;
     message: string;
   };
+  attempts?: AiInteractionDebugAttempt[];
+  successfulAttempt?: number;
+}
+
+export interface AiInteractionDebugAttempt {
+  attempt: number;
+  messages: AiChatMessage[];
+  rawOutput?: string;
+  validationError?: {
+    errorCode: string;
+    message: string;
+  };
 }
 
 export interface AiInteractionDebugLogger {

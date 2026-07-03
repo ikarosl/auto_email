@@ -2,6 +2,11 @@ import { z } from 'zod';
 
 import { InquiryStatus } from '../../../inquiry/domain/enums/inquiry-status.enum.js';
 
+const extractedRequirementValueSchema = z
+  .union([z.string(), z.number()])
+  .transform((value) => String(value).trim())
+  .optional();
+
 export const emailAiAnalysisSchema = z
   .object({
     isInquiry: z.boolean(),
@@ -18,12 +23,12 @@ export const emailAiAnalysisSchema = z
     reason: z.string().trim().min(1),
     missingFields: z.array(z.string()),
     extractedRequirements: z.object({
-      productType: z.string().optional(),
-      frequencyRange: z.string().optional(),
-      power: z.string().optional(),
-      quantity: z.string().optional(),
-      sizeRequirement: z.string().optional(),
-      application: z.string().optional(),
+      productType: extractedRequirementValueSchema,
+      frequencyRange: extractedRequirementValueSchema,
+      power: extractedRequirementValueSchema,
+      quantity: extractedRequirementValueSchema,
+      sizeRequirement: extractedRequirementValueSchema,
+      application: extractedRequirementValueSchema,
     }),
     quoteBoundaryDetected: z.boolean(),
     humanReviewRequired: z.boolean(),

@@ -1,3 +1,6 @@
+import { mkdirSync, appendFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+
 import { load } from 'cheerio';
 import { convert } from 'html-to-text';
 
@@ -9,14 +12,34 @@ interface QuoteCandidate {
   score: number;
 }
 
+export interface EmailContentSanitizerMetadata {
+  emailMessageId?: string;
+  externalMessageId?: string;
+  fromEmail?: string;
+  subject?: string;
+  sourceKind?: string;
+}
+
 export class EmailContentSanitizer {
-  sanitize(bodyText?: string, bodyHtml?: string): string | undefined {
-    const source = selectBodySource(bodyText, bodyHtml);
-    if (!source) {
+  sanitize(
+    bodyText?: string,
+    bodyHtml?: string,
+    metadata?: EmailContentSanitizerMetadata,
+  ): string | undefined {
+    const selected = selectBodySource(bodyText, bodyHtml);
+    if (!selected.text) {
       return undefined;
     }
 
-    const normalized = normalizeWhitespace(source);
+    logSanitizerInput({
+      metadata,
+      bodyText,
+      bodyHtml,
+      selectedTextOriginal: selected.text,
+      sourceKind: selected.sourceKind,
+    });
+
+    const normalized = normalizeWhitespace(selected.text);
     const withoutQuotedHistory = stripQuotedHistory(normalized);
     const withoutSignature = stripSignatureAndDisclaimer(withoutQuotedHistory);
     const cleaned = normalizeWhitespace(withoutSignature);
@@ -25,15 +48,26 @@ export class EmailContentSanitizer {
   }
 }
 
-function selectBodySource(bodyText?: string, bodyHtml?: string): string | undefined {
+interface SelectedBodySource {
+  text?: string;
+  sourceKind: 'plain_text' | 'html_converted' | 'none';
+}
+
+function selectBodySource(bodyText?: string, bodyHtml?: string): SelectedBodySource {
   const hasText = Boolean(bodyText?.trim());
   const hasHtml = Boolean(bodyHtml?.trim());
 
   if (hasHtml && (!hasText || containsTable(bodyHtml as string))) {
-    return convertHtmlToText(stripHtmlQuotedHistory(bodyHtml as string));
+    return {
+      text: convertHtmlToText(stripHtmlQuotedHistory(bodyHtml as string)),
+      sourceKind: 'html_converted',
+    };
   }
 
-  return hasText ? bodyText : undefined;
+  return {
+    text: hasText ? bodyText : undefined,
+    sourceKind: hasText ? 'plain_text' : 'none',
+  };
 }
 
 function containsTable(html: string): boolean {
@@ -121,7 +155,10 @@ function scoreQuoteBoundary(lines: string[], index: number): number {
     return 100;
   }
 
-  if (/^On .+ wrote:$/i.test(trimmed) || /^在 .+ 写道：$/.test(trimmed)) {
+  if (
+    /^On .+ wrote:$/i.test(trimmed)
+    || /^(?:.+\s)?\u5728\s*.+\s*\u5199\u9053[:\uff1a]$/.test(trimmed)
+  ) {
     return 90;
   }
 
@@ -241,4 +278,56 @@ function normalizeWhitespace(value: string): string {
     .replace(/\n[ ]+/g, '\n')
     .replace(/\n{3,}/g, '\n\n')
     .trim();
+}
+
+function logSanitizerInput(input: {
+  metadata?: EmailContentSanitizerMetadata;
+  bodyText?: string;
+  bodyHtml?: string;
+  selectedTextOriginal: string;
+  sourceKind: 'plain_text' | 'html_converted' | 'none';
+}): void {
+  if (!isSanitizerDebugLogEnabled()) {
+    return;
+  }
+
+  const logPath = resolve(
+    process.cwd(),
+    process.env.EMAIL_SANITIZER_DEBUG_LOG_PATH || 'logs/email-sanitizer-debug.jsonl',
+  );
+  const linesOriginal = input.selectedTextOriginal.split(/\r\n|\r|\n/);
+  const payload = {
+    occurredAt: new Date().toISOString(),
+    emailMessageId: input.metadata?.emailMessageId,
+    externalMessageId: input.metadata?.externalMessageId,
+    fromEmail: input.metadata?.fromEmail,
+    subject: input.metadata?.subject,
+    sourceKind: input.metadata?.sourceKind ?? input.sourceKind,
+    selectedBodySourceKind: input.sourceKind,
+    bodyTextOriginal: input.bodyText,
+    bodyHtmlExists: Boolean(input.bodyHtml?.trim()),
+    selectedTextOriginal: input.selectedTextOriginal,
+    selectedTextOriginalUtf8Base64: Buffer.from(input.selectedTextOriginal, 'utf8').toString('base64'),
+    linesOriginal: linesOriginal.map((line, index) => ({
+      index,
+      text: line,
+      utf8Base64: Buffer.from(line, 'utf8').toString('base64'),
+      codePoints: Array.from(line).map((character) =>
+        `U+${(character.codePointAt(0) ?? 0).toString(16).toUpperCase().padStart(4, '0')}`,
+      ),
+    })),
+  };
+
+  try {
+    mkdirSync(dirname(logPath), { recursive: true });
+    appendFileSync(logPath, `${JSON.stringify(payload)}\n`, 'utf8');
+  } catch {
+    // Debug logging must never block email ingestion.
+  }
+}
+
+function isSanitizerDebugLogEnabled(): boolean {
+  return ['1', 'true', 'yes', 'on'].includes(
+    (process.env.EMAIL_SANITIZER_DEBUG_LOG_ENABLED ?? '').toLowerCase(),
+  );
 }

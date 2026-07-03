@@ -326,9 +326,15 @@ export class ImapPollService implements OnApplicationBootstrap, OnApplicationShu
 
     // 4. 输出 AI 分析结果
     if (!result.inquiryCase) {
-      this.logger.warn(
-        `Email stored without inquiry; AI analysis skipped. reason=${result.skippedReason ?? 'unknown'} email=${emailId}`,
-      );
+      if (result.skippedReason === 'own_email_without_matching_inquiry') {
+        this.logger.warn(
+          `Own outbound/internal email stored without matching inquiry; AI analysis skipped. email=${emailId}`,
+        );
+      } else {
+        this.logger.warn(
+          `Email stored without inquiry; AI analysis skipped. reason=${result.skippedReason ?? 'unknown'} email=${emailId}`,
+        );
+      }
       return;
     }
 
@@ -394,7 +400,7 @@ export class ImapPollService implements OnApplicationBootstrap, OnApplicationShu
         ? message.internalDate
         : new Date(message.internalDate || Date.now()),
       source: EmailSource.IMAP,
-      raw: sourceBuffer.toString('utf8'),
+      raw: formatRawSource(sourceBuffer),
     };
   }
 
@@ -520,6 +526,10 @@ function toBuffer(source: unknown): Buffer {
   if (Buffer.isBuffer(source)) return source;
   if (source instanceof Uint8Array) return Buffer.from(source);
   return Buffer.from(String(source), 'utf8');
+}
+
+function formatRawSource(source: Buffer): string {
+  return `base64:${source.toString('base64')}`;
 }
 
 function firstAddress(addresses: { address?: string; name?: string }[] | undefined) {

@@ -128,6 +128,10 @@ function toAddressList(addresses: MailAddress[] | undefined): string[] {
   return addresses?.map((item) => item.address).filter((address): address is string => Boolean(address)) ?? [];
 }
 
+function formatRawSource(source: Buffer): string {
+  return `base64:${source.toString('base64')}`;
+}
+
 async function listMessageSummaries(client: ImapFlow, range: string): Promise<ImapMessageSummary[]> {
   const summaries: ImapMessageSummary[] = [];
 
@@ -182,7 +186,7 @@ async function fetchInboundEmailByUid(
     bodyHtml: typeof parsed.html === 'string' ? parsed.html : undefined,
     receivedAt: message.internalDate instanceof Date ? message.internalDate : new Date(message.internalDate || Date.now()),
     source: EmailSource.IMAP,
-    raw: sourceBuffer.toString('utf8'),
+    raw: formatRawSource(sourceBuffer),
   };
 
   return {

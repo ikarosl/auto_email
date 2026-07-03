@@ -1,4 +1,7 @@
 import assert from 'node:assert/strict';
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { describe, it } from 'node:test';
 
 import { EmailContentSanitizer } from './email-content-sanitizer.js';
@@ -53,6 +56,74 @@ describe('EmailContentSanitizer', () => {
     ].join('\r\n'));
 
     assert.equal(result, 'The required frequency is 12-15GHz.');
+  });
+
+  it('removes Chinese wrote reply history and keeps the new message', () => {
+    const result = sanitizer.sanitize([
+      '我们接受 4 到 6 周交期。',
+      '',
+      '销售 <silent@hzbeat.com> 在 2026年7月3日 周五 10:16 写道：',
+      '我们有现货方案可以满足需求。',
+    ].join('\n'));
+
+    assert.equal(result, '我们接受 4 到 6 周交期。');
+  });
+
+  it('keeps ordinary UTF-8 Chinese body text', () => {
+    const result = sanitizer.sanitize([
+      '这是一封新的询盘邮件。',
+      '频率范围：12-15GHz。',
+      '数量：50 件。',
+    ].join('\n'));
+
+    assert.equal(result, '这是一封新的询盘邮件。\n频率范围：12-15GHz。\n数量：50 件。');
+  });
+
+  it('writes original sanitizer input diagnostics before quote matching when enabled', () => {
+    const previousEnabled = process.env.EMAIL_SANITIZER_DEBUG_LOG_ENABLED;
+    const previousPath = process.env.EMAIL_SANITIZER_DEBUG_LOG_PATH;
+    const tempDir = mkdtempSync(join(tmpdir(), 'email-sanitizer-'));
+    const logPath = join(tempDir, 'debug.jsonl');
+    process.env.EMAIL_SANITIZER_DEBUG_LOG_ENABLED = 'true';
+    process.env.EMAIL_SANITIZER_DEBUG_LOG_PATH = logPath;
+
+    try {
+      const originalText = [
+        '我们接受 4 到 6 周交期。',
+        '',
+        '销售 <silent@hzbeat.com> 在 2026年7月3日 写道：',
+        '上一封历史邮件。',
+      ].join('\n');
+
+      sanitizer.sanitize(originalText, undefined, {
+        emailMessageId: 'email_debug_001',
+        externalMessageId: 'message_debug_001',
+        fromEmail: 'buyer@example.com',
+        subject: 'Re: RF inquiry',
+        sourceKind: 'imap',
+      });
+
+      const entry = JSON.parse(readFileSync(logPath, 'utf8')) as {
+        emailMessageId: string;
+        selectedTextOriginal: string;
+        selectedTextOriginalUtf8Base64: string;
+        linesOriginal: Array<{ text: string; codePoints: string[] }>;
+      };
+
+      assert.equal(entry.emailMessageId, 'email_debug_001');
+      assert.equal(entry.selectedTextOriginal, originalText);
+      assert.equal(
+        Buffer.from(entry.selectedTextOriginalUtf8Base64, 'base64').toString('utf8'),
+        originalText,
+      );
+      assert.equal(entry.linesOriginal[2]?.text, '销售 <silent@hzbeat.com> 在 2026年7月3日 写道：');
+      assert.ok(entry.linesOriginal[2]?.codePoints.includes('U+5728'));
+      assert.ok(entry.linesOriginal[2]?.codePoints.includes('U+5199'));
+    } finally {
+      restoreEnv('EMAIL_SANITIZER_DEBUG_LOG_ENABLED', previousEnabled);
+      restoreEnv('EMAIL_SANITIZER_DEBUG_LOG_PATH', previousPath);
+      rmSync(tempDir, { recursive: true, force: true });
+    }
   });
 
   it('removes an HTML gmail quote before converting the body', () => {
@@ -192,3 +263,12 @@ describe('EmailContentSanitizer', () => {
     assert.equal(result, 'Ship from: Shanghai\nDeliver to: Shenzhen\nQuantity: 20 pcs');
   });
 });
+
+function restoreEnv(key: string, value: string | undefined): void {
+  if (value === undefined) {
+    delete process.env[key];
+    return;
+  }
+
+  process.env[key] = value;
+}

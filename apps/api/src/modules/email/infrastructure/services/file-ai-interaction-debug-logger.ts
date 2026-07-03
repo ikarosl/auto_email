@@ -24,6 +24,8 @@ export class FileAiInteractionDebugLogger implements AiInteractionDebugLogger {
       rawOutput: entry.rawOutput,
       analysis: entry.analysis,
       validationError: entry.validationError,
+      attempts: entry.attempts,
+      successfulAttempt: entry.successfulAttempt,
     };
 
     await mkdir(dirname(logPath), { recursive: true });

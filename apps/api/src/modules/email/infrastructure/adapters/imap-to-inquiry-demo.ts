@@ -105,6 +105,10 @@ function toAddressList(addresses: MailAddress[] | undefined): string[] {
   return addresses?.map((item) => item.address).filter((address): address is string => Boolean(address)) ?? [];
 }
 
+function formatRawSource(source: Buffer): string {
+  return `base64:${source.toString('base64')}`;
+}
+
 async function getLatestSequence(client: ImapFlow, mailbox: string): Promise<number | undefined> {
   const status = await client.status(mailbox, { messages: true });
   const messageCount = status.messages ?? 0;
@@ -150,7 +154,7 @@ async function fetchInboundEmail(client: ImapFlow, config: ImapInquiryDemoConfig
     bodyHtml: typeof parsed.html === 'string' ? parsed.html : undefined,
     receivedAt: message.internalDate instanceof Date ? message.internalDate : new Date(message.internalDate || Date.now()),
     source: EmailSource.IMAP,
-    raw: toBuffer(message.source).toString('utf8'),
+    raw: formatRawSource(toBuffer(message.source)),
   };
 }
 

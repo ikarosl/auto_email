@@ -1,6 +1,7 @@
 import { EmailMessageRepository } from '../../../email/application/ports/email-message.repository.js';
 import { EmailMessage } from '../../../email/domain/entities/email-message.entity.js';
 import { EmailDirection } from '../../../email/domain/enums/email-direction.enum.js';
+import { isOwnEmail } from '../../../../common/email/own-email-address.js';
 import { InquiryRepository } from '../ports/inquiry.repository.js';
 import { InquiryMessageRepository } from '../ports/inquiry-message.repository.js';
 import { INQUIRY_MATCHING_POLICY } from '../../domain/matching/inquiry-matching-policy.js';
@@ -105,19 +106,6 @@ function uniqueInquiries<T extends { id: string }>(inquiries: T[]): T[] {
     seen.add(inquiry.id);
     return true;
   });
-}
-
-function isOwnEmail(email: string): boolean {
-  const domain = email.split('@')[1]?.toLowerCase();
-  if (!domain) {
-    return false;
-  }
-
-  return (process.env.OUR_EMAIL_DOMAINS ?? 'hzbeat.com')
-    .split(',')
-    .map((value) => value.trim().toLowerCase())
-    .filter(Boolean)
-    .some((ownDomain) => domain === ownDomain || domain.endsWith(`.${ownDomain}`));
 }
 
 function isWithinRecentWindow(updatedAt: Date): boolean {

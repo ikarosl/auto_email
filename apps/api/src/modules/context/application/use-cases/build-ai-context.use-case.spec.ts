@@ -49,10 +49,14 @@ describe('BuildAiContextUseCase', () => {
 
     const savedSnapshot = await snapshotRepository.findById(result.contextSnapshotId);
 
-    assert.equal(result.messages.length, 2);
+    assert.equal(result.messages.length, 7);
     assert.equal(result.messages[0]?.role, 'system');
+    assert.equal(result.messages.slice(1).every((message) => message.role === 'user'), true);
+    assert.match(result.messages[1]?.content ?? '', /Context section: inquiry_state/);
     assert.match(result.messages[1]?.content ?? '', /Current inquiry state/);
-    assert.match(result.messages[1]?.content ?? '', /Current customer email/);
+    assert.match(result.messages[5]?.content ?? '', /Context section: current_email/);
+    assert.match(result.messages[5]?.content ?? '', /Current customer email/);
+    assert.match(result.messages[6]?.content ?? '', /Context section: output_instruction/);
     assert.ok(result.estimatedTokens > 0);
     assert.equal(savedSnapshot?.purpose, ContextPurpose.EMAIL_ANALYSIS);
     assert.equal(savedSnapshot?.emailMessageId, 'email_001');

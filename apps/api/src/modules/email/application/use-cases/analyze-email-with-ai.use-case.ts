@@ -6,8 +6,13 @@ import { EmailMessage } from '../../domain/entities/email-message.entity.js';
 import { EmailAiAnalysis } from '../../domain/value-objects/email-ai-analysis.vo.js';
 import { emailAiAnalysisSchema } from '../dto/email-ai-analysis.schema.js';
 import { EmailAiAnalysisAdapter } from '../ports/email-ai-analysis.adapter.js';
-import { AiInteractionDebugLogger } from '../ports/ai-interaction-debug-logger.js';
+import {
+  AiInteractionDebugAttempt,
+  AiInteractionDebugLogger,
+} from '../ports/ai-interaction-debug-logger.js';
 import { EMAIL_ANALYSIS_SYSTEM_PROMPT } from '../prompts/email-analysis.prompt.js';
+
+const MAX_AI_ANALYSIS_ATTEMPTS = 3;
 
 export interface AnalyzeEmailWithAiSuccess {
   success: true;
@@ -49,98 +54,127 @@ export class AnalyzeEmailWithAiUseCase {
     options: AnalyzeEmailWithAiOptions = {},
   ): Promise<AnalyzeEmailWithAiResult> {
     const context = await this.buildMessages(emailMessage, options);
-    const rawOutput = (await this.emailAiAnalysisAdapter.analyze(context.messages)).trim();
+    const attempts: AiInteractionDebugAttempt[] = [];
+    let lastFailure: AnalyzeEmailWithAiFailure | undefined;
 
-    if (!rawOutput) {
-      await this.logAiInteraction(emailMessage, options, context, {
-        errorCode: 'ai_empty_output',
-        message: 'AI returned empty output.',
-      });
+    for (let attempt = 1; attempt <= MAX_AI_ANALYSIS_ATTEMPTS; attempt += 1) {
+      const messages = buildAttemptMessages(context.messages, attempt, lastFailure);
+      const rawOutput = (await this.emailAiAnalysisAdapter.analyze(messages)).trim();
 
-      return {
-        success: false,
-        errorCode: 'ai_empty_output',
-        message: 'AI returned empty output.',
-        humanReviewRequired: true,
-        contextSnapshotId: context.contextSnapshotId,
-        estimatedContextTokens: context.estimatedTokens,
-        contextMessages: context.messages,
-      };
-    }
+      if (!rawOutput) {
+        lastFailure = this.buildFailure(
+          context,
+          'ai_empty_output',
+          'AI returned empty output.',
+        );
+        attempts.push({
+          attempt,
+          messages,
+          validationError: {
+            errorCode: lastFailure.errorCode,
+            message: lastFailure.message,
+          },
+        });
+        continue;
+      }
 
-    const jsonText = extractJsonText(rawOutput);
-    if (!jsonText) {
-      await this.logAiInteraction(emailMessage, options, context, {
-        errorCode: 'ai_json_parse_failed',
-        message: 'AI output did not contain a JSON object.',
-      }, rawOutput);
+      const jsonText = extractJsonText(rawOutput);
+      if (!jsonText) {
+        lastFailure = this.buildFailure(
+          context,
+          'ai_json_parse_failed',
+          'AI output did not contain a JSON object.',
+          rawOutput,
+        );
+        attempts.push({
+          attempt,
+          messages,
+          rawOutput,
+          validationError: {
+            errorCode: lastFailure.errorCode,
+            message: lastFailure.message,
+          },
+        });
+        continue;
+      }
 
-      return {
-        success: false,
-        errorCode: 'ai_json_parse_failed',
-        message: 'AI output did not contain a JSON object.',
+      let parsed: unknown;
+      try {
+        parsed = JSON.parse(jsonText);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        lastFailure = this.buildFailure(context, 'ai_json_parse_failed', message, rawOutput);
+        attempts.push({
+          attempt,
+          messages,
+          rawOutput,
+          validationError: {
+            errorCode: lastFailure.errorCode,
+            message: lastFailure.message,
+          },
+        });
+        continue;
+      }
+
+      const validation = emailAiAnalysisSchema.safeParse(parsed);
+      if (!validation.success) {
+        const message = validation.error.issues
+          .map((issue) => `${issue.path.join('.') || '(root)'}: ${issue.message}`)
+          .join('; ');
+        lastFailure = this.buildFailure(context, 'ai_validation_failed', message, rawOutput);
+        attempts.push({
+          attempt,
+          messages,
+          rawOutput,
+          validationError: {
+            errorCode: lastFailure.errorCode,
+            message: lastFailure.message,
+          },
+        });
+        continue;
+      }
+
+      attempts.push({ attempt, messages, rawOutput });
+      await this.logAiInteraction(
+        emailMessage,
+        options,
+        context,
+        undefined,
         rawOutput,
-        humanReviewRequired: true,
-        contextSnapshotId: context.contextSnapshotId,
-        estimatedContextTokens: context.estimatedTokens,
-        contextMessages: context.messages,
-      };
-    }
-
-    let parsed: unknown;
-    try {
-      parsed = JSON.parse(jsonText);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      await this.logAiInteraction(emailMessage, options, context, {
-        errorCode: 'ai_json_parse_failed',
-        message,
-      }, rawOutput);
+        validation.data,
+        attempts,
+        attempt,
+      );
 
       return {
-        success: false,
-        errorCode: 'ai_json_parse_failed',
-        message,
+        success: true,
+        analysis: validation.data,
         rawOutput,
-        humanReviewRequired: true,
         contextSnapshotId: context.contextSnapshotId,
         estimatedContextTokens: context.estimatedTokens,
         contextMessages: context.messages,
       };
     }
 
-    const validation = emailAiAnalysisSchema.safeParse(parsed);
-    if (!validation.success) {
-      const message = validation.error.issues
-        .map((issue) => `${issue.path.join('.') || '(root)'}: ${issue.message}`)
-        .join('; ');
-      await this.logAiInteraction(emailMessage, options, context, {
-        errorCode: 'ai_validation_failed',
-        message,
-      }, rawOutput);
+    const finalFailure = lastFailure ?? this.buildFailure(
+      context,
+      'ai_empty_output',
+      'AI returned no usable output.',
+    );
+    await this.logAiInteraction(
+      emailMessage,
+      options,
+      context,
+      {
+        errorCode: finalFailure.errorCode,
+        message: finalFailure.message,
+      },
+      finalFailure.rawOutput,
+      undefined,
+      attempts,
+    );
 
-      return {
-        success: false,
-        errorCode: 'ai_validation_failed',
-        message,
-        rawOutput,
-        humanReviewRequired: true,
-        contextSnapshotId: context.contextSnapshotId,
-        estimatedContextTokens: context.estimatedTokens,
-        contextMessages: context.messages,
-      };
-    }
-
-    await this.logAiInteraction(emailMessage, options, context, undefined, rawOutput, validation.data);
-
-    return {
-      success: true,
-      analysis: validation.data,
-      rawOutput,
-      contextSnapshotId: context.contextSnapshotId,
-      estimatedContextTokens: context.estimatedTokens,
-      contextMessages: context.messages,
-    };
+    return finalFailure;
   }
 
   private async buildMessages(
@@ -186,6 +220,8 @@ export class AnalyzeEmailWithAiUseCase {
     validationError?: { errorCode: string; message: string },
     rawOutput?: string,
     analysis?: EmailAiAnalysis,
+    attempts?: AiInteractionDebugAttempt[],
+    successfulAttempt?: number,
   ): Promise<void> {
     if (!this.aiInteractionDebugLogger) {
       return;
@@ -202,11 +238,55 @@ export class AnalyzeEmailWithAiUseCase {
         rawOutput,
         analysis,
         validationError,
+        attempts,
+        successfulAttempt,
       });
     } catch {
       // Debug logging must never block the email processing pipeline.
     }
   }
+
+  private buildFailure(
+    context: { messages: AiChatMessage[]; contextSnapshotId?: string; estimatedTokens?: number },
+    errorCode: AnalyzeEmailWithAiFailure['errorCode'],
+    message: string,
+    rawOutput?: string,
+  ): AnalyzeEmailWithAiFailure {
+    return {
+      success: false,
+      errorCode,
+      message,
+      rawOutput,
+      humanReviewRequired: true,
+      contextSnapshotId: context.contextSnapshotId,
+      estimatedContextTokens: context.estimatedTokens,
+      contextMessages: context.messages,
+    };
+  }
+}
+
+function buildAttemptMessages(
+  baseMessages: AiChatMessage[],
+  attempt: number,
+  previousFailure?: AnalyzeEmailWithAiFailure,
+): AiChatMessage[] {
+  if (attempt === 1 || !previousFailure) {
+    return baseMessages;
+  }
+
+  return [
+    ...baseMessages,
+    {
+      role: 'user',
+      content: [
+        `Context section: retry_repair_instruction`,
+        `Previous attempt failed with ${previousFailure.errorCode}: ${previousFailure.message}`,
+        'Return only one valid JSON object matching the required schema.',
+        'Do not include markdown fences, comments, or explanatory text.',
+        'For extractedRequirements values, use strings. Example: quantity should be "50 pcs" or "50", not a bare number.',
+      ].join('\n'),
+    },
+  ];
 }
 
 function formatEmailForAnalysis(emailMessage: EmailMessage): string {

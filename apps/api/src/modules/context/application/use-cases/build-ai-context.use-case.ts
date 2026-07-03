@@ -43,17 +43,39 @@ export class BuildAiContextUseCase {
       },
       {
         role: 'user',
-        content: [
+        content: formatContextSection('inquiry_state', [
           `Context purpose: ${input.purpose}`,
-          '',
           formatStateSection(input),
+        ]),
+      },
+      {
+        role: 'user',
+        content: formatContextSection(
+          'recent_customer_emails',
           formatRecentMessagesSection(recentEmails, budget.recentMessagesTokens),
+        ),
+      },
+      {
+        role: 'user',
+        content: formatContextSection(
+          'recent_our_replies',
           formatRecentOurRepliesSection(recentOurReplies),
-          formatRagSection(ragReferences),
+        ),
+      },
+      {
+        role: 'user',
+        content: formatContextSection('rag_references', formatRagSection(ragReferences)),
+      },
+      {
+        role: 'user',
+        content: formatContextSection(
+          'current_email',
           formatCurrentEmailSection(input.currentEmailMessage, budget.currentEmailTokens),
-          '',
-          input.outputFormatInstruction,
-        ].filter(Boolean).join('\n'),
+        ),
+      },
+      {
+        role: 'user',
+        content: formatContextSection('output_instruction', input.outputFormatInstruction),
       },
     ];
 
@@ -82,6 +104,14 @@ export class BuildAiContextUseCase {
       estimatedTokens,
     };
   }
+}
+
+function formatContextSection(sectionName: string, content: string | string[]): string {
+  const lines = Array.isArray(content) ? content : [content];
+  return [
+    `Context section: ${sectionName}`,
+    ...lines.filter(Boolean),
+  ].join('\n');
 }
 
 function selectRecentEmails(messages: EmailMessage[], currentEmailMessageId: string): EmailMessage[] {
