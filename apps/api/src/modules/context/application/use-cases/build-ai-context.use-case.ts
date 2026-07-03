@@ -1,15 +1,18 @@
 import { randomUUID } from 'node:crypto';
 
-import { EmailDirection } from '../../../email/domain/enums/email-direction.enum.js';
 import { EmailMessage } from '../../../email/domain/entities/email-message.entity.js';
 import { ContextPurpose } from '../../domain/enums/context-purpose.enum.js';
 import { ContextSourceType } from '../../domain/enums/context-source-type.enum.js';
 import { AiContextSnapshot } from '../../domain/entities/ai-context-snapshot.entity.js';
-import { DEFAULT_EMAIL_ANALYSIS_CONTEXT_BUDGET } from '../../domain/value-objects/context-budget.vo.js';
 import { AiChatMessage } from '../../domain/value-objects/ai-chat-message.vo.js';
 import { ContextSourceReference } from '../../domain/value-objects/context-source-reference.vo.js';
+import {
+  AiEmailAnalysisContextPayload,
+  aiEmailAnalysisContextPayloadSchema,
+} from '../dto/ai-email-analysis-context.schema.js';
 import { BuildAiContextInput } from '../dto/build-ai-context.dto.js';
 import { ContextSnapshotResponseDto } from '../dto/context-snapshot-response.dto.js';
+import { RagReference } from '../ports/rag-retriever.adapter.js';
 import { ContextSnapshotRepository } from '../ports/context-snapshot.repository.js';
 import { RagRetrieverAdapter } from '../ports/rag-retriever.adapter.js';
 import { TokenEstimator } from '../ports/token-estimator.js';
@@ -22,9 +25,10 @@ export class BuildAiContextUseCase {
   ) {}
 
   async execute(input: BuildAiContextInput): Promise<ContextSnapshotResponseDto> {
-    const budget = input.budget ?? DEFAULT_EMAIL_ANALYSIS_CONTEXT_BUDGET;
-    const recentEmails = selectRecentEmails(input.recentEmailMessages ?? [], input.currentEmailMessage.id);
-    const recentOurReplies = selectRecentOurReplies(input.recentOurReplies ?? []);
+    const recentThreadMessages = selectRecentThreadMessages(
+      input.recentEmailMessages ?? [],
+      input.currentEmailMessage.id,
+    );
     const ragReferences = await this.ragRetrieverAdapter.retrieve({
       inquiryCaseId: input.inquiryCase.id,
       emailMessageId: input.currentEmailMessage.id,
@@ -35,6 +39,9 @@ export class BuildAiContextUseCase {
       ].filter(Boolean).join('\n'),
       limit: 5,
     });
+    const contextPayload = aiEmailAnalysisContextPayloadSchema.parse(
+      buildContextPayload(input, recentThreadMessages, ragReferences),
+    );
 
     const messages: AiChatMessage[] = [
       {
@@ -43,43 +50,11 @@ export class BuildAiContextUseCase {
       },
       {
         role: 'user',
-        content: formatContextSection('inquiry_state', [
-          `Context purpose: ${input.purpose}`,
-          formatStateSection(input),
-        ]),
-      },
-      {
-        role: 'user',
-        content: formatContextSection(
-          'recent_customer_emails',
-          formatRecentMessagesSection(recentEmails, budget.recentMessagesTokens),
-        ),
-      },
-      {
-        role: 'user',
-        content: formatContextSection(
-          'recent_our_replies',
-          formatRecentOurRepliesSection(recentOurReplies),
-        ),
-      },
-      {
-        role: 'user',
-        content: formatContextSection('rag_references', formatRagSection(ragReferences)),
-      },
-      {
-        role: 'user',
-        content: formatContextSection(
-          'current_email',
-          formatCurrentEmailSection(input.currentEmailMessage, budget.currentEmailTokens),
-        ),
-      },
-      {
-        role: 'user',
-        content: formatContextSection('output_instruction', input.outputFormatInstruction),
+        content: JSON.stringify(contextPayload, null, 2),
       },
     ];
 
-    const sources = buildSources(input, recentEmails, recentOurReplies, ragReferences);
+    const sources = buildSources(input, recentThreadMessages, ragReferences);
     const estimatedTokens = this.tokenEstimator.estimateMessages(messages);
     const snapshot: AiContextSnapshot = {
       id: `ctx_${randomUUID()}`,
@@ -106,104 +81,89 @@ export class BuildAiContextUseCase {
   }
 }
 
-function formatContextSection(sectionName: string, content: string | string[]): string {
-  const lines = Array.isArray(content) ? content : [content];
-  return [
-    `Context section: ${sectionName}`,
-    ...lines.filter(Boolean),
-  ].join('\n');
-}
-
-function selectRecentEmails(messages: EmailMessage[], currentEmailMessageId: string): EmailMessage[] {
+function selectRecentThreadMessages(messages: EmailMessage[], currentEmailMessageId: string): EmailMessage[] {
   return messages
     .filter((message) => message.id !== currentEmailMessageId)
-    .sort((a, b) => b.receivedAt.getTime() - a.receivedAt.getTime())
-    .slice(0, 5)
-    .reverse();
+    .sort((a, b) => a.receivedAt.getTime() - b.receivedAt.getTime());
 }
 
-function selectRecentOurReplies(messages: EmailMessage[]): EmailMessage[] {
-  return messages
-    .filter((message) => message.direction === EmailDirection.OUTBOUND)
-    .sort((a, b) => b.receivedAt.getTime() - a.receivedAt.getTime())
-    .slice(0, 3)
-    .reverse();
-}
-
-function formatStateSection(input: BuildAiContextInput): string {
-  return [
-    'Current inquiry state:',
-    JSON.stringify({
-      inquiryCaseId: input.inquiryCase.id,
+function buildContextPayload(
+  input: BuildAiContextInput,
+  recentThreadMessages: EmailMessage[],
+  ragReferences: RagReference[],
+): AiEmailAnalysisContextPayload {
+  return {
+    inquiryState: {
       status: input.inquiryCase.status,
       customerEmail: input.inquiryCase.customerEmail,
-      subject: input.inquiryCase.subject,
+      subject: formatSubject(input.inquiryCase.subject),
       latestMessageAt: input.inquiryCase.latestMessageAt.toISOString(),
-    }, null, 2),
-  ].join('\n');
+    },
+    recentThreadMessages: recentThreadMessages.map(formatThreadMessage),
+    ragReferences: ragReferences.map((reference) => ({
+      title: reference.sourceTitle || 'reference',
+      content: reference.content || '(empty)',
+      score: reference.score,
+    })),
+    currentEmail: {
+      ...formatThreadMessage(input.currentEmailMessage),
+      to: formatRecipients(input.currentEmailMessage.toEmails),
+      subject: formatSubject(input.currentEmailMessage.subject),
+    },
+    outputInstruction: {
+      format: 'json_only',
+      schema: {
+        isInquiry: 'boolean',
+        classification: 'valid_inquiry | invalid | unrelated_product | commercial | unknown',
+        suggestedStatus: 'new | need_clarification | need_engineer_review | ready_for_quote | quoted | closed | invalid',
+        confidence: 'number between 0 and 1',
+        riskLevel: 'low | medium | high',
+        reason: 'string',
+        missingFields: 'string[]',
+        extractedRequirements: 'object with string values',
+        quoteBoundaryDetected: 'boolean',
+        humanReviewRequired: 'boolean',
+        nextAction: 'string',
+      },
+    },
+  };
 }
 
-function formatRecentMessagesSection(messages: EmailMessage[], tokenLimit: number): string {
-  if (messages.length === 0) {
-    return 'Recent email window: none';
-  }
-
-  return [
-    `Recent email window, approximate budget ${tokenLimit} tokens:`,
-    ...messages.map((message) => formatEmailMessage(message, 1200)),
-  ].join('\n\n');
+function formatThreadMessage(message: EmailMessage): {
+  direction: EmailMessage['direction'];
+  from: string;
+  to?: string;
+  subject?: string;
+  receivedAt: string;
+  cleanBody: string;
+} {
+  return {
+    direction: message.direction,
+    from: formatSender(message),
+    to: message.toEmails.length > 0 ? formatRecipients(message.toEmails) : undefined,
+    subject: message.subject ? formatSubject(message.subject) : undefined,
+    receivedAt: message.receivedAt.toISOString(),
+    cleanBody: message.bodyText || message.bodyHtml || '(empty)',
+  };
 }
 
-function formatRecentOurRepliesSection(messages: EmailMessage[]): string {
-  if (messages.length === 0) {
-    return 'Recent our reply window: none';
-  }
-
-  return [
-    'Recent our reply window:',
-    ...messages.map((message) => formatEmailMessage(message, 1200)),
-  ].join('\n\n');
+function formatSender(message: EmailMessage): string {
+  return message.fromName
+    ? `${message.fromName} <${message.fromEmail}>`
+    : message.fromEmail;
 }
 
-function formatRagSection(references: Array<{ sourceTitle: string; content: string; score?: number }>): string {
-  if (references.length === 0) {
-    return 'RAG references: none';
-  }
-
-  return [
-    'RAG references:',
-    ...references.map((reference) => [
-      `Title: ${reference.sourceTitle}`,
-      reference.score === undefined ? undefined : `Score: ${reference.score}`,
-      truncate(reference.content, 1200),
-    ].filter(Boolean).join('\n')),
-  ].join('\n\n');
+function formatRecipients(recipients: string[]): string {
+  return recipients.length > 0 ? recipients.join(', ') : '(none)';
 }
 
-function formatCurrentEmailSection(message: EmailMessage, tokenLimit: number): string {
-  return [
-    `Current customer email, approximate budget ${tokenLimit} tokens:`,
-    formatEmailMessage(message, 8000),
-  ].join('\n');
-}
-
-function formatEmailMessage(message: EmailMessage, maxLength: number): string {
-  return [
-    `EmailMessage ID: ${message.id}`,
-    `Direction: ${message.direction}`,
-    `From: ${message.fromName || ''} <${message.fromEmail}>`,
-    `To: ${message.toEmails.join(', ')}`,
-    `Subject: ${message.subject}`,
-    `ReceivedAt: ${message.receivedAt.toISOString()}`,
-    'Body:',
-    truncate(message.bodyText || message.bodyHtml || '(empty)', maxLength),
-  ].join('\n');
+function formatSubject(subject: string): string {
+  return subject.trim() || '(no subject)';
 }
 
 function buildSources(
   input: BuildAiContextInput,
-  recentEmails: EmailMessage[],
-  recentOurReplies: EmailMessage[],
+  recentThreadMessages: EmailMessage[],
   ragReferences: Array<{ sourceId?: string; sourceTitle: string }>,
 ): ContextSourceReference[] {
   return [
@@ -221,15 +181,10 @@ function buildSources(
       sourceId: input.currentEmailMessage.id,
       label: 'current email',
     },
-    ...recentEmails.map((message) => ({
+    ...recentThreadMessages.map((message) => ({
       sourceType: ContextSourceType.EMAIL,
       sourceId: message.id,
-      label: 'recent email',
-    })),
-    ...recentOurReplies.map((message) => ({
-      sourceType: ContextSourceType.EMAIL,
-      sourceId: message.id,
-      label: 'recent our reply',
+      label: 'recent thread email',
     })),
     ...ragReferences.map((reference) => ({
       sourceType: ContextSourceType.RAG,
@@ -237,12 +192,4 @@ function buildSources(
       label: reference.sourceTitle,
     })),
   ];
-}
-
-function truncate(value: string, maxLength: number): string {
-  if (value.length <= maxLength) {
-    return value;
-  }
-
-  return `${value.slice(0, maxLength)}\n[truncated ${value.length - maxLength} chars]`;
 }

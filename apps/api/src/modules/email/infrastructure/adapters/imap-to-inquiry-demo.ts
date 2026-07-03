@@ -13,6 +13,7 @@ import { EmailSource } from '../../domain/enums/email-source.enum.js';
 import { InboundEmail } from '../../domain/value-objects/inbound-email.vo.js';
 import { ReceiveInboundEmailUseCase } from '../../application/use-cases/receive-inbound-email.use-case.js';
 import { InMemoryEmailMessageRepository } from '../repositories/in-memory-email-message.repository.js';
+import { appendFetchedEmailMetadata } from '../services/email-metadata-file-logger.js';
 
 interface ImapInquiryDemoConfig {
   host: string;
@@ -136,13 +137,14 @@ async function fetchInboundEmail(client: ImapFlow, config: ImapInquiryDemoConfig
     return undefined;
   }
 
-  const parsed = await simpleParser(toBuffer(message.source));
+  const sourceBuffer = toBuffer(message.source);
+  const parsed = await simpleParser(sourceBuffer);
   const from = firstAddress(message.envelope?.from);
   if (!from?.address) {
     throw new Error(`Message UID ${message.uid} does not have a sender address.`);
   }
 
-  return {
+  const inboundEmail: InboundEmail = {
     messageId: parsed.messageId || `imap:${config.mailbox}:${message.uid}`,
     threadId: parsed.inReplyTo || parsed.references?.at(0),
     fromEmail: from.address,
@@ -154,8 +156,18 @@ async function fetchInboundEmail(client: ImapFlow, config: ImapInquiryDemoConfig
     bodyHtml: typeof parsed.html === 'string' ? parsed.html : undefined,
     receivedAt: message.internalDate instanceof Date ? message.internalDate : new Date(message.internalDate || Date.now()),
     source: EmailSource.IMAP,
-    raw: formatRawSource(toBuffer(message.source)),
+    raw: formatRawSource(sourceBuffer),
   };
+
+  await appendFetchedEmailMetadata({
+    mailbox: config.mailbox,
+    uid: message.uid,
+    inboundEmail,
+    rawSource: sourceBuffer,
+    rawSizeBytes: sourceBuffer.length,
+  });
+
+  return inboundEmail;
 }
 
 async function run(): Promise<void> {

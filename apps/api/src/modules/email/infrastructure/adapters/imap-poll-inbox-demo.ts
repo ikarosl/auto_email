@@ -12,6 +12,7 @@ import { PollEmailCandidate, PollEmailInboxUseCase } from '../../application/use
 import { ReceiveInboundEmailUseCase } from '../../application/use-cases/receive-inbound-email.use-case.js';
 import { EmailSource } from '../../domain/enums/email-source.enum.js';
 import { InboundEmail } from '../../domain/value-objects/inbound-email.vo.js';
+import { appendFetchedEmailMetadata } from '../services/email-metadata-file-logger.js';
 import { DeepseekEmailAnalysisAdapter } from './deepseek-email-analysis.adapter.js';
 import { InMemoryEmailMessageRepository } from '../repositories/in-memory-email-message.repository.js';
 import { InMemoryProcessedEmailTracker } from '../repositories/in-memory-processed-email-tracker.js';
@@ -188,6 +189,14 @@ async function fetchInboundEmailByUid(
     source: EmailSource.IMAP,
     raw: formatRawSource(sourceBuffer),
   };
+
+  await appendFetchedEmailMetadata({
+    mailbox,
+    uid: message.uid,
+    inboundEmail,
+    rawSource: sourceBuffer,
+    rawSizeBytes: sourceBuffer.length,
+  });
 
   return {
     identity: {

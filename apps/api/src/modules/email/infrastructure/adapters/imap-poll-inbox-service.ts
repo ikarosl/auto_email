@@ -23,6 +23,7 @@ import { PrismaService } from '../../../../common/database/prisma.service.js';
 import { PollEmailInboxUseCase } from '../../application/use-cases/poll-email-inbox.use-case.js';
 import { EmailSource } from '../../domain/enums/email-source.enum.js';
 import { InboundEmail } from '../../domain/value-objects/inbound-email.vo.js';
+import { appendFetchedEmailMetadata } from '../services/email-metadata-file-logger.js';
 import { MailboxSyncService } from '../services/mailbox-sync.service.js';
 
 // ---------------------------------------------------------------------------
@@ -159,7 +160,7 @@ async function fetchInboundEmail(
     throw new Error(`Message UID ${message.uid} does not have a sender address.`);
   }
 
-  return {
+  const inboundEmail: InboundEmail = {
     messageId: parsed.messageId || `imap:${mailbox}:${message.uid}`,
     threadId: parsed.inReplyTo || parsed.references?.at(0),
     fromEmail: from.address,
@@ -175,6 +176,16 @@ async function fetchInboundEmail(
     source: EmailSource.IMAP,
     raw: formatRawSource(sourceBuffer),
   };
+
+  await appendFetchedEmailMetadata({
+    mailbox,
+    uid: message.uid,
+    inboundEmail,
+    rawSource: sourceBuffer,
+    rawSizeBytes: sourceBuffer.length,
+  });
+
+  return inboundEmail;
 }
 
 function getStatusUidValidity(status: unknown): bigint | null {

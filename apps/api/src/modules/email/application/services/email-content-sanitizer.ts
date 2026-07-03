@@ -158,6 +158,7 @@ function scoreQuoteBoundary(lines: string[], index: number): number {
   if (
     /^On .+ wrote:$/i.test(trimmed)
     || /^(?:.+\s)?\u5728\s*.+\s*\u5199\u9053[:\uff1a]$/.test(trimmed)
+    || isReplyAttributionLine(trimmed)
   ) {
     return 90;
   }
@@ -179,6 +180,42 @@ function countConsecutiveQuotedLines(lines: string[], startIndex: number): numbe
   }
 
   return count;
+}
+
+function isReplyAttributionLine(line: string): boolean {
+  if (!hasEmailAddress(line)) {
+    return false;
+  }
+
+  return hasDateOrTimeSignal(line) && hasReplyVerbSignal(line);
+}
+
+function hasDateOrTimeSignal(line: string): boolean {
+  return (
+    /\b\d{4}[-/.]\d{1,2}[-/.]\d{1,2}\b/.test(line)
+    || /\b\d{1,2}[-/.]\d{1,2}[-/.]\d{2,4}\b/.test(line)
+    || /\b\d{4}\s*\u5e74\s*\d{1,2}\s*\u6708\s*\d{1,2}\s*\u65e5/.test(line)
+    || /\b\d{1,2}\s*\u6708\s*\d{1,2}\s*\u65e5/.test(line)
+    || /\b\d{1,2}\s+(?:jan|january|feb|february|mar|march|apr|april|may|jun|june|jul|july|aug|august|sep|sept|september|oct|october|nov|november|dec|december)\s+\d{4}\b/i.test(line)
+    || /\b(?:jan|january|feb|february|mar|march|apr|april|may|jun|june|jul|july|aug|august|sep|sept|september|oct|october|nov|november|dec|december)\s+\d{1,2},?\s+\d{4}\b/i.test(line)
+    || /\b\d{1,2}:\d{2}(?::\d{2})?\s*(?:am|pm|cest|cet|gmt|utc|est|edt|pst|pdt|cst|cdt)?\b/i.test(line)
+  );
+}
+
+function hasReplyVerbSignal(line: string): boolean {
+  return (
+    /\bwrote\s*:?\s*$/i.test(line)
+    || /\bha\s+scritto\s*:?\s*$/i.test(line)
+    || /\ba\s+\u00e9crit\s*:?\s*$/i.test(line)
+    || /\bescribi\u00f3\s*:?\s*$/i.test(line)
+    || /\bescreveu\s*:?\s*$/i.test(line)
+    || /\bschrieb\s*:?\s*$/i.test(line)
+    || /\bnapisa\u0142(?:a)?\s*:?\s*$/i.test(line)
+    || /\bschreef\s*:?\s*$/i.test(line)
+    || /\u5199\u9053\s*[:\uff1a]?\s*$/.test(line)
+    || /\u66f8\u304d\u307e\u3057\u305f\s*[:\uff1a]?\s*$/.test(line)
+    || /\uc791\uc131\s*[:\uff1a]?\s*$/.test(line)
+  );
 }
 
 function scoreMailHeaderSignals(lines: string[], startIndex: number): number {

@@ -27,6 +27,7 @@ import {
 } from '../../application/use-cases/poll-email-inbox.use-case.js';
 import { EmailSource } from '../../domain/enums/email-source.enum.js';
 import { InboundEmail } from '../../domain/value-objects/inbound-email.vo.js';
+import { appendFetchedEmailMetadata } from './email-metadata-file-logger.js';
 import { MailboxSyncService } from './mailbox-sync.service.js';
 
 // ---------------------------------------------------------------------------
@@ -386,7 +387,7 @@ export class ImapPollService implements OnApplicationBootstrap, OnApplicationShu
     const from = firstAddress(message.envelope?.from);
     if (!from?.address) throw new Error(`邮件 UID=${uid} 没有发件人地址`);
 
-    return {
+    const inboundEmail: InboundEmail = {
       messageId: parsed.messageId || `imap:${mailbox}:${message.uid}`,
       threadId: parsed.inReplyTo || parsed.references?.at(0),
       fromEmail: from.address,
@@ -402,6 +403,17 @@ export class ImapPollService implements OnApplicationBootstrap, OnApplicationShu
       source: EmailSource.IMAP,
       raw: formatRawSource(sourceBuffer),
     };
+
+    await appendFetchedEmailMetadata({
+      mailbox,
+      uid: message.uid,
+      uidValidity: await this.getUidValidity(),
+      inboundEmail,
+      rawSource: sourceBuffer,
+      rawSizeBytes: sourceBuffer.length,
+    });
+
+    return inboundEmail;
   }
 
   private async tryReconnect(): Promise<void> {

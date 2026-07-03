@@ -69,6 +69,48 @@ describe('EmailContentSanitizer', () => {
     assert.equal(result, '我们接受 4 到 6 周交期。');
   });
 
+  it('removes reply attribution lines with email, date, and localized wrote signal', () => {
+    const chinese = sanitizer.sanitize([
+      'Current reply: please proceed with the quotation.',
+      '',
+      '(Dennis kim) <dykim@rfhic.com> 在 2026年6月22日 周一 17:47 写道：',
+      'Previous inquiry body.',
+    ].join('\n'));
+    const italian = sanitizer.sanitize([
+      'Current reply: accepted.',
+      '',
+      'Il 26/06/2026 03:51 CEST Hzbeat <sales@hzbeat.com> ha scritto:',
+      'Previous reply body.',
+    ].join('\n'));
+    const english = sanitizer.sanitize([
+      'Current reply: contract received.',
+      '',
+      'On 2 Jul 2026 at 8:42 am, Shira <shira@hzbeat.com> wrote:',
+      'Previous reply body.',
+    ].join('\n'));
+
+    assert.equal(chinese, 'Current reply: please proceed with the quotation.');
+    assert.equal(italian, 'Current reply: accepted.');
+    assert.equal(english, 'Current reply: contract received.');
+  });
+
+  it('does not remove a business line that has email and date but no reply attribution verb', () => {
+    const result = sanitizer.sanitize([
+      'Schedule:',
+      'Please contact buyer@example.com before 2 Jul 2026 for delivery confirmation.',
+      'Quantity: 50 pcs.',
+    ].join('\n'));
+
+    assert.equal(
+      result,
+      [
+        'Schedule:',
+        'Please contact buyer@example.com before 2 Jul 2026 for delivery confirmation.',
+        'Quantity: 50 pcs.',
+      ].join('\n'),
+    );
+  });
+
   it('keeps ordinary UTF-8 Chinese body text', () => {
     const result = sanitizer.sanitize([
       '这是一封新的询盘邮件。',
