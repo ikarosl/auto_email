@@ -131,9 +131,9 @@ AI 上下文快照进入 ai_context_snapshots。
 模块建议：
 
 ```text
-apps/api/src/modules/inquiry/application/ports/inquiry-structured-facts.repository.ts
-apps/api/src/modules/inquiry/application/use-cases/update-inquiry-structured-facts.use-case.ts
-apps/api/src/modules/inquiry/infrastructure/repositories/prisma-inquiry-structured-facts.repository.ts
+apps/backend/src/modules/inquiry/application/ports/inquiry-structured-facts.repository.ts
+apps/backend/src/modules/inquiry/application/use-cases/update-inquiry-structured-facts.use-case.ts
+apps/backend/src/modules/inquiry/infrastructure/repositories/prisma-inquiry-structured-facts.repository.ts
 ```
 
 小点：
@@ -164,8 +164,8 @@ apps/api/src/modules/inquiry/infrastructure/repositories/prisma-inquiry-structur
 模块建议：
 
 ```text
-apps/api/src/modules/email/application/ports/ai-decision.repository.ts
-apps/api/src/modules/email/infrastructure/repositories/prisma-ai-decision.repository.ts
+apps/backend/src/modules/email/application/ports/ai-decision.repository.ts
+apps/backend/src/modules/email/infrastructure/repositories/prisma-ai-decision.repository.ts
 ```
 
 小点：
@@ -193,10 +193,10 @@ apps/api/src/modules/email/infrastructure/repositories/prisma-ai-decision.reposi
 模块建议：
 
 ```text
-apps/api/src/modules/reply/domain/entities/reply-draft.entity.ts
-apps/api/src/modules/reply/application/ports/reply-draft.repository.ts
-apps/api/src/modules/reply/application/use-cases/create-reply-draft.use-case.ts
-apps/api/src/modules/reply/infrastructure/repositories/prisma-reply-draft.repository.ts
+apps/backend/src/modules/reply/domain/entities/reply-draft.entity.ts
+apps/backend/src/modules/reply/application/ports/reply-draft.repository.ts
+apps/backend/src/modules/reply/application/use-cases/create-reply-draft.use-case.ts
+apps/backend/src/modules/reply/infrastructure/repositories/prisma-reply-draft.repository.ts
 ```
 
 小点：
@@ -333,7 +333,7 @@ AI 能避免重复询问已经确认过的字段。
 在这之前你需要先安装：
 
 ```bash
-pnpm --filter @email-inquiry/api add @prisma/adapter-pg
+pnpm --filter @email-inquiry/backend add @prisma/adapter-pg
 ```
 
 装完后，我就可以继续实现：

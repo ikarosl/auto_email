@@ -9,9 +9,11 @@
     "pnpm": ">=11.0.0"
   },
   "scripts": {
-    "dev:api": "pnpm --filter @email-inquiry/api dev",
-    "start:api": "pnpm --filter @email-inquiry/api start",
-    "dev:demo": "pnpm --filter @email-inquiry/api demo:imap",
+    "dev:backend": "pnpm --filter @email-inquiry/backend dev",
+    "start:backend": "pnpm --filter @email-inquiry/backend start",
+    "dev:api": "pnpm dev:backend",
+    "start:api": "pnpm start:backend",
+    "dev:demo": "pnpm --filter @email-inquiry/backend demo:imap",
     "build": "pnpm -r build",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",

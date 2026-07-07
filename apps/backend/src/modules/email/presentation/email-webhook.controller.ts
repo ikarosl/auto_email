@@ -12,6 +12,7 @@ export class EmailWebhookController {
   async receiveInbound(@Body() body: InboundEmailWebhookDto) {
     const result = await this.receiveInboundEmailUseCase.execute({
       messageId: body.messageId,
+      mailboxAccountId: '',
       threadId: body.threadId,
       fromEmail: body.fromEmail,
       fromName: body.fromName,

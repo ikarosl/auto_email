@@ -104,7 +104,7 @@ AI 分析
 建议新增独立模块：
 
 ```text
-apps/api/src/modules/context/
+apps/backend/src/modules/context/
 ```
 
 原因：
@@ -121,7 +121,7 @@ context 模块负责为 AI 调用准备上下文。
 ## 5. 推荐目录结构
 
 ```text
-apps/api/src/modules/context/
+apps/backend/src/modules/context/
   context.module.ts
 
   domain/

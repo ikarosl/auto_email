@@ -389,6 +389,7 @@ export class ImapPollService implements OnApplicationBootstrap, OnApplicationShu
 
     const inboundEmail: InboundEmail = {
       messageId: parsed.messageId || `imap:${mailbox}:${message.uid}`,
+      mailboxAccountId: this.mailboxAccountId,
       threadId: parsed.inReplyTo || parsed.references?.at(0),
       fromEmail: from.address,
       fromName: from.name,

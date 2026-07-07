@@ -146,6 +146,7 @@ async function fetchInboundEmail(client: ImapFlow, config: ImapInquiryDemoConfig
 
   const inboundEmail: InboundEmail = {
     messageId: parsed.messageId || `imap:${config.mailbox}:${message.uid}`,
+    mailboxAccountId: '',
     threadId: parsed.inReplyTo || parsed.references?.at(0),
     fromEmail: from.address,
     fromName: from.name,
@@ -198,9 +199,11 @@ async function run(): Promise<void> {
     const emailRepository = new InMemoryEmailMessageRepository();
     const inquiryRepository = new InMemoryInquiryRepository();
     const createInquiryFromEmailUseCase = new CreateInquiryFromEmailUseCase(inquiryRepository);
+    const emailThreadRepository = createMockEmailThreadRepository();
     const receiveInboundEmailUseCase = new ReceiveInboundEmailUseCase(
       emailRepository,
       createInquiryFromEmailUseCase,
+      emailThreadRepository,
     );
 
     const result = await receiveInboundEmailUseCase.execute(inboundEmail);
@@ -218,6 +221,19 @@ async function run(): Promise<void> {
     lock.release();
     await client.logout();
   }
+}
+
+function createMockEmailThreadRepository() {
+  return {
+    findByThreadKey: async () => null,
+    create: async (params: { id: string; threadKey: string; mailboxAccountId: string }) => ({
+      ...params,
+      externalThreadId: undefined,
+      subjectNormalized: undefined,
+      customerEmail: undefined,
+      latestMessageAt: undefined,
+    }),
+  };
 }
 
 run().catch((error: unknown) => {

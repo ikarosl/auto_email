@@ -14,16 +14,18 @@ import { AnalyzeEmailWithAiUseCase } from './application/use-cases/analyze-email
 import { PollEmailInboxUseCase } from './application/use-cases/poll-email-inbox.use-case.js';
 import { EmailMessageRepository } from './application/ports/email-message.repository.js';
 import { EmailAiAnalysisAdapter } from './application/ports/email-ai-analysis.adapter.js';
+import { EmailThreadRepository } from './application/ports/email-thread.repository.js';
 import { ProcessedEmailTracker } from './application/ports/processed-email-tracker.js';
 import { AiInteractionDebugLogger } from './application/ports/ai-interaction-debug-logger.js';
 import { DeepseekEmailAnalysisAdapter } from './infrastructure/adapters/deepseek-email-analysis.adapter.js';
 import { PrismaEmailMessageRepository } from './infrastructure/repositories/prisma-email-message.repository.js';
+import { PrismaEmailThreadRepository } from './infrastructure/repositories/prisma-email-thread.repository.js';
 import { PrismaProcessedEmailTracker } from './infrastructure/repositories/prisma-processed-email-tracker.js';
 import { MailboxSyncService } from './infrastructure/services/mailbox-sync.service.js';
 import { ImapPollService } from './infrastructure/services/imap-poll.service.js';
 import { FileAiInteractionDebugLogger } from './infrastructure/services/file-ai-interaction-debug-logger.js';
 import { EmailWebhookController } from './presentation/email-webhook.controller.js';
-import { EMAIL_AI_ANALYSIS_ADAPTER, EMAIL_MESSAGE_REPOSITORY, PROCESSED_EMAIL_TRACKER } from './email.tokens.js';
+import { EMAIL_AI_ANALYSIS_ADAPTER, EMAIL_MESSAGE_REPOSITORY, EMAIL_THREAD_REPOSITORY, PROCESSED_EMAIL_TRACKER } from './email.tokens.js';
 
 @Module({
   imports: [InquiryModule, ContextModule],
@@ -58,6 +60,11 @@ import { EMAIL_AI_ANALYSIS_ADAPTER, EMAIL_MESSAGE_REPOSITORY, PROCESSED_EMAIL_TR
       useClass: FileAiInteractionDebugLogger,
     },
     {
+      provide: EMAIL_THREAD_REPOSITORY,
+      useFactory: (prisma: PrismaService) => new PrismaEmailThreadRepository(prisma),
+      inject: [PrismaService],
+    },
+    {
       provide: PROCESSED_EMAIL_TRACKER,
       useFactory: (prisma: PrismaService) => new PrismaProcessedEmailTracker(prisma),
       inject: [PrismaService],
@@ -67,6 +74,7 @@ import { EMAIL_AI_ANALYSIS_ADAPTER, EMAIL_MESSAGE_REPOSITORY, PROCESSED_EMAIL_TR
       useFactory: (
         emailMessageRepository: EmailMessageRepository,
         createInquiryFromEmailUseCase: CreateInquiryFromEmailUseCase,
+        emailThreadRepository: EmailThreadRepository,
         inquiryRepository: InquiryRepository,
         inquiryMessageRepository: InquiryMessageRepository,
       ) => {
@@ -79,6 +87,7 @@ import { EMAIL_AI_ANALYSIS_ADAPTER, EMAIL_MESSAGE_REPOSITORY, PROCESSED_EMAIL_TR
         return new ReceiveInboundEmailUseCase(
           emailMessageRepository,
           createInquiryFromEmailUseCase,
+          emailThreadRepository,
           findInquiryForInboundEmailUseCase,
           inquiryMessageRepository,
         );
@@ -86,6 +95,7 @@ import { EMAIL_AI_ANALYSIS_ADAPTER, EMAIL_MESSAGE_REPOSITORY, PROCESSED_EMAIL_TR
       inject: [
         EMAIL_MESSAGE_REPOSITORY,
         CreateInquiryFromEmailUseCase,
+        EMAIL_THREAD_REPOSITORY,
         INQUIRY_REPOSITORY,
         INQUIRY_MESSAGE_REPOSITORY,
       ],

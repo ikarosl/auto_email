@@ -63,7 +63,7 @@
 
 - 新增 IMAP 源数据日志 helper。
 - 每次后端从 IMAP 拉取邮件后，追加写入：
-  - `apps/api/logs/email.txt`
+  - `apps/backend/logs/email.txt`
 - 日志内容包含：
   - `rawSourceBase64`
   - `rawSourceUtf8LossyForDebug`
@@ -99,8 +99,8 @@
 已通过：
 
 ```text
-pnpm.cmd --filter @email-inquiry/api typecheck
-pnpm.cmd --filter @email-inquiry/api test
+pnpm.cmd --filter @email-inquiry/backend typecheck
+pnpm.cmd --filter @email-inquiry/backend test
 ```
 
 测试结果：
@@ -127,6 +127,6 @@ pnpm.cmd --filter @email-inquiry/api test
 
 ## 注意事项
 
-- `apps/api/logs/email.txt`、AI debug log、sanitizer debug log 都可能包含真实邮件内容，仅用于本地开发调试，不应提交到仓库。
+- `apps/backend/logs/email.txt`、AI debug log、sanitizer debug log 都可能包含真实邮件内容，仅用于本地开发调试，不应提交到仓库。
 - 当前 AI 输出 schema 未改变，仍保持原有状态建议、置信度、缺失字段和结构化需求字段。
 - 本次改动只优化 AI 输入上下文与调试能力，不实现 AI 自动发邮件，也不自动执行询盘状态流转。

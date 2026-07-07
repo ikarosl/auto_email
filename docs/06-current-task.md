@@ -166,10 +166,10 @@ AI_EMAIL_ANALYSIS_MODEL
 建议新增：
 
 ```text
-apps/api/src/modules/email/application/ports/processed-email-tracker.ts
-apps/api/src/modules/email/infrastructure/repositories/in-memory-processed-email-tracker.ts
-apps/api/src/modules/email/application/use-cases/poll-email-inbox.use-case.ts
-apps/api/src/modules/email/infrastructure/adapters/imap-poll-inbox-demo.ts
+apps/backend/src/modules/email/application/ports/processed-email-tracker.ts
+apps/backend/src/modules/email/infrastructure/repositories/in-memory-processed-email-tracker.ts
+apps/backend/src/modules/email/application/use-cases/poll-email-inbox.use-case.ts
+apps/backend/src/modules/email/infrastructure/adapters/imap-poll-inbox-demo.ts
 ```
 
 职责：
@@ -225,10 +225,10 @@ messageId
 建议新增：
 
 ```text
-apps/api/src/modules/email/domain/value-objects/email-ai-analysis.vo.ts
-apps/api/src/modules/email/application/use-cases/analyze-email-with-ai.use-case.ts
-apps/api/src/modules/email/application/dto/email-ai-analysis.schema.ts
-apps/api/src/modules/email/infrastructure/adapters/deepseek-email-analysis.adapter.ts
+apps/backend/src/modules/email/domain/value-objects/email-ai-analysis.vo.ts
+apps/backend/src/modules/email/application/use-cases/analyze-email-with-ai.use-case.ts
+apps/backend/src/modules/email/application/dto/email-ai-analysis.schema.ts
+apps/backend/src/modules/email/infrastructure/adapters/deepseek-email-analysis.adapter.ts
 ```
 
 职责：

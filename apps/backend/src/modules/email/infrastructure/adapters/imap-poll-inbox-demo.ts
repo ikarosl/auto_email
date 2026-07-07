@@ -177,6 +177,7 @@ async function fetchInboundEmailByUid(
 
   const inboundEmail: InboundEmail = {
     messageId: parsed.messageId || `imap:${mailbox}:${message.uid}`,
+    mailboxAccountId: '',
     threadId: parsed.inReplyTo || parsed.references?.at(0),
     fromEmail: from.address,
     fromName: from.name,
@@ -232,9 +233,11 @@ async function run(): Promise<void> {
     inquiryMessageRepository,
     emailRepository,
   );
+  const emailThreadRepository = createMockEmailThreadRepository();
   const receiveInboundEmailUseCase = new ReceiveInboundEmailUseCase(
     emailRepository,
     createInquiryFromEmailUseCase,
+    emailThreadRepository,
     findInquiryForInboundEmailUseCase,
     inquiryMessageRepository,
   );
@@ -352,6 +355,19 @@ async function run(): Promise<void> {
   }
 
   await client.logout();
+}
+
+function createMockEmailThreadRepository() {
+  return {
+    findByThreadKey: async () => null,
+    create: async (params: { id: string; threadKey: string; mailboxAccountId: string }) => ({
+      ...params,
+      externalThreadId: undefined,
+      subjectNormalized: undefined,
+      customerEmail: undefined,
+      latestMessageAt: undefined,
+    }),
+  };
 }
 
 run().catch((error: unknown) => {

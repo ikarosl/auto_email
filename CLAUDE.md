@@ -101,34 +101,40 @@ cp .env.example .env
 # 然后编辑 .env，填入 DEEPSEEK_API_KEY、IMAP_HOST/USER/PASS、DATABASE_URL
 
 # 初始化数据库（需要先手动创建 email_inquiry 数据库）
-pnpm --filter @email-inquiry/api db:migrate
+pnpm --filter @email-inquiry/backend db:migrate
 
 # 生成 Prisma 客户端
-pnpm --filter @email-inquiry/api db:generate
+pnpm --filter @email-inquiry/backend db:generate
 
-# 启动开发服务器（tsx watch 热重载，默认 http://0.0.0.0:3000）
-pnpm --filter @email-inquiry/api dev
+# 启动开发服务器（tsx watch 热重载，默认 http://0.0.0.0:3003）
+pnpm dev:backend
+# 或兼容别名（效果相同）
+pnpm dev:api
+
+# 生产启动
+pnpm start:backend
+pnpm start:api    # 兼容别名
 ```
 
 ## 构建命令
 
 ```bash
-# 构建 API 应用（tsc 编译到 apps/api/dist/）
-pnpm --filter @email-inquiry/api build
+# 构建 API 应用（tsc 编译到 apps/backend/dist/）
+pnpm --filter @email-inquiry/backend build
 
 # 构建 shared 包
 pnpm --filter @email-inquiry/shared build
 
 # 按依赖顺序构建所有包（从依赖到依赖者）
 pnpm --filter @email-inquiry/shared build
-pnpm --filter @email-inquiry/api build
+pnpm --filter @email-inquiry/backend build
 
 # 类型检查（不输出文件）
-pnpm --filter @email-inquiry/api typecheck
+pnpm --filter @email-inquiry/backend typecheck
 pnpm --filter @email-inquiry/shared typecheck
 
 # 清理 dist 目录
-pnpm --filter @email-inquiry/api clean
+pnpm --filter @email-inquiry/backend clean
 pnpm --filter @email-inquiry/shared clean
 ```
 
@@ -136,13 +142,13 @@ pnpm --filter @email-inquiry/shared clean
 
 ```bash
 # 运行所有测试
-pnpm --filter @email-inquiry/api test
+pnpm --filter @email-inquiry/backend test
 
 # 运行单个测试文件
 pnpx --package tsx tsx --test "src/modules/inquiry/domain/state-machine/inquiry-state-machine.spec.ts"
 
 # 按名称模式过滤测试（Node 22+）
-pnpm --filter @email-inquiry/api test -- --test-name-pattern="canTransition"
+pnpm --filter @email-inquiry/backend test -- --test-name-pattern="canTransition"
 ```
 
 测试框架：Node.js 原生 `node:test` + `node:assert/strict`，无 Jest/Vitest。
@@ -163,16 +169,16 @@ pnpm --filter @email-inquiry/api test -- --test-name-pattern="canTransition"
 
 ```bash
 # 测试 DeepSeek API 调用
-pnpm --filter @email-inquiry/api demo:deepseek
+pnpm --filter @email-inquiry/backend demo:deepseek
 
 # 测试 IMAP 拉取邮件（需配置 IMAP_* 环境变量）
-pnpm --filter @email-inquiry/api demo:imap
+pnpm --filter @email-inquiry/backend demo:imap
 
 # 测试 IMAP 拉取 → 创建询盘
-pnpm --filter @email-inquiry/api demo:imap-to-inquiry
+pnpm --filter @email-inquiry/backend demo:imap-to-inquiry
 
 # 测试 IMAP 轮询 + AI 分析（核心 demo）
-pnpm --filter @email-inquiry/api demo:poll-inbox
+pnpm --filter @email-inquiry/backend demo:poll-inbox
 ```
 
 ## 目录结构
@@ -180,7 +186,7 @@ pnpm --filter @email-inquiry/api demo:poll-inbox
 ```
 邮件自动回复/
 ├── apps/
-│   └── api/                          # NestJS 应用
+│   └── backend/                      # NestJS 应用（包名 @email-inquiry/backend）
 │       ├── src/
 │       │   ├── main.ts               # 应用入口（NestFactory.create）
 │       │   ├── app.module.ts          # 根模块（导入所有子模块）
@@ -364,14 +370,14 @@ import { InquiryRepository } from './application/ports/inquiry.repository.js';
 
 ```bash
 # Prisma 相关
-pnpm --filter @email-inquiry/api db:generate   # 重新生成 Prisma 客户端（到 src/generated/prisma/）
-pnpm --filter @email-inquiry/api db:push       # 推送 schema 到数据库
-pnpm --filter @email-inquiry/api db:pull       # 从数据库拉取 schema
-pnpm --filter @email-inquiry/api db:studio     # Prisma Studio GUI
+pnpm --filter @email-inquiry/backend db:generate   # 重新生成 Prisma 客户端（到 src/generated/prisma/）
+pnpm --filter @email-inquiry/backend db:push       # 推送 schema 到数据库
+pnpm --filter @email-inquiry/backend db:pull       # 从数据库拉取 schema
+pnpm --filter @email-inquiry/backend db:studio     # Prisma Studio GUI
 
 # 自定义 SQL 迁移
-pnpm --filter @email-inquiry/api db:migrate    # 运行 database/migrations/ 下的 SQL
-pnpm --filter @email-inquiry/api db:check      # 验证数据库表是否存在
+pnpm --filter @email-inquiry/backend db:migrate    # 运行 database/migrations/ 下的 SQL
+pnpm --filter @email-inquiry/backend db:check      # 验证数据库表是否存在
 ```
 
 ### 数据库模型（Prisma schema 中的 13 个模型）
@@ -391,32 +397,32 @@ pnpm --filter @email-inquiry/api db:check      # 验证数据库表是否存在
 
 | 文件 | 风险说明 |
 |------|---------|
-| `apps/api/prisma/schema.prisma` | 数据库模型定义，增删改影响迁移和数据类型 |
-| `apps/api/database/migrations/*.sql` | 已有迁移不可修改（只能新增），否则破坏环境一致性 |
+| `apps/backend/prisma/schema.prisma` | 数据库模型定义，增删改影响迁移和数据类型 |
+| `apps/backend/database/migrations/*.sql` | 已有迁移不可修改（只能新增），否则破坏环境一致性 |
 | `.env.example` | 环境变量模板，增减变量需同步更新文档和代码 |
 | `.env` | 已 gitignore，但本地配置依赖此文件 |
-| `apps/api/src/modules/inquiry/domain/state-machine/inquiry-transitions.ts` | 状态流转表，修改需同步更新业务文档和设备代码 |
-| `apps/api/src/modules/inquiry/domain/state-machine/inquiry-transition.guard.ts` | 流转守卫规则，涉及 AI/人工权限边界 |
-| `apps/api/src/modules/inquiry/domain/enums/inquiry-status.enum.ts` | 状态枚举，增删改影响状态机和所有引用 |
-| `apps/api/src/modules/email/application/prompts/email-analysis.prompt.ts` | AI 系统提示词，影响整个 AI 分析质量 |
-| `apps/api/src/modules/email/application/dto/email-ai-analysis.schema.ts` | AI 输出 zod schema，校验规则影响系统安全边界 |
-| `apps/api/src/modules/inquiry/domain/matching/inquiry-matching-policy.ts` | 询盘匹配策略常量 |
-| `apps/api/src/config/deepseek-chat-demo.ts` | API Key 配置文件（但 Key 来自环境变量） |
-| `apps/api/src/main.ts` | 应用入口，全局过滤器、启动配置 |
-| `apps/api/src/app.module.ts` | 根模块，模块导入结构 |
+| `apps/backend/src/modules/inquiry/domain/state-machine/inquiry-transitions.ts` | 状态流转表，修改需同步更新业务文档和设备代码 |
+| `apps/backend/src/modules/inquiry/domain/state-machine/inquiry-transition.guard.ts` | 流转守卫规则，涉及 AI/人工权限边界 |
+| `apps/backend/src/modules/inquiry/domain/enums/inquiry-status.enum.ts` | 状态枚举，增删改影响状态机和所有引用 |
+| `apps/backend/src/modules/email/application/prompts/email-analysis.prompt.ts` | AI 系统提示词，影响整个 AI 分析质量 |
+| `apps/backend/src/modules/email/application/dto/email-ai-analysis.schema.ts` | AI 输出 zod schema，校验规则影响系统安全边界 |
+| `apps/backend/src/modules/inquiry/domain/matching/inquiry-matching-policy.ts` | 询盘匹配策略常量 |
+| `apps/backend/src/config/deepseek-chat-demo.ts` | API Key 配置文件（但 Key 来自环境变量） |
+| `apps/backend/src/main.ts` | 应用入口，全局过滤器、启动配置 |
+| `apps/backend/src/app.module.ts` | 根模块，模块导入结构 |
 | `package.json` (各层) | 依赖版本和 scripts |
 | `pnpm-workspace.yaml` | workspace 配置 |
 | `tsconfig.base.json` | 全局 TypeScript 配置 |
 
 ### 含 `.gitkeep` 的占位目录（尚未实现功能，新增文件需同步移除 `.gitkeep`）
 
-- `apps/api/src/common/decorators/`
-- `apps/api/src/common/guards/`
-- `apps/api/src/common/interceptors/`
-- `apps/api/src/common/utils/`
-- `apps/api/src/modules/inquiry/domain/events/`
-- `apps/api/src/modules/inquiry/infrastructure/mappers/`
-- `apps/api/test/`
+- `apps/backend/src/common/decorators/`
+- `apps/backend/src/common/guards/`
+- `apps/backend/src/common/interceptors/`
+- `apps/backend/src/common/utils/`
+- `apps/backend/src/modules/inquiry/domain/events/`
+- `apps/backend/src/modules/inquiry/infrastructure/mappers/`
+- `apps/backend/test/`
 - `packages/shared/src/types/`
 - `packages/shared/src/constants/`
 

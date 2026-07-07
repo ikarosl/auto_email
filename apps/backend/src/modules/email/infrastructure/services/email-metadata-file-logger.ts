@@ -29,7 +29,7 @@ function resolveEmailMetadataLogPath(): string {
     return resolve(cwd(), 'logs/email.txt');
   }
 
-  return resolve(cwd(), 'apps/api/logs/email.txt');
+  return resolve(cwd(), 'apps/backend/logs/email.txt');
 }
 
 function formatEmailMetadata(input: EmailMetadataLogInput): string {

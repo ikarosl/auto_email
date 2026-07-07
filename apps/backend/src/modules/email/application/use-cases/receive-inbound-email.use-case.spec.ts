@@ -15,9 +15,11 @@ describe('ReceiveInboundEmailUseCase', () => {
     const emailRepository = new InMemoryEmailMessageRepository();
     const inquiryRepository = new InMemoryInquiryRepository();
     const createInquiryFromEmailUseCase = new CreateInquiryFromEmailUseCase(inquiryRepository);
+    const emailThreadRepository = createMockEmailThreadRepository();
     const receiveInboundEmailUseCase = new ReceiveInboundEmailUseCase(
       emailRepository,
       createInquiryFromEmailUseCase,
+      emailThreadRepository,
     );
 
     const result = await receiveInboundEmailUseCase.execute({
@@ -31,6 +33,7 @@ describe('ReceiveInboundEmailUseCase', () => {
       bodyText: 'We need a 12-15GHz microstrip circulator, small size, 10 pcs.',
       receivedAt: new Date('2026-06-22T10:00:00.000Z'),
       source: EmailSource.MOCK,
+      mailboxAccountId: 'mock-account',
     });
 
     assert.equal(result.emailMessage.externalMessageId, 'mock-message-001');
@@ -48,6 +51,7 @@ describe('ReceiveInboundEmailUseCase', () => {
     const receiveInboundEmailUseCase = new ReceiveInboundEmailUseCase(
       emailRepository,
       new CreateInquiryFromEmailUseCase(inquiryRepository),
+      createMockEmailThreadRepository(),
     );
 
     const result = await receiveInboundEmailUseCase.execute({
@@ -64,6 +68,7 @@ describe('ReceiveInboundEmailUseCase', () => {
       ].join(''),
       receivedAt: new Date('2026-06-22T10:00:00.000Z'),
       source: EmailSource.MOCK,
+      mailboxAccountId: 'mock-account',
     });
 
     assert.equal(result.emailMessage.bodyText, 'Frequency: 12-15GHz\nQuantity: 50 pcs');
@@ -83,6 +88,7 @@ describe('ReceiveInboundEmailUseCase', () => {
       bodyText: 'We need an RF circulator.',
       receivedAt: new Date('2026-06-22T10:00:00.000Z'),
       source: EmailSource.MOCK,
+      mailboxAccountId: 'mock-account',
     });
 
     const second = await receiveInboundEmailUseCase.execute({
@@ -95,6 +101,7 @@ describe('ReceiveInboundEmailUseCase', () => {
       bodyText: '12-15GHz, 20W CW, 50 pcs.',
       receivedAt: new Date('2026-06-22T11:00:00.000Z'),
       source: EmailSource.MOCK,
+      mailboxAccountId: 'mock-account',
     });
 
     assert.equal(expectInquiryCase(second).id, expectInquiryCase(first).id);
@@ -115,6 +122,7 @@ describe('ReceiveInboundEmailUseCase', () => {
       bodyText: 'We need an RF circulator.',
       receivedAt: new Date(),
       source: EmailSource.MOCK,
+      mailboxAccountId: 'mock-account',
     });
 
     const second = await receiveInboundEmailUseCase.execute({
@@ -127,6 +135,7 @@ describe('ReceiveInboundEmailUseCase', () => {
       bodyText: '12-15GHz, 20W CW, 50 pcs.',
       receivedAt: new Date(),
       source: EmailSource.MOCK,
+      mailboxAccountId: 'mock-account',
     });
 
     assert.equal(expectInquiryCase(second).id, expectInquiryCase(first).id);
@@ -166,6 +175,7 @@ describe('ReceiveInboundEmailUseCase', () => {
       bodyText: 'Please check this new request.',
       receivedAt: now,
       source: EmailSource.MOCK,
+      mailboxAccountId: 'mock-account',
     });
 
     const inquiryCase = expectInquiryCase(result);
@@ -187,6 +197,7 @@ describe('ReceiveInboundEmailUseCase', () => {
       bodyText: 'We need an RF circulator.',
       receivedAt: new Date(),
       source: EmailSource.MOCK,
+      mailboxAccountId: 'mock-account',
     });
 
     const second = await receiveInboundEmailUseCase.execute({
@@ -199,6 +210,7 @@ describe('ReceiveInboundEmailUseCase', () => {
       bodyText: 'We need an RF isolator.',
       receivedAt: new Date(),
       source: EmailSource.MOCK,
+      mailboxAccountId: 'mock-account',
     });
 
     assert.equal(expectInquiryCase(second).customerEmail, 'second@example.com');
@@ -223,6 +235,7 @@ describe('ReceiveInboundEmailUseCase', () => {
         bodyText: 'We will check and reply tomorrow.',
         receivedAt: new Date(),
         source: EmailSource.MOCK,
+      mailboxAccountId: 'mock-account',
       });
 
       assert.equal(result.emailMessage.direction, 'outbound');
@@ -251,6 +264,7 @@ describe('ReceiveInboundEmailUseCase', () => {
         bodyText: 'Please see the attached contract.',
         receivedAt: new Date(),
         source: EmailSource.MOCK,
+      mailboxAccountId: 'mock-account',
       });
 
       assert.equal(result.emailMessage.direction, 'outbound');
@@ -279,10 +293,25 @@ function restoreEnv(key: string, value: string | undefined): void {
   process.env[key] = value;
 }
 
+function createMockEmailThreadRepository() {
+  let counter = 0;
+  return {
+    findByThreadKey: async () => null,
+    create: async (params: { id: string; threadKey: string; mailboxAccountId: string }) => ({
+      ...params,
+      externalThreadId: undefined,
+      subjectNormalized: undefined,
+      customerEmail: undefined,
+      latestMessageAt: undefined,
+    }),
+  } as const;
+}
+
 function createUseCaseWithMatcher() {
   const emailRepository = new InMemoryEmailMessageRepository();
   const inquiryRepository = new InMemoryInquiryRepository();
   const inquiryMessageRepository = new InMemoryInquiryMessageRepository();
+  const emailThreadRepository = createMockEmailThreadRepository();
   const createInquiryFromEmailUseCase = new CreateInquiryFromEmailUseCase(inquiryRepository);
   const findInquiryForInboundEmailUseCase = new FindInquiryForInboundEmailUseCase(
     inquiryRepository,
@@ -292,6 +321,7 @@ function createUseCaseWithMatcher() {
   const receiveInboundEmailUseCase = new ReceiveInboundEmailUseCase(
     emailRepository,
     createInquiryFromEmailUseCase,
+    emailThreadRepository,
     findInquiryForInboundEmailUseCase,
     inquiryMessageRepository,
   );

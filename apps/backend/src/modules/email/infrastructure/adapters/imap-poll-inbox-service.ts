@@ -142,6 +142,7 @@ async function fetchInboundEmail(
   client: ImapFlow,
   mailbox: string,
   uid: number,
+  mailboxAccountId?: string,
 ): Promise<InboundEmail> {
   const message = await client.fetchOne(
     String(uid),
@@ -162,6 +163,7 @@ async function fetchInboundEmail(
 
   const inboundEmail: InboundEmail = {
     messageId: parsed.messageId || `imap:${mailbox}:${message.uid}`,
+    mailboxAccountId: mailboxAccountId ?? '',
     threadId: parsed.inReplyTo || parsed.references?.at(0),
     fromEmail: from.address,
     fromName: from.name,
@@ -291,7 +293,7 @@ async function run(): Promise<void> {
           uid: summary.uid,
         };
 
-        const inboundEmail = await fetchInboundEmail(client, mailboxName, summary.uid);
+        const inboundEmail = await fetchInboundEmail(client, mailboxName, summary.uid, mailboxAccountId);
         const candidate = { identity, inboundEmail };
 
         const result = await pollUseCase.processCandidate(candidate);
