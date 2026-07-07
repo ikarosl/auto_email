@@ -59,6 +59,7 @@ export type AiContextSnapshotCountAggregateOutputType = {
   inquiryCaseId: number
   emailMessageId: number
   purpose: number
+  contextPayloadJson: number
   messagesJson: number
   sourceReferences: number
   estimatedTokens: number
@@ -101,6 +102,7 @@ export type AiContextSnapshotCountAggregateInputType = {
   inquiryCaseId?: true
   emailMessageId?: true
   purpose?: true
+  contextPayloadJson?: true
   messagesJson?: true
   sourceReferences?: true
   estimatedTokens?: true
@@ -200,6 +202,7 @@ export type AiContextSnapshotGroupByOutputType = {
   inquiryCaseId: string | null
   emailMessageId: string | null
   purpose: string
+  contextPayloadJson: runtime.JsonValue
   messagesJson: runtime.JsonValue
   sourceReferences: runtime.JsonValue
   estimatedTokens: number | null
@@ -235,6 +238,7 @@ export type AiContextSnapshotWhereInput = {
   inquiryCaseId?: Prisma.StringNullableFilter<"AiContextSnapshot"> | string | null
   emailMessageId?: Prisma.StringNullableFilter<"AiContextSnapshot"> | string | null
   purpose?: Prisma.StringFilter<"AiContextSnapshot"> | string
+  contextPayloadJson?: Prisma.JsonFilter<"AiContextSnapshot">
   messagesJson?: Prisma.JsonFilter<"AiContextSnapshot">
   sourceReferences?: Prisma.JsonFilter<"AiContextSnapshot">
   estimatedTokens?: Prisma.IntNullableFilter<"AiContextSnapshot"> | number | null
@@ -249,6 +253,7 @@ export type AiContextSnapshotOrderByWithRelationInput = {
   inquiryCaseId?: Prisma.SortOrderInput | Prisma.SortOrder
   emailMessageId?: Prisma.SortOrderInput | Prisma.SortOrder
   purpose?: Prisma.SortOrder
+  contextPayloadJson?: Prisma.SortOrder
   messagesJson?: Prisma.SortOrder
   sourceReferences?: Prisma.SortOrder
   estimatedTokens?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -266,6 +271,7 @@ export type AiContextSnapshotWhereUniqueInput = Prisma.AtLeast<{
   inquiryCaseId?: Prisma.StringNullableFilter<"AiContextSnapshot"> | string | null
   emailMessageId?: Prisma.StringNullableFilter<"AiContextSnapshot"> | string | null
   purpose?: Prisma.StringFilter<"AiContextSnapshot"> | string
+  contextPayloadJson?: Prisma.JsonFilter<"AiContextSnapshot">
   messagesJson?: Prisma.JsonFilter<"AiContextSnapshot">
   sourceReferences?: Prisma.JsonFilter<"AiContextSnapshot">
   estimatedTokens?: Prisma.IntNullableFilter<"AiContextSnapshot"> | number | null
@@ -280,6 +286,7 @@ export type AiContextSnapshotOrderByWithAggregationInput = {
   inquiryCaseId?: Prisma.SortOrderInput | Prisma.SortOrder
   emailMessageId?: Prisma.SortOrderInput | Prisma.SortOrder
   purpose?: Prisma.SortOrder
+  contextPayloadJson?: Prisma.SortOrder
   messagesJson?: Prisma.SortOrder
   sourceReferences?: Prisma.SortOrder
   estimatedTokens?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -300,6 +307,7 @@ export type AiContextSnapshotScalarWhereWithAggregatesInput = {
   inquiryCaseId?: Prisma.StringNullableWithAggregatesFilter<"AiContextSnapshot"> | string | null
   emailMessageId?: Prisma.StringNullableWithAggregatesFilter<"AiContextSnapshot"> | string | null
   purpose?: Prisma.StringWithAggregatesFilter<"AiContextSnapshot"> | string
+  contextPayloadJson?: Prisma.JsonWithAggregatesFilter<"AiContextSnapshot">
   messagesJson?: Prisma.JsonWithAggregatesFilter<"AiContextSnapshot">
   sourceReferences?: Prisma.JsonWithAggregatesFilter<"AiContextSnapshot">
   estimatedTokens?: Prisma.IntNullableWithAggregatesFilter<"AiContextSnapshot"> | number | null
@@ -310,6 +318,7 @@ export type AiContextSnapshotScalarWhereWithAggregatesInput = {
 export type AiContextSnapshotCreateInput = {
   id?: string
   purpose: string
+  contextPayloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   messagesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceReferences?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   estimatedTokens?: number | null
@@ -324,6 +333,7 @@ export type AiContextSnapshotUncheckedCreateInput = {
   inquiryCaseId?: string | null
   emailMessageId?: string | null
   purpose: string
+  contextPayloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   messagesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceReferences?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   estimatedTokens?: number | null
@@ -334,6 +344,7 @@ export type AiContextSnapshotUncheckedCreateInput = {
 export type AiContextSnapshotUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   purpose?: Prisma.StringFieldUpdateOperationsInput | string
+  contextPayloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   messagesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceReferences?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   estimatedTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -348,6 +359,7 @@ export type AiContextSnapshotUncheckedUpdateInput = {
   inquiryCaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purpose?: Prisma.StringFieldUpdateOperationsInput | string
+  contextPayloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   messagesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceReferences?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   estimatedTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -360,6 +372,7 @@ export type AiContextSnapshotCreateManyInput = {
   inquiryCaseId?: string | null
   emailMessageId?: string | null
   purpose: string
+  contextPayloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   messagesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceReferences?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   estimatedTokens?: number | null
@@ -370,6 +383,7 @@ export type AiContextSnapshotCreateManyInput = {
 export type AiContextSnapshotUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   purpose?: Prisma.StringFieldUpdateOperationsInput | string
+  contextPayloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   messagesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceReferences?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   estimatedTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -382,6 +396,7 @@ export type AiContextSnapshotUncheckedUpdateManyInput = {
   inquiryCaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purpose?: Prisma.StringFieldUpdateOperationsInput | string
+  contextPayloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   messagesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceReferences?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   estimatedTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -404,6 +419,7 @@ export type AiContextSnapshotCountOrderByAggregateInput = {
   inquiryCaseId?: Prisma.SortOrder
   emailMessageId?: Prisma.SortOrder
   purpose?: Prisma.SortOrder
+  contextPayloadJson?: Prisma.SortOrder
   messagesJson?: Prisma.SortOrder
   sourceReferences?: Prisma.SortOrder
   estimatedTokens?: Prisma.SortOrder
@@ -534,6 +550,7 @@ export type NullableIntFieldUpdateOperationsInput = {
 export type AiContextSnapshotCreateWithoutEmailMessageInput = {
   id?: string
   purpose: string
+  contextPayloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   messagesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceReferences?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   estimatedTokens?: number | null
@@ -546,6 +563,7 @@ export type AiContextSnapshotUncheckedCreateWithoutEmailMessageInput = {
   id?: string
   inquiryCaseId?: string | null
   purpose: string
+  contextPayloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   messagesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceReferences?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   estimatedTokens?: number | null
@@ -587,6 +605,7 @@ export type AiContextSnapshotScalarWhereInput = {
   inquiryCaseId?: Prisma.StringNullableFilter<"AiContextSnapshot"> | string | null
   emailMessageId?: Prisma.StringNullableFilter<"AiContextSnapshot"> | string | null
   purpose?: Prisma.StringFilter<"AiContextSnapshot"> | string
+  contextPayloadJson?: Prisma.JsonFilter<"AiContextSnapshot">
   messagesJson?: Prisma.JsonFilter<"AiContextSnapshot">
   sourceReferences?: Prisma.JsonFilter<"AiContextSnapshot">
   estimatedTokens?: Prisma.IntNullableFilter<"AiContextSnapshot"> | number | null
@@ -597,6 +616,7 @@ export type AiContextSnapshotScalarWhereInput = {
 export type AiContextSnapshotCreateWithoutInquiryCaseInput = {
   id?: string
   purpose: string
+  contextPayloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   messagesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceReferences?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   estimatedTokens?: number | null
@@ -609,6 +629,7 @@ export type AiContextSnapshotUncheckedCreateWithoutInquiryCaseInput = {
   id?: string
   emailMessageId?: string | null
   purpose: string
+  contextPayloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   messagesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceReferences?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   estimatedTokens?: number | null
@@ -646,6 +667,7 @@ export type AiContextSnapshotCreateManyEmailMessageInput = {
   id?: string
   inquiryCaseId?: string | null
   purpose: string
+  contextPayloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   messagesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceReferences?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   estimatedTokens?: number | null
@@ -656,6 +678,7 @@ export type AiContextSnapshotCreateManyEmailMessageInput = {
 export type AiContextSnapshotUpdateWithoutEmailMessageInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   purpose?: Prisma.StringFieldUpdateOperationsInput | string
+  contextPayloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   messagesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceReferences?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   estimatedTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -668,6 +691,7 @@ export type AiContextSnapshotUncheckedUpdateWithoutEmailMessageInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   inquiryCaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purpose?: Prisma.StringFieldUpdateOperationsInput | string
+  contextPayloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   messagesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceReferences?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   estimatedTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -679,6 +703,7 @@ export type AiContextSnapshotUncheckedUpdateManyWithoutEmailMessageInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   inquiryCaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purpose?: Prisma.StringFieldUpdateOperationsInput | string
+  contextPayloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   messagesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceReferences?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   estimatedTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -690,6 +715,7 @@ export type AiContextSnapshotCreateManyInquiryCaseInput = {
   id?: string
   emailMessageId?: string | null
   purpose: string
+  contextPayloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   messagesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceReferences?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   estimatedTokens?: number | null
@@ -700,6 +726,7 @@ export type AiContextSnapshotCreateManyInquiryCaseInput = {
 export type AiContextSnapshotUpdateWithoutInquiryCaseInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   purpose?: Prisma.StringFieldUpdateOperationsInput | string
+  contextPayloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   messagesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceReferences?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   estimatedTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -712,6 +739,7 @@ export type AiContextSnapshotUncheckedUpdateWithoutInquiryCaseInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   emailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purpose?: Prisma.StringFieldUpdateOperationsInput | string
+  contextPayloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   messagesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceReferences?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   estimatedTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -723,6 +751,7 @@ export type AiContextSnapshotUncheckedUpdateManyWithoutInquiryCaseInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   emailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purpose?: Prisma.StringFieldUpdateOperationsInput | string
+  contextPayloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   messagesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceReferences?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   estimatedTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -737,6 +766,7 @@ export type AiContextSnapshotSelect<ExtArgs extends runtime.Types.Extensions.Int
   inquiryCaseId?: boolean
   emailMessageId?: boolean
   purpose?: boolean
+  contextPayloadJson?: boolean
   messagesJson?: boolean
   sourceReferences?: boolean
   estimatedTokens?: boolean
@@ -751,6 +781,7 @@ export type AiContextSnapshotSelectCreateManyAndReturn<ExtArgs extends runtime.T
   inquiryCaseId?: boolean
   emailMessageId?: boolean
   purpose?: boolean
+  contextPayloadJson?: boolean
   messagesJson?: boolean
   sourceReferences?: boolean
   estimatedTokens?: boolean
@@ -765,6 +796,7 @@ export type AiContextSnapshotSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   inquiryCaseId?: boolean
   emailMessageId?: boolean
   purpose?: boolean
+  contextPayloadJson?: boolean
   messagesJson?: boolean
   sourceReferences?: boolean
   estimatedTokens?: boolean
@@ -779,6 +811,7 @@ export type AiContextSnapshotSelectScalar = {
   inquiryCaseId?: boolean
   emailMessageId?: boolean
   purpose?: boolean
+  contextPayloadJson?: boolean
   messagesJson?: boolean
   sourceReferences?: boolean
   estimatedTokens?: boolean
@@ -786,7 +819,7 @@ export type AiContextSnapshotSelectScalar = {
   createdAt?: boolean
 }
 
-export type AiContextSnapshotOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "inquiryCaseId" | "emailMessageId" | "purpose" | "messagesJson" | "sourceReferences" | "estimatedTokens" | "modelName" | "createdAt", ExtArgs["result"]["aiContextSnapshot"]>
+export type AiContextSnapshotOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "inquiryCaseId" | "emailMessageId" | "purpose" | "contextPayloadJson" | "messagesJson" | "sourceReferences" | "estimatedTokens" | "modelName" | "createdAt", ExtArgs["result"]["aiContextSnapshot"]>
 export type AiContextSnapshotInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   inquiryCase?: boolean | Prisma.AiContextSnapshot$inquiryCaseArgs<ExtArgs>
   emailMessage?: boolean | Prisma.AiContextSnapshot$emailMessageArgs<ExtArgs>
@@ -811,6 +844,7 @@ export type $AiContextSnapshotPayload<ExtArgs extends runtime.Types.Extensions.I
     inquiryCaseId: string | null
     emailMessageId: string | null
     purpose: string
+    contextPayloadJson: runtime.JsonValue
     messagesJson: runtime.JsonValue
     sourceReferences: runtime.JsonValue
     estimatedTokens: number | null
@@ -1245,6 +1279,7 @@ export interface AiContextSnapshotFieldRefs {
   readonly inquiryCaseId: Prisma.FieldRef<"AiContextSnapshot", 'String'>
   readonly emailMessageId: Prisma.FieldRef<"AiContextSnapshot", 'String'>
   readonly purpose: Prisma.FieldRef<"AiContextSnapshot", 'String'>
+  readonly contextPayloadJson: Prisma.FieldRef<"AiContextSnapshot", 'Json'>
   readonly messagesJson: Prisma.FieldRef<"AiContextSnapshot", 'Json'>
   readonly sourceReferences: Prisma.FieldRef<"AiContextSnapshot", 'Json'>
   readonly estimatedTokens: Prisma.FieldRef<"AiContextSnapshot", 'Int'>

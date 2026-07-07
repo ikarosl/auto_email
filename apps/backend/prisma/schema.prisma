@@ -263,6 +263,7 @@ model AiContextSnapshot {
   inquiryCaseId    String?       @map("inquiry_case_id")
   emailMessageId   String?       @map("email_message_id")
   purpose          String
+  contextPayloadJson Json         @default("{}") @map("context_payload_json")
   messagesJson     Json          @default("[]") @map("messages_json")
   sourceReferences Json          @default("[]") @map("source_references")
   estimatedTokens  Int?          @map("estimated_tokens")

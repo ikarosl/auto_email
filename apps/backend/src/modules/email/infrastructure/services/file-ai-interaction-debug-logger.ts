@@ -20,6 +20,7 @@ export class FileAiInteractionDebugLogger implements AiInteractionDebugLogger {
       currentInquiryStatus: entry.inquiryCase?.status,
       contextSnapshotId: entry.contextSnapshotId,
       estimatedContextTokens: entry.estimatedContextTokens,
+      contextPayload: entry.contextPayload,
       messages: entry.messages,
       rawOutput: entry.rawOutput,
       analysis: entry.analysis,

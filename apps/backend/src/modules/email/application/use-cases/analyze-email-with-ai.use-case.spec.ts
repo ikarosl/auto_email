@@ -63,7 +63,12 @@ describe('AnalyzeEmailWithAiUseCase', () => {
     assert.equal(logger.entries.length, 1);
     assert.equal(logger.entries[0]?.successfulAttempt, 2);
     assert.equal(logger.entries[0]?.attempts?.length, 2);
-    assert.match(logger.entries[0]?.attempts?.[1]?.messages.at(-1)?.content ?? '', /retry_repair_instruction/);
+    assert.equal(logger.entries[0]?.attempts?.[0]?.usedRepairInstruction, false);
+    assert.equal(logger.entries[0]?.attempts?.[1]?.usedRepairInstruction, true);
+    assert.equal(logger.entries[0]?.attempts?.[0]?.messageCount, 2);
+    assert.equal(logger.entries[0]?.attempts?.[1]?.messageCount, 3);
+    assert.match(logger.entries[0]?.attempts?.[1]?.repairInstructionMessage?.content ?? '', /retry_repair_instruction/);
+    assert.equal('messages' in (logger.entries[0]?.attempts?.[0] ?? {}), false);
   });
 
   it('does not retry when numeric extracted requirements are coercible', async () => {
@@ -89,6 +94,8 @@ describe('AnalyzeEmailWithAiUseCase', () => {
     }
     assert.equal(logger.entries[0]?.successfulAttempt, 1);
     assert.equal(logger.entries[0]?.attempts?.length, 1);
+    assert.equal(logger.entries[0]?.attempts?.[0]?.messageCount, 2);
+    assert.equal(logger.entries[0]?.attempts?.[0]?.usedRepairInstruction, false);
   });
 
   it('returns a safe failure after all retry attempts fail', async () => {
@@ -102,6 +109,7 @@ describe('AnalyzeEmailWithAiUseCase', () => {
     assert.equal(adapter.calls, 3);
     assert.equal(logger.entries[0]?.attempts?.length, 3);
     assert.equal(logger.entries[0]?.validationError?.errorCode, 'ai_json_parse_failed');
+    assert.equal(logger.entries[0]?.attempts?.[2]?.usedRepairInstruction, true);
   });
 });
 

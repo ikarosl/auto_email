@@ -263,6 +263,7 @@ CREATE TABLE IF NOT EXISTS ai_context_snapshots (
   inquiry_case_id TEXT REFERENCES inquiry_cases(id) ON DELETE SET NULL,
   email_message_id TEXT REFERENCES email_messages(id) ON DELETE SET NULL,
   purpose TEXT NOT NULL,
+  context_payload_json JSONB NOT NULL DEFAULT '{}'::JSONB,
   messages_json JSONB NOT NULL DEFAULT '[]'::JSONB,
   source_references JSONB NOT NULL DEFAULT '[]'::JSONB,
   estimated_tokens INTEGER,

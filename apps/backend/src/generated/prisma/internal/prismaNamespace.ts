@@ -1629,6 +1629,7 @@ export const AiContextSnapshotScalarFieldEnum = {
   inquiryCaseId: 'inquiryCaseId',
   emailMessageId: 'emailMessageId',
   purpose: 'purpose',
+  contextPayloadJson: 'contextPayloadJson',
   messagesJson: 'messagesJson',
   sourceReferences: 'sourceReferences',
   estimatedTokens: 'estimatedTokens',

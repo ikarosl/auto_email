@@ -66,6 +66,7 @@ describe('BuildAiContextUseCase', () => {
     );
 
     assert.equal(result.messages.length, 2);
+    assert.deepEqual(result.contextPayload, payload);
     assert.equal(result.messages[0]?.role, 'system');
     assert.equal(result.messages[0]?.content, 'system rules');
     assert.equal(result.messages[1]?.role, 'user');
@@ -88,6 +89,8 @@ describe('BuildAiContextUseCase', () => {
     assert.ok(result.estimatedTokens > 0);
     assert.equal(savedSnapshot?.purpose, ContextPurpose.EMAIL_ANALYSIS);
     assert.equal(savedSnapshot?.emailMessageId, 'email_001');
+    assert.deepEqual(savedSnapshot?.contextPayload, result.contextPayload);
+    assert.deepEqual(JSON.parse(savedSnapshot?.messages[1]?.content ?? '{}'), result.contextPayload);
   });
 });
 

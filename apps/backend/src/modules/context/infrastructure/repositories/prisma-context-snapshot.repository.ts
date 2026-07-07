@@ -1,4 +1,8 @@
 import { PrismaService } from '../../../../common/database/prisma.service.js';
+import {
+  aiEmailAnalysisContextPayloadSchema,
+} from '../../application/dto/ai-email-analysis-context.schema.js';
+import type { AiEmailAnalysisContextPayload } from '../../application/dto/ai-email-analysis-context.schema.js';
 import { ContextSnapshotRepository } from '../../application/ports/context-snapshot.repository.js';
 import { AiContextSnapshot } from '../../domain/entities/ai-context-snapshot.entity.js';
 import { AiChatMessage } from '../../domain/value-objects/ai-chat-message.vo.js';
@@ -14,6 +18,7 @@ export class PrismaContextSnapshotRepository implements ContextSnapshotRepositor
       inquiryCaseId: snapshot.inquiryCaseId,
       emailMessageId: snapshot.emailMessageId ?? null,
       purpose: snapshot.purpose,
+      contextPayloadJson: JSON.parse(JSON.stringify(snapshot.contextPayload)),
       messagesJson: JSON.parse(JSON.stringify(snapshot.messages)),
       sourceReferences: JSON.parse(JSON.stringify(snapshot.sourceReferences)),
       estimatedTokens: snapshot.estimatedTokens,
@@ -48,6 +53,7 @@ function toDomain(record: {
   inquiryCaseId: string | null;
   emailMessageId: string | null;
   purpose: string;
+  contextPayloadJson: unknown;
   messagesJson: unknown;
   sourceReferences: unknown;
   estimatedTokens: number | null;
@@ -58,6 +64,7 @@ function toDomain(record: {
     inquiryCaseId: record.inquiryCaseId ?? '',
     emailMessageId: record.emailMessageId ?? undefined,
     purpose: record.purpose as ContextPurpose,
+    contextPayload: parseContextPayload(record.contextPayloadJson, record.messagesJson),
     messages: Array.isArray(record.messagesJson)
       ? (record.messagesJson as AiChatMessage[])
       : [],
@@ -67,4 +74,33 @@ function toDomain(record: {
     estimatedTokens: record.estimatedTokens ?? 0,
     createdAt: record.createdAt,
   };
+}
+
+function parseContextPayload(
+  contextPayloadJson: unknown,
+  messagesJson: unknown,
+): AiEmailAnalysisContextPayload {
+  const direct = aiEmailAnalysisContextPayloadSchema.safeParse(contextPayloadJson);
+  if (direct.success) {
+    return direct.data;
+  }
+
+  const messages = Array.isArray(messagesJson) ? (messagesJson as AiChatMessage[]) : [];
+  for (const message of messages) {
+    if (message.role !== 'user') {
+      continue;
+    }
+
+    try {
+      const parsed = JSON.parse(message.content);
+      const fromMessage = aiEmailAnalysisContextPayloadSchema.safeParse(parsed);
+      if (fromMessage.success) {
+        return fromMessage.data;
+      }
+    } catch {
+      // Older snapshots may contain natural language user content.
+    }
+  }
+
+  throw new Error('AiContextSnapshot is missing a valid context payload.');
 }

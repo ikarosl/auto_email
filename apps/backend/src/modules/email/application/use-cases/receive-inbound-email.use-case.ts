@@ -15,6 +15,7 @@ import { InboundEmail } from '../../domain/value-objects/inbound-email.vo.js';
 import { EmailThreadRepository } from '../ports/email-thread.repository.js';
 import { EmailMessageRepository } from '../ports/email-message.repository.js';
 import { EmailContentSanitizer } from '../services/email-content-sanitizer.js';
+import { isRelayDomain, extractContactInfoFromBody } from '../services/email-relay-extractor.js';
 import { EMAIL_THREAD_REPOSITORY } from '../../email.tokens.js';
 
 export interface ReceiveInboundEmailResult {
@@ -56,6 +57,18 @@ export class ReceiveInboundEmailUseCase {
         sourceKind: inboundEmail.source,
       },
     );
+
+    // 中转服务检测：来自已知中转域名的邮件，从正文提取真实客户邮箱/姓名
+    // （如 tatasoft.com 网站留言表单，Envelope From 为中转服务而非客户）
+    if (isRelayDomain(inboundEmail.fromEmail)) {
+      const relayInfo = extractContactInfoFromBody(inboundEmail.bodyText);
+      if (relayInfo?.email) {
+        inboundEmail.fromEmail = relayInfo.email;
+        if (relayInfo.name) {
+          inboundEmail.fromName = relayInfo.name;
+        }
+      }
+    }
 
     // 解析/创建邮件线程：先确保 email_threads 记录存在，email_messages 才能引用
     const thread = await this.resolveOrCreateThread(inboundEmail);

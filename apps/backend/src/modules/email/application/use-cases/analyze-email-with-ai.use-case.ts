@@ -1,4 +1,5 @@
 import { BuildAiContextUseCase } from '../../../context/application/use-cases/build-ai-context.use-case.js';
+import type { AiEmailAnalysisContextPayload } from '../../../context/application/dto/ai-email-analysis-context.schema.js';
 import { ContextPurpose } from '../../../context/domain/enums/context-purpose.enum.js';
 import { AiChatMessage } from '../../../context/domain/value-objects/ai-chat-message.vo.js';
 import { InquiryCase } from '../../../inquiry/domain/entities/inquiry-case.entity.js';
@@ -20,6 +21,7 @@ export interface AnalyzeEmailWithAiSuccess {
   rawOutput: string;
   contextSnapshotId?: string;
   estimatedContextTokens?: number;
+  contextPayload?: AiEmailAnalysisContextPayload;
   contextMessages?: AiChatMessage[];
 }
 
@@ -31,6 +33,7 @@ export interface AnalyzeEmailWithAiFailure {
   humanReviewRequired: true;
   contextSnapshotId?: string;
   estimatedContextTokens?: number;
+  contextPayload?: AiEmailAnalysisContextPayload;
   contextMessages?: AiChatMessage[];
 }
 
@@ -58,7 +61,8 @@ export class AnalyzeEmailWithAiUseCase {
     let lastFailure: AnalyzeEmailWithAiFailure | undefined;
 
     for (let attempt = 1; attempt <= MAX_AI_ANALYSIS_ATTEMPTS; attempt += 1) {
-      const messages = buildAttemptMessages(context.messages, attempt, lastFailure);
+      const attemptContext = buildAttemptMessages(context.messages, attempt, lastFailure);
+      const messages = attemptContext.messages;
       const rawOutput = (await this.emailAiAnalysisAdapter.analyze(messages)).trim();
 
       if (!rawOutput) {
@@ -69,7 +73,9 @@ export class AnalyzeEmailWithAiUseCase {
         );
         attempts.push({
           attempt,
-          messages,
+          messageCount: messages.length,
+          usedRepairInstruction: attemptContext.usedRepairInstruction,
+          repairInstructionMessage: attemptContext.repairInstructionMessage,
           validationError: {
             errorCode: lastFailure.errorCode,
             message: lastFailure.message,
@@ -88,8 +94,10 @@ export class AnalyzeEmailWithAiUseCase {
         );
         attempts.push({
           attempt,
-          messages,
           rawOutput,
+          messageCount: messages.length,
+          usedRepairInstruction: attemptContext.usedRepairInstruction,
+          repairInstructionMessage: attemptContext.repairInstructionMessage,
           validationError: {
             errorCode: lastFailure.errorCode,
             message: lastFailure.message,
@@ -106,8 +114,10 @@ export class AnalyzeEmailWithAiUseCase {
         lastFailure = this.buildFailure(context, 'ai_json_parse_failed', message, rawOutput);
         attempts.push({
           attempt,
-          messages,
           rawOutput,
+          messageCount: messages.length,
+          usedRepairInstruction: attemptContext.usedRepairInstruction,
+          repairInstructionMessage: attemptContext.repairInstructionMessage,
           validationError: {
             errorCode: lastFailure.errorCode,
             message: lastFailure.message,
@@ -124,8 +134,10 @@ export class AnalyzeEmailWithAiUseCase {
         lastFailure = this.buildFailure(context, 'ai_validation_failed', message, rawOutput);
         attempts.push({
           attempt,
-          messages,
           rawOutput,
+          messageCount: messages.length,
+          usedRepairInstruction: attemptContext.usedRepairInstruction,
+          repairInstructionMessage: attemptContext.repairInstructionMessage,
           validationError: {
             errorCode: lastFailure.errorCode,
             message: lastFailure.message,
@@ -134,7 +146,13 @@ export class AnalyzeEmailWithAiUseCase {
         continue;
       }
 
-      attempts.push({ attempt, messages, rawOutput });
+      attempts.push({
+        attempt,
+        rawOutput,
+        messageCount: messages.length,
+        usedRepairInstruction: attemptContext.usedRepairInstruction,
+        repairInstructionMessage: attemptContext.repairInstructionMessage,
+      });
       await this.logAiInteraction(
         emailMessage,
         options,
@@ -152,6 +170,7 @@ export class AnalyzeEmailWithAiUseCase {
         rawOutput,
         contextSnapshotId: context.contextSnapshotId,
         estimatedContextTokens: context.estimatedTokens,
+        contextPayload: context.contextPayload,
         contextMessages: context.messages,
       };
     }
@@ -180,7 +199,7 @@ export class AnalyzeEmailWithAiUseCase {
   private async buildMessages(
     emailMessage: EmailMessage,
     options: AnalyzeEmailWithAiOptions,
-  ): Promise<{ messages: AiChatMessage[]; contextSnapshotId?: string; estimatedTokens?: number }> {
+  ): Promise<AiAnalysisContext> {
     if (this.buildAiContextUseCase && options.inquiryCase) {
       const result = await this.buildAiContextUseCase.execute({
         inquiryCase: options.inquiryCase,
@@ -196,6 +215,7 @@ export class AnalyzeEmailWithAiUseCase {
         messages: result.messages,
         contextSnapshotId: result.contextSnapshotId,
         estimatedTokens: result.estimatedTokens,
+        contextPayload: result.contextPayload,
       };
     }
 
@@ -216,7 +236,7 @@ export class AnalyzeEmailWithAiUseCase {
   private async logAiInteraction(
     emailMessage: EmailMessage,
     options: AnalyzeEmailWithAiOptions,
-    context: { messages: AiChatMessage[]; contextSnapshotId?: string; estimatedTokens?: number },
+    context: AiAnalysisContext,
     validationError?: { errorCode: string; message: string },
     rawOutput?: string,
     analysis?: EmailAiAnalysis,
@@ -234,6 +254,7 @@ export class AnalyzeEmailWithAiUseCase {
         inquiryCase: options.inquiryCase,
         contextSnapshotId: context.contextSnapshotId,
         estimatedContextTokens: context.estimatedTokens,
+        contextPayload: context.contextPayload,
         messages: context.messages,
         rawOutput,
         analysis,
@@ -247,7 +268,7 @@ export class AnalyzeEmailWithAiUseCase {
   }
 
   private buildFailure(
-    context: { messages: AiChatMessage[]; contextSnapshotId?: string; estimatedTokens?: number },
+    context: AiAnalysisContext,
     errorCode: AnalyzeEmailWithAiFailure['errorCode'],
     message: string,
     rawOutput?: string,
@@ -260,6 +281,7 @@ export class AnalyzeEmailWithAiUseCase {
       humanReviewRequired: true,
       contextSnapshotId: context.contextSnapshotId,
       estimatedContextTokens: context.estimatedTokens,
+      contextPayload: context.contextPayload,
       contextMessages: context.messages,
     };
   }
@@ -269,24 +291,45 @@ function buildAttemptMessages(
   baseMessages: AiChatMessage[],
   attempt: number,
   previousFailure?: AnalyzeEmailWithAiFailure,
-): AiChatMessage[] {
+): {
+  messages: AiChatMessage[];
+  messageCount: number;
+  usedRepairInstruction: boolean;
+  repairInstructionMessage?: AiChatMessage;
+} {
   if (attempt === 1 || !previousFailure) {
-    return baseMessages;
+    return {
+      messages: baseMessages,
+      messageCount: baseMessages.length,
+      usedRepairInstruction: false,
+    };
   }
 
-  return [
-    ...baseMessages,
-    {
-      role: 'user',
-      content: [
-        `Context section: retry_repair_instruction`,
-        `Previous attempt failed with ${previousFailure.errorCode}: ${previousFailure.message}`,
-        'Return only one valid JSON object matching the required schema.',
-        'Do not include markdown fences, comments, or explanatory text.',
-        'For extractedRequirements values, use strings. Example: quantity should be "50 pcs" or "50", not a bare number.',
-      ].join('\n'),
-    },
-  ];
+  const repairInstructionMessage: AiChatMessage = {
+    role: 'user',
+    content: [
+      `Context section: retry_repair_instruction`,
+      `Previous attempt failed with ${previousFailure.errorCode}: ${previousFailure.message}`,
+      'Return only one valid JSON object matching the required schema.',
+      'Do not include markdown fences, comments, or explanatory text.',
+      'For extractedRequirements values, use strings. Example: quantity should be "50 pcs" or "50", not a bare number.',
+    ].join('\n'),
+  };
+  const messages = [...baseMessages, repairInstructionMessage];
+
+  return {
+    messages,
+    messageCount: messages.length,
+    usedRepairInstruction: true,
+    repairInstructionMessage,
+  };
+}
+
+interface AiAnalysisContext {
+  messages: AiChatMessage[];
+  contextSnapshotId?: string;
+  estimatedTokens?: number;
+  contextPayload?: AiEmailAnalysisContextPayload;
 }
 
 function formatEmailForAnalysis(emailMessage: EmailMessage): string {
