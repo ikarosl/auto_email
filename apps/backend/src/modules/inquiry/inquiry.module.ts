@@ -14,8 +14,10 @@ import { InquiryStateMachine } from './domain/state-machine/inquiry-state-machin
 import { PrismaCustomerRepository } from './infrastructure/repositories/prisma-customer.repository.js';
 import { PrismaInquiryMessageRepository } from './infrastructure/repositories/prisma-inquiry-message.repository.js';
 import { PrismaInquiryRepository } from './infrastructure/repositories/prisma-inquiry.repository.js';
+import { PrismaInquiryStatusLogRepository } from './infrastructure/repositories/prisma-inquiry-status-log.repository.js';
+import { InquiryStatusLogRepository } from './application/ports/inquiry-status-log.repository.js';
 import { InquiryController } from './presentation/inquiry.controller.js';
-import { CUSTOMER_REPOSITORY, INQUIRY_MESSAGE_REPOSITORY, INQUIRY_REPOSITORY } from './inquiry.tokens.js';
+import { CUSTOMER_REPOSITORY, INQUIRY_MESSAGE_REPOSITORY, INQUIRY_REPOSITORY, INQUIRY_STATUS_LOG_REPOSITORY } from './inquiry.tokens.js';
 import { InquiryRepository } from './application/ports/inquiry.repository.js';
 
 @Module({
@@ -35,6 +37,11 @@ import { InquiryRepository } from './application/ports/inquiry.repository.js';
     {
       provide: INQUIRY_MESSAGE_REPOSITORY,
       useFactory: (prisma: PrismaService) => new PrismaInquiryMessageRepository(prisma),
+      inject: [PrismaService],
+    },
+    {
+      provide: INQUIRY_STATUS_LOG_REPOSITORY,
+      useFactory: (prisma: PrismaService) => new PrismaInquiryStatusLogRepository(prisma),
       inject: [PrismaService],
     },
     {
@@ -74,18 +81,21 @@ import { InquiryRepository } from './application/ports/inquiry.repository.js';
         inquiryRepository: InquiryRepository,
         getInquiryUseCase: GetInquiryUseCase,
         inquiryStateMachine: InquiryStateMachine,
+        inquiryStatusLogRepository: InquiryStatusLogRepository,
       ) => new TransitionInquiryStatusUseCase(
         inquiryRepository,
         getInquiryUseCase,
         inquiryStateMachine,
+        inquiryStatusLogRepository,
       ),
-      inject: [INQUIRY_REPOSITORY, GetInquiryUseCase, InquiryStateMachine],
+      inject: [INQUIRY_REPOSITORY, GetInquiryUseCase, InquiryStateMachine, INQUIRY_STATUS_LOG_REPOSITORY],
     },
   ],
   exports: [
     INQUIRY_REPOSITORY,
     INQUIRY_MESSAGE_REPOSITORY,
     CUSTOMER_REPOSITORY,
+    INQUIRY_STATUS_LOG_REPOSITORY,
     InquiryStateMachine,
     CreateInquiryFromEmailUseCase,
     UpdateCustomerStatusFromAiAnalysisUseCase,

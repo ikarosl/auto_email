@@ -8,8 +8,9 @@ import { CreateInquiryFromEmailUseCase } from '../inquiry/application/use-cases/
 import { UpdateCustomerStatusFromAiAnalysisUseCase } from '../inquiry/application/use-cases/update-customer-status-from-ai-analysis.use-case.js';
 import { InquiryMessageRepository } from '../inquiry/application/ports/inquiry-message.repository.js';
 import { InquiryRepository } from '../inquiry/application/ports/inquiry.repository.js';
+import { InquiryStatusLogRepository } from '../inquiry/application/ports/inquiry-status-log.repository.js';
 import { InquiryStateMachine } from '../inquiry/domain/state-machine/inquiry-state-machine.js';
-import { INQUIRY_MESSAGE_REPOSITORY, INQUIRY_REPOSITORY } from '../inquiry/inquiry.tokens.js';
+import { INQUIRY_MESSAGE_REPOSITORY, INQUIRY_REPOSITORY, INQUIRY_STATUS_LOG_REPOSITORY } from '../inquiry/inquiry.tokens.js';
 import { InquiryModule } from '../inquiry/inquiry.module.js';
 import { ReceiveInboundEmailUseCase } from './application/use-cases/receive-inbound-email.use-case.js';
 import { AnalyzeEmailWithAiUseCase } from './application/use-cases/analyze-email-with-ai.use-case.js';
@@ -140,6 +141,7 @@ import {
         aiDecisionRepository: AiDecisionRepository,
         inquiryStateMachine: InquiryStateMachine,
         inquiryRepository: InquiryRepository,
+        inquiryStatusLogRepository: InquiryStatusLogRepository,
       ) => new PollEmailInboxUseCase(
         processedEmailTracker,
         receiveInboundEmailUseCase,
@@ -150,6 +152,7 @@ import {
         aiDecisionRepository,
         inquiryStateMachine,
         inquiryRepository,
+        inquiryStatusLogRepository,
       ),
       inject: [
         PROCESSED_EMAIL_TRACKER,
@@ -161,6 +164,7 @@ import {
         AI_DECISION_REPOSITORY,
         InquiryStateMachine,
         INQUIRY_REPOSITORY,
+        INQUIRY_STATUS_LOG_REPOSITORY,
       ],
     },
   ],

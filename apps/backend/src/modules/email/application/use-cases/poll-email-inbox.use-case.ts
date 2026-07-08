@@ -19,6 +19,7 @@ import { InquiryStateMachine } from '../../../inquiry/domain/state-machine/inqui
 import { InquiryRepository } from '../../../inquiry/application/ports/inquiry.repository.js';
 import { InquiryMessageRepository } from '../../../inquiry/application/ports/inquiry-message.repository.js';
 import { UpdateCustomerStatusFromAiAnalysisUseCase } from '../../../inquiry/application/use-cases/update-customer-status-from-ai-analysis.use-case.js';
+import { InquiryStatusLogRepository } from '../../../inquiry/application/ports/inquiry-status-log.repository.js';
 import { EmailMessageRepository } from '../ports/email-message.repository.js';
 import { AiDecisionRepository } from '../ports/ai-decision.repository.js';
 import { EmailDirection } from '../../domain/enums/email-direction.enum.js';
@@ -48,6 +49,7 @@ export class PollEmailInboxUseCase {
     private readonly aiDecisionRepository?: AiDecisionRepository,
     private readonly inquiryStateMachine?: InquiryStateMachine,
     private readonly inquiryRepository?: InquiryRepository,
+    private readonly inquiryStatusLogRepository?: InquiryStatusLogRepository,
   ) {}
 
   async markExistingSeen(candidates: PollEmailCandidate[]): Promise<void> {
@@ -129,6 +131,7 @@ export class PollEmailInboxUseCase {
           aiAnalysisResult.analysis,
           this.inquiryStateMachine,
           this.inquiryRepository,
+          this.inquiryStatusLogRepository,
         );
         if (invalidated) {
           receiveResult.inquiryCase.status = InquiryStatus.INVALID;
@@ -180,6 +183,7 @@ async function tryAutoInvalidateInquiry(
   analysis: { classification: string; confidence: number; reason?: string },
   stateMachine: InquiryStateMachine,
   inquiryRepository: InquiryRepository,
+  inquiryStatusLogRepository?: InquiryStatusLogRepository,
 ): Promise<boolean> {
   if (analysis.classification !== 'invalid') {
     return false;
@@ -206,5 +210,16 @@ async function tryAutoInvalidateInquiry(
   };
 
   await inquiryRepository.save(updated);
+
+  if (inquiryStatusLogRepository) {
+    await inquiryStatusLogRepository.save({
+      inquiryCaseId: inquiryCase.id,
+      fromStatus: transition.fromStatus,
+      toStatus: transition.toStatus,
+      reason: context.reason,
+      changedByType: 'ai',
+    });
+  }
+
   return true;
 }
