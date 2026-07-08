@@ -1,6 +1,9 @@
 import { randomUUID } from 'node:crypto';
 
-import { EmailMessage } from '../../../email/domain/entities/email-message.entity.js';
+import {
+  EmailMessage,
+  EmailMessageAttachment,
+} from '../../../email/domain/entities/email-message.entity.js';
 import { ContextPurpose } from '../../domain/enums/context-purpose.enum.js';
 import { ContextSourceType } from '../../domain/enums/context-source-type.enum.js';
 import { AiContextSnapshot } from '../../domain/entities/ai-context-snapshot.entity.js';
@@ -8,6 +11,7 @@ import { AiChatMessage } from '../../domain/value-objects/ai-chat-message.vo.js'
 import { ContextSourceReference } from '../../domain/value-objects/context-source-reference.vo.js';
 import {
   AiEmailAnalysisContextPayload,
+  AiEmailAttachmentContext,
   aiEmailAnalysisContextPayloadSchema,
 } from '../dto/ai-email-analysis-context.schema.js';
 import { BuildAiContextInput } from '../dto/build-ai-context.dto.js';
@@ -101,14 +105,14 @@ function buildContextPayload(
       subject: formatSubject(input.inquiryCase.subject),
       latestMessageAt: input.inquiryCase.latestMessageAt.toISOString(),
     },
-    recentThreadMessages: recentThreadMessages.map(formatThreadMessage),
+    recentThreadMessages: recentThreadMessages.map((message) => formatThreadMessage(message, false)),
     ragReferences: ragReferences.map((reference) => ({
       title: reference.sourceTitle || 'reference',
       content: reference.content || '(empty)',
       score: reference.score,
     })),
     currentEmail: {
-      ...formatThreadMessage(input.currentEmailMessage),
+      ...formatThreadMessage(input.currentEmailMessage, true),
       to: formatRecipients(input.currentEmailMessage.toEmails),
       subject: formatSubject(input.currentEmailMessage.subject),
     },
@@ -131,14 +135,17 @@ function buildContextPayload(
   };
 }
 
-function formatThreadMessage(message: EmailMessage): {
+function formatThreadMessage(message: EmailMessage, includeFullAttachmentText: boolean): {
   direction: EmailMessage['direction'];
   from: string;
   to?: string;
   subject?: string;
   receivedAt: string;
   cleanBody: string;
+  attachments?: AiEmailAttachmentContext[];
 } {
+  const attachments = formatAttachments(message.attachments, includeFullAttachmentText);
+
   return {
     direction: message.direction,
     from: formatSender(message),
@@ -146,7 +153,37 @@ function formatThreadMessage(message: EmailMessage): {
     subject: message.subject ? formatSubject(message.subject) : undefined,
     receivedAt: message.receivedAt.toISOString(),
     cleanBody: message.bodyText || message.bodyHtml || '(empty)',
+    ...(attachments.length > 0 ? { attachments } : {}),
   };
+}
+
+function formatAttachments(
+  attachments: EmailMessageAttachment[] | undefined,
+  includeFullText: boolean,
+): AiEmailAttachmentContext[] {
+  return (attachments ?? [])
+    .filter((attachment) => attachment.isContextCandidate !== false)
+    .map((attachment) => stripUndefinedValues({
+      fileName: attachment.fileName,
+      mimeType: attachment.mimeType,
+      fileSize: attachment.fileSize,
+      parseStatus: attachment.parseStatus,
+      textSource: attachment.textSource,
+      parsedTextPreview: attachment.parsedTextPreview,
+      ...(includeFullText ? { parsedText: attachment.parsedText } : {}),
+      parseErrorCode: attachment.parseErrorCode,
+      ocrStatus: attachment.ocrStatus,
+      ocrTextPreview: attachment.ocrTextPreview,
+      ...(includeFullText ? { ocrText: attachment.ocrText } : {}),
+      ocrErrorCode: attachment.ocrErrorCode,
+      truncated: attachment.truncated,
+    }));
+}
+
+function stripUndefinedValues<T extends Record<string, unknown>>(value: T): T {
+  return Object.fromEntries(
+    Object.entries(value).filter(([, entryValue]) => entryValue !== undefined),
+  ) as T;
 }
 
 function formatSender(message: EmailMessage): string {
@@ -188,10 +225,25 @@ function buildSources(
       sourceId: message.id,
       label: 'recent thread email',
     })),
+    ...buildAttachmentSources(input.currentEmailMessage, 'current email attachment'),
+    ...recentThreadMessages.flatMap((message) =>
+      buildAttachmentSources(message, 'recent thread email attachment'),
+    ),
     ...ragReferences.map((reference) => ({
       sourceType: ContextSourceType.RAG,
       sourceId: reference.sourceId,
       label: reference.sourceTitle,
     })),
   ];
+}
+
+function buildAttachmentSources(message: EmailMessage, label: string): ContextSourceReference[] {
+  return (message.attachments ?? [])
+    .filter((attachment) => attachment.isContextCandidate !== false)
+    .map((attachment) => ({
+      sourceType: ContextSourceType.ATTACHMENT,
+      sourceId: attachment.id,
+      emailMessageId: message.id,
+      label: attachment.fileName ? `${label}: ${attachment.fileName}` : label,
+    }));
 }

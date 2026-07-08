@@ -34,6 +34,63 @@ describe('aiEmailAnalysisContextPayloadSchema', () => {
 
     assert.equal(result.success, false);
   });
+
+  it('accepts attachment context on current and recent emails', () => {
+    const result = aiEmailAnalysisContextPayloadSchema.safeParse({
+      ...createPayload(),
+      recentThreadMessages: [
+        {
+          ...createPayload().recentThreadMessages[0],
+          attachments: [
+            {
+              fileName: 'datasheet.pdf',
+              mimeType: 'application/pdf',
+              fileSize: 1024,
+              parseStatus: 'parsed',
+              textSource: 'pdf_text',
+              parsedTextPreview: 'Frequency range 12-15GHz...',
+              truncated: true,
+            },
+          ],
+        },
+      ],
+      currentEmail: {
+        ...createPayload().currentEmail,
+        attachments: [
+          {
+            fileName: 'contract.pdf',
+            mimeType: 'application/pdf',
+            fileSize: 2048,
+            parseStatus: 'failed',
+            textSource: 'none',
+            parseErrorCode: 'encrypted_pdf',
+            ocrStatus: 'skipped',
+          },
+        ],
+      },
+    });
+
+    assert.equal(result.success, true);
+  });
+
+  it('rejects attachment context with an invalid parse status', () => {
+    const result = aiEmailAnalysisContextPayloadSchema.safeParse({
+      ...createPayload(),
+      currentEmail: {
+        ...createPayload().currentEmail,
+        attachments: [
+          {
+            fileName: 'datasheet.pdf',
+            mimeType: 'application/pdf',
+            fileSize: 1024,
+            parseStatus: 'unknown',
+          },
+        ],
+      },
+    });
+
+    assert.equal(result.success, false);
+  });
 });
 
 function createPayload() {

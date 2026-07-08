@@ -6,6 +6,22 @@ import { InquiryStatus } from '../../../inquiry/domain/enums/inquiry-status.enum
 const dateTimeStringSchema = z.string().trim().min(1);
 const cleanBodySchema = z.string().trim().min(1);
 
+export const aiEmailAttachmentContextSchema = z.object({
+  fileName: z.string().trim().min(1),
+  mimeType: z.string().trim().min(1),
+  fileSize: z.number().nonnegative(),
+  parseStatus: z.enum(['parsed', 'skipped', 'failed']),
+  textSource: z.enum(['pdf_text', 'plain_text', 'ocr', 'none']).optional(),
+  parsedTextPreview: z.string().trim().optional(),
+  parsedText: z.string().trim().optional(),
+  parseErrorCode: z.string().trim().optional(),
+  ocrStatus: z.enum(['pending', 'skipped', 'parsed', 'failed']).optional(),
+  ocrTextPreview: z.string().trim().optional(),
+  ocrText: z.string().trim().optional(),
+  ocrErrorCode: z.string().trim().optional(),
+  truncated: z.boolean().optional(),
+});
+
 export const aiEmailThreadMessageContextSchema = z.object({
   direction: z.nativeEnum(EmailDirection),
   from: z.string().trim().min(1),
@@ -13,6 +29,7 @@ export const aiEmailThreadMessageContextSchema = z.object({
   subject: z.string().trim().optional(),
   receivedAt: dateTimeStringSchema,
   cleanBody: cleanBodySchema,
+  attachments: z.array(aiEmailAttachmentContextSchema).optional(),
 });
 
 export const aiEmailCurrentMessageContextSchema = aiEmailThreadMessageContextSchema.extend({
@@ -42,6 +59,7 @@ export const aiEmailAnalysisContextPayloadSchema = z.object({
   }),
 });
 
+export type AiEmailAttachmentContext = z.infer<typeof aiEmailAttachmentContextSchema>;
 export type AiEmailThreadMessageContext = z.infer<typeof aiEmailThreadMessageContextSchema>;
 export type AiEmailCurrentMessageContext = z.infer<typeof aiEmailCurrentMessageContextSchema>;
 export type AiEmailRagReferenceContext = z.infer<typeof aiEmailRagReferenceContextSchema>;

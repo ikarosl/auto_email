@@ -5,4 +5,5 @@ export enum ContextSourceType {
   RAG = 'rag',
   STATE = 'state',
   SYSTEM = 'system',
+  ATTACHMENT = 'attachment',
 }
