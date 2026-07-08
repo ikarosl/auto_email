@@ -91,6 +91,46 @@ describe('aiEmailAnalysisContextPayloadSchema', () => {
 
     assert.equal(result.success, false);
   });
+
+  it('accepts a valid thread summary', () => {
+    const result = aiEmailAnalysisContextPayloadSchema.safeParse({
+      ...createPayload(),
+      threadSummary: {
+        summaryText: 'Earlier emails discussed a 12-15GHz isolator and delivery time.',
+        coveredMessageCount: 2,
+        coveredTimeRange: {
+          from: '2026-07-03T02:13:25.000Z',
+          to: '2026-07-03T02:20:54.000Z',
+        },
+        knownFacts: ['Product: microstrip isolator'],
+        customerDecisions: ['Customer accepted delivery time'],
+        ourCommitments: ['We confirmed delivery time'],
+        openQuestions: [],
+      },
+    });
+
+    assert.equal(result.success, true);
+  });
+
+  it('rejects an invalid thread summary time range', () => {
+    const result = aiEmailAnalysisContextPayloadSchema.safeParse({
+      ...createPayload(),
+      threadSummary: {
+        summaryText: 'Earlier emails discussed a 12-15GHz isolator and delivery time.',
+        coveredMessageCount: 2,
+        coveredTimeRange: {
+          from: '2026-07-03T02:20:54.000Z',
+          to: '2026-07-03T02:13:25.000Z',
+        },
+        knownFacts: ['Product: microstrip isolator'],
+        customerDecisions: [],
+        ourCommitments: [],
+        openQuestions: [],
+      },
+    });
+
+    assert.equal(result.success, false);
+  });
 });
 
 function createPayload() {

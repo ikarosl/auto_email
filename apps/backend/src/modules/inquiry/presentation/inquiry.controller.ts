@@ -61,6 +61,7 @@ export class InquiryController {
       toStatus: body.toStatus,
       reason: body.reason,
       operatorType: body.operatorType,
+      changedBy: body.changedBy,
     });
 
     return {

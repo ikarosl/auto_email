@@ -22,8 +22,10 @@ import { InMemoryInquiryMessageRepository } from '../../../inquiry/infrastructur
 import { InMemoryInquiryRepository } from '../../../inquiry/infrastructure/repositories/in-memory-inquiry.repository.js';
 import { BuildAiContextUseCase } from '../../../context/application/use-cases/build-ai-context.use-case.js';
 import { NoopRagRetrieverAdapter } from '../../../context/infrastructure/adapters/noop-rag-retriever.adapter.js';
-import { SimpleTokenEstimator } from '../../../context/infrastructure/adapters/simple-token-estimator.js';
 import { InMemoryContextSnapshotRepository } from '../../../context/infrastructure/repositories/in-memory-context-snapshot.repository.js';
+import { InMemoryInquiryContextSummaryRepository } from '../../../context/infrastructure/repositories/in-memory-inquiry-context-summary.repository.js';
+import { DeepseekInquiryContextSummaryGenerator } from '../../../context/infrastructure/adapters/deepseek-inquiry-context-summary.generator.js';
+import { TiktokenTokenEstimator } from '../../../context/infrastructure/adapters/tiktoken-token-estimator.js';
 
 interface ImapPollConfig {
   host: string;
@@ -243,7 +245,9 @@ async function run(): Promise<void> {
   );
   const buildAiContextUseCase = new BuildAiContextUseCase(
     new InMemoryContextSnapshotRepository(),
-    new SimpleTokenEstimator(),
+    new InMemoryInquiryContextSummaryRepository(),
+    new DeepseekInquiryContextSummaryGenerator(),
+    new TiktokenTokenEstimator(),
     new NoopRagRetrieverAdapter(),
   );
   const analyzeEmailWithAiUseCase = config.aiEnabled

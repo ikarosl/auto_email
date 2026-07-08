@@ -5,4 +5,5 @@ export interface TransitionInquiryStatusDto {
   toStatus: InquiryStatus;
   reason?: string;
   operatorType?: InquiryTransitionOperatorType;
+  changedBy?: string;
 }

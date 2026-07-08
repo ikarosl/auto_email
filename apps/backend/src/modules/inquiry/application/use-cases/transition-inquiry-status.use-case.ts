@@ -16,6 +16,7 @@ export interface TransitionInquiryStatusInput {
   toStatus: InquiryStatus;
   reason?: string;
   operatorType?: InquiryTransitionOperatorType;
+  changedBy?: string;
 }
 
 export interface TransitionInquiryStatusResult {

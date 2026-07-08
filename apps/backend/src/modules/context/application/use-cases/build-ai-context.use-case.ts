@@ -12,26 +12,39 @@ import { ContextSourceReference } from '../../domain/value-objects/context-sourc
 import {
   AiEmailAnalysisContextPayload,
   AiEmailAttachmentContext,
+  AiEmailThreadMessageContext,
+  AiEmailThreadSummaryContext,
   aiEmailAnalysisContextPayloadSchema,
 } from '../dto/ai-email-analysis-context.schema.js';
 import { BuildAiContextInput } from '../dto/build-ai-context.dto.js';
 import { ContextSnapshotResponseDto } from '../dto/context-snapshot-response.dto.js';
+import { ContextBudgetService } from '../services/context-budget.service.js';
 import { RagReference } from '../ports/rag-retriever.adapter.js';
 import { ContextSnapshotRepository } from '../ports/context-snapshot.repository.js';
+import { InquiryContextSummaryRepository } from '../ports/inquiry-context-summary.repository.js';
+import { InquiryContextSummaryGenerator } from '../ports/inquiry-context-summary-generator.js';
 import { RagRetrieverAdapter } from '../ports/rag-retriever.adapter.js';
 import { TokenEstimator } from '../ports/token-estimator.js';
+import { InquiryContextSummary } from '../../domain/entities/inquiry-context-summary.entity.js';
+import { getEmailAnalysisContextBudgetFromEnv } from '../../domain/value-objects/context-budget.vo.js';
 
 export class BuildAiContextUseCase {
   constructor(
     private readonly contextSnapshotRepository: ContextSnapshotRepository,
+    private readonly inquiryContextSummaryRepository: InquiryContextSummaryRepository,
+    private readonly inquiryContextSummaryGenerator: InquiryContextSummaryGenerator,
     private readonly tokenEstimator: TokenEstimator,
     private readonly ragRetrieverAdapter: RagRetrieverAdapter,
   ) {}
 
   async execute(input: BuildAiContextInput): Promise<ContextSnapshotResponseDto> {
+    const existingSummary = await this.inquiryContextSummaryRepository.findByInquiryCaseId(
+      input.inquiryCase.id,
+    );
     const recentThreadMessages = selectRecentThreadMessages(
       input.recentEmailMessages ?? [],
       input.currentEmailMessage.id,
+      existingSummary?.coveredMessageIds ?? [],
     );
     const ragReferences = await this.ragRetrieverAdapter.retrieve({
       inquiryCaseId: input.inquiryCase.id,
@@ -43,8 +56,31 @@ export class BuildAiContextUseCase {
       ].filter(Boolean).join('\n'),
       limit: 5,
     });
+    const initialPayload = aiEmailAnalysisContextPayloadSchema.parse(
+      buildContextPayload(input, recentThreadMessages, ragReferences, existingSummary),
+    );
+    const budgetService = new ContextBudgetService(this.tokenEstimator);
+    const budgetResult = budgetService.applyRecentMessageBudget(
+      initialPayload,
+      input.systemPrompt,
+      input.budget ?? getEmailAnalysisContextBudgetFromEnv(process.env),
+    );
+    const summary = budgetResult.overflowThreadMessages.length > 0
+      ? await this.inquiryContextSummaryRepository.save(
+        await this.buildRollingSummary(
+          existingSummary,
+          budgetResult.overflowThreadMessages,
+          findOverflowMessageIds(recentThreadMessages, budgetResult.overflowThreadMessages),
+          input.inquiryCase.id,
+        ),
+      )
+      : existingSummary;
+    const keptRecentEmailMessages = findMatchingMessages(
+      recentThreadMessages,
+      budgetResult.recentThreadMessages,
+    );
     const contextPayload = aiEmailAnalysisContextPayloadSchema.parse(
-      buildContextPayload(input, recentThreadMessages, ragReferences),
+      buildContextPayload(input, budgetResult.recentThreadMessages, ragReferences, summary),
     );
 
     const messages: AiChatMessage[] = [
@@ -58,7 +94,7 @@ export class BuildAiContextUseCase {
       },
     ];
 
-    const sources = buildSources(input, recentThreadMessages, ragReferences);
+    const sources = buildSources(input, keptRecentEmailMessages, ragReferences, summary);
     const estimatedTokens = this.tokenEstimator.estimateMessages(messages);
     const snapshot: AiContextSnapshot = {
       id: `ctx_${randomUUID()}`,
@@ -85,18 +121,64 @@ export class BuildAiContextUseCase {
       estimatedTokens,
     };
   }
+
+  private async buildRollingSummary(
+    existingSummary: InquiryContextSummary | undefined,
+    overflowMessages: AiEmailThreadMessageContext[],
+    overflowMessageIds: string[],
+    inquiryCaseId: string,
+  ): Promise<InquiryContextSummary> {
+    const generatedSummary = await this.inquiryContextSummaryGenerator.generate({
+      inquiryCaseId,
+      existingSummary,
+      messagesToSummarize: overflowMessages,
+    });
+    const existingIds = existingSummary?.coveredMessageIds ?? [];
+    const coveredMessageIds = Array.from(new Set([...existingIds, ...overflowMessageIds]));
+    const coveredDates = [
+      existingSummary?.coveredFrom,
+      existingSummary?.coveredTo,
+      ...overflowMessages.map((message) => new Date(message.receivedAt)),
+    ].filter((date): date is Date => date instanceof Date && !Number.isNaN(date.getTime()));
+
+    return {
+      id: existingSummary?.id,
+      inquiryCaseId,
+      summaryText: generatedSummary.summaryText,
+      knownFacts: generatedSummary.knownFacts,
+      customerDecisions: generatedSummary.customerDecisions,
+      ourCommitments: generatedSummary.ourCommitments,
+      openQuestions: generatedSummary.openQuestions,
+      coveredMessageIds,
+      coveredMessageCount: coveredMessageIds.length,
+      coveredFrom: coveredDates.length > 0
+        ? new Date(Math.min(...coveredDates.map((date) => date.getTime())))
+        : undefined,
+      coveredTo: coveredDates.length > 0
+        ? new Date(Math.max(...coveredDates.map((date) => date.getTime())))
+        : undefined,
+      updatedAt: new Date(),
+    };
+  }
 }
 
-function selectRecentThreadMessages(messages: EmailMessage[], currentEmailMessageId: string): EmailMessage[] {
+function selectRecentThreadMessages(
+  messages: EmailMessage[],
+  currentEmailMessageId: string,
+  excludedMessageIds: string[],
+): EmailMessage[] {
+  const excludedIds = new Set([currentEmailMessageId, ...excludedMessageIds]);
+
   return messages
-    .filter((message) => message.id !== currentEmailMessageId)
+    .filter((message) => !excludedIds.has(message.id))
     .sort((a, b) => a.receivedAt.getTime() - b.receivedAt.getTime());
 }
 
 function buildContextPayload(
   input: BuildAiContextInput,
-  recentThreadMessages: EmailMessage[],
+  recentThreadMessages: Array<EmailMessage | AiEmailThreadMessageContext>,
   ragReferences: RagReference[],
+  summary?: InquiryContextSummary,
 ): AiEmailAnalysisContextPayload {
   return {
     inquiryState: {
@@ -105,7 +187,10 @@ function buildContextPayload(
       subject: formatSubject(input.inquiryCase.subject),
       latestMessageAt: input.inquiryCase.latestMessageAt.toISOString(),
     },
-    recentThreadMessages: recentThreadMessages.map((message) => formatThreadMessage(message, false)),
+    ...(summary ? { threadSummary: formatThreadSummary(summary) } : {}),
+    recentThreadMessages: recentThreadMessages.map((message) =>
+      isFormattedThreadMessage(message) ? message : formatThreadMessage(message, false),
+    ),
     ragReferences: ragReferences.map((reference) => ({
       title: reference.sourceTitle || 'reference',
       content: reference.content || '(empty)',
@@ -120,7 +205,7 @@ function buildContextPayload(
       format: 'json_only',
       schema: {
         isInquiry: 'boolean',
-        classification: 'valid_inquiry | invalid | unknown',
+        classification: 'valid_inquiry | invalid | unrelated_product | commercial | unknown',
         suggestedStatus: 'new | need_clarification | need_engineer_review | ready_for_quote | quoted | closed | invalid',
         confidence: 'number between 0 and 1',
         riskLevel: 'low | medium | high',
@@ -133,6 +218,27 @@ function buildContextPayload(
       },
     },
   };
+}
+
+function formatThreadSummary(summary: InquiryContextSummary): AiEmailThreadSummaryContext {
+  return {
+    summaryText: summary.summaryText,
+    coveredMessageCount: summary.coveredMessageCount,
+    coveredTimeRange: {
+      from: (summary.coveredFrom ?? summary.updatedAt).toISOString(),
+      to: (summary.coveredTo ?? summary.updatedAt).toISOString(),
+    },
+    knownFacts: summary.knownFacts,
+    customerDecisions: summary.customerDecisions,
+    ourCommitments: summary.ourCommitments,
+    openQuestions: summary.openQuestions,
+  };
+}
+
+function isFormattedThreadMessage(
+  message: EmailMessage | AiEmailThreadMessageContext,
+): message is AiEmailThreadMessageContext {
+  return typeof message.receivedAt === 'string';
 }
 
 function formatThreadMessage(message: EmailMessage, includeFullAttachmentText: boolean): {
@@ -204,6 +310,7 @@ function buildSources(
   input: BuildAiContextInput,
   recentThreadMessages: EmailMessage[],
   ragReferences: Array<{ sourceId?: string; sourceTitle: string }>,
+  summary?: InquiryContextSummary,
 ): ContextSourceReference[] {
   return [
     {
@@ -220,6 +327,11 @@ function buildSources(
       sourceId: input.currentEmailMessage.id,
       label: 'current email',
     },
+    ...(summary ? [{
+      sourceType: ContextSourceType.SUMMARY,
+      sourceId: summary.id ?? summary.inquiryCaseId,
+      label: 'thread summary',
+    }] : []),
     ...recentThreadMessages.map((message) => ({
       sourceType: ContextSourceType.EMAIL,
       sourceId: message.id,
@@ -235,6 +347,34 @@ function buildSources(
       label: reference.sourceTitle,
     })),
   ];
+}
+
+function findOverflowMessageIds(
+  sourceMessages: EmailMessage[],
+  overflowMessages: AiEmailThreadMessageContext[],
+): string[] {
+  return findMatchingMessages(sourceMessages, overflowMessages).map((message) => message.id);
+}
+
+function findMatchingMessages(
+  sourceMessages: EmailMessage[],
+  targetMessages: AiEmailThreadMessageContext[],
+): EmailMessage[] {
+  const targetKeys = new Set(targetMessages.map(createThreadMessageKey));
+
+  return sourceMessages
+    .filter((message) => targetKeys.has(createThreadMessageKey(formatThreadMessage(message, false))));
+}
+
+function createThreadMessageKey(message: AiEmailThreadMessageContext): string {
+  return [
+    message.receivedAt,
+    message.direction,
+    message.from,
+    message.to ?? '',
+    message.subject ?? '',
+    message.cleanBody,
+  ].join('\u001f');
 }
 
 function buildAttachmentSources(message: EmailMessage, label: string): ContextSourceReference[] {

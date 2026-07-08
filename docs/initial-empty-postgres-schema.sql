@@ -1,6 +1,7 @@
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 DROP TABLE IF EXISTS inquiry_status_logs CASCADE;
+DROP TABLE IF EXISTS inquiry_context_summaries CASCADE;
 DROP TABLE IF EXISTS ai_context_snapshots CASCADE;
 DROP TABLE IF EXISTS reply_drafts CASCADE;
 DROP TABLE IF EXISTS inquiry_structured_facts CASCADE;
@@ -279,6 +280,24 @@ CREATE TABLE IF NOT EXISTS ai_context_snapshots (
 CREATE INDEX IF NOT EXISTS ai_context_snapshots_inquiry_idx ON ai_context_snapshots(inquiry_case_id);
 CREATE INDEX IF NOT EXISTS ai_context_snapshots_email_idx ON ai_context_snapshots(email_message_id);
 CREATE INDEX IF NOT EXISTS ai_context_snapshots_created_at_idx ON ai_context_snapshots(created_at);
+
+CREATE TABLE IF NOT EXISTS inquiry_context_summaries (
+  id TEXT PRIMARY KEY DEFAULT ('context_summary_' || gen_random_uuid()::TEXT),
+  inquiry_case_id TEXT NOT NULL UNIQUE REFERENCES inquiry_cases(id) ON DELETE CASCADE,
+  summary_text TEXT NOT NULL,
+  known_facts_json JSONB NOT NULL DEFAULT '[]'::JSONB,
+  customer_decisions_json JSONB NOT NULL DEFAULT '[]'::JSONB,
+  our_commitments_json JSONB NOT NULL DEFAULT '[]'::JSONB,
+  open_questions_json JSONB NOT NULL DEFAULT '[]'::JSONB,
+  covered_email_ids_json JSONB NOT NULL DEFAULT '[]'::JSONB,
+  covered_message_count INTEGER NOT NULL DEFAULT 0,
+  covered_from TIMESTAMPTZ,
+  covered_to TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS inquiry_context_summaries_updated_at_idx ON inquiry_context_summaries(updated_at);
 
 CREATE TABLE IF NOT EXISTS inquiry_status_logs (
   id TEXT PRIMARY KEY DEFAULT ('status_log_' || gen_random_uuid()::TEXT),

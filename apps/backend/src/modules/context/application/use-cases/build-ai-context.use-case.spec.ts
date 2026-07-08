@@ -9,15 +9,20 @@ import { InquiryStatus } from '../../../inquiry/domain/enums/inquiry-status.enum
 import { ContextPurpose } from '../../domain/enums/context-purpose.enum.js';
 import { aiEmailAnalysisContextPayloadSchema } from '../dto/ai-email-analysis-context.schema.js';
 import { InMemoryContextSnapshotRepository } from '../../infrastructure/repositories/in-memory-context-snapshot.repository.js';
+import { InMemoryInquiryContextSummaryRepository } from '../../infrastructure/repositories/in-memory-inquiry-context-summary.repository.js';
 import { NoopRagRetrieverAdapter } from '../../infrastructure/adapters/noop-rag-retriever.adapter.js';
 import { SimpleTokenEstimator } from '../../infrastructure/adapters/simple-token-estimator.js';
+import { InquiryContextSummaryGenerator } from '../ports/inquiry-context-summary-generator.js';
 import { BuildAiContextUseCase } from './build-ai-context.use-case.js';
 
 describe('BuildAiContextUseCase', () => {
   it('builds context messages and saves a snapshot', async () => {
     const snapshotRepository = new InMemoryContextSnapshotRepository();
+    const summaryRepository = new InMemoryInquiryContextSummaryRepository();
     const useCase = new BuildAiContextUseCase(
       snapshotRepository,
+      summaryRepository,
+      new FakeInquiryContextSummaryGenerator(),
       new SimpleTokenEstimator(),
       new NoopRagRetrieverAdapter(),
     );
@@ -132,7 +137,90 @@ describe('BuildAiContextUseCase', () => {
     assert.deepEqual(savedSnapshot?.contextPayload, result.contextPayload);
     assert.deepEqual(JSON.parse(savedSnapshot?.messages[1]?.content ?? '{}'), result.contextPayload);
   });
+
+  it('summarizes overflow messages and keeps the newest messages in chronological order', async () => {
+    const snapshotRepository = new InMemoryContextSnapshotRepository();
+    const summaryRepository = new InMemoryInquiryContextSummaryRepository();
+    const useCase = new BuildAiContextUseCase(
+      snapshotRepository,
+      summaryRepository,
+      new FakeInquiryContextSummaryGenerator(),
+      new SimpleTokenEstimator(),
+      new NoopRagRetrieverAdapter(),
+    );
+
+    const result = await useCase.execute({
+      inquiryCase: {
+        id: 'inquiry_budget',
+        customerEmail: 'buyer@example.com',
+        subject: 'RF isolator inquiry',
+        status: InquiryStatus.NEW,
+        latestMessageAt: new Date('2026-06-23T00:05:00.000Z'),
+        createdAt: new Date('2026-06-23T00:00:00.000Z'),
+        updatedAt: new Date('2026-06-23T00:05:00.000Z'),
+      },
+      currentEmailMessage: createEmailMessage({
+        id: 'email_current',
+        receivedAt: new Date('2026-06-23T00:05:00.000Z'),
+        bodyText: 'Current email must stay in context.',
+      }),
+      purpose: ContextPurpose.EMAIL_ANALYSIS,
+      systemPrompt: 'system rules',
+      outputFormatInstruction: 'Return JSON.',
+      budget: {
+        systemRulesTokens: 200,
+        customerProfileTokens: 200,
+        structuredFactsTokens: 200,
+        historySummaryTokens: 200,
+        recentMessagesTokens: 90,
+        ragTokens: 200,
+        currentEmailTokens: 200,
+        outputTokens: 20,
+        maxContextTokens: 300,
+        inputTokenRatio: 0.8,
+        outputTokenRatio: 0.1,
+        safetyTokenRatio: 0.1,
+      },
+      recentEmailMessages: [
+        createEmailMessage({
+          id: 'email_old',
+          receivedAt: new Date('2026-06-23T00:01:00.000Z'),
+          bodyText: 'Old customer message with product 12-15GHz and quantity 50 pcs.',
+        }),
+        createEmailMessage({
+          id: 'email_new',
+          receivedAt: new Date('2026-06-23T00:04:00.000Z'),
+          bodyText: 'Newest customer message accepts delivery.',
+        }),
+      ],
+    });
+
+    assert.equal(result.contextPayload.currentEmail.cleanBody, 'Current email must stay in context.');
+    assert.ok(result.contextPayload.threadSummary);
+    assert.equal(result.contextPayload.threadSummary?.coveredMessageCount, 2);
+    assert.deepEqual(result.contextPayload.recentThreadMessages, []);
+    assert.equal(
+      result.sources.filter((source) => source.sourceType === ContextSourceType.SUMMARY).length,
+      1,
+    );
+
+    const savedSummary = await summaryRepository.findByInquiryCaseId('inquiry_budget');
+    assert.deepEqual(savedSummary?.coveredMessageIds, ['email_old', 'email_new']);
+    assert.equal(savedSummary?.summaryText, 'AI generated rolling summary.');
+  });
 });
+
+class FakeInquiryContextSummaryGenerator implements InquiryContextSummaryGenerator {
+  async generate() {
+    return {
+      summaryText: 'AI generated rolling summary.',
+      knownFacts: ['Product: microstrip isolator'],
+      customerDecisions: ['Customer accepted delivery.'],
+      ourCommitments: [],
+      openQuestions: [],
+    };
+  }
+}
 
 function createEmailMessage(overrides: Partial<{
   id: string;

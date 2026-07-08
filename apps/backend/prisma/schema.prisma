@@ -136,6 +136,7 @@ model InquiryCase {
   structuredFacts InquiryStructuredFact?
   replyDrafts     ReplyDraft[]
   contextSnapshots AiContextSnapshot[]
+  contextSummary  InquiryContextSummary?
   statusLogs      InquiryStatusLog[]
 
   @@index([customerId])
@@ -280,6 +281,26 @@ model AiContextSnapshot {
   @@index([emailMessageId])
   @@index([createdAt])
   @@map("ai_context_snapshots")
+}
+
+model InquiryContextSummary {
+  id                    String      @id @default(dbgenerated("'context_summary_' || gen_random_uuid()::TEXT"))
+  inquiryCaseId         String      @unique @map("inquiry_case_id")
+  summaryText           String      @map("summary_text")
+  knownFactsJson        Json        @default("[]") @map("known_facts_json")
+  customerDecisionsJson Json        @default("[]") @map("customer_decisions_json")
+  ourCommitmentsJson    Json        @default("[]") @map("our_commitments_json")
+  openQuestionsJson     Json        @default("[]") @map("open_questions_json")
+  coveredEmailIdsJson   Json        @default("[]") @map("covered_email_ids_json")
+  coveredMessageCount   Int         @default(0) @map("covered_message_count")
+  coveredFrom           DateTime?   @map("covered_from") @db.Timestamptz(6)
+  coveredTo             DateTime?   @map("covered_to") @db.Timestamptz(6)
+  createdAt             DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt             DateTime    @default(now()) @map("updated_at") @db.Timestamptz(6)
+  inquiryCase           InquiryCase @relation(fields: [inquiryCaseId], references: [id], onDelete: Cascade)
+
+  @@index([updatedAt])
+  @@map("inquiry_context_summaries")
 }
 
 model InquiryStatusLog {

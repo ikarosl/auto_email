@@ -5,6 +5,7 @@ import { InquiryStatus } from '../../../inquiry/domain/enums/inquiry-status.enum
 
 const dateTimeStringSchema = z.string().trim().min(1);
 const cleanBodySchema = z.string().trim().min(1);
+const nonEmptyStringArraySchema = z.array(z.string().trim().min(1));
 
 export const aiEmailAttachmentContextSchema = z.object({
   fileName: z.string().trim().min(1),
@@ -43,6 +44,22 @@ export const aiEmailRagReferenceContextSchema = z.object({
   score: z.number().optional(),
 });
 
+export const aiEmailThreadSummaryContextSchema = z.object({
+  summaryText: z.string().trim().min(1),
+  coveredMessageCount: z.number().int().nonnegative(),
+  coveredTimeRange: z.object({
+    from: dateTimeStringSchema,
+    to: dateTimeStringSchema,
+  }).refine(
+    (range) => Date.parse(range.from) <= Date.parse(range.to),
+    { message: 'coveredTimeRange.from must be before or equal to coveredTimeRange.to' },
+  ),
+  knownFacts: nonEmptyStringArraySchema,
+  customerDecisions: nonEmptyStringArraySchema,
+  ourCommitments: nonEmptyStringArraySchema,
+  openQuestions: nonEmptyStringArraySchema,
+});
+
 export const aiEmailAnalysisContextPayloadSchema = z.object({
   inquiryState: z.object({
     status: z.nativeEnum(InquiryStatus),
@@ -50,6 +67,7 @@ export const aiEmailAnalysisContextPayloadSchema = z.object({
     subject: z.string().trim().min(1),
     latestMessageAt: dateTimeStringSchema,
   }),
+  threadSummary: aiEmailThreadSummaryContextSchema.optional(),
   recentThreadMessages: z.array(aiEmailThreadMessageContextSchema),
   ragReferences: z.array(aiEmailRagReferenceContextSchema),
   currentEmail: aiEmailCurrentMessageContextSchema,
@@ -63,4 +81,5 @@ export type AiEmailAttachmentContext = z.infer<typeof aiEmailAttachmentContextSc
 export type AiEmailThreadMessageContext = z.infer<typeof aiEmailThreadMessageContextSchema>;
 export type AiEmailCurrentMessageContext = z.infer<typeof aiEmailCurrentMessageContextSchema>;
 export type AiEmailRagReferenceContext = z.infer<typeof aiEmailRagReferenceContextSchema>;
+export type AiEmailThreadSummaryContext = z.infer<typeof aiEmailThreadSummaryContextSchema>;
 export type AiEmailAnalysisContextPayload = z.infer<typeof aiEmailAnalysisContextPayloadSchema>;

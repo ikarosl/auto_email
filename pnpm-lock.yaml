@@ -96,6 +96,9 @@ importers:
       dotenv:
         specifier: ^16.4.7
         version: 16.6.1
+      entities:
+        specifier: 7.0.1
+        version: 7.0.1
       html-to-text:
         specifier: 10.0.0
         version: 10.0.0
@@ -117,6 +120,9 @@ importers:
       rxjs:
         specifier: ^7.8.2
         version: 7.8.2
+      tiktoken:
+        specifier: ^1.0.22
+        version: 1.0.22
       zod:
         specifier: ^3.25.76
         version: 3.25.76
@@ -2225,6 +2231,9 @@ packages:
   thread-stream@4.2.0:
     resolution: {integrity: sha512-e2zZ96wSChazBsbENf/Pcm/4swHt2cEKQ92rhUjkL9GCKiTDJIaTBenjE/m9DXi0QBmTMDkFDdOomUy20A1tDQ==}
     engines: {node: '>=20'}
+
+  tiktoken@1.0.22:
+    resolution: {integrity: sha512-PKvy1rVF1RibfF3JlXBSP0Jrcw2uq3yXdgcEXtKTYn3QJ/cBRBHDnrJ5jHky+MENZ6DIPwNUGWpkVx+7joCpNA==}
 
   tinyglobby@0.2.17:
     resolution: {integrity: sha512-wXR/dYpcqKmfWpEdZjiKJOwCNFndD0DMnrW/cYjVGttEkBfVgcLFHoNrlj47mjOVic9yyNu65alsgF4NQyTa2g==}
@@ -4388,6 +4397,8 @@ snapshots:
   thread-stream@4.2.0:
     dependencies:
       real-require: 1.0.0
+
+  tiktoken@1.0.22: {}
 
   tinyglobby@0.2.17:
     dependencies:
