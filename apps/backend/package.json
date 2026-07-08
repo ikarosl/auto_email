@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/main.ts",
+    "dev": "pnpm --filter @email-inquiry/shared build && tsx watch src/main.ts",
     "start": "node dist/main.js",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
@@ -16,8 +16,8 @@
     "demo:imap": "tsx src/modules/email/infrastructure/adapters/imap-pull-demo.ts",
     "demo:imap-to-inquiry": "tsx src/modules/email/infrastructure/adapters/imap-to-inquiry-demo.ts",
     "demo:poll-inbox": "tsx src/modules/email/infrastructure/adapters/imap-poll-inbox-service.ts",
-    "build": "tsc -p tsconfig.build.json",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "build": "pnpm --filter @email-inquiry/shared build && tsc -p tsconfig.build.json",
+    "typecheck": "pnpm --filter @email-inquiry/shared build && tsc -p tsconfig.json --noEmit",
     "test": "tsx --test \"src/**/*.spec.ts\"",
     "clean": "rimraf dist"
   },

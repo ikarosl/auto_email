@@ -1,11 +1,13 @@
 import { defineStore } from 'pinia';
+import type { InquiryListItem } from '@email-inquiry/shared';
 
-import { fetchHealth, fetchInquiries, type HealthResponse, type InquiryCase } from '@/api/backend';
+import { fetchHealth, fetchInquiries, type HealthResponse } from '@/api/backend';
 
 export const useWorkbenchStore = defineStore('workbench', {
   state: () => ({
     health: undefined as HealthResponse | undefined,
-    inquiries: [] as InquiryCase[],
+    inquiries: [] as InquiryListItem[],
+    inquiryTotal: 0,
     loading: false,
     loadingStep: '',
     loadProgress: 0,
@@ -13,12 +15,16 @@ export const useWorkbenchStore = defineStore('workbench', {
     lastLoadedAt: undefined as Date | undefined,
   }),
   getters: {
-    totalInquiries: (state) => state.inquiries.length,
+    totalInquiries: (state) => state.inquiryTotal || state.inquiries.length,
     invalidInquiries: (state) =>
       state.inquiries.filter((item) => item.status === 'invalid').length,
     activeInquiries: (state) =>
       state.inquiries.filter((item) => item.status !== 'invalid' && item.status !== 'closed')
         .length,
+    pendingInquiries: (state) =>
+      state.inquiries.filter((item) =>
+        ['new', 'need_clarification', 'need_engineer_review'].includes(String(item.status)),
+      ).length,
   },
   actions: {
     async refresh() {
@@ -31,7 +37,9 @@ export const useWorkbenchStore = defineStore('workbench', {
         this.health = await fetchHealth();
         this.loadingStep = '读取询盘列表';
         this.loadProgress = 62;
-        this.inquiries = await fetchInquiries();
+        const inquiries = await fetchInquiries({ page: 1, limit: 10 });
+        this.inquiries = inquiries.data;
+        this.inquiryTotal = inquiries.total;
         this.loadingStep = '整理工作台数据';
         this.loadProgress = 100;
         this.lastLoadedAt = new Date();

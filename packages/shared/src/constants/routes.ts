@@ -1,0 +1,21 @@
+export const API_ROUTE_SEGMENTS = {
+  health: 'health',
+  inquiries: 'inquiries',
+  customers: 'customers',
+  emailThreads: 'email-threads',
+  contextSnapshots: 'context-snapshots',
+  aiDecisions: 'ai-decisions',
+  replyDrafts: 'reply-drafts',
+} as const;
+
+export const WEB_ROUTES = {
+  workbench: '/',
+  threads: '/threads',
+  inquiries: '/inquiries',
+  customers: '/customers',
+  contexts: '/contexts',
+  ai: '/ai',
+  drafts: '/drafts',
+} as const;
+
+export type WebRoutePath = (typeof WEB_ROUTES)[keyof typeof WEB_ROUTES];

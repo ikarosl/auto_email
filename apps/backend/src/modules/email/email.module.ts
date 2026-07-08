@@ -29,7 +29,10 @@ import { PrismaAiDecisionRepository } from './infrastructure/repositories/prisma
 import { MailboxSyncService } from './infrastructure/services/mailbox-sync.service.js';
 import { ImapPollService } from './infrastructure/services/imap-poll.service.js';
 import { FileAiInteractionDebugLogger } from './infrastructure/services/file-ai-interaction-debug-logger.js';
+import { AiDecisionController } from './presentation/ai-decision.controller.js';
+import { EmailThreadController } from './presentation/email-thread.controller.js';
 import { EmailWebhookController } from './presentation/email-webhook.controller.js';
+import { ReplyDraftController } from './presentation/reply-draft.controller.js';
 import {
   AI_DECISION_REPOSITORY,
   EMAIL_AI_ANALYSIS_ADAPTER,
@@ -40,7 +43,7 @@ import {
 
 @Module({
   imports: [InquiryModule, ContextModule],
-  controllers: [EmailWebhookController],
+  controllers: [EmailWebhookController, EmailThreadController, AiDecisionController, ReplyDraftController],
   providers: [
     {
       provide: EMAIL_MESSAGE_REPOSITORY,

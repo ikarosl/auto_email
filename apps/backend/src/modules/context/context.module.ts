@@ -12,6 +12,7 @@ import { NoopRagRetrieverAdapter } from './infrastructure/adapters/noop-rag-retr
 import { TiktokenTokenEstimator } from './infrastructure/adapters/tiktoken-token-estimator.js';
 import { PrismaContextSnapshotRepository } from './infrastructure/repositories/prisma-context-snapshot.repository.js';
 import { PrismaInquiryContextSummaryRepository } from './infrastructure/repositories/prisma-inquiry-context-summary.repository.js';
+import { ContextSnapshotController } from './presentation/context-snapshot.controller.js';
 import {
   CONTEXT_SNAPSHOT_REPOSITORY,
   INQUIRY_CONTEXT_SUMMARY_GENERATOR,
@@ -21,6 +22,7 @@ import {
 } from './context.tokens.js';
 
 @Module({
+  controllers: [ContextSnapshotController],
   providers: [
     {
       provide: CONTEXT_SNAPSHOT_REPOSITORY,

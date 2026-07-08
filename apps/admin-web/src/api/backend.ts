@@ -1,3 +1,15 @@
+import { API_ROUTE_SEGMENTS } from '@email-inquiry/shared';
+import type {
+  AiDecisionListItem,
+  ApiPageResult,
+  ContextSnapshotListItem,
+  CustomerListItem,
+  EmailMessageListItem,
+  EmailThreadListItem,
+  InquiryListItem,
+  ReplyDraftListItem,
+} from '@email-inquiry/shared';
+
 import { http } from './http';
 
 export interface HealthResponse {
@@ -7,28 +19,73 @@ export interface HealthResponse {
   timestamp: string;
 }
 
-export interface InquiryCase {
-  id: string;
-  customerEmail: string;
-  customerName?: string;
-  subject: string;
-  status: string;
-  latestMessageAt: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface InquiryListResponse {
-  success: boolean;
-  inquiryCases: InquiryCase[];
+export interface ListParams {
+  page?: number;
+  limit?: number;
+  q?: string;
+  status?: string;
+  inquiryCaseId?: string;
+  emailMessageId?: string;
+  customerEmail?: string;
+  classification?: string;
+  success?: boolean;
+  purpose?: string;
 }
 
 export async function fetchHealth(): Promise<HealthResponse> {
-  const response = await http.get<HealthResponse>('/health');
+  const response = await http.get<HealthResponse>(`/${API_ROUTE_SEGMENTS.health}`);
   return response.data;
 }
 
-export async function fetchInquiries(): Promise<InquiryCase[]> {
-  const response = await http.get<InquiryListResponse>('/inquiries');
-  return response.data.inquiryCases;
+export async function fetchInquiries(params: ListParams = {}) {
+  return fetchPage<InquiryListItem>(`/${API_ROUTE_SEGMENTS.inquiries}`, params);
+}
+
+export async function fetchInquiry(id: string) {
+  return fetchItem<InquiryListItem>(`/${API_ROUTE_SEGMENTS.inquiries}/${id}`);
+}
+
+export async function fetchCustomers(params: ListParams = {}) {
+  return fetchPage<CustomerListItem>(`/${API_ROUTE_SEGMENTS.customers}`, params);
+}
+
+export async function fetchEmailThreads(params: ListParams = {}) {
+  return fetchPage<EmailThreadListItem>(`/${API_ROUTE_SEGMENTS.emailThreads}`, params);
+}
+
+export async function fetchEmailThread(id: string) {
+  return fetchItem<EmailThreadListItem>(`/${API_ROUTE_SEGMENTS.emailThreads}/${id}`);
+}
+
+export async function fetchEmailThreadMessages(threadId: string, params: ListParams = {}) {
+  return fetchPage<EmailMessageListItem>(
+    `/${API_ROUTE_SEGMENTS.emailThreads}/${threadId}/messages`,
+    params,
+  );
+}
+
+export async function fetchContextSnapshots(params: ListParams = {}) {
+  return fetchPage<ContextSnapshotListItem>(`/${API_ROUTE_SEGMENTS.contextSnapshots}`, params);
+}
+
+export async function fetchContextSnapshot(id: string) {
+  return fetchItem<ContextSnapshotListItem>(`/${API_ROUTE_SEGMENTS.contextSnapshots}/${id}`);
+}
+
+export async function fetchAiDecisions(params: ListParams = {}) {
+  return fetchPage<AiDecisionListItem>(`/${API_ROUTE_SEGMENTS.aiDecisions}`, params);
+}
+
+export async function fetchReplyDrafts(params: ListParams = {}) {
+  return fetchPage<ReplyDraftListItem>(`/${API_ROUTE_SEGMENTS.replyDrafts}`, params);
+}
+
+async function fetchPage<T>(url: string, params: ListParams): Promise<ApiPageResult<T[]>> {
+  const response = await http.get<ApiPageResult<T[]>>(url, { params });
+  return response.data;
+}
+
+async function fetchItem<T>(url: string): Promise<T> {
+  const response = await http.get<ApiPageResult<T>>(url);
+  return response.data.data;
 }

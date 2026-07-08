@@ -1,5 +1,14 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Param, Post, Query } from '@nestjs/common';
+import { API_ROUTE_SEGMENTS } from '@email-inquiry/shared';
 
+import {
+  itemResponse,
+  pageResponse,
+  parseLimit,
+  parsePage,
+  toDateIso,
+} from '../../../common/http/api-response.js';
+import { PrismaService } from '../../../common/database/prisma.service.js';
 import { CreateInquiryDto } from '../application/dto/create-inquiry.dto.js';
 import { TransitionInquiryStatusDto } from '../application/dto/transition-inquiry-status.dto.js';
 import { CreateInquiryUseCase } from '../application/use-cases/create-inquiry.use-case.js';
@@ -8,7 +17,7 @@ import { ListAllowedTransitionsUseCase } from '../application/use-cases/list-all
 import { ListInquiriesUseCase } from '../application/use-cases/list-inquiries.use-case.js';
 import { TransitionInquiryStatusUseCase } from '../application/use-cases/transition-inquiry-status.use-case.js';
 
-@Controller('inquiries')
+@Controller(API_ROUTE_SEGMENTS.inquiries)
 export class InquiryController {
   constructor(
     private readonly createInquiryUseCase: CreateInquiryUseCase,
@@ -16,6 +25,7 @@ export class InquiryController {
     private readonly listInquiriesUseCase: ListInquiriesUseCase,
     private readonly listAllowedTransitionsUseCase: ListAllowedTransitionsUseCase,
     private readonly transitionInquiryStatusUseCase: TransitionInquiryStatusUseCase,
+    private readonly prisma: PrismaService,
   ) {}
 
   @Post()
@@ -29,29 +39,104 @@ export class InquiryController {
 
     return {
       success: true,
-      inquiryCase,
+      data: inquiryCase,
+      total: 1,
+      page: 1,
+      limit: 1,
     };
   }
 
   @Get()
-  async list() {
-    return {
-      success: true,
-      inquiryCases: await this.listInquiriesUseCase.execute(),
+  async list(
+    @Query('page') pageQuery?: string,
+    @Query('limit') limitQuery?: string,
+    @Query('status') status?: string,
+    @Query('customerEmail') customerEmail?: string,
+    @Query('q') q?: string,
+  ) {
+    const page = parsePage(pageQuery);
+    const limit = parseLimit(limitQuery);
+    const where = {
+      deletedAt: null,
+      ...(status ? { status } : {}),
+      ...(customerEmail ? { customer: { email: { contains: customerEmail, mode: 'insensitive' as const } } } : {}),
+      ...(q
+        ? {
+            OR: [
+              { subject: { contains: q, mode: 'insensitive' as const } },
+              { productType: { contains: q, mode: 'insensitive' as const } },
+              { customer: { email: { contains: q, mode: 'insensitive' as const } } },
+              { customer: { name: { contains: q, mode: 'insensitive' as const } } },
+              { customer: { companyName: { contains: q, mode: 'insensitive' as const } } },
+            ],
+          }
+        : {}),
     };
+    const [total, records] = await Promise.all([
+      this.prisma.inquiryCase.count({ where }),
+      this.prisma.inquiryCase.findMany({
+        where,
+        include: {
+          customer: true,
+          structuredFacts: true,
+          _count: {
+            select: {
+              inquiryMessages: true,
+              aiDecisions: true,
+              replyDrafts: true,
+              contextSnapshots: true,
+              statusLogs: true,
+            },
+          },
+        },
+        orderBy: [{ latestMessageAt: 'desc' }, { createdAt: 'desc' }],
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+    ]);
+
+    return pageResponse({
+      data: records.map(mapInquiryCase),
+      total,
+      page,
+      limit,
+    });
   }
 
   @Get(':id')
   async get(@Param('id') id: string) {
-    return {
-      success: true,
-      inquiryCase: await this.getInquiryUseCase.execute(id),
-    };
+    const [record, contextSummary] = await Promise.all([
+      this.prisma.inquiryCase.findUnique({
+        where: { id },
+        include: {
+          customer: true,
+          structuredFacts: true,
+          statusLogs: { orderBy: { createdAt: 'desc' }, take: 20 },
+          _count: {
+            select: {
+              inquiryMessages: true,
+              aiDecisions: true,
+              replyDrafts: true,
+              contextSnapshots: true,
+              statusLogs: true,
+            },
+          },
+        },
+      }),
+      this.prisma.$queryRaw<InquiryContextSummaryRecord[]>`
+        SELECT *
+        FROM inquiry_context_summaries
+        WHERE inquiry_case_id = ${id}
+        LIMIT 1
+      `,
+    ]);
+    if (!record || record.deletedAt) throw new NotFoundException(`Inquiry not found: ${id}`);
+    return itemResponse(mapInquiryCase({ ...record, contextSummary: mapInquiryContextSummary(contextSummary[0]) }));
   }
 
   @Get(':id/allowed-transitions')
   async allowedTransitions(@Param('id') id: string) {
-    return this.listAllowedTransitionsUseCase.execute(id);
+    return itemResponse(await this.listAllowedTransitionsUseCase.execute(id));
   }
 
   @Post(':id/transitions')
@@ -66,10 +151,90 @@ export class InquiryController {
 
     return {
       success: true,
-      inquiryCaseId: result.inquiryCase.id,
-      fromStatus: result.fromStatus,
-      toStatus: result.toStatus,
-      inquiryCase: result.inquiryCase,
+      data: {
+        inquiryCaseId: result.inquiryCase.id,
+        fromStatus: result.fromStatus,
+        toStatus: result.toStatus,
+        inquiryCase: result.inquiryCase,
+      },
+      total: 1,
+      page: 1,
+      limit: 1,
     };
   }
+}
+
+interface InquiryContextSummaryRecord {
+  id: string;
+  inquiry_case_id: string;
+  summary_text: string;
+  known_facts_json: unknown;
+  customer_decisions_json: unknown;
+  our_commitments_json: unknown;
+  open_questions_json: unknown;
+  covered_email_ids_json: unknown;
+  covered_message_count: number;
+  covered_from: Date | null;
+  covered_to: Date | null;
+  created_at?: Date;
+  updated_at: Date;
+}
+
+function mapInquiryCase(record: any) {
+  return {
+    id: record.id,
+    customerId: record.customerId,
+    status: record.status,
+    subject: record.subject,
+    productType: record.productType,
+    latestMessageAt: toDateIso(record.latestMessageAt),
+    closedAt: toDateIso(record.closedAt),
+    createdAt: toDateIso(record.createdAt),
+    updatedAt: toDateIso(record.updatedAt),
+    customer: record.customer
+      ? {
+          id: record.customer.id,
+          email: record.customer.email,
+          name: record.customer.name,
+          domain: record.customer.domain,
+          companyName: record.customer.companyName,
+          country: record.customer.country,
+          source: record.customer.source,
+          status: record.customer.status,
+          invalidReason: record.customer.invalidReason,
+          statusUpdatedAt: toDateIso(record.customer.statusUpdatedAt),
+        }
+      : null,
+    structuredFacts: record.structuredFacts ?? null,
+    contextSummary: record.contextSummary ?? null,
+    statusLogs: record.statusLogs?.map((log: any) => ({
+      id: log.id,
+      fromStatus: log.fromStatus,
+      toStatus: log.toStatus,
+      reason: log.reason,
+      changedBy: log.changedBy,
+      changedByType: log.changedByType,
+      createdAt: toDateIso(log.createdAt),
+    })),
+    counts: record._count ?? undefined,
+  };
+}
+
+function mapInquiryContextSummary(record: InquiryContextSummaryRecord | undefined) {
+  if (!record) return null;
+  return {
+    id: record.id,
+    inquiryCaseId: record.inquiry_case_id,
+    summaryText: record.summary_text,
+    knownFacts: record.known_facts_json,
+    customerDecisions: record.customer_decisions_json,
+    ourCommitments: record.our_commitments_json,
+    openQuestions: record.open_questions_json,
+    coveredEmailIds: record.covered_email_ids_json,
+    coveredMessageCount: record.covered_message_count,
+    coveredFrom: toDateIso(record.covered_from),
+    coveredTo: toDateIso(record.covered_to),
+    createdAt: toDateIso(record.created_at),
+    updatedAt: toDateIso(record.updated_at),
+  };
 }

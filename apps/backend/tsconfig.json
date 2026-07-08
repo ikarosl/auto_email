@@ -7,8 +7,10 @@
     "moduleResolution": "NodeNext",
     "outDir": "dist",
     "types": ["node"],
+    "declaration": false,
+    "declarationMap": false,
+    "sourceMap": false,
     "noEmit": true
   },
-  "files": [],
   "include": ["src/**/*.ts"]
 }
