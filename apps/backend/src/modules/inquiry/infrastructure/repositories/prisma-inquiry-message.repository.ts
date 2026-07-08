@@ -16,8 +16,13 @@ export class PrismaInquiryMessageRepository implements InquiryMessageRepository 
     };
 
     await this.prisma.inquiryMessage.upsert({
-      where: { id: inquiryMessage.id },
-      create: data,
+      where: {
+        inquiryCaseId_emailMessageId: {
+          inquiryCaseId: inquiryMessage.inquiryCaseId,
+          emailMessageId: inquiryMessage.emailMessageId,
+        },
+      },
+      create: { ...data, id: inquiryMessage.id },
       update: data,
     });
 

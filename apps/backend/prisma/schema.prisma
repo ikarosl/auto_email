@@ -49,12 +49,16 @@ model Customer {
   companyName  String?       @map("company_name")
   country      String?
   source       String        @default("email")
+  status       String        @default("unknown")
+  invalidReason String?      @map("invalid_reason")
+  statusUpdatedAt DateTime?  @map("status_updated_at") @db.Timestamptz(6)
   remark       String?
   createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt    DateTime      @default(now()) @map("updated_at") @db.Timestamptz(6)
   deletedAt    DateTime?     @map("deleted_at") @db.Timestamptz(6)
   inquiryCases InquiryCase[]
 
+  @@index([status])
   @@map("customers")
 }
 

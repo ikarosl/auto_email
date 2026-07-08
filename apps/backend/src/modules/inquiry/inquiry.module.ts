@@ -8,17 +8,25 @@ import { InquiryMessageRepository } from './application/ports/inquiry-message.re
 import { ListAllowedTransitionsUseCase } from './application/use-cases/list-allowed-transitions.use-case.js';
 import { ListInquiriesUseCase } from './application/use-cases/list-inquiries.use-case.js';
 import { TransitionInquiryStatusUseCase } from './application/use-cases/transition-inquiry-status.use-case.js';
+import { UpdateCustomerStatusFromAiAnalysisUseCase } from './application/use-cases/update-customer-status-from-ai-analysis.use-case.js';
+import { CustomerRepository } from './application/ports/customer.repository.js';
 import { InquiryStateMachine } from './domain/state-machine/inquiry-state-machine.js';
+import { PrismaCustomerRepository } from './infrastructure/repositories/prisma-customer.repository.js';
 import { PrismaInquiryMessageRepository } from './infrastructure/repositories/prisma-inquiry-message.repository.js';
 import { PrismaInquiryRepository } from './infrastructure/repositories/prisma-inquiry.repository.js';
 import { InquiryController } from './presentation/inquiry.controller.js';
-import { INQUIRY_MESSAGE_REPOSITORY, INQUIRY_REPOSITORY } from './inquiry.tokens.js';
+import { CUSTOMER_REPOSITORY, INQUIRY_MESSAGE_REPOSITORY, INQUIRY_REPOSITORY } from './inquiry.tokens.js';
 import { InquiryRepository } from './application/ports/inquiry.repository.js';
 
 @Module({
   controllers: [InquiryController],
   providers: [
     InquiryStateMachine,
+    {
+      provide: CUSTOMER_REPOSITORY,
+      useFactory: (prisma: PrismaService) => new PrismaCustomerRepository(prisma),
+      inject: [PrismaService],
+    },
     {
       provide: INQUIRY_REPOSITORY,
       useFactory: (prisma: PrismaService) => new PrismaInquiryRepository(prisma),
@@ -55,6 +63,12 @@ import { InquiryRepository } from './application/ports/inquiry.repository.js';
       inject: [GetInquiryUseCase],
     },
     {
+      provide: UpdateCustomerStatusFromAiAnalysisUseCase,
+      useFactory: (customerRepository: CustomerRepository) =>
+        new UpdateCustomerStatusFromAiAnalysisUseCase(customerRepository),
+      inject: [CUSTOMER_REPOSITORY],
+    },
+    {
       provide: TransitionInquiryStatusUseCase,
       useFactory: (
         inquiryRepository: InquiryRepository,
@@ -68,6 +82,13 @@ import { InquiryRepository } from './application/ports/inquiry.repository.js';
       inject: [INQUIRY_REPOSITORY, GetInquiryUseCase, InquiryStateMachine],
     },
   ],
-  exports: [INQUIRY_REPOSITORY, INQUIRY_MESSAGE_REPOSITORY, CreateInquiryFromEmailUseCase],
+  exports: [
+    INQUIRY_REPOSITORY,
+    INQUIRY_MESSAGE_REPOSITORY,
+    CUSTOMER_REPOSITORY,
+    InquiryStateMachine,
+    CreateInquiryFromEmailUseCase,
+    UpdateCustomerStatusFromAiAnalysisUseCase,
+  ],
 })
 export class InquiryModule {}

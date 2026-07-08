@@ -159,11 +159,13 @@ export class ImapPollService implements OnApplicationBootstrap, OnApplicationShu
       this.logger.log(`发现 ${newUids.length} 封新邮件（共 ${allUids.length} 封已有），按时间顺序逐封入库...`);
 
       let processed = 0;
+      let maxHandledUid = 0;
       for (const uid of newUids) {
         if (this.shutdownRequested) break;
         try {
           await this.processSingleEmail(uid, this.config!.mailbox);
           processed += 1;
+          maxHandledUid = Math.max(maxHandledUid, uid);
           if (processed % 10 === 0 || processed === newUids.length) {
             this.logger.log(`历史邮件同步进度: ${processed}/${newUids.length}`);
           }
@@ -175,6 +177,18 @@ export class ImapPollService implements OnApplicationBootstrap, OnApplicationShu
       }
 
       this.logger.log(`历史邮件同步完成: ${processed}/${newUids.length} 封入库`);
+
+      // 更新 lastSeenUid，使后续轮询只扫描新邮件而非全网箱
+      if (maxHandledUid > 0) {
+        const status = await this.client!.status(this.config!.mailbox, { uidNext: true });
+        const uidValidity = getStatusUidValidity(status);
+        await this.syncService.updateLastSeenUid(
+          this.mailboxAccountId,
+          this.config!.mailbox,
+          BigInt(maxHandledUid),
+          uidValidity,
+        );
+      }
     } finally {
       lock.release();
       await this.syncService.markBootstrapCompleted(this.mailboxAccountId, this.config!.mailbox);

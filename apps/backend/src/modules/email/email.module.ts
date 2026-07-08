@@ -5,8 +5,10 @@ import { BuildAiContextUseCase } from '../context/application/use-cases/build-ai
 import { ContextModule } from '../context/context.module.js';
 import { FindInquiryForInboundEmailUseCase } from '../inquiry/application/use-cases/find-inquiry-for-inbound-email.use-case.js';
 import { CreateInquiryFromEmailUseCase } from '../inquiry/application/use-cases/create-inquiry-from-email.use-case.js';
+import { UpdateCustomerStatusFromAiAnalysisUseCase } from '../inquiry/application/use-cases/update-customer-status-from-ai-analysis.use-case.js';
 import { InquiryMessageRepository } from '../inquiry/application/ports/inquiry-message.repository.js';
 import { InquiryRepository } from '../inquiry/application/ports/inquiry.repository.js';
+import { InquiryStateMachine } from '../inquiry/domain/state-machine/inquiry-state-machine.js';
 import { INQUIRY_MESSAGE_REPOSITORY, INQUIRY_REPOSITORY } from '../inquiry/inquiry.tokens.js';
 import { InquiryModule } from '../inquiry/inquiry.module.js';
 import { ReceiveInboundEmailUseCase } from './application/use-cases/receive-inbound-email.use-case.js';
@@ -14,6 +16,7 @@ import { AnalyzeEmailWithAiUseCase } from './application/use-cases/analyze-email
 import { PollEmailInboxUseCase } from './application/use-cases/poll-email-inbox.use-case.js';
 import { EmailMessageRepository } from './application/ports/email-message.repository.js';
 import { EmailAiAnalysisAdapter } from './application/ports/email-ai-analysis.adapter.js';
+import { AiDecisionRepository } from './application/ports/ai-decision.repository.js';
 import { EmailThreadRepository } from './application/ports/email-thread.repository.js';
 import { ProcessedEmailTracker } from './application/ports/processed-email-tracker.js';
 import { AiInteractionDebugLogger } from './application/ports/ai-interaction-debug-logger.js';
@@ -21,11 +24,18 @@ import { DeepseekEmailAnalysisAdapter } from './infrastructure/adapters/deepseek
 import { PrismaEmailMessageRepository } from './infrastructure/repositories/prisma-email-message.repository.js';
 import { PrismaEmailThreadRepository } from './infrastructure/repositories/prisma-email-thread.repository.js';
 import { PrismaProcessedEmailTracker } from './infrastructure/repositories/prisma-processed-email-tracker.js';
+import { PrismaAiDecisionRepository } from './infrastructure/repositories/prisma-ai-decision.repository.js';
 import { MailboxSyncService } from './infrastructure/services/mailbox-sync.service.js';
 import { ImapPollService } from './infrastructure/services/imap-poll.service.js';
 import { FileAiInteractionDebugLogger } from './infrastructure/services/file-ai-interaction-debug-logger.js';
 import { EmailWebhookController } from './presentation/email-webhook.controller.js';
-import { EMAIL_AI_ANALYSIS_ADAPTER, EMAIL_MESSAGE_REPOSITORY, EMAIL_THREAD_REPOSITORY, PROCESSED_EMAIL_TRACKER } from './email.tokens.js';
+import {
+  AI_DECISION_REPOSITORY,
+  EMAIL_AI_ANALYSIS_ADAPTER,
+  EMAIL_MESSAGE_REPOSITORY,
+  EMAIL_THREAD_REPOSITORY,
+  PROCESSED_EMAIL_TRACKER,
+} from './email.tokens.js';
 
 @Module({
   imports: [InquiryModule, ContextModule],
@@ -50,6 +60,11 @@ import { EMAIL_AI_ANALYSIS_ADAPTER, EMAIL_MESSAGE_REPOSITORY, EMAIL_THREAD_REPOS
         analyzeEmailWithAiUseCase: AnalyzeEmailWithAiUseCase,
       ) => new ImapPollService(prisma, pollUseCase, syncService, analyzeEmailWithAiUseCase),
       inject: [PrismaService, PollEmailInboxUseCase, MailboxSyncService, AnalyzeEmailWithAiUseCase],
+    },
+    {
+      provide: AI_DECISION_REPOSITORY,
+      useFactory: (prisma: PrismaService) => new PrismaAiDecisionRepository(prisma),
+      inject: [PrismaService],
     },
     {
       provide: EMAIL_AI_ANALYSIS_ADAPTER,
@@ -121,12 +136,20 @@ import { EMAIL_AI_ANALYSIS_ADAPTER, EMAIL_MESSAGE_REPOSITORY, EMAIL_THREAD_REPOS
         analyzeEmailWithAiUseCase: AnalyzeEmailWithAiUseCase,
         inquiryMessageRepository: InquiryMessageRepository,
         emailMessageRepository: EmailMessageRepository,
+        updateCustomerStatusFromAiAnalysisUseCase: UpdateCustomerStatusFromAiAnalysisUseCase,
+        aiDecisionRepository: AiDecisionRepository,
+        inquiryStateMachine: InquiryStateMachine,
+        inquiryRepository: InquiryRepository,
       ) => new PollEmailInboxUseCase(
         processedEmailTracker,
         receiveInboundEmailUseCase,
         analyzeEmailWithAiUseCase,
         inquiryMessageRepository,
         emailMessageRepository,
+        updateCustomerStatusFromAiAnalysisUseCase,
+        aiDecisionRepository,
+        inquiryStateMachine,
+        inquiryRepository,
       ),
       inject: [
         PROCESSED_EMAIL_TRACKER,
@@ -134,6 +157,10 @@ import { EMAIL_AI_ANALYSIS_ADAPTER, EMAIL_MESSAGE_REPOSITORY, EMAIL_THREAD_REPOS
         AnalyzeEmailWithAiUseCase,
         INQUIRY_MESSAGE_REPOSITORY,
         EMAIL_MESSAGE_REPOSITORY,
+        UpdateCustomerStatusFromAiAnalysisUseCase,
+        AI_DECISION_REPOSITORY,
+        InquiryStateMachine,
+        INQUIRY_REPOSITORY,
       ],
     },
   ],

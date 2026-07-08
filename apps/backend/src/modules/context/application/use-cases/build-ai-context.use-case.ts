@@ -116,7 +116,7 @@ function buildContextPayload(
       format: 'json_only',
       schema: {
         isInquiry: 'boolean',
-        classification: 'valid_inquiry | invalid | unrelated_product | commercial | unknown',
+        classification: 'valid_inquiry | invalid | unknown',
         suggestedStatus: 'new | need_clarification | need_engineer_review | ready_for_quote | quoted | closed | invalid',
         confidence: 'number between 0 and 1',
         riskLevel: 'low | medium | high',

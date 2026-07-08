@@ -47,11 +47,16 @@ CREATE TABLE IF NOT EXISTS customers (
   company_name TEXT,
   country TEXT,
   source TEXT NOT NULL DEFAULT 'email',
+  status TEXT NOT NULL DEFAULT 'unknown' CHECK (status IN ('unknown', 'active', 'invalid')),
+  invalid_reason TEXT,
+  status_updated_at TIMESTAMPTZ,
   remark TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   deleted_at TIMESTAMPTZ
 );
+
+CREATE INDEX IF NOT EXISTS customers_status_idx ON customers(status);
 
 CREATE TABLE IF NOT EXISTS email_threads (
   id TEXT PRIMARY KEY DEFAULT ('thread_' || gen_random_uuid()::TEXT),

@@ -13,8 +13,6 @@ export const emailAiAnalysisSchema = z
     classification: z.enum([
       'valid_inquiry',
       'invalid',
-      'unrelated_product',
-      'commercial',
       'unknown',
     ]),
     suggestedStatus: z.nativeEnum(InquiryStatus),

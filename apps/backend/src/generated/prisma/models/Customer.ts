@@ -32,6 +32,9 @@ export type CustomerMinAggregateOutputType = {
   companyName: string | null
   country: string | null
   source: string | null
+  status: string | null
+  invalidReason: string | null
+  statusUpdatedAt: Date | null
   remark: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -46,6 +49,9 @@ export type CustomerMaxAggregateOutputType = {
   companyName: string | null
   country: string | null
   source: string | null
+  status: string | null
+  invalidReason: string | null
+  statusUpdatedAt: Date | null
   remark: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -60,6 +66,9 @@ export type CustomerCountAggregateOutputType = {
   companyName: number
   country: number
   source: number
+  status: number
+  invalidReason: number
+  statusUpdatedAt: number
   remark: number
   createdAt: number
   updatedAt: number
@@ -76,6 +85,9 @@ export type CustomerMinAggregateInputType = {
   companyName?: true
   country?: true
   source?: true
+  status?: true
+  invalidReason?: true
+  statusUpdatedAt?: true
   remark?: true
   createdAt?: true
   updatedAt?: true
@@ -90,6 +102,9 @@ export type CustomerMaxAggregateInputType = {
   companyName?: true
   country?: true
   source?: true
+  status?: true
+  invalidReason?: true
+  statusUpdatedAt?: true
   remark?: true
   createdAt?: true
   updatedAt?: true
@@ -104,6 +119,9 @@ export type CustomerCountAggregateInputType = {
   companyName?: true
   country?: true
   source?: true
+  status?: true
+  invalidReason?: true
+  statusUpdatedAt?: true
   remark?: true
   createdAt?: true
   updatedAt?: true
@@ -191,6 +209,9 @@ export type CustomerGroupByOutputType = {
   companyName: string | null
   country: string | null
   source: string
+  status: string
+  invalidReason: string | null
+  statusUpdatedAt: Date | null
   remark: string | null
   createdAt: Date
   updatedAt: Date
@@ -226,6 +247,9 @@ export type CustomerWhereInput = {
   companyName?: Prisma.StringNullableFilter<"Customer"> | string | null
   country?: Prisma.StringNullableFilter<"Customer"> | string | null
   source?: Prisma.StringFilter<"Customer"> | string
+  status?: Prisma.StringFilter<"Customer"> | string
+  invalidReason?: Prisma.StringNullableFilter<"Customer"> | string | null
+  statusUpdatedAt?: Prisma.DateTimeNullableFilter<"Customer"> | Date | string | null
   remark?: Prisma.StringNullableFilter<"Customer"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Customer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Customer"> | Date | string
@@ -241,6 +265,9 @@ export type CustomerOrderByWithRelationInput = {
   companyName?: Prisma.SortOrderInput | Prisma.SortOrder
   country?: Prisma.SortOrderInput | Prisma.SortOrder
   source?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  invalidReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  statusUpdatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   remark?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -259,6 +286,9 @@ export type CustomerWhereUniqueInput = Prisma.AtLeast<{
   companyName?: Prisma.StringNullableFilter<"Customer"> | string | null
   country?: Prisma.StringNullableFilter<"Customer"> | string | null
   source?: Prisma.StringFilter<"Customer"> | string
+  status?: Prisma.StringFilter<"Customer"> | string
+  invalidReason?: Prisma.StringNullableFilter<"Customer"> | string | null
+  statusUpdatedAt?: Prisma.DateTimeNullableFilter<"Customer"> | Date | string | null
   remark?: Prisma.StringNullableFilter<"Customer"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Customer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Customer"> | Date | string
@@ -274,6 +304,9 @@ export type CustomerOrderByWithAggregationInput = {
   companyName?: Prisma.SortOrderInput | Prisma.SortOrder
   country?: Prisma.SortOrderInput | Prisma.SortOrder
   source?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  invalidReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  statusUpdatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   remark?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -294,6 +327,9 @@ export type CustomerScalarWhereWithAggregatesInput = {
   companyName?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
   country?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
   source?: Prisma.StringWithAggregatesFilter<"Customer"> | string
+  status?: Prisma.StringWithAggregatesFilter<"Customer"> | string
+  invalidReason?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
+  statusUpdatedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Customer"> | Date | string | null
   remark?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Customer"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Customer"> | Date | string
@@ -308,6 +344,9 @@ export type CustomerCreateInput = {
   companyName?: string | null
   country?: string | null
   source?: string
+  status?: string
+  invalidReason?: string | null
+  statusUpdatedAt?: Date | string | null
   remark?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -323,6 +362,9 @@ export type CustomerUncheckedCreateInput = {
   companyName?: string | null
   country?: string | null
   source?: string
+  status?: string
+  invalidReason?: string | null
+  statusUpdatedAt?: Date | string | null
   remark?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -338,6 +380,9 @@ export type CustomerUpdateInput = {
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  invalidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   remark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -353,6 +398,9 @@ export type CustomerUncheckedUpdateInput = {
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  invalidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   remark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -368,6 +416,9 @@ export type CustomerCreateManyInput = {
   companyName?: string | null
   country?: string | null
   source?: string
+  status?: string
+  invalidReason?: string | null
+  statusUpdatedAt?: Date | string | null
   remark?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -382,6 +433,9 @@ export type CustomerUpdateManyMutationInput = {
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  invalidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   remark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -396,6 +450,9 @@ export type CustomerUncheckedUpdateManyInput = {
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  invalidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   remark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -410,6 +467,9 @@ export type CustomerCountOrderByAggregateInput = {
   companyName?: Prisma.SortOrder
   country?: Prisma.SortOrder
   source?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  invalidReason?: Prisma.SortOrder
+  statusUpdatedAt?: Prisma.SortOrder
   remark?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -424,6 +484,9 @@ export type CustomerMaxOrderByAggregateInput = {
   companyName?: Prisma.SortOrder
   country?: Prisma.SortOrder
   source?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  invalidReason?: Prisma.SortOrder
+  statusUpdatedAt?: Prisma.SortOrder
   remark?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -438,6 +501,9 @@ export type CustomerMinOrderByAggregateInput = {
   companyName?: Prisma.SortOrder
   country?: Prisma.SortOrder
   source?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  invalidReason?: Prisma.SortOrder
+  statusUpdatedAt?: Prisma.SortOrder
   remark?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -471,6 +537,9 @@ export type CustomerCreateWithoutInquiryCasesInput = {
   companyName?: string | null
   country?: string | null
   source?: string
+  status?: string
+  invalidReason?: string | null
+  statusUpdatedAt?: Date | string | null
   remark?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -485,6 +554,9 @@ export type CustomerUncheckedCreateWithoutInquiryCasesInput = {
   companyName?: string | null
   country?: string | null
   source?: string
+  status?: string
+  invalidReason?: string | null
+  statusUpdatedAt?: Date | string | null
   remark?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -515,6 +587,9 @@ export type CustomerUpdateWithoutInquiryCasesInput = {
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  invalidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   remark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -529,6 +604,9 @@ export type CustomerUncheckedUpdateWithoutInquiryCasesInput = {
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  invalidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   remark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -574,6 +652,9 @@ export type CustomerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   companyName?: boolean
   country?: boolean
   source?: boolean
+  status?: boolean
+  invalidReason?: boolean
+  statusUpdatedAt?: boolean
   remark?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -590,6 +671,9 @@ export type CustomerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   companyName?: boolean
   country?: boolean
   source?: boolean
+  status?: boolean
+  invalidReason?: boolean
+  statusUpdatedAt?: boolean
   remark?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -604,6 +688,9 @@ export type CustomerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   companyName?: boolean
   country?: boolean
   source?: boolean
+  status?: boolean
+  invalidReason?: boolean
+  statusUpdatedAt?: boolean
   remark?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -618,13 +705,16 @@ export type CustomerSelectScalar = {
   companyName?: boolean
   country?: boolean
   source?: boolean
+  status?: boolean
+  invalidReason?: boolean
+  statusUpdatedAt?: boolean
   remark?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
 }
 
-export type CustomerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "domain" | "companyName" | "country" | "source" | "remark" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["customer"]>
+export type CustomerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "domain" | "companyName" | "country" | "source" | "status" | "invalidReason" | "statusUpdatedAt" | "remark" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["customer"]>
 export type CustomerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   inquiryCases?: boolean | Prisma.Customer$inquiryCasesArgs<ExtArgs>
   _count?: boolean | Prisma.CustomerCountOutputTypeDefaultArgs<ExtArgs>
@@ -645,6 +735,9 @@ export type $CustomerPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     companyName: string | null
     country: string | null
     source: string
+    status: string
+    invalidReason: string | null
+    statusUpdatedAt: Date | null
     remark: string | null
     createdAt: Date
     updatedAt: Date
@@ -1080,6 +1173,9 @@ export interface CustomerFieldRefs {
   readonly companyName: Prisma.FieldRef<"Customer", 'String'>
   readonly country: Prisma.FieldRef<"Customer", 'String'>
   readonly source: Prisma.FieldRef<"Customer", 'String'>
+  readonly status: Prisma.FieldRef<"Customer", 'String'>
+  readonly invalidReason: Prisma.FieldRef<"Customer", 'String'>
+  readonly statusUpdatedAt: Prisma.FieldRef<"Customer", 'DateTime'>
   readonly remark: Prisma.FieldRef<"Customer", 'String'>
   readonly createdAt: Prisma.FieldRef<"Customer", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Customer", 'DateTime'>

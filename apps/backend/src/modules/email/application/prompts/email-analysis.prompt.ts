@@ -26,10 +26,11 @@ ready_for_quote
 closed
 
 Rules:
-- classification must be one of: valid_inquiry, invalid, unrelated_product, commercial, unknown.
-- Never use classification values outside the allowed list. For spam, SEO, marketing, or unsolicited promotion emails, use classification=invalid.
-- For spam, SEO, marketing, or unsolicited promotion emails, use suggestedStatus=invalid, not closed.
-- For spam, SEO, marketing, or unsolicited promotion emails, set humanReviewRequired=true because the system does not let AI close or discard inquiries automatically.
+- classification must be one of: valid_inquiry, invalid, unknown.
+- Never use classification values outside the allowed list.
+- For spam, SEO, marketing, unsolicited promotion, or unrelated product emails, use classification=invalid.
+- For emails classified as invalid, use suggestedStatus=invalid, not closed.
+- For emails classified as invalid, set humanReviewRequired=true because the system does not let AI close or discard inquiries automatically.
 - If product requirements are missing, suggest need_clarification.
 - If technical requirements are mostly clear but feasibility needs engineering confirmation, suggest need_engineer_review.
 - If the email asks for price, quote, payment, invoice, contract, PI, purchase order, or commercial terms, set quoteBoundaryDetected=true and humanReviewRequired=true.

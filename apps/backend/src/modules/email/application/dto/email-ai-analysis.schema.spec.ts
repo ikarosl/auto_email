@@ -58,7 +58,7 @@ describe('emailAiAnalysisSchema', () => {
   it('rejects quote boundary output without human review', () => {
     const result = emailAiAnalysisSchema.safeParse({
       isInquiry: true,
-      classification: 'commercial',
+      classification: 'invalid',
       suggestedStatus: InquiryStatus.NEED_ENGINEER_REVIEW,
       confidence: 0.91,
       riskLevel: 'high',

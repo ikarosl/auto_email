@@ -3,8 +3,6 @@ import { InquiryStatus } from '../../../inquiry/domain/enums/inquiry-status.enum
 export type EmailInquiryClassification =
   | 'valid_inquiry'
   | 'invalid'
-  | 'unrelated_product'
-  | 'commercial'
   | 'unknown';
 
 export type EmailAiRiskLevel = 'low' | 'medium' | 'high';
