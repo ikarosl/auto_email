@@ -24,6 +24,8 @@ export class PrismaEmailMessageRepository implements EmailMessageRepository {
       subject: emailMessage.subject,
       bodyText: emailMessage.bodyText ?? null,
       bodyHtml: emailMessage.bodyHtml ?? null,
+      hasAttachments: emailMessage.hasAttachments ?? false,
+      attachmentCount: emailMessage.attachmentCount ?? 0,
       rawSource: emailMessage.raw ?? null,
       receivedAt: emailMessage.receivedAt,
       createdAt: emailMessage.createdAt,
@@ -44,14 +46,14 @@ export class PrismaEmailMessageRepository implements EmailMessageRepository {
 
   async findById(id: string): Promise<EmailMessage | undefined> {
     const record = await this.prisma.emailMessage.findUnique({ where: { id } });
-    return record ? toDomain(record) : undefined;
+    return record ? this.toDomainWithAttachments(record) : undefined;
   }
 
   async findByExternalMessageId(externalMessageId: string): Promise<EmailMessage | undefined> {
     const record = await this.prisma.emailMessage.findFirst({
       where: { messageId: externalMessageId },
     });
-    return record ? toDomain(record) : undefined;
+    return record ? this.toDomainWithAttachments(record) : undefined;
   }
 
   async listByThreadId(threadId: string): Promise<EmailMessage[]> {
@@ -59,14 +61,25 @@ export class PrismaEmailMessageRepository implements EmailMessageRepository {
       where: { emailThreadId: threadId },
       orderBy: { receivedAt: 'asc' },
     });
-    return records.map(toDomain);
+    return this.toDomainsWithAttachments(records);
   }
 
   async list(): Promise<EmailMessage[]> {
     const records = await this.prisma.emailMessage.findMany({
       orderBy: { receivedAt: 'desc' },
     });
-    return records.map(toDomain);
+    return this.toDomainsWithAttachments(records);
+  }
+
+  async updateAttachmentSummary(emailMessageId: string, attachmentCount: number): Promise<void> {
+    await this.prisma.emailMessage.update({
+      where: { id: emailMessageId },
+      data: {
+        hasAttachments: attachmentCount > 0,
+        attachmentCount,
+        updatedAt: new Date(),
+      } as any,
+    });
   }
 
   private async resolveEmailThreadId(
@@ -158,11 +171,55 @@ export class PrismaEmailMessageRepository implements EmailMessageRepository {
 
     return created.id;
   }
+
+  private async toDomainWithAttachments(record: EmailMessageRecord): Promise<EmailMessage> {
+    const attachments = await this.listAttachmentsByEmailMessageIds([record.id]);
+    return toDomain(record, attachments.get(record.id) ?? []);
+  }
+
+  private async toDomainsWithAttachments(records: EmailMessageRecord[]): Promise<EmailMessage[]> {
+    const attachments = await this.listAttachmentsByEmailMessageIds(records.map((record) => record.id));
+    return records.map((record) => toDomain(record, attachments.get(record.id) ?? []));
+  }
+
+  private async listAttachmentsByEmailMessageIds(emailMessageIds: string[]): Promise<Map<string, EmailMessage['attachments']>> {
+    const result = new Map<string, EmailMessage['attachments']>();
+    if (emailMessageIds.length === 0 || !(this.prisma as any).emailAttachment) {
+      return result;
+    }
+
+    const records = await (this.prisma as any).emailAttachment.findMany({
+      where: { emailMessageId: { in: emailMessageIds } },
+      orderBy: { createdAt: 'asc' },
+    });
+
+    for (const record of records) {
+      const list = result.get(record.emailMessageId) ?? [];
+      list.push({
+        id: record.id,
+        fileName: record.originalFileName ?? record.safeFileName,
+        mimeType: record.mimeType,
+        fileSize: Number(record.fileSize),
+        parseStatus: record.parseStatus,
+        textSource: resolveTextSource(record),
+        parsedTextPreview: record.parsedTextPreview ?? undefined,
+        parsedText: record.parsedText ?? undefined,
+        parseErrorCode: record.parseErrorCode ?? undefined,
+        ocrStatus: record.ocrStatus ?? undefined,
+        ocrTextPreview: record.ocrTextPreview ?? undefined,
+        ocrText: record.ocrText ?? undefined,
+        ocrErrorCode: record.ocrErrorCode ?? undefined,
+        truncated: isTruncated(record),
+        isContextCandidate: record.isContextCandidate,
+      });
+      result.set(record.emailMessageId, list);
+    }
+
+    return result;
+  }
 }
 
-type PrismaEmailMessage = Awaited<ReturnType<PrismaEmailMessageRepository['list']>>[number];
-
-function toDomain(record: {
+type EmailMessageRecord = {
   id: string;
   messageId: string | null;
   emailThreadId: string | null;
@@ -175,10 +232,14 @@ function toDomain(record: {
   subject: string | null;
   bodyText: string | null;
   bodyHtml: string | null;
+  hasAttachments?: boolean;
+  attachmentCount?: number;
   rawSource: string | null;
   receivedAt: Date;
   createdAt: Date;
-}): EmailMessage {
+};
+
+function toDomain(record: EmailMessageRecord, attachments: EmailMessage['attachments'] = []): EmailMessage {
   return {
     id: record.id,
     externalMessageId: record.messageId ?? record.id,
@@ -193,10 +254,34 @@ function toDomain(record: {
     subject: record.subject ?? '',
     bodyText: record.bodyText ?? undefined,
     bodyHtml: record.bodyHtml ?? undefined,
+    hasAttachments: record.hasAttachments ?? attachments.length > 0,
+    attachmentCount: record.attachmentCount ?? attachments.length,
+    attachments,
     raw: record.rawSource ?? undefined,
     receivedAt: record.receivedAt,
     createdAt: record.createdAt,
   };
+}
+
+function resolveTextSource(record: {
+  parseStrategy?: string | null;
+  ocrStatus?: string | null;
+  parsedText?: string | null;
+}) {
+  if (record.ocrStatus === 'parsed') return 'ocr';
+  if (record.parseStrategy === 'pdf_text') return 'pdf_text';
+  if (record.parseStrategy === 'plain_text') return 'plain_text';
+  return record.parsedText ? 'plain_text' : 'none';
+}
+
+function isTruncated(record: {
+  parsedText?: string | null;
+  parsedTextLength?: number | null;
+  ocrText?: string | null;
+}) {
+  const parsedLength = record.parsedText?.length ?? 0;
+  const totalLength = record.parsedTextLength ?? parsedLength;
+  return totalLength > parsedLength;
 }
 
 function normalizeSubject(subject: string): string {

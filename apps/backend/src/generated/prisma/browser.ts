@@ -48,6 +48,11 @@ export type EmailThread = Prisma.EmailThreadModel
  */
 export type EmailMessage = Prisma.EmailMessageModel
 /**
+ * Model EmailAttachment
+ * 
+ */
+export type EmailAttachment = Prisma.EmailAttachmentModel
+/**
  * Model InquiryCase
  * 
  */

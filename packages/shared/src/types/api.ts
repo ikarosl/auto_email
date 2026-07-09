@@ -111,6 +111,38 @@ export interface EmailThreadListItem {
   };
 }
 
+export interface EmailAttachmentListItem {
+  id: string;
+  emailMessageId: string;
+  inquiryCaseId?: string | null;
+  originalFileName?: string | null;
+  safeFileName: string;
+  contentId?: string | null;
+  contentDisposition?: string | null;
+  mimeType: string;
+  fileExtension?: string | null;
+  fileSize?: string | null;
+  contentHash?: string | null;
+  storageProvider: string;
+  storagePath?: string | null;
+  parseStatus: 'pending' | 'parsed' | 'skipped' | 'failed' | string;
+  parseStrategy?: string | null;
+  parsedTextPreview?: string | null;
+  parsedTextLength?: number | null;
+  parseErrorCode?: string | null;
+  parseErrorMessage?: string | null;
+  parsedAt?: string | null;
+  ocrStatus?: 'pending' | 'skipped' | 'parsed' | 'failed' | string;
+  ocrProvider?: string | null;
+  ocrTextPreview?: string | null;
+  ocrErrorCode?: string | null;
+  ocrAt?: string | null;
+  isInline: boolean;
+  isContextCandidate: boolean;
+  createdAt: string | null;
+  updatedAt: string | null;
+}
+
 export interface EmailMessageListItem {
   id: string;
   emailThreadId?: string | null;
@@ -121,6 +153,9 @@ export interface EmailMessageListItem {
   ccEmails: unknown;
   subject?: string | null;
   bodyText?: string | null;
+  hasAttachments?: boolean;
+  attachmentCount?: number;
+  attachments?: EmailAttachmentListItem[];
   receivedAt: string | null;
   inquiryLinks?: Array<{
     inquiryCaseId: string;

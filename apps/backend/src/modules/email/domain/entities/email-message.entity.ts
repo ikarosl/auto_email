@@ -38,6 +38,8 @@ export interface EmailMessage {
   subject: string;
   bodyText?: string;
   bodyHtml?: string;
+  hasAttachments?: boolean;
+  attachmentCount?: number;
   attachments?: EmailMessageAttachment[];
   receivedAt: Date;
   raw?: string;

@@ -29,4 +29,8 @@ export class InMemoryEmailMessageRepository implements EmailMessageRepository {
   async list(): Promise<EmailMessage[]> {
     return Array.from(this.emailMessages.values());
   }
+
+  async updateAttachmentSummary(_emailMessageId: string, _attachmentCount: number): Promise<void> {
+    return undefined;
+  }
 }

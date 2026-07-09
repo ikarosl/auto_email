@@ -715,3 +715,32 @@ currentEmail 附件优先展示完整解析文本。
 再完成 IMAP 附件保存。
 最后把 PDF 解析文本接入 BuildAiContextUseCase。
 ```
+
+## 16. 当前实现状态
+
+已落地：
+
+```text
+1. email_messages.has_attachments / attachment_count。
+2. email_attachments 表与 Prisma EmailAttachment model。
+3. IMAP mailparser 附件读取，附件二进制进入 InboundEmail。
+4. 本地附件存储 LocalAttachmentStorageAdapter。
+5. PDF / text 基础解析 BasicAttachmentParserAdapter。
+6. OpenAI PDF Reader Adapter 预接入：
+   - ATTACHMENT_AI_READER_ENABLED=true
+   - ATTACHMENT_AI_READER_PROVIDER=openai
+   - ATTACHMENT_AI_READER_MODEL=gpt-4o
+7. PDF 本地解析为空或失败时，可启用 AI reader 生成可读文本。
+8. BuildAiContextUseCase 已可从 EmailMessage.attachments 注入上下文。
+9. email thread messages 接口返回附件元数据和解析状态。
+```
+
+仍未落地：
+
+```text
+1. Gemini / Claude PDF Reader Adapter。
+2. 图片 OCR Adapter。
+3. 前端附件查看、下载和解析文本展示。
+4. 附件重解析接口。
+5. 附件解析任务队列和超时隔离。
+```

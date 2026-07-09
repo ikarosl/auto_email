@@ -390,6 +390,7 @@ export const ModelName = {
   Organization: 'Organization',
   EmailThread: 'EmailThread',
   EmailMessage: 'EmailMessage',
+  EmailAttachment: 'EmailAttachment',
   InquiryCase: 'InquiryCase',
   InquiryMessage: 'InquiryMessage',
   ProcessedEmail: 'ProcessedEmail',
@@ -414,7 +415,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "mailboxAccount" | "mailboxSyncState" | "customer" | "organization" | "emailThread" | "emailMessage" | "inquiryCase" | "inquiryMessage" | "processedEmail" | "aiDecision" | "inquiryStructuredFact" | "replyDraft" | "aiContextSnapshot" | "inquiryContextSummary" | "inquiryStatusLog"
+    modelProps: "mailboxAccount" | "mailboxSyncState" | "customer" | "organization" | "emailThread" | "emailMessage" | "emailAttachment" | "inquiryCase" | "inquiryMessage" | "processedEmail" | "aiDecision" | "inquiryStructuredFact" | "replyDraft" | "aiContextSnapshot" | "inquiryContextSummary" | "inquiryStatusLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -859,6 +860,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.EmailMessageCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.EmailMessageCountAggregateOutputType> | number
+        }
+      }
+    }
+    EmailAttachment: {
+      payload: Prisma.$EmailAttachmentPayload<ExtArgs>
+      fields: Prisma.EmailAttachmentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EmailAttachmentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailAttachmentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EmailAttachmentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailAttachmentPayload>
+        }
+        findFirst: {
+          args: Prisma.EmailAttachmentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailAttachmentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EmailAttachmentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailAttachmentPayload>
+        }
+        findMany: {
+          args: Prisma.EmailAttachmentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailAttachmentPayload>[]
+        }
+        create: {
+          args: Prisma.EmailAttachmentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailAttachmentPayload>
+        }
+        createMany: {
+          args: Prisma.EmailAttachmentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EmailAttachmentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailAttachmentPayload>[]
+        }
+        delete: {
+          args: Prisma.EmailAttachmentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailAttachmentPayload>
+        }
+        update: {
+          args: Prisma.EmailAttachmentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailAttachmentPayload>
+        }
+        deleteMany: {
+          args: Prisma.EmailAttachmentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EmailAttachmentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EmailAttachmentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailAttachmentPayload>[]
+        }
+        upsert: {
+          args: Prisma.EmailAttachmentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailAttachmentPayload>
+        }
+        aggregate: {
+          args: Prisma.EmailAttachmentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEmailAttachment>
+        }
+        groupBy: {
+          args: Prisma.EmailAttachmentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmailAttachmentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EmailAttachmentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmailAttachmentCountAggregateOutputType> | number
         }
       }
     }
@@ -1666,6 +1741,8 @@ export const EmailMessageScalarFieldEnum = {
   subject: 'subject',
   bodyText: 'bodyText',
   bodyHtml: 'bodyHtml',
+  hasAttachments: 'hasAttachments',
+  attachmentCount: 'attachmentCount',
   rawSource: 'rawSource',
   receivedAt: 'receivedAt',
   source: 'source',
@@ -1675,6 +1752,44 @@ export const EmailMessageScalarFieldEnum = {
 } as const
 
 export type EmailMessageScalarFieldEnum = (typeof EmailMessageScalarFieldEnum)[keyof typeof EmailMessageScalarFieldEnum]
+
+
+export const EmailAttachmentScalarFieldEnum = {
+  id: 'id',
+  emailMessageId: 'emailMessageId',
+  inquiryCaseId: 'inquiryCaseId',
+  originalFileName: 'originalFileName',
+  safeFileName: 'safeFileName',
+  contentId: 'contentId',
+  contentDisposition: 'contentDisposition',
+  mimeType: 'mimeType',
+  fileExtension: 'fileExtension',
+  fileSize: 'fileSize',
+  contentHash: 'contentHash',
+  storageProvider: 'storageProvider',
+  storagePath: 'storagePath',
+  parseStatus: 'parseStatus',
+  parseStrategy: 'parseStrategy',
+  parsedText: 'parsedText',
+  parsedTextPreview: 'parsedTextPreview',
+  parsedTextLength: 'parsedTextLength',
+  parseErrorCode: 'parseErrorCode',
+  parseErrorMessage: 'parseErrorMessage',
+  parsedAt: 'parsedAt',
+  ocrStatus: 'ocrStatus',
+  ocrProvider: 'ocrProvider',
+  ocrText: 'ocrText',
+  ocrTextPreview: 'ocrTextPreview',
+  ocrResultJson: 'ocrResultJson',
+  ocrErrorCode: 'ocrErrorCode',
+  ocrAt: 'ocrAt',
+  isInline: 'isInline',
+  isContextCandidate: 'isContextCandidate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmailAttachmentScalarFieldEnum = (typeof EmailAttachmentScalarFieldEnum)[keyof typeof EmailAttachmentScalarFieldEnum]
 
 
 export const InquiryCaseScalarFieldEnum = {
@@ -2119,6 +2234,7 @@ export type GlobalOmitConfig = {
   organization?: Prisma.OrganizationOmit
   emailThread?: Prisma.EmailThreadOmit
   emailMessage?: Prisma.EmailMessageOmit
+  emailAttachment?: Prisma.EmailAttachmentOmit
   inquiryCase?: Prisma.InquiryCaseOmit
   inquiryMessage?: Prisma.InquiryMessageOmit
   processedEmail?: Prisma.ProcessedEmailOmit

@@ -1,5 +1,16 @@
 import { EmailSource } from '../enums/email-source.enum.js';
 
+export interface InboundEmailAttachment {
+  originalFileName?: string;
+  contentType?: string;
+  contentDisposition?: string;
+  contentId?: string;
+  content: Buffer;
+  size?: number;
+  checksum?: string;
+  isInline?: boolean;
+}
+
 export interface InboundEmail {
   messageId: string;
   /** IMAP 邮箱账户 ID（mailbox_accounts.id），用于创建 EmailThread 等关联 */
@@ -16,6 +27,7 @@ export interface InboundEmail {
   subject: string;
   bodyText?: string;
   bodyHtml?: string;
+  attachments?: InboundEmailAttachment[];
   receivedAt: Date;
   source: EmailSource;
   raw?: string;

@@ -37,6 +37,7 @@
     "imapflow": "^1.0.194",
     "mailparser": "^3.7.2",
     "openai": "^5.8.2",
+    "pdf-parse": "^1.1.1",
     "pg": "^8.22.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",

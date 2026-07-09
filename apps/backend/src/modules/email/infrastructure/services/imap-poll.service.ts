@@ -412,6 +412,16 @@ export class ImapPollService implements OnApplicationBootstrap, OnApplicationShu
       subject: message.envelope?.subject || parsed.subject || '(无主题)',
       bodyText: parsed.text,
       bodyHtml: typeof parsed.html === 'string' ? parsed.html : undefined,
+      attachments: parsed.attachments.map((attachment) => ({
+        originalFileName: attachment.filename,
+        contentType: attachment.contentType,
+        contentDisposition: attachment.contentDisposition,
+        contentId: attachment.cid,
+        content: attachment.content,
+        size: attachment.size,
+        checksum: attachment.checksum,
+        isInline: attachment.related === true || attachment.contentDisposition === 'inline',
+      })),
       receivedAt: message.internalDate instanceof Date
         ? message.internalDate
         : new Date(message.internalDate || Date.now()),

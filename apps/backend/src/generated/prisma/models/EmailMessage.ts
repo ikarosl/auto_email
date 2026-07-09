@@ -29,11 +29,13 @@ export type AggregateEmailMessage = {
 export type EmailMessageAvgAggregateOutputType = {
   uidValidity: number | null
   uid: number | null
+  attachmentCount: number | null
 }
 
 export type EmailMessageSumAggregateOutputType = {
   uidValidity: bigint | null
   uid: bigint | null
+  attachmentCount: number | null
 }
 
 export type EmailMessageMinAggregateOutputType = {
@@ -51,6 +53,8 @@ export type EmailMessageMinAggregateOutputType = {
   subject: string | null
   bodyText: string | null
   bodyHtml: string | null
+  hasAttachments: boolean | null
+  attachmentCount: number | null
   rawSource: string | null
   receivedAt: Date | null
   source: string | null
@@ -74,6 +78,8 @@ export type EmailMessageMaxAggregateOutputType = {
   subject: string | null
   bodyText: string | null
   bodyHtml: string | null
+  hasAttachments: boolean | null
+  attachmentCount: number | null
   rawSource: string | null
   receivedAt: Date | null
   source: string | null
@@ -100,6 +106,8 @@ export type EmailMessageCountAggregateOutputType = {
   subject: number
   bodyText: number
   bodyHtml: number
+  hasAttachments: number
+  attachmentCount: number
   rawSource: number
   receivedAt: number
   source: number
@@ -113,11 +121,13 @@ export type EmailMessageCountAggregateOutputType = {
 export type EmailMessageAvgAggregateInputType = {
   uidValidity?: true
   uid?: true
+  attachmentCount?: true
 }
 
 export type EmailMessageSumAggregateInputType = {
   uidValidity?: true
   uid?: true
+  attachmentCount?: true
 }
 
 export type EmailMessageMinAggregateInputType = {
@@ -135,6 +145,8 @@ export type EmailMessageMinAggregateInputType = {
   subject?: true
   bodyText?: true
   bodyHtml?: true
+  hasAttachments?: true
+  attachmentCount?: true
   rawSource?: true
   receivedAt?: true
   source?: true
@@ -158,6 +170,8 @@ export type EmailMessageMaxAggregateInputType = {
   subject?: true
   bodyText?: true
   bodyHtml?: true
+  hasAttachments?: true
+  attachmentCount?: true
   rawSource?: true
   receivedAt?: true
   source?: true
@@ -184,6 +198,8 @@ export type EmailMessageCountAggregateInputType = {
   subject?: true
   bodyText?: true
   bodyHtml?: true
+  hasAttachments?: true
+  attachmentCount?: true
   rawSource?: true
   receivedAt?: true
   source?: true
@@ -297,6 +313,8 @@ export type EmailMessageGroupByOutputType = {
   subject: string | null
   bodyText: string | null
   bodyHtml: string | null
+  hasAttachments: boolean
+  attachmentCount: number
   rawSource: string | null
   receivedAt: Date
   source: string
@@ -346,6 +364,8 @@ export type EmailMessageWhereInput = {
   subject?: Prisma.StringNullableFilter<"EmailMessage"> | string | null
   bodyText?: Prisma.StringNullableFilter<"EmailMessage"> | string | null
   bodyHtml?: Prisma.StringNullableFilter<"EmailMessage"> | string | null
+  hasAttachments?: Prisma.BoolFilter<"EmailMessage"> | boolean
+  attachmentCount?: Prisma.IntFilter<"EmailMessage"> | number
   rawSource?: Prisma.StringNullableFilter<"EmailMessage"> | string | null
   receivedAt?: Prisma.DateTimeFilter<"EmailMessage"> | Date | string
   source?: Prisma.StringFilter<"EmailMessage"> | string
@@ -360,6 +380,7 @@ export type EmailMessageWhereInput = {
   sentReplyDrafts?: Prisma.ReplyDraftListRelationFilter
   contextSnapshots?: Prisma.AiContextSnapshotListRelationFilter
   updatedStructuredFacts?: Prisma.InquiryStructuredFactListRelationFilter
+  attachments?: Prisma.EmailAttachmentListRelationFilter
 }
 
 export type EmailMessageOrderByWithRelationInput = {
@@ -380,6 +401,8 @@ export type EmailMessageOrderByWithRelationInput = {
   subject?: Prisma.SortOrderInput | Prisma.SortOrder
   bodyText?: Prisma.SortOrderInput | Prisma.SortOrder
   bodyHtml?: Prisma.SortOrderInput | Prisma.SortOrder
+  hasAttachments?: Prisma.SortOrder
+  attachmentCount?: Prisma.SortOrder
   rawSource?: Prisma.SortOrderInput | Prisma.SortOrder
   receivedAt?: Prisma.SortOrder
   source?: Prisma.SortOrder
@@ -394,6 +417,7 @@ export type EmailMessageOrderByWithRelationInput = {
   sentReplyDrafts?: Prisma.ReplyDraftOrderByRelationAggregateInput
   contextSnapshots?: Prisma.AiContextSnapshotOrderByRelationAggregateInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactOrderByRelationAggregateInput
+  attachments?: Prisma.EmailAttachmentOrderByRelationAggregateInput
 }
 
 export type EmailMessageWhereUniqueInput = Prisma.AtLeast<{
@@ -417,6 +441,8 @@ export type EmailMessageWhereUniqueInput = Prisma.AtLeast<{
   subject?: Prisma.StringNullableFilter<"EmailMessage"> | string | null
   bodyText?: Prisma.StringNullableFilter<"EmailMessage"> | string | null
   bodyHtml?: Prisma.StringNullableFilter<"EmailMessage"> | string | null
+  hasAttachments?: Prisma.BoolFilter<"EmailMessage"> | boolean
+  attachmentCount?: Prisma.IntFilter<"EmailMessage"> | number
   rawSource?: Prisma.StringNullableFilter<"EmailMessage"> | string | null
   receivedAt?: Prisma.DateTimeFilter<"EmailMessage"> | Date | string
   source?: Prisma.StringFilter<"EmailMessage"> | string
@@ -431,6 +457,7 @@ export type EmailMessageWhereUniqueInput = Prisma.AtLeast<{
   sentReplyDrafts?: Prisma.ReplyDraftListRelationFilter
   contextSnapshots?: Prisma.AiContextSnapshotListRelationFilter
   updatedStructuredFacts?: Prisma.InquiryStructuredFactListRelationFilter
+  attachments?: Prisma.EmailAttachmentListRelationFilter
 }, "id">
 
 export type EmailMessageOrderByWithAggregationInput = {
@@ -451,6 +478,8 @@ export type EmailMessageOrderByWithAggregationInput = {
   subject?: Prisma.SortOrderInput | Prisma.SortOrder
   bodyText?: Prisma.SortOrderInput | Prisma.SortOrder
   bodyHtml?: Prisma.SortOrderInput | Prisma.SortOrder
+  hasAttachments?: Prisma.SortOrder
+  attachmentCount?: Prisma.SortOrder
   rawSource?: Prisma.SortOrderInput | Prisma.SortOrder
   receivedAt?: Prisma.SortOrder
   source?: Prisma.SortOrder
@@ -485,6 +514,8 @@ export type EmailMessageScalarWhereWithAggregatesInput = {
   subject?: Prisma.StringNullableWithAggregatesFilter<"EmailMessage"> | string | null
   bodyText?: Prisma.StringNullableWithAggregatesFilter<"EmailMessage"> | string | null
   bodyHtml?: Prisma.StringNullableWithAggregatesFilter<"EmailMessage"> | string | null
+  hasAttachments?: Prisma.BoolWithAggregatesFilter<"EmailMessage"> | boolean
+  attachmentCount?: Prisma.IntWithAggregatesFilter<"EmailMessage"> | number
   rawSource?: Prisma.StringNullableWithAggregatesFilter<"EmailMessage"> | string | null
   receivedAt?: Prisma.DateTimeWithAggregatesFilter<"EmailMessage"> | Date | string
   source?: Prisma.StringWithAggregatesFilter<"EmailMessage"> | string
@@ -509,6 +540,8 @@ export type EmailMessageCreateInput = {
   subject?: string | null
   bodyText?: string | null
   bodyHtml?: string | null
+  hasAttachments?: boolean
+  attachmentCount?: number
   rawSource?: string | null
   receivedAt: Date | string
   source?: string
@@ -523,6 +556,7 @@ export type EmailMessageCreateInput = {
   sentReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSentEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactCreateNestedManyWithoutUpdatedFromEmailMessageInput
+  attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageUncheckedCreateInput = {
@@ -543,6 +577,8 @@ export type EmailMessageUncheckedCreateInput = {
   subject?: string | null
   bodyText?: string | null
   bodyHtml?: string | null
+  hasAttachments?: boolean
+  attachmentCount?: number
   rawSource?: string | null
   receivedAt: Date | string
   source?: string
@@ -555,6 +591,7 @@ export type EmailMessageUncheckedCreateInput = {
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSentEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedManyWithoutUpdatedFromEmailMessageInput
+  attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageUpdateInput = {
@@ -573,6 +610,8 @@ export type EmailMessageUpdateInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
   rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
@@ -587,6 +626,7 @@ export type EmailMessageUpdateInput = {
   sentReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSentEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUpdateManyWithoutUpdatedFromEmailMessageNestedInput
+  attachments?: Prisma.EmailAttachmentUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateInput = {
@@ -607,6 +647,8 @@ export type EmailMessageUncheckedUpdateInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
   rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
@@ -619,6 +661,7 @@ export type EmailMessageUncheckedUpdateInput = {
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSentEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateManyWithoutUpdatedFromEmailMessageNestedInput
+  attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageCreateManyInput = {
@@ -639,6 +682,8 @@ export type EmailMessageCreateManyInput = {
   subject?: string | null
   bodyText?: string | null
   bodyHtml?: string | null
+  hasAttachments?: boolean
+  attachmentCount?: number
   rawSource?: string | null
   receivedAt: Date | string
   source?: string
@@ -663,6 +708,8 @@ export type EmailMessageUpdateManyMutationInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
   rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
@@ -689,6 +736,8 @@ export type EmailMessageUncheckedUpdateManyInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
   rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
@@ -725,6 +774,8 @@ export type EmailMessageCountOrderByAggregateInput = {
   subject?: Prisma.SortOrder
   bodyText?: Prisma.SortOrder
   bodyHtml?: Prisma.SortOrder
+  hasAttachments?: Prisma.SortOrder
+  attachmentCount?: Prisma.SortOrder
   rawSource?: Prisma.SortOrder
   receivedAt?: Prisma.SortOrder
   source?: Prisma.SortOrder
@@ -736,6 +787,7 @@ export type EmailMessageCountOrderByAggregateInput = {
 export type EmailMessageAvgOrderByAggregateInput = {
   uidValidity?: Prisma.SortOrder
   uid?: Prisma.SortOrder
+  attachmentCount?: Prisma.SortOrder
 }
 
 export type EmailMessageMaxOrderByAggregateInput = {
@@ -753,6 +805,8 @@ export type EmailMessageMaxOrderByAggregateInput = {
   subject?: Prisma.SortOrder
   bodyText?: Prisma.SortOrder
   bodyHtml?: Prisma.SortOrder
+  hasAttachments?: Prisma.SortOrder
+  attachmentCount?: Prisma.SortOrder
   rawSource?: Prisma.SortOrder
   receivedAt?: Prisma.SortOrder
   source?: Prisma.SortOrder
@@ -776,6 +830,8 @@ export type EmailMessageMinOrderByAggregateInput = {
   subject?: Prisma.SortOrder
   bodyText?: Prisma.SortOrder
   bodyHtml?: Prisma.SortOrder
+  hasAttachments?: Prisma.SortOrder
+  attachmentCount?: Prisma.SortOrder
   rawSource?: Prisma.SortOrder
   receivedAt?: Prisma.SortOrder
   source?: Prisma.SortOrder
@@ -787,6 +843,7 @@ export type EmailMessageMinOrderByAggregateInput = {
 export type EmailMessageSumOrderByAggregateInput = {
   uidValidity?: Prisma.SortOrder
   uid?: Prisma.SortOrder
+  attachmentCount?: Prisma.SortOrder
 }
 
 export type EmailMessageScalarRelationFilter = {
@@ -881,6 +938,20 @@ export type EmailMessageUncheckedUpdateManyWithoutEmailThreadNestedInput = {
   update?: Prisma.EmailMessageUpdateWithWhereUniqueWithoutEmailThreadInput | Prisma.EmailMessageUpdateWithWhereUniqueWithoutEmailThreadInput[]
   updateMany?: Prisma.EmailMessageUpdateManyWithWhereWithoutEmailThreadInput | Prisma.EmailMessageUpdateManyWithWhereWithoutEmailThreadInput[]
   deleteMany?: Prisma.EmailMessageScalarWhereInput | Prisma.EmailMessageScalarWhereInput[]
+}
+
+export type EmailMessageCreateNestedOneWithoutAttachmentsInput = {
+  create?: Prisma.XOR<Prisma.EmailMessageCreateWithoutAttachmentsInput, Prisma.EmailMessageUncheckedCreateWithoutAttachmentsInput>
+  connectOrCreate?: Prisma.EmailMessageCreateOrConnectWithoutAttachmentsInput
+  connect?: Prisma.EmailMessageWhereUniqueInput
+}
+
+export type EmailMessageUpdateOneRequiredWithoutAttachmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.EmailMessageCreateWithoutAttachmentsInput, Prisma.EmailMessageUncheckedCreateWithoutAttachmentsInput>
+  connectOrCreate?: Prisma.EmailMessageCreateOrConnectWithoutAttachmentsInput
+  upsert?: Prisma.EmailMessageUpsertWithoutAttachmentsInput
+  connect?: Prisma.EmailMessageWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EmailMessageUpdateToOneWithWhereWithoutAttachmentsInput, Prisma.EmailMessageUpdateWithoutAttachmentsInput>, Prisma.EmailMessageUncheckedUpdateWithoutAttachmentsInput>
 }
 
 export type EmailMessageCreateNestedOneWithoutInquiryMessagesInput = {
@@ -993,6 +1064,8 @@ export type EmailMessageCreateWithoutMailboxAccountInput = {
   subject?: string | null
   bodyText?: string | null
   bodyHtml?: string | null
+  hasAttachments?: boolean
+  attachmentCount?: number
   rawSource?: string | null
   receivedAt: Date | string
   source?: string
@@ -1006,6 +1079,7 @@ export type EmailMessageCreateWithoutMailboxAccountInput = {
   sentReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSentEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactCreateNestedManyWithoutUpdatedFromEmailMessageInput
+  attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageUncheckedCreateWithoutMailboxAccountInput = {
@@ -1025,6 +1099,8 @@ export type EmailMessageUncheckedCreateWithoutMailboxAccountInput = {
   subject?: string | null
   bodyText?: string | null
   bodyHtml?: string | null
+  hasAttachments?: boolean
+  attachmentCount?: number
   rawSource?: string | null
   receivedAt: Date | string
   source?: string
@@ -1037,6 +1113,7 @@ export type EmailMessageUncheckedCreateWithoutMailboxAccountInput = {
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSentEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedManyWithoutUpdatedFromEmailMessageInput
+  attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageCreateOrConnectWithoutMailboxAccountInput = {
@@ -1086,6 +1163,8 @@ export type EmailMessageScalarWhereInput = {
   subject?: Prisma.StringNullableFilter<"EmailMessage"> | string | null
   bodyText?: Prisma.StringNullableFilter<"EmailMessage"> | string | null
   bodyHtml?: Prisma.StringNullableFilter<"EmailMessage"> | string | null
+  hasAttachments?: Prisma.BoolFilter<"EmailMessage"> | boolean
+  attachmentCount?: Prisma.IntFilter<"EmailMessage"> | number
   rawSource?: Prisma.StringNullableFilter<"EmailMessage"> | string | null
   receivedAt?: Prisma.DateTimeFilter<"EmailMessage"> | Date | string
   source?: Prisma.StringFilter<"EmailMessage"> | string
@@ -1110,6 +1189,8 @@ export type EmailMessageCreateWithoutEmailThreadInput = {
   subject?: string | null
   bodyText?: string | null
   bodyHtml?: string | null
+  hasAttachments?: boolean
+  attachmentCount?: number
   rawSource?: string | null
   receivedAt: Date | string
   source?: string
@@ -1123,6 +1204,7 @@ export type EmailMessageCreateWithoutEmailThreadInput = {
   sentReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSentEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactCreateNestedManyWithoutUpdatedFromEmailMessageInput
+  attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageUncheckedCreateWithoutEmailThreadInput = {
@@ -1142,6 +1224,8 @@ export type EmailMessageUncheckedCreateWithoutEmailThreadInput = {
   subject?: string | null
   bodyText?: string | null
   bodyHtml?: string | null
+  hasAttachments?: boolean
+  attachmentCount?: number
   rawSource?: string | null
   receivedAt: Date | string
   source?: string
@@ -1154,6 +1238,7 @@ export type EmailMessageUncheckedCreateWithoutEmailThreadInput = {
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSentEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedManyWithoutUpdatedFromEmailMessageInput
+  attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageCreateOrConnectWithoutEmailThreadInput = {
@@ -1182,6 +1267,158 @@ export type EmailMessageUpdateManyWithWhereWithoutEmailThreadInput = {
   data: Prisma.XOR<Prisma.EmailMessageUpdateManyMutationInput, Prisma.EmailMessageUncheckedUpdateManyWithoutEmailThreadInput>
 }
 
+export type EmailMessageCreateWithoutAttachmentsInput = {
+  id?: string
+  direction: string
+  mailboxName?: string
+  uidValidity?: bigint | number | null
+  uid?: bigint | number | null
+  messageId?: string | null
+  inReplyTo?: string | null
+  referencesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  fromEmail: string
+  fromName?: string | null
+  toEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ccEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  subject?: string | null
+  bodyText?: string | null
+  bodyHtml?: string | null
+  hasAttachments?: boolean
+  attachmentCount?: number
+  rawSource?: string | null
+  receivedAt: Date | string
+  source?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  mailboxAccount?: Prisma.MailboxAccountCreateNestedOneWithoutEmailMessagesInput
+  emailThread?: Prisma.EmailThreadCreateNestedOneWithoutEmailMessagesInput
+  inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutEmailMessageInput
+  aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutEmailMessageInput
+  sourceReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSourceEmailMessageInput
+  sentReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSentEmailMessageInput
+  contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutEmailMessageInput
+  updatedStructuredFacts?: Prisma.InquiryStructuredFactCreateNestedManyWithoutUpdatedFromEmailMessageInput
+}
+
+export type EmailMessageUncheckedCreateWithoutAttachmentsInput = {
+  id?: string
+  mailboxAccountId?: string | null
+  emailThreadId?: string | null
+  direction: string
+  mailboxName?: string
+  uidValidity?: bigint | number | null
+  uid?: bigint | number | null
+  messageId?: string | null
+  inReplyTo?: string | null
+  referencesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  fromEmail: string
+  fromName?: string | null
+  toEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ccEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  subject?: string | null
+  bodyText?: string | null
+  bodyHtml?: string | null
+  hasAttachments?: boolean
+  attachmentCount?: number
+  rawSource?: string | null
+  receivedAt: Date | string
+  source?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutEmailMessageInput
+  aiDecisions?: Prisma.AiDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  sourceReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSourceEmailMessageInput
+  sentReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSentEmailMessageInput
+  contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutEmailMessageInput
+  updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedManyWithoutUpdatedFromEmailMessageInput
+}
+
+export type EmailMessageCreateOrConnectWithoutAttachmentsInput = {
+  where: Prisma.EmailMessageWhereUniqueInput
+  create: Prisma.XOR<Prisma.EmailMessageCreateWithoutAttachmentsInput, Prisma.EmailMessageUncheckedCreateWithoutAttachmentsInput>
+}
+
+export type EmailMessageUpsertWithoutAttachmentsInput = {
+  update: Prisma.XOR<Prisma.EmailMessageUpdateWithoutAttachmentsInput, Prisma.EmailMessageUncheckedUpdateWithoutAttachmentsInput>
+  create: Prisma.XOR<Prisma.EmailMessageCreateWithoutAttachmentsInput, Prisma.EmailMessageUncheckedCreateWithoutAttachmentsInput>
+  where?: Prisma.EmailMessageWhereInput
+}
+
+export type EmailMessageUpdateToOneWithWhereWithoutAttachmentsInput = {
+  where?: Prisma.EmailMessageWhereInput
+  data: Prisma.XOR<Prisma.EmailMessageUpdateWithoutAttachmentsInput, Prisma.EmailMessageUncheckedUpdateWithoutAttachmentsInput>
+}
+
+export type EmailMessageUpdateWithoutAttachmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  direction?: Prisma.StringFieldUpdateOperationsInput | string
+  mailboxName?: Prisma.StringFieldUpdateOperationsInput | string
+  uidValidity?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  uid?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  messageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inReplyTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referencesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  fromEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  fromName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  toEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ccEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  source?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mailboxAccount?: Prisma.MailboxAccountUpdateOneWithoutEmailMessagesNestedInput
+  emailThread?: Prisma.EmailThreadUpdateOneWithoutEmailMessagesNestedInput
+  inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutEmailMessageNestedInput
+  aiDecisions?: Prisma.AiDecisionUpdateManyWithoutEmailMessageNestedInput
+  sourceReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSourceEmailMessageNestedInput
+  sentReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSentEmailMessageNestedInput
+  contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutEmailMessageNestedInput
+  updatedStructuredFacts?: Prisma.InquiryStructuredFactUpdateManyWithoutUpdatedFromEmailMessageNestedInput
+}
+
+export type EmailMessageUncheckedUpdateWithoutAttachmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mailboxAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailThreadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  direction?: Prisma.StringFieldUpdateOperationsInput | string
+  mailboxName?: Prisma.StringFieldUpdateOperationsInput | string
+  uidValidity?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  uid?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  messageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inReplyTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referencesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  fromEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  fromName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  toEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ccEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  source?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutEmailMessageNestedInput
+  aiDecisions?: Prisma.AiDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  sourceReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSourceEmailMessageNestedInput
+  sentReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSentEmailMessageNestedInput
+  contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutEmailMessageNestedInput
+  updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateManyWithoutUpdatedFromEmailMessageNestedInput
+}
+
 export type EmailMessageCreateWithoutInquiryMessagesInput = {
   id?: string
   direction: string
@@ -1198,6 +1435,8 @@ export type EmailMessageCreateWithoutInquiryMessagesInput = {
   subject?: string | null
   bodyText?: string | null
   bodyHtml?: string | null
+  hasAttachments?: boolean
+  attachmentCount?: number
   rawSource?: string | null
   receivedAt: Date | string
   source?: string
@@ -1211,6 +1450,7 @@ export type EmailMessageCreateWithoutInquiryMessagesInput = {
   sentReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSentEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactCreateNestedManyWithoutUpdatedFromEmailMessageInput
+  attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageUncheckedCreateWithoutInquiryMessagesInput = {
@@ -1231,6 +1471,8 @@ export type EmailMessageUncheckedCreateWithoutInquiryMessagesInput = {
   subject?: string | null
   bodyText?: string | null
   bodyHtml?: string | null
+  hasAttachments?: boolean
+  attachmentCount?: number
   rawSource?: string | null
   receivedAt: Date | string
   source?: string
@@ -1242,6 +1484,7 @@ export type EmailMessageUncheckedCreateWithoutInquiryMessagesInput = {
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSentEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedManyWithoutUpdatedFromEmailMessageInput
+  attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageCreateOrConnectWithoutInquiryMessagesInput = {
@@ -1276,6 +1519,8 @@ export type EmailMessageUpdateWithoutInquiryMessagesInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
   rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1289,6 +1534,7 @@ export type EmailMessageUpdateWithoutInquiryMessagesInput = {
   sentReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSentEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUpdateManyWithoutUpdatedFromEmailMessageNestedInput
+  attachments?: Prisma.EmailAttachmentUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateWithoutInquiryMessagesInput = {
@@ -1309,6 +1555,8 @@ export type EmailMessageUncheckedUpdateWithoutInquiryMessagesInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
   rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1320,6 +1568,7 @@ export type EmailMessageUncheckedUpdateWithoutInquiryMessagesInput = {
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSentEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateManyWithoutUpdatedFromEmailMessageNestedInput
+  attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageCreateWithoutAiDecisionsInput = {
@@ -1338,6 +1587,8 @@ export type EmailMessageCreateWithoutAiDecisionsInput = {
   subject?: string | null
   bodyText?: string | null
   bodyHtml?: string | null
+  hasAttachments?: boolean
+  attachmentCount?: number
   rawSource?: string | null
   receivedAt: Date | string
   source?: string
@@ -1351,6 +1602,7 @@ export type EmailMessageCreateWithoutAiDecisionsInput = {
   sentReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSentEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactCreateNestedManyWithoutUpdatedFromEmailMessageInput
+  attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageUncheckedCreateWithoutAiDecisionsInput = {
@@ -1371,6 +1623,8 @@ export type EmailMessageUncheckedCreateWithoutAiDecisionsInput = {
   subject?: string | null
   bodyText?: string | null
   bodyHtml?: string | null
+  hasAttachments?: boolean
+  attachmentCount?: number
   rawSource?: string | null
   receivedAt: Date | string
   source?: string
@@ -1382,6 +1636,7 @@ export type EmailMessageUncheckedCreateWithoutAiDecisionsInput = {
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSentEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedManyWithoutUpdatedFromEmailMessageInput
+  attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageCreateOrConnectWithoutAiDecisionsInput = {
@@ -1416,6 +1671,8 @@ export type EmailMessageUpdateWithoutAiDecisionsInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
   rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1429,6 +1686,7 @@ export type EmailMessageUpdateWithoutAiDecisionsInput = {
   sentReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSentEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUpdateManyWithoutUpdatedFromEmailMessageNestedInput
+  attachments?: Prisma.EmailAttachmentUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateWithoutAiDecisionsInput = {
@@ -1449,6 +1707,8 @@ export type EmailMessageUncheckedUpdateWithoutAiDecisionsInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
   rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1460,6 +1720,7 @@ export type EmailMessageUncheckedUpdateWithoutAiDecisionsInput = {
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSentEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateManyWithoutUpdatedFromEmailMessageNestedInput
+  attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageCreateWithoutUpdatedStructuredFactsInput = {
@@ -1478,6 +1739,8 @@ export type EmailMessageCreateWithoutUpdatedStructuredFactsInput = {
   subject?: string | null
   bodyText?: string | null
   bodyHtml?: string | null
+  hasAttachments?: boolean
+  attachmentCount?: number
   rawSource?: string | null
   receivedAt: Date | string
   source?: string
@@ -1491,6 +1754,7 @@ export type EmailMessageCreateWithoutUpdatedStructuredFactsInput = {
   sourceReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSourceEmailMessageInput
   sentReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSentEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutEmailMessageInput
+  attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageUncheckedCreateWithoutUpdatedStructuredFactsInput = {
@@ -1511,6 +1775,8 @@ export type EmailMessageUncheckedCreateWithoutUpdatedStructuredFactsInput = {
   subject?: string | null
   bodyText?: string | null
   bodyHtml?: string | null
+  hasAttachments?: boolean
+  attachmentCount?: number
   rawSource?: string | null
   receivedAt: Date | string
   source?: string
@@ -1522,6 +1788,7 @@ export type EmailMessageUncheckedCreateWithoutUpdatedStructuredFactsInput = {
   sourceReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSourceEmailMessageInput
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSentEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutEmailMessageInput
+  attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageCreateOrConnectWithoutUpdatedStructuredFactsInput = {
@@ -1556,6 +1823,8 @@ export type EmailMessageUpdateWithoutUpdatedStructuredFactsInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
   rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1569,6 +1838,7 @@ export type EmailMessageUpdateWithoutUpdatedStructuredFactsInput = {
   sourceReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSourceEmailMessageNestedInput
   sentReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSentEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutEmailMessageNestedInput
+  attachments?: Prisma.EmailAttachmentUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateWithoutUpdatedStructuredFactsInput = {
@@ -1589,6 +1859,8 @@ export type EmailMessageUncheckedUpdateWithoutUpdatedStructuredFactsInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
   rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1600,6 +1872,7 @@ export type EmailMessageUncheckedUpdateWithoutUpdatedStructuredFactsInput = {
   sourceReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSourceEmailMessageNestedInput
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSentEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutEmailMessageNestedInput
+  attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageCreateWithoutSourceReplyDraftsInput = {
@@ -1618,6 +1891,8 @@ export type EmailMessageCreateWithoutSourceReplyDraftsInput = {
   subject?: string | null
   bodyText?: string | null
   bodyHtml?: string | null
+  hasAttachments?: boolean
+  attachmentCount?: number
   rawSource?: string | null
   receivedAt: Date | string
   source?: string
@@ -1631,6 +1906,7 @@ export type EmailMessageCreateWithoutSourceReplyDraftsInput = {
   sentReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSentEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactCreateNestedManyWithoutUpdatedFromEmailMessageInput
+  attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageUncheckedCreateWithoutSourceReplyDraftsInput = {
@@ -1651,6 +1927,8 @@ export type EmailMessageUncheckedCreateWithoutSourceReplyDraftsInput = {
   subject?: string | null
   bodyText?: string | null
   bodyHtml?: string | null
+  hasAttachments?: boolean
+  attachmentCount?: number
   rawSource?: string | null
   receivedAt: Date | string
   source?: string
@@ -1662,6 +1940,7 @@ export type EmailMessageUncheckedCreateWithoutSourceReplyDraftsInput = {
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSentEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedManyWithoutUpdatedFromEmailMessageInput
+  attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageCreateOrConnectWithoutSourceReplyDraftsInput = {
@@ -1685,6 +1964,8 @@ export type EmailMessageCreateWithoutSentReplyDraftsInput = {
   subject?: string | null
   bodyText?: string | null
   bodyHtml?: string | null
+  hasAttachments?: boolean
+  attachmentCount?: number
   rawSource?: string | null
   receivedAt: Date | string
   source?: string
@@ -1698,6 +1979,7 @@ export type EmailMessageCreateWithoutSentReplyDraftsInput = {
   sourceReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSourceEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactCreateNestedManyWithoutUpdatedFromEmailMessageInput
+  attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageUncheckedCreateWithoutSentReplyDraftsInput = {
@@ -1718,6 +2000,8 @@ export type EmailMessageUncheckedCreateWithoutSentReplyDraftsInput = {
   subject?: string | null
   bodyText?: string | null
   bodyHtml?: string | null
+  hasAttachments?: boolean
+  attachmentCount?: number
   rawSource?: string | null
   receivedAt: Date | string
   source?: string
@@ -1729,6 +2013,7 @@ export type EmailMessageUncheckedCreateWithoutSentReplyDraftsInput = {
   sourceReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSourceEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedManyWithoutUpdatedFromEmailMessageInput
+  attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageCreateOrConnectWithoutSentReplyDraftsInput = {
@@ -1763,6 +2048,8 @@ export type EmailMessageUpdateWithoutSourceReplyDraftsInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
   rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1776,6 +2063,7 @@ export type EmailMessageUpdateWithoutSourceReplyDraftsInput = {
   sentReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSentEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUpdateManyWithoutUpdatedFromEmailMessageNestedInput
+  attachments?: Prisma.EmailAttachmentUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateWithoutSourceReplyDraftsInput = {
@@ -1796,6 +2084,8 @@ export type EmailMessageUncheckedUpdateWithoutSourceReplyDraftsInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
   rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1807,6 +2097,7 @@ export type EmailMessageUncheckedUpdateWithoutSourceReplyDraftsInput = {
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSentEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateManyWithoutUpdatedFromEmailMessageNestedInput
+  attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUpsertWithoutSentReplyDraftsInput = {
@@ -1836,6 +2127,8 @@ export type EmailMessageUpdateWithoutSentReplyDraftsInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
   rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1849,6 +2142,7 @@ export type EmailMessageUpdateWithoutSentReplyDraftsInput = {
   sourceReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSourceEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUpdateManyWithoutUpdatedFromEmailMessageNestedInput
+  attachments?: Prisma.EmailAttachmentUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateWithoutSentReplyDraftsInput = {
@@ -1869,6 +2163,8 @@ export type EmailMessageUncheckedUpdateWithoutSentReplyDraftsInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
   rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1880,6 +2176,7 @@ export type EmailMessageUncheckedUpdateWithoutSentReplyDraftsInput = {
   sourceReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSourceEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateManyWithoutUpdatedFromEmailMessageNestedInput
+  attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageCreateWithoutContextSnapshotsInput = {
@@ -1898,6 +2195,8 @@ export type EmailMessageCreateWithoutContextSnapshotsInput = {
   subject?: string | null
   bodyText?: string | null
   bodyHtml?: string | null
+  hasAttachments?: boolean
+  attachmentCount?: number
   rawSource?: string | null
   receivedAt: Date | string
   source?: string
@@ -1911,6 +2210,7 @@ export type EmailMessageCreateWithoutContextSnapshotsInput = {
   sourceReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSourceEmailMessageInput
   sentReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSentEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactCreateNestedManyWithoutUpdatedFromEmailMessageInput
+  attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageUncheckedCreateWithoutContextSnapshotsInput = {
@@ -1931,6 +2231,8 @@ export type EmailMessageUncheckedCreateWithoutContextSnapshotsInput = {
   subject?: string | null
   bodyText?: string | null
   bodyHtml?: string | null
+  hasAttachments?: boolean
+  attachmentCount?: number
   rawSource?: string | null
   receivedAt: Date | string
   source?: string
@@ -1942,6 +2244,7 @@ export type EmailMessageUncheckedCreateWithoutContextSnapshotsInput = {
   sourceReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSourceEmailMessageInput
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSentEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedManyWithoutUpdatedFromEmailMessageInput
+  attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageCreateOrConnectWithoutContextSnapshotsInput = {
@@ -1976,6 +2279,8 @@ export type EmailMessageUpdateWithoutContextSnapshotsInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
   rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1989,6 +2294,7 @@ export type EmailMessageUpdateWithoutContextSnapshotsInput = {
   sourceReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSourceEmailMessageNestedInput
   sentReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSentEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUpdateManyWithoutUpdatedFromEmailMessageNestedInput
+  attachments?: Prisma.EmailAttachmentUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateWithoutContextSnapshotsInput = {
@@ -2009,6 +2315,8 @@ export type EmailMessageUncheckedUpdateWithoutContextSnapshotsInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
   rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2020,6 +2328,7 @@ export type EmailMessageUncheckedUpdateWithoutContextSnapshotsInput = {
   sourceReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSourceEmailMessageNestedInput
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSentEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateManyWithoutUpdatedFromEmailMessageNestedInput
+  attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageCreateManyMailboxAccountInput = {
@@ -2039,6 +2348,8 @@ export type EmailMessageCreateManyMailboxAccountInput = {
   subject?: string | null
   bodyText?: string | null
   bodyHtml?: string | null
+  hasAttachments?: boolean
+  attachmentCount?: number
   rawSource?: string | null
   receivedAt: Date | string
   source?: string
@@ -2063,6 +2374,8 @@ export type EmailMessageUpdateWithoutMailboxAccountInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
   rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2076,6 +2389,7 @@ export type EmailMessageUpdateWithoutMailboxAccountInput = {
   sentReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSentEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUpdateManyWithoutUpdatedFromEmailMessageNestedInput
+  attachments?: Prisma.EmailAttachmentUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateWithoutMailboxAccountInput = {
@@ -2095,6 +2409,8 @@ export type EmailMessageUncheckedUpdateWithoutMailboxAccountInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
   rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2107,6 +2423,7 @@ export type EmailMessageUncheckedUpdateWithoutMailboxAccountInput = {
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSentEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateManyWithoutUpdatedFromEmailMessageNestedInput
+  attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateManyWithoutMailboxAccountInput = {
@@ -2126,6 +2443,8 @@ export type EmailMessageUncheckedUpdateManyWithoutMailboxAccountInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
   rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2151,6 +2470,8 @@ export type EmailMessageCreateManyEmailThreadInput = {
   subject?: string | null
   bodyText?: string | null
   bodyHtml?: string | null
+  hasAttachments?: boolean
+  attachmentCount?: number
   rawSource?: string | null
   receivedAt: Date | string
   source?: string
@@ -2175,6 +2496,8 @@ export type EmailMessageUpdateWithoutEmailThreadInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
   rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2188,6 +2511,7 @@ export type EmailMessageUpdateWithoutEmailThreadInput = {
   sentReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSentEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUpdateManyWithoutUpdatedFromEmailMessageNestedInput
+  attachments?: Prisma.EmailAttachmentUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateWithoutEmailThreadInput = {
@@ -2207,6 +2531,8 @@ export type EmailMessageUncheckedUpdateWithoutEmailThreadInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
   rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2219,6 +2545,7 @@ export type EmailMessageUncheckedUpdateWithoutEmailThreadInput = {
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSentEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateManyWithoutUpdatedFromEmailMessageNestedInput
+  attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateManyWithoutEmailThreadInput = {
@@ -2238,6 +2565,8 @@ export type EmailMessageUncheckedUpdateManyWithoutEmailThreadInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
   rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2258,6 +2587,7 @@ export type EmailMessageCountOutputType = {
   sentReplyDrafts: number
   contextSnapshots: number
   updatedStructuredFacts: number
+  attachments: number
 }
 
 export type EmailMessageCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2267,6 +2597,7 @@ export type EmailMessageCountOutputTypeSelect<ExtArgs extends runtime.Types.Exte
   sentReplyDrafts?: boolean | EmailMessageCountOutputTypeCountSentReplyDraftsArgs
   contextSnapshots?: boolean | EmailMessageCountOutputTypeCountContextSnapshotsArgs
   updatedStructuredFacts?: boolean | EmailMessageCountOutputTypeCountUpdatedStructuredFactsArgs
+  attachments?: boolean | EmailMessageCountOutputTypeCountAttachmentsArgs
 }
 
 /**
@@ -2321,6 +2652,13 @@ export type EmailMessageCountOutputTypeCountUpdatedStructuredFactsArgs<ExtArgs e
   where?: Prisma.InquiryStructuredFactWhereInput
 }
 
+/**
+ * EmailMessageCountOutputType without action
+ */
+export type EmailMessageCountOutputTypeCountAttachmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmailAttachmentWhereInput
+}
+
 
 export type EmailMessageSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2340,6 +2678,8 @@ export type EmailMessageSelect<ExtArgs extends runtime.Types.Extensions.Internal
   subject?: boolean
   bodyText?: boolean
   bodyHtml?: boolean
+  hasAttachments?: boolean
+  attachmentCount?: boolean
   rawSource?: boolean
   receivedAt?: boolean
   source?: boolean
@@ -2354,6 +2694,7 @@ export type EmailMessageSelect<ExtArgs extends runtime.Types.Extensions.Internal
   sentReplyDrafts?: boolean | Prisma.EmailMessage$sentReplyDraftsArgs<ExtArgs>
   contextSnapshots?: boolean | Prisma.EmailMessage$contextSnapshotsArgs<ExtArgs>
   updatedStructuredFacts?: boolean | Prisma.EmailMessage$updatedStructuredFactsArgs<ExtArgs>
+  attachments?: boolean | Prisma.EmailMessage$attachmentsArgs<ExtArgs>
   _count?: boolean | Prisma.EmailMessageCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["emailMessage"]>
 
@@ -2375,6 +2716,8 @@ export type EmailMessageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   subject?: boolean
   bodyText?: boolean
   bodyHtml?: boolean
+  hasAttachments?: boolean
+  attachmentCount?: boolean
   rawSource?: boolean
   receivedAt?: boolean
   source?: boolean
@@ -2403,6 +2746,8 @@ export type EmailMessageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   subject?: boolean
   bodyText?: boolean
   bodyHtml?: boolean
+  hasAttachments?: boolean
+  attachmentCount?: boolean
   rawSource?: boolean
   receivedAt?: boolean
   source?: boolean
@@ -2431,6 +2776,8 @@ export type EmailMessageSelectScalar = {
   subject?: boolean
   bodyText?: boolean
   bodyHtml?: boolean
+  hasAttachments?: boolean
+  attachmentCount?: boolean
   rawSource?: boolean
   receivedAt?: boolean
   source?: boolean
@@ -2439,7 +2786,7 @@ export type EmailMessageSelectScalar = {
   deletedAt?: boolean
 }
 
-export type EmailMessageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "mailboxAccountId" | "emailThreadId" | "direction" | "mailboxName" | "uidValidity" | "uid" | "messageId" | "inReplyTo" | "referencesJson" | "fromEmail" | "fromName" | "toEmails" | "ccEmails" | "subject" | "bodyText" | "bodyHtml" | "rawSource" | "receivedAt" | "source" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["emailMessage"]>
+export type EmailMessageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "mailboxAccountId" | "emailThreadId" | "direction" | "mailboxName" | "uidValidity" | "uid" | "messageId" | "inReplyTo" | "referencesJson" | "fromEmail" | "fromName" | "toEmails" | "ccEmails" | "subject" | "bodyText" | "bodyHtml" | "hasAttachments" | "attachmentCount" | "rawSource" | "receivedAt" | "source" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["emailMessage"]>
 export type EmailMessageInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   mailboxAccount?: boolean | Prisma.EmailMessage$mailboxAccountArgs<ExtArgs>
   emailThread?: boolean | Prisma.EmailMessage$emailThreadArgs<ExtArgs>
@@ -2449,6 +2796,7 @@ export type EmailMessageInclude<ExtArgs extends runtime.Types.Extensions.Interna
   sentReplyDrafts?: boolean | Prisma.EmailMessage$sentReplyDraftsArgs<ExtArgs>
   contextSnapshots?: boolean | Prisma.EmailMessage$contextSnapshotsArgs<ExtArgs>
   updatedStructuredFacts?: boolean | Prisma.EmailMessage$updatedStructuredFactsArgs<ExtArgs>
+  attachments?: boolean | Prisma.EmailMessage$attachmentsArgs<ExtArgs>
   _count?: boolean | Prisma.EmailMessageCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type EmailMessageIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2471,6 +2819,7 @@ export type $EmailMessagePayload<ExtArgs extends runtime.Types.Extensions.Intern
     sentReplyDrafts: Prisma.$ReplyDraftPayload<ExtArgs>[]
     contextSnapshots: Prisma.$AiContextSnapshotPayload<ExtArgs>[]
     updatedStructuredFacts: Prisma.$InquiryStructuredFactPayload<ExtArgs>[]
+    attachments: Prisma.$EmailAttachmentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2490,6 +2839,8 @@ export type $EmailMessagePayload<ExtArgs extends runtime.Types.Extensions.Intern
     subject: string | null
     bodyText: string | null
     bodyHtml: string | null
+    hasAttachments: boolean
+    attachmentCount: number
     rawSource: string | null
     receivedAt: Date
     source: string
@@ -2898,6 +3249,7 @@ export interface Prisma__EmailMessageClient<T, Null = never, ExtArgs extends run
   sentReplyDrafts<T extends Prisma.EmailMessage$sentReplyDraftsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmailMessage$sentReplyDraftsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReplyDraftPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   contextSnapshots<T extends Prisma.EmailMessage$contextSnapshotsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmailMessage$contextSnapshotsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiContextSnapshotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   updatedStructuredFacts<T extends Prisma.EmailMessage$updatedStructuredFactsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmailMessage$updatedStructuredFactsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InquiryStructuredFactPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  attachments<T extends Prisma.EmailMessage$attachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmailMessage$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmailAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2944,6 +3296,8 @@ export interface EmailMessageFieldRefs {
   readonly subject: Prisma.FieldRef<"EmailMessage", 'String'>
   readonly bodyText: Prisma.FieldRef<"EmailMessage", 'String'>
   readonly bodyHtml: Prisma.FieldRef<"EmailMessage", 'String'>
+  readonly hasAttachments: Prisma.FieldRef<"EmailMessage", 'Boolean'>
+  readonly attachmentCount: Prisma.FieldRef<"EmailMessage", 'Int'>
   readonly rawSource: Prisma.FieldRef<"EmailMessage", 'String'>
   readonly receivedAt: Prisma.FieldRef<"EmailMessage", 'DateTime'>
   readonly source: Prisma.FieldRef<"EmailMessage", 'String'>
@@ -3530,6 +3884,30 @@ export type EmailMessage$updatedStructuredFactsArgs<ExtArgs extends runtime.Type
   take?: number
   skip?: number
   distinct?: Prisma.InquiryStructuredFactScalarFieldEnum | Prisma.InquiryStructuredFactScalarFieldEnum[]
+}
+
+/**
+ * EmailMessage.attachments
+ */
+export type EmailMessage$attachmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmailAttachment
+   */
+  select?: Prisma.EmailAttachmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmailAttachment
+   */
+  omit?: Prisma.EmailAttachmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmailAttachmentInclude<ExtArgs> | null
+  where?: Prisma.EmailAttachmentWhereInput
+  orderBy?: Prisma.EmailAttachmentOrderByWithRelationInput | Prisma.EmailAttachmentOrderByWithRelationInput[]
+  cursor?: Prisma.EmailAttachmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EmailAttachmentScalarFieldEnum | Prisma.EmailAttachmentScalarFieldEnum[]
 }
 
 /**

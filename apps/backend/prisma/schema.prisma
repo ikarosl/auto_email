@@ -120,6 +120,8 @@ model EmailMessage {
   subject              String?
   bodyText             String?             @map("body_text")
   bodyHtml             String?             @map("body_html")
+  hasAttachments       Boolean             @default(false) @map("has_attachments")
+  attachmentCount      Int                 @default(0) @map("attachment_count")
   rawSource            String?             @map("raw_source")
   receivedAt           DateTime            @map("received_at") @db.Timestamptz(6)
   source               String              @default("imap")
@@ -134,12 +136,56 @@ model EmailMessage {
   sentReplyDrafts      ReplyDraft[]        @relation("ReplyDraftSentEmail")
   contextSnapshots     AiContextSnapshot[]
   updatedStructuredFacts InquiryStructuredFact[]
+  attachments          EmailAttachment[]
 
   @@index([emailThreadId])
   @@index([fromEmail])
   @@index([receivedAt])
   @@index([direction])
   @@map("email_messages")
+}
+
+model EmailAttachment {
+  id                 String        @id @default(dbgenerated("'attachment_' || gen_random_uuid()::TEXT"))
+  emailMessageId     String        @map("email_message_id")
+  inquiryCaseId      String?       @map("inquiry_case_id")
+  originalFileName   String?       @map("original_file_name")
+  safeFileName       String        @map("safe_file_name")
+  contentId          String?       @map("content_id")
+  contentDisposition String?       @map("content_disposition")
+  mimeType           String        @map("mime_type")
+  fileExtension      String?       @map("file_extension")
+  fileSize           BigInt        @map("file_size")
+  contentHash        String?       @map("content_hash")
+  storageProvider    String        @default("local") @map("storage_provider")
+  storagePath        String?       @map("storage_path")
+  parseStatus        String        @default("pending") @map("parse_status")
+  parseStrategy      String?       @map("parse_strategy")
+  parsedText         String?       @map("parsed_text")
+  parsedTextPreview  String?       @map("parsed_text_preview")
+  parsedTextLength   Int           @default(0) @map("parsed_text_length")
+  parseErrorCode     String?       @map("parse_error_code")
+  parseErrorMessage  String?       @map("parse_error_message")
+  parsedAt           DateTime?     @map("parsed_at") @db.Timestamptz(6)
+  ocrStatus          String        @default("skipped") @map("ocr_status")
+  ocrProvider        String?       @map("ocr_provider")
+  ocrText            String?       @map("ocr_text")
+  ocrTextPreview     String?       @map("ocr_text_preview")
+  ocrResultJson      Json          @default("{}") @map("ocr_result_json")
+  ocrErrorCode       String?       @map("ocr_error_code")
+  ocrAt              DateTime?     @map("ocr_at") @db.Timestamptz(6)
+  isInline           Boolean       @default(false) @map("is_inline")
+  isContextCandidate Boolean       @default(true) @map("is_context_candidate")
+  createdAt          DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime      @default(now()) @map("updated_at") @db.Timestamptz(6)
+  emailMessage       EmailMessage  @relation(fields: [emailMessageId], references: [id], onDelete: Cascade)
+  inquiryCase        InquiryCase?  @relation(fields: [inquiryCaseId], references: [id], onDelete: SetNull)
+
+  @@index([emailMessageId])
+  @@index([inquiryCaseId])
+  @@index([parseStatus])
+  @@index([contentHash])
+  @@map("email_attachments")
 }
 
 model InquiryCase {
@@ -170,6 +216,7 @@ model InquiryCase {
   contextSnapshots AiContextSnapshot[]
   contextSummary  InquiryContextSummary?
   statusLogs      InquiryStatusLog[]
+  attachments     EmailAttachment[]
 
   @@index([customerId])
   @@index([organizationId])

@@ -17,6 +17,7 @@ import { EmailMessageRepository } from '../ports/email-message.repository.js';
 import { EmailContentSanitizer } from '../services/email-content-sanitizer.js';
 import { isRelayDomain, extractContactInfoFromBody } from '../services/email-relay-extractor.js';
 import { EMAIL_THREAD_REPOSITORY } from '../../email.tokens.js';
+import { SaveEmailAttachmentsUseCase } from './save-email-attachments.use-case.js';
 
 export interface ReceiveInboundEmailResult {
   emailMessage: EmailMessage;
@@ -31,6 +32,7 @@ export class ReceiveInboundEmailUseCase {
     @Inject(EMAIL_THREAD_REPOSITORY) private readonly emailThreadRepository: EmailThreadRepository,
     private readonly findInquiryForInboundEmailUseCase?: FindInquiryForInboundEmailUseCase,
     private readonly inquiryMessageRepository?: InquiryMessageRepository,
+    private readonly saveEmailAttachmentsUseCase?: SaveEmailAttachmentsUseCase,
     private readonly emailContentSanitizer = new EmailContentSanitizer(),
   ) {}
 
@@ -86,13 +88,54 @@ export class ReceiveInboundEmailUseCase {
       subject: inboundEmail.subject,
       bodyText: cleanedBodyText,
       bodyHtml: inboundEmail.bodyHtml,
+      hasAttachments: (inboundEmail.attachments?.length ?? 0) > 0,
+      attachmentCount: inboundEmail.attachments?.length ?? 0,
       receivedAt: inboundEmail.receivedAt,
       raw: inboundEmail.raw,
       createdAt: new Date(),
     };
 
-    const savedEmailMessage = await this.emailMessageRepository.save(emailMessage);
+    let savedEmailMessage = await this.emailMessageRepository.save(emailMessage);
+    if (this.saveEmailAttachmentsUseCase && inboundEmail.attachments?.length) {
+      const attachments = await this.saveEmailAttachmentsUseCase.execute({
+        emailMessageId: savedEmailMessage.id,
+        attachments: inboundEmail.attachments,
+      });
+      savedEmailMessage = {
+        ...savedEmailMessage,
+        hasAttachments: attachments.length > 0,
+        attachmentCount: attachments.length,
+        attachments: attachments.map((attachment) => ({
+          id: attachment.id,
+          fileName: attachment.originalFileName ?? attachment.safeFileName,
+          mimeType: attachment.mimeType,
+          fileSize: attachment.fileSize,
+          parseStatus: attachment.parseStatus === 'pending' ? 'skipped' : attachment.parseStatus,
+          textSource: attachment.ocrStatus === 'parsed'
+            ? 'ocr'
+            : attachment.parseStrategy === 'pdf_text'
+              ? 'pdf_text'
+              : attachment.parseStrategy === 'plain_text'
+                ? 'plain_text'
+                : 'none',
+          parsedTextPreview: attachment.parsedTextPreview,
+          parsedText: attachment.parsedText,
+          parseErrorCode: attachment.parseErrorCode,
+          ocrStatus: attachment.ocrStatus,
+          ocrTextPreview: attachment.ocrTextPreview,
+          ocrText: attachment.ocrText,
+          ocrErrorCode: attachment.ocrErrorCode,
+          isContextCandidate: attachment.isContextCandidate,
+        })),
+      };
+    }
     const inquiryCase = await this.findOrCreateInquiryForEmail(savedEmailMessage);
+    if (inquiryCase && this.saveEmailAttachmentsUseCase && inboundEmail.attachments?.length) {
+      await this.saveEmailAttachmentsUseCase.updateInquiryCaseId(
+        savedEmailMessage.id,
+        inquiryCase.id,
+      );
+    }
 
     return {
       emailMessage: savedEmailMessage,

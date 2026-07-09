@@ -99,6 +99,9 @@ export class EmailThreadController {
       this.prisma.emailMessage.findMany({
         where,
         include: {
+          attachments: {
+            orderBy: { createdAt: 'asc' },
+          },
           inquiryMessages: {
             include: {
               inquiryCase: {
@@ -114,7 +117,7 @@ export class EmailThreadController {
             orderBy: { createdAt: 'desc' },
             take: 1,
           },
-        },
+        } as any,
         orderBy: [{ receivedAt: 'asc' }, { createdAt: 'asc' }],
         skip: (page - 1) * limit,
         take: limit,
@@ -164,6 +167,9 @@ function mapEmailMessage(record: any) {
     ccEmails: record.ccEmails,
     subject: record.subject,
     bodyText: record.bodyText,
+    hasAttachments: record.hasAttachments,
+    attachmentCount: record.attachmentCount,
+    attachments: record.attachments?.map(mapEmailAttachment) ?? [],
     receivedAt: toDateIso(record.receivedAt),
     source: record.source,
     createdAt: toDateIso(record.createdAt),
@@ -184,5 +190,39 @@ function mapEmailMessage(record: any) {
           createdAt: toDateIso(record.aiDecisions[0].createdAt),
         }
       : null,
+  };
+}
+
+function mapEmailAttachment(record: any) {
+  return {
+    id: record.id,
+    emailMessageId: record.emailMessageId,
+    inquiryCaseId: record.inquiryCaseId,
+    originalFileName: record.originalFileName,
+    safeFileName: record.safeFileName,
+    contentId: record.contentId,
+    contentDisposition: record.contentDisposition,
+    mimeType: record.mimeType,
+    fileExtension: record.fileExtension,
+    fileSize: toStringOrNull(record.fileSize),
+    contentHash: record.contentHash,
+    storageProvider: record.storageProvider,
+    storagePath: record.storagePath,
+    parseStatus: record.parseStatus,
+    parseStrategy: record.parseStrategy,
+    parsedTextPreview: record.parsedTextPreview,
+    parsedTextLength: record.parsedTextLength,
+    parseErrorCode: record.parseErrorCode,
+    parseErrorMessage: record.parseErrorMessage,
+    parsedAt: toDateIso(record.parsedAt),
+    ocrStatus: record.ocrStatus,
+    ocrProvider: record.ocrProvider,
+    ocrTextPreview: record.ocrTextPreview,
+    ocrErrorCode: record.ocrErrorCode,
+    ocrAt: toDateIso(record.ocrAt),
+    isInline: record.isInline,
+    isContextCandidate: record.isContextCandidate,
+    createdAt: toDateIso(record.createdAt),
+    updatedAt: toDateIso(record.updatedAt),
   };
 }

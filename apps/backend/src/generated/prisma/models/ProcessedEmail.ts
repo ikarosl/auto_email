@@ -505,14 +505,6 @@ export type ProcessedEmailUncheckedUpdateManyWithoutMailboxAccountNestedInput = 
   deleteMany?: Prisma.ProcessedEmailScalarWhereInput | Prisma.ProcessedEmailScalarWhereInput[]
 }
 
-export type BigIntFieldUpdateOperationsInput = {
-  set?: bigint | number
-  increment?: bigint | number
-  decrement?: bigint | number
-  multiply?: bigint | number
-  divide?: bigint | number
-}
-
 export type ProcessedEmailCreateWithoutMailboxAccountInput = {
   id?: string
   mailboxName?: string

@@ -6,4 +6,5 @@ export interface EmailMessageRepository {
   findByExternalMessageId(externalMessageId: string): Promise<EmailMessage | undefined>;
   listByThreadId(threadId: string): Promise<EmailMessage[]>;
   list(): Promise<EmailMessage[]>;
+  updateAttachmentSummary(emailMessageId: string, attachmentCount: number): Promise<void>;
 }

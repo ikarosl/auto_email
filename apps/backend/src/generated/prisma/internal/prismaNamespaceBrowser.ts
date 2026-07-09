@@ -57,6 +57,7 @@ export const ModelName = {
   Organization: 'Organization',
   EmailThread: 'EmailThread',
   EmailMessage: 'EmailMessage',
+  EmailAttachment: 'EmailAttachment',
   InquiryCase: 'InquiryCase',
   InquiryMessage: 'InquiryMessage',
   ProcessedEmail: 'ProcessedEmail',
@@ -183,6 +184,8 @@ export const EmailMessageScalarFieldEnum = {
   subject: 'subject',
   bodyText: 'bodyText',
   bodyHtml: 'bodyHtml',
+  hasAttachments: 'hasAttachments',
+  attachmentCount: 'attachmentCount',
   rawSource: 'rawSource',
   receivedAt: 'receivedAt',
   source: 'source',
@@ -192,6 +195,44 @@ export const EmailMessageScalarFieldEnum = {
 } as const
 
 export type EmailMessageScalarFieldEnum = (typeof EmailMessageScalarFieldEnum)[keyof typeof EmailMessageScalarFieldEnum]
+
+
+export const EmailAttachmentScalarFieldEnum = {
+  id: 'id',
+  emailMessageId: 'emailMessageId',
+  inquiryCaseId: 'inquiryCaseId',
+  originalFileName: 'originalFileName',
+  safeFileName: 'safeFileName',
+  contentId: 'contentId',
+  contentDisposition: 'contentDisposition',
+  mimeType: 'mimeType',
+  fileExtension: 'fileExtension',
+  fileSize: 'fileSize',
+  contentHash: 'contentHash',
+  storageProvider: 'storageProvider',
+  storagePath: 'storagePath',
+  parseStatus: 'parseStatus',
+  parseStrategy: 'parseStrategy',
+  parsedText: 'parsedText',
+  parsedTextPreview: 'parsedTextPreview',
+  parsedTextLength: 'parsedTextLength',
+  parseErrorCode: 'parseErrorCode',
+  parseErrorMessage: 'parseErrorMessage',
+  parsedAt: 'parsedAt',
+  ocrStatus: 'ocrStatus',
+  ocrProvider: 'ocrProvider',
+  ocrText: 'ocrText',
+  ocrTextPreview: 'ocrTextPreview',
+  ocrResultJson: 'ocrResultJson',
+  ocrErrorCode: 'ocrErrorCode',
+  ocrAt: 'ocrAt',
+  isInline: 'isInline',
+  isContextCandidate: 'isContextCandidate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmailAttachmentScalarFieldEnum = (typeof EmailAttachmentScalarFieldEnum)[keyof typeof EmailAttachmentScalarFieldEnum]
 
 
 export const InquiryCaseScalarFieldEnum = {
