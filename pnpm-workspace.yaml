@@ -2,6 +2,9 @@ packages:
   - 'apps/*'
   - 'packages/*'
 
+overrides:
+  media-typer: 1.1.0
+
 onlyBuiltDependencies:
   - esbuild
 allowBuilds:

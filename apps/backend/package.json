@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "pnpm --filter @email-inquiry/shared build && tsx watch src/main.ts",
+    "dev": "pnpm --filter @email-inquiry/shared build && tsc -p tsconfig.build.json && node --watch dist/main.js",
     "start": "node dist/main.js",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
