@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto';
+
 import { BadRequestException, Body, Controller, Get, NotFoundException, Param, Patch, Post, Query } from '@nestjs/common';
 import { API_ROUTE_SEGMENTS } from '@email-inquiry/shared';
 
@@ -235,15 +237,56 @@ export class InquiryController {
     if (!inquiryCase || inquiryCase.deletedAt) throw new NotFoundException(`Inquiry not found: ${id}`);
 
     if (body.mode === 'create_manual_email') {
-      throw new BadRequestException('Manual email creation is reserved for the next implementation batch.');
+      const now = new Date();
+      const receivedAt = new Date(body.receivedAt);
+
+      const emailId = `email_${randomUUID()}`;
+      const emailMessage = await this.prisma.emailMessage.create({
+        data: {
+          id: emailId,
+          direction: body.direction,
+          source: 'manual',
+          fromEmail: body.fromEmail,
+          fromName: body.fromName ?? null,
+          toEmails: body.toEmails ?? [],
+          ccEmails: body.ccEmails ?? [],
+          subject: body.subject,
+          bodyText: body.bodyText ?? null,
+          receivedAt,
+        },
+      });
+
+      const relationType = body.relationType ?? InquiryMessageRelationType.MANUAL_IMPORT;
+      const inquiryMessage = await this.prisma.inquiryMessage.create({
+        data: {
+          inquiryCaseId: id,
+          emailMessageId: emailId,
+          direction: body.direction,
+          relationType,
+          createdByType: 'human',
+          createdBy: body.changedBy ?? null,
+          relationReason: body.relationReason ?? null,
+          createdAt: now,
+          updatedAt: now,
+        },
+        include: { emailMessage: true, inquiryCase: true },
+      });
+
+      await this.prisma.inquiryCase.update({
+        where: { id },
+        data: { latestMessageAt: receivedAt, updatedAt: now },
+      });
+
+      return itemResponse(mapInquiryMessage(inquiryMessage));
     }
 
+    // mode === 'link_existing_email'
     if (!body.emailMessageId) {
       throw new BadRequestException('emailMessageId is required when mode=link_existing_email.');
     }
 
-    const emailMessage = await this.prisma.emailMessage.findUnique({ where: { id: body.emailMessageId } });
-    if (!emailMessage || emailMessage.deletedAt) {
+    const existingEmail = await this.prisma.emailMessage.findUnique({ where: { id: body.emailMessageId } });
+    if (!existingEmail || existingEmail.deletedAt) {
       throw new NotFoundException(`Email message not found: ${body.emailMessageId}`);
     }
 
@@ -259,7 +302,7 @@ export class InquiryController {
       create: {
         inquiryCaseId: id,
         emailMessageId: body.emailMessageId,
-        direction: emailMessage.direction,
+        direction: existingEmail.direction,
         relationType,
         createdByType: 'human',
         createdBy: body.changedBy ?? null,
@@ -283,7 +326,7 @@ export class InquiryController {
     await this.prisma.inquiryCase.update({
       where: { id },
       data: {
-        latestMessageAt: emailMessage.receivedAt,
+        latestMessageAt: existingEmail.receivedAt,
         updatedAt: now,
       },
     });

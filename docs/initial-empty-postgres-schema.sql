@@ -207,7 +207,7 @@ CREATE TABLE IF NOT EXISTS ai_decisions (
   email_message_id TEXT REFERENCES email_messages(id) ON DELETE SET NULL,
   inquiry_case_id TEXT REFERENCES inquiry_cases(id) ON DELETE SET NULL,
   classification TEXT CHECK (
-    classification IN ('valid_inquiry', 'invalid', 'unrelated_product', 'commercial', 'unknown')
+    classification IN ('valid_inquiry', 'invalid', 'unknown')
   ),
   suggested_status TEXT CHECK (
     suggested_status IN (
