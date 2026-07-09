@@ -1,4 +1,4 @@
-import { Controller, Get, NotFoundException, Param, Query } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Param, Patch, Query } from '@nestjs/common';
 import { API_ROUTE_SEGMENTS } from '@email-inquiry/shared';
 
 import {
@@ -9,6 +9,7 @@ import {
   toDateIso,
 } from '../../../common/http/api-response.js';
 import { PrismaService } from '../../../common/database/prisma.service.js';
+import { UpdateCustomerDto } from '../application/dto/update-customer.dto.js';
 
 @Controller(API_ROUTE_SEGMENTS.customers)
 export class CustomerController {
@@ -97,6 +98,42 @@ export class CustomerController {
         updatedAt: toDateIso(inquiry.updatedAt),
       })),
     });
+  }
+
+  @Patch(':id')
+  async update(@Param('id') id: string, @Body() body: UpdateCustomerDto) {
+    const existing = await this.prisma.customer.findUnique({ where: { id } });
+    if (!existing || existing.deletedAt) throw new NotFoundException(`Customer not found: ${id}`);
+
+    if (body.organizationId) {
+      const organization = await this.prisma.organization.findUnique({
+        where: { id: body.organizationId },
+      });
+      if (!organization || organization.deletedAt) {
+        throw new NotFoundException(`Organization not found: ${body.organizationId}`);
+      }
+    }
+
+    const updated = await this.prisma.customer.update({
+      where: { id },
+      data: {
+        ...(body.organizationId !== undefined ? { organizationId: body.organizationId } : {}),
+        ...(body.name !== undefined ? { name: body.name } : {}),
+        ...(body.companyName !== undefined ? { companyName: body.companyName } : {}),
+        ...(body.remark !== undefined ? { remark: body.remark } : {}),
+        updatedAt: new Date(),
+      },
+      include: {
+        organization: true,
+        _count: {
+          select: {
+            inquiryCases: true,
+          },
+        },
+      },
+    });
+
+    return itemResponse(mapCustomer(updated));
   }
 }
 

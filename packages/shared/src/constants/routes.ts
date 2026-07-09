@@ -1,6 +1,7 @@
 export const API_ROUTE_SEGMENTS = {
   health: 'health',
   inquiries: 'inquiries',
+  inquiryMessages: 'inquiry-messages',
   customers: 'customers',
   organizations: 'organizations',
   emailThreads: 'email-threads',

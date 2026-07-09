@@ -1,4 +1,4 @@
-import { Body, Controller, Get, NotFoundException, Param, Post, Query } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, NotFoundException, Param, Patch, Post, Query } from '@nestjs/common';
 import { API_ROUTE_SEGMENTS } from '@email-inquiry/shared';
 
 import {
@@ -10,8 +10,11 @@ import {
 } from '../../../common/http/api-response.js';
 import { PrismaService } from '../../../common/database/prisma.service.js';
 import { CreateInquiryDto } from '../application/dto/create-inquiry.dto.js';
+import { LinkInquiryMessageDto } from '../application/dto/link-inquiry-message.dto.js';
 import { TransitionInquiryStatusDto } from '../application/dto/transition-inquiry-status.dto.js';
+import { UpdateInquiryDto } from '../application/dto/update-inquiry.dto.js';
 import { CreateInquiryUseCase } from '../application/use-cases/create-inquiry.use-case.js';
+import { InquiryMessageRelationType } from '../domain/enums/inquiry-message-relation-type.enum.js';
 import { GetInquiryUseCase } from '../application/use-cases/get-inquiry.use-case.js';
 import { ListAllowedTransitionsUseCase } from '../application/use-cases/list-allowed-transitions.use-case.js';
 import { ListInquiriesUseCase } from '../application/use-cases/list-inquiries.use-case.js';
@@ -140,6 +143,63 @@ export class InquiryController {
     return itemResponse(mapInquiryCase({ ...record, contextSummary: mapInquiryContextSummary(contextSummary[0]) }));
   }
 
+  @Patch(':id')
+  async update(@Param('id') id: string, @Body() body: UpdateInquiryDto) {
+    const existing = await this.prisma.inquiryCase.findUnique({ where: { id } });
+    if (!existing || existing.deletedAt) throw new NotFoundException(`Inquiry not found: ${id}`);
+
+    if (body.organizationId) {
+      const organization = await this.prisma.organization.findUnique({ where: { id: body.organizationId } });
+      if (!organization || organization.deletedAt) {
+        throw new NotFoundException(`Organization not found: ${body.organizationId}`);
+      }
+    }
+
+    if (body.primaryCustomerId) {
+      const customer = await this.prisma.customer.findUnique({ where: { id: body.primaryCustomerId } });
+      if (!customer || customer.deletedAt) {
+        throw new NotFoundException(`Customer not found: ${body.primaryCustomerId}`);
+      }
+    }
+
+    const updated = await this.prisma.inquiryCase.update({
+      where: { id },
+      data: {
+        ...(body.businessSubject !== undefined
+          ? {
+              businessSubject: body.businessSubject,
+              businessSubjectSource: 'human',
+              businessSubjectUpdatedAt: new Date(),
+            }
+          : {}),
+        ...(body.businessSubjectLocked !== undefined
+          ? { businessSubjectLocked: body.businessSubjectLocked }
+          : {}),
+        ...(body.organizationId !== undefined ? { organizationId: body.organizationId } : {}),
+        ...(body.primaryCustomerId !== undefined ? { primaryCustomerId: body.primaryCustomerId } : {}),
+        ...(body.productType !== undefined ? { productType: body.productType } : {}),
+        updatedAt: new Date(),
+      },
+      include: {
+        customer: true,
+        organization: true,
+        primaryCustomer: true,
+        structuredFacts: true,
+        _count: {
+          select: {
+            inquiryMessages: true,
+            aiDecisions: true,
+            replyDrafts: true,
+            contextSnapshots: true,
+            statusLogs: true,
+          },
+        },
+      },
+    });
+
+    return itemResponse(mapInquiryCase(updated));
+  }
+
   @Get(':id/allowed-transitions')
   async allowedTransitions(@Param('id') id: string) {
     return itemResponse(await this.listAllowedTransitionsUseCase.execute(id));
@@ -167,6 +227,68 @@ export class InquiryController {
       page: 1,
       limit: 1,
     };
+  }
+
+  @Post(':id/messages')
+  async linkMessage(@Param('id') id: string, @Body() body: LinkInquiryMessageDto) {
+    const inquiryCase = await this.prisma.inquiryCase.findUnique({ where: { id } });
+    if (!inquiryCase || inquiryCase.deletedAt) throw new NotFoundException(`Inquiry not found: ${id}`);
+
+    if (body.mode === 'create_manual_email') {
+      throw new BadRequestException('Manual email creation is reserved for the next implementation batch.');
+    }
+
+    if (!body.emailMessageId) {
+      throw new BadRequestException('emailMessageId is required when mode=link_existing_email.');
+    }
+
+    const emailMessage = await this.prisma.emailMessage.findUnique({ where: { id: body.emailMessageId } });
+    if (!emailMessage || emailMessage.deletedAt) {
+      throw new NotFoundException(`Email message not found: ${body.emailMessageId}`);
+    }
+
+    const now = new Date();
+    const relationType = body.relationType ?? InquiryMessageRelationType.MANUAL_LINK;
+    const record = await this.prisma.inquiryMessage.upsert({
+      where: {
+        inquiryCaseId_emailMessageId: {
+          inquiryCaseId: id,
+          emailMessageId: body.emailMessageId,
+        },
+      },
+      create: {
+        inquiryCaseId: id,
+        emailMessageId: body.emailMessageId,
+        direction: emailMessage.direction,
+        relationType,
+        createdByType: 'human',
+        createdBy: body.changedBy ?? null,
+        relationReason: body.relationReason ?? null,
+        createdAt: now,
+        updatedAt: now,
+      },
+      update: {
+        relationType,
+        createdByType: 'human',
+        createdBy: body.changedBy ?? null,
+        relationReason: body.relationReason ?? null,
+        updatedAt: now,
+      },
+      include: {
+        emailMessage: true,
+        inquiryCase: true,
+      },
+    });
+
+    await this.prisma.inquiryCase.update({
+      where: { id },
+      data: {
+        latestMessageAt: emailMessage.receivedAt,
+        updatedAt: now,
+      },
+    });
+
+    return itemResponse(mapInquiryMessage(record));
   }
 }
 
@@ -269,5 +391,37 @@ function mapInquiryContextSummary(record: InquiryContextSummaryRecord | undefine
     coveredTo: toDateIso(record.covered_to),
     createdAt: toDateIso(record.created_at),
     updatedAt: toDateIso(record.updated_at),
+  };
+}
+
+function mapInquiryMessage(record: any) {
+  return {
+    id: record.id,
+    inquiryCaseId: record.inquiryCaseId,
+    emailMessageId: record.emailMessageId,
+    relationType: record.relationType,
+    direction: record.direction,
+    createdByType: record.createdByType,
+    createdBy: record.createdBy,
+    relationReason: record.relationReason,
+    createdAt: toDateIso(record.createdAt),
+    updatedAt: toDateIso(record.updatedAt),
+    emailMessage: record.emailMessage
+      ? {
+          id: record.emailMessage.id,
+          fromEmail: record.emailMessage.fromEmail,
+          fromName: record.emailMessage.fromName,
+          subject: record.emailMessage.subject,
+          receivedAt: toDateIso(record.emailMessage.receivedAt),
+        }
+      : null,
+    inquiryCase: record.inquiryCase
+      ? {
+          id: record.inquiryCase.id,
+          status: record.inquiryCase.status,
+          subject: record.inquiryCase.subject,
+          businessSubject: record.inquiryCase.businessSubject,
+        }
+      : null,
   };
 }

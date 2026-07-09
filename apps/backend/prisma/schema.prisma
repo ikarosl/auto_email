@@ -185,7 +185,11 @@ model InquiryMessage {
   emailMessageId String      @map("email_message_id")
   relationType   String      @default("reply") @map("relation_type")
   direction      String
+  createdByType  String      @default("system") @map("created_by_type")
+  createdBy      String?     @map("created_by")
+  relationReason String?     @map("relation_reason")
   createdAt      DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime    @default(now()) @map("updated_at") @db.Timestamptz(6)
   inquiryCase    InquiryCase @relation(fields: [inquiryCaseId], references: [id], onDelete: Cascade)
   emailMessage   EmailMessage @relation(fields: [emailMessageId], references: [id], onDelete: Cascade)
 

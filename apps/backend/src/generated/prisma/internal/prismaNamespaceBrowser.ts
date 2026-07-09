@@ -223,7 +223,11 @@ export const InquiryMessageScalarFieldEnum = {
   emailMessageId: 'emailMessageId',
   relationType: 'relationType',
   direction: 'direction',
-  createdAt: 'createdAt'
+  createdByType: 'createdByType',
+  createdBy: 'createdBy',
+  relationReason: 'relationReason',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type InquiryMessageScalarFieldEnum = (typeof InquiryMessageScalarFieldEnum)[keyof typeof InquiryMessageScalarFieldEnum]

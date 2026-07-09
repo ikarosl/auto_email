@@ -176,12 +176,29 @@ CREATE TABLE IF NOT EXISTS inquiry_messages (
   inquiry_case_id TEXT NOT NULL REFERENCES inquiry_cases(id) ON DELETE CASCADE,
   email_message_id TEXT NOT NULL REFERENCES email_messages(id) ON DELETE CASCADE,
   relation_type TEXT NOT NULL DEFAULT 'reply' CHECK (
-    relation_type IN ('original', 'reply', 'related_context', 'manual_link')
+    relation_type IN ('original', 'reply', 'forward', 'related_context', 'manual_link', 'manual_import')
   ),
   direction TEXT NOT NULL CHECK (direction IN ('inbound', 'outbound')),
+  created_by_type TEXT NOT NULL DEFAULT 'system',
+  created_by TEXT,
+  relation_reason TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   UNIQUE (inquiry_case_id, email_message_id)
 );
+
+ALTER TABLE inquiry_messages
+  ADD COLUMN IF NOT EXISTS created_by_type TEXT NOT NULL DEFAULT 'system',
+  ADD COLUMN IF NOT EXISTS created_by TEXT,
+  ADD COLUMN IF NOT EXISTS relation_reason TEXT,
+  ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT now();
+
+ALTER TABLE inquiry_messages
+  DROP CONSTRAINT IF EXISTS inquiry_messages_relation_type_check;
+
+ALTER TABLE inquiry_messages
+  ADD CONSTRAINT inquiry_messages_relation_type_check
+  CHECK (relation_type IN ('original', 'reply', 'forward', 'related_context', 'manual_link', 'manual_import'));
 
 CREATE INDEX IF NOT EXISTS inquiry_messages_inquiry_idx ON inquiry_messages(inquiry_case_id);
 CREATE INDEX IF NOT EXISTS inquiry_messages_email_idx ON inquiry_messages(email_message_id);

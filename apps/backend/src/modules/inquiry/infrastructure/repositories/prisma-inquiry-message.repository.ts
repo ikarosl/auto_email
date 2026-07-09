@@ -12,7 +12,11 @@ export class PrismaInquiryMessageRepository implements InquiryMessageRepository 
       emailMessageId: inquiryMessage.emailMessageId,
       direction: inquiryMessage.direction,
       relationType: inquiryMessage.relationType,
+      createdByType: inquiryMessage.createdByType ?? 'system',
+      createdBy: inquiryMessage.createdBy ?? null,
+      relationReason: inquiryMessage.relationReason ?? null,
       createdAt: inquiryMessage.createdAt,
+      updatedAt: inquiryMessage.updatedAt ?? new Date(),
     };
 
     await this.prisma.inquiryMessage.upsert({
@@ -58,7 +62,11 @@ function toDomain(record: {
   emailMessageId: string;
   direction: string;
   relationType: string;
+  createdByType: string;
+  createdBy: string | null;
+  relationReason: string | null;
   createdAt: Date;
+  updatedAt: Date;
 }): InquiryMessage {
   return {
     id: record.id,
@@ -66,6 +74,10 @@ function toDomain(record: {
     emailMessageId: record.emailMessageId,
     direction: record.direction as InquiryMessage['direction'],
     relationType: record.relationType as InquiryMessage['relationType'],
+    createdByType: record.createdByType as InquiryMessage['createdByType'],
+    createdBy: record.createdBy ?? undefined,
+    relationReason: record.relationReason ?? undefined,
     createdAt: record.createdAt,
+    updatedAt: record.updatedAt,
   };
 }

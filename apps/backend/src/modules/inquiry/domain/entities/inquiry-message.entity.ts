@@ -8,5 +8,9 @@ export interface InquiryMessage {
   emailMessageId: string;
   direction: InquiryMessageDirection;
   relationType: InquiryMessageRelationType;
+  createdByType?: 'system' | 'human' | 'ai';
+  createdBy?: string;
+  relationReason?: string;
   createdAt: Date;
+  updatedAt?: Date;
 }

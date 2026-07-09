@@ -173,10 +173,14 @@ CREATE TABLE IF NOT EXISTS inquiry_messages (
   inquiry_case_id TEXT NOT NULL REFERENCES inquiry_cases(id) ON DELETE CASCADE,
   email_message_id TEXT NOT NULL REFERENCES email_messages(id) ON DELETE CASCADE,
   relation_type TEXT NOT NULL DEFAULT 'reply' CHECK (
-    relation_type IN ('original', 'reply', 'related_context', 'manual_link')
+    relation_type IN ('original', 'reply', 'forward', 'related_context', 'manual_link', 'manual_import')
   ),
   direction TEXT NOT NULL CHECK (direction IN ('inbound', 'outbound')),
+  created_by_type TEXT NOT NULL DEFAULT 'system',
+  created_by TEXT,
+  relation_reason TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   UNIQUE (inquiry_case_id, email_message_id)
 );
 

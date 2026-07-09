@@ -30,7 +30,11 @@ export type InquiryMessageMinAggregateOutputType = {
   emailMessageId: string | null
   relationType: string | null
   direction: string | null
+  createdByType: string | null
+  createdBy: string | null
+  relationReason: string | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type InquiryMessageMaxAggregateOutputType = {
@@ -39,7 +43,11 @@ export type InquiryMessageMaxAggregateOutputType = {
   emailMessageId: string | null
   relationType: string | null
   direction: string | null
+  createdByType: string | null
+  createdBy: string | null
+  relationReason: string | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type InquiryMessageCountAggregateOutputType = {
@@ -48,7 +56,11 @@ export type InquiryMessageCountAggregateOutputType = {
   emailMessageId: number
   relationType: number
   direction: number
+  createdByType: number
+  createdBy: number
+  relationReason: number
   createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -59,7 +71,11 @@ export type InquiryMessageMinAggregateInputType = {
   emailMessageId?: true
   relationType?: true
   direction?: true
+  createdByType?: true
+  createdBy?: true
+  relationReason?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type InquiryMessageMaxAggregateInputType = {
@@ -68,7 +84,11 @@ export type InquiryMessageMaxAggregateInputType = {
   emailMessageId?: true
   relationType?: true
   direction?: true
+  createdByType?: true
+  createdBy?: true
+  relationReason?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type InquiryMessageCountAggregateInputType = {
@@ -77,7 +97,11 @@ export type InquiryMessageCountAggregateInputType = {
   emailMessageId?: true
   relationType?: true
   direction?: true
+  createdByType?: true
+  createdBy?: true
+  relationReason?: true
   createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -159,7 +183,11 @@ export type InquiryMessageGroupByOutputType = {
   emailMessageId: string
   relationType: string
   direction: string
+  createdByType: string
+  createdBy: string | null
+  relationReason: string | null
   createdAt: Date
+  updatedAt: Date
   _count: InquiryMessageCountAggregateOutputType | null
   _min: InquiryMessageMinAggregateOutputType | null
   _max: InquiryMessageMaxAggregateOutputType | null
@@ -189,7 +217,11 @@ export type InquiryMessageWhereInput = {
   emailMessageId?: Prisma.StringFilter<"InquiryMessage"> | string
   relationType?: Prisma.StringFilter<"InquiryMessage"> | string
   direction?: Prisma.StringFilter<"InquiryMessage"> | string
+  createdByType?: Prisma.StringFilter<"InquiryMessage"> | string
+  createdBy?: Prisma.StringNullableFilter<"InquiryMessage"> | string | null
+  relationReason?: Prisma.StringNullableFilter<"InquiryMessage"> | string | null
   createdAt?: Prisma.DateTimeFilter<"InquiryMessage"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"InquiryMessage"> | Date | string
   inquiryCase?: Prisma.XOR<Prisma.InquiryCaseScalarRelationFilter, Prisma.InquiryCaseWhereInput>
   emailMessage?: Prisma.XOR<Prisma.EmailMessageScalarRelationFilter, Prisma.EmailMessageWhereInput>
 }
@@ -200,7 +232,11 @@ export type InquiryMessageOrderByWithRelationInput = {
   emailMessageId?: Prisma.SortOrder
   relationType?: Prisma.SortOrder
   direction?: Prisma.SortOrder
+  createdByType?: Prisma.SortOrder
+  createdBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  relationReason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   inquiryCase?: Prisma.InquiryCaseOrderByWithRelationInput
   emailMessage?: Prisma.EmailMessageOrderByWithRelationInput
 }
@@ -215,7 +251,11 @@ export type InquiryMessageWhereUniqueInput = Prisma.AtLeast<{
   emailMessageId?: Prisma.StringFilter<"InquiryMessage"> | string
   relationType?: Prisma.StringFilter<"InquiryMessage"> | string
   direction?: Prisma.StringFilter<"InquiryMessage"> | string
+  createdByType?: Prisma.StringFilter<"InquiryMessage"> | string
+  createdBy?: Prisma.StringNullableFilter<"InquiryMessage"> | string | null
+  relationReason?: Prisma.StringNullableFilter<"InquiryMessage"> | string | null
   createdAt?: Prisma.DateTimeFilter<"InquiryMessage"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"InquiryMessage"> | Date | string
   inquiryCase?: Prisma.XOR<Prisma.InquiryCaseScalarRelationFilter, Prisma.InquiryCaseWhereInput>
   emailMessage?: Prisma.XOR<Prisma.EmailMessageScalarRelationFilter, Prisma.EmailMessageWhereInput>
 }, "id" | "inquiryCaseId_emailMessageId">
@@ -226,7 +266,11 @@ export type InquiryMessageOrderByWithAggregationInput = {
   emailMessageId?: Prisma.SortOrder
   relationType?: Prisma.SortOrder
   direction?: Prisma.SortOrder
+  createdByType?: Prisma.SortOrder
+  createdBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  relationReason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.InquiryMessageCountOrderByAggregateInput
   _max?: Prisma.InquiryMessageMaxOrderByAggregateInput
   _min?: Prisma.InquiryMessageMinOrderByAggregateInput
@@ -241,14 +285,22 @@ export type InquiryMessageScalarWhereWithAggregatesInput = {
   emailMessageId?: Prisma.StringWithAggregatesFilter<"InquiryMessage"> | string
   relationType?: Prisma.StringWithAggregatesFilter<"InquiryMessage"> | string
   direction?: Prisma.StringWithAggregatesFilter<"InquiryMessage"> | string
+  createdByType?: Prisma.StringWithAggregatesFilter<"InquiryMessage"> | string
+  createdBy?: Prisma.StringNullableWithAggregatesFilter<"InquiryMessage"> | string | null
+  relationReason?: Prisma.StringNullableWithAggregatesFilter<"InquiryMessage"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"InquiryMessage"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"InquiryMessage"> | Date | string
 }
 
 export type InquiryMessageCreateInput = {
   id?: string
   relationType?: string
   direction: string
+  createdByType?: string
+  createdBy?: string | null
+  relationReason?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   inquiryCase: Prisma.InquiryCaseCreateNestedOneWithoutInquiryMessagesInput
   emailMessage: Prisma.EmailMessageCreateNestedOneWithoutInquiryMessagesInput
 }
@@ -259,14 +311,22 @@ export type InquiryMessageUncheckedCreateInput = {
   emailMessageId: string
   relationType?: string
   direction: string
+  createdByType?: string
+  createdBy?: string | null
+  relationReason?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type InquiryMessageUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   relationType?: Prisma.StringFieldUpdateOperationsInput | string
   direction?: Prisma.StringFieldUpdateOperationsInput | string
+  createdByType?: Prisma.StringFieldUpdateOperationsInput | string
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   inquiryCase?: Prisma.InquiryCaseUpdateOneRequiredWithoutInquiryMessagesNestedInput
   emailMessage?: Prisma.EmailMessageUpdateOneRequiredWithoutInquiryMessagesNestedInput
 }
@@ -277,7 +337,11 @@ export type InquiryMessageUncheckedUpdateInput = {
   emailMessageId?: Prisma.StringFieldUpdateOperationsInput | string
   relationType?: Prisma.StringFieldUpdateOperationsInput | string
   direction?: Prisma.StringFieldUpdateOperationsInput | string
+  createdByType?: Prisma.StringFieldUpdateOperationsInput | string
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type InquiryMessageCreateManyInput = {
@@ -286,14 +350,22 @@ export type InquiryMessageCreateManyInput = {
   emailMessageId: string
   relationType?: string
   direction: string
+  createdByType?: string
+  createdBy?: string | null
+  relationReason?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type InquiryMessageUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   relationType?: Prisma.StringFieldUpdateOperationsInput | string
   direction?: Prisma.StringFieldUpdateOperationsInput | string
+  createdByType?: Prisma.StringFieldUpdateOperationsInput | string
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type InquiryMessageUncheckedUpdateManyInput = {
@@ -302,7 +374,11 @@ export type InquiryMessageUncheckedUpdateManyInput = {
   emailMessageId?: Prisma.StringFieldUpdateOperationsInput | string
   relationType?: Prisma.StringFieldUpdateOperationsInput | string
   direction?: Prisma.StringFieldUpdateOperationsInput | string
+  createdByType?: Prisma.StringFieldUpdateOperationsInput | string
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type InquiryMessageListRelationFilter = {
@@ -326,7 +402,11 @@ export type InquiryMessageCountOrderByAggregateInput = {
   emailMessageId?: Prisma.SortOrder
   relationType?: Prisma.SortOrder
   direction?: Prisma.SortOrder
+  createdByType?: Prisma.SortOrder
+  createdBy?: Prisma.SortOrder
+  relationReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type InquiryMessageMaxOrderByAggregateInput = {
@@ -335,7 +415,11 @@ export type InquiryMessageMaxOrderByAggregateInput = {
   emailMessageId?: Prisma.SortOrder
   relationType?: Prisma.SortOrder
   direction?: Prisma.SortOrder
+  createdByType?: Prisma.SortOrder
+  createdBy?: Prisma.SortOrder
+  relationReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type InquiryMessageMinOrderByAggregateInput = {
@@ -344,7 +428,11 @@ export type InquiryMessageMinOrderByAggregateInput = {
   emailMessageId?: Prisma.SortOrder
   relationType?: Prisma.SortOrder
   direction?: Prisma.SortOrder
+  createdByType?: Prisma.SortOrder
+  createdBy?: Prisma.SortOrder
+  relationReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type InquiryMessageCreateNestedManyWithoutEmailMessageInput = {
@@ -435,7 +523,11 @@ export type InquiryMessageCreateWithoutEmailMessageInput = {
   id?: string
   relationType?: string
   direction: string
+  createdByType?: string
+  createdBy?: string | null
+  relationReason?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   inquiryCase: Prisma.InquiryCaseCreateNestedOneWithoutInquiryMessagesInput
 }
 
@@ -444,7 +536,11 @@ export type InquiryMessageUncheckedCreateWithoutEmailMessageInput = {
   inquiryCaseId: string
   relationType?: string
   direction: string
+  createdByType?: string
+  createdBy?: string | null
+  relationReason?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type InquiryMessageCreateOrConnectWithoutEmailMessageInput = {
@@ -482,14 +578,22 @@ export type InquiryMessageScalarWhereInput = {
   emailMessageId?: Prisma.StringFilter<"InquiryMessage"> | string
   relationType?: Prisma.StringFilter<"InquiryMessage"> | string
   direction?: Prisma.StringFilter<"InquiryMessage"> | string
+  createdByType?: Prisma.StringFilter<"InquiryMessage"> | string
+  createdBy?: Prisma.StringNullableFilter<"InquiryMessage"> | string | null
+  relationReason?: Prisma.StringNullableFilter<"InquiryMessage"> | string | null
   createdAt?: Prisma.DateTimeFilter<"InquiryMessage"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"InquiryMessage"> | Date | string
 }
 
 export type InquiryMessageCreateWithoutInquiryCaseInput = {
   id?: string
   relationType?: string
   direction: string
+  createdByType?: string
+  createdBy?: string | null
+  relationReason?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   emailMessage: Prisma.EmailMessageCreateNestedOneWithoutInquiryMessagesInput
 }
 
@@ -498,7 +602,11 @@ export type InquiryMessageUncheckedCreateWithoutInquiryCaseInput = {
   emailMessageId: string
   relationType?: string
   direction: string
+  createdByType?: string
+  createdBy?: string | null
+  relationReason?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type InquiryMessageCreateOrConnectWithoutInquiryCaseInput = {
@@ -532,14 +640,22 @@ export type InquiryMessageCreateManyEmailMessageInput = {
   inquiryCaseId: string
   relationType?: string
   direction: string
+  createdByType?: string
+  createdBy?: string | null
+  relationReason?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type InquiryMessageUpdateWithoutEmailMessageInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   relationType?: Prisma.StringFieldUpdateOperationsInput | string
   direction?: Prisma.StringFieldUpdateOperationsInput | string
+  createdByType?: Prisma.StringFieldUpdateOperationsInput | string
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   inquiryCase?: Prisma.InquiryCaseUpdateOneRequiredWithoutInquiryMessagesNestedInput
 }
 
@@ -548,7 +664,11 @@ export type InquiryMessageUncheckedUpdateWithoutEmailMessageInput = {
   inquiryCaseId?: Prisma.StringFieldUpdateOperationsInput | string
   relationType?: Prisma.StringFieldUpdateOperationsInput | string
   direction?: Prisma.StringFieldUpdateOperationsInput | string
+  createdByType?: Prisma.StringFieldUpdateOperationsInput | string
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type InquiryMessageUncheckedUpdateManyWithoutEmailMessageInput = {
@@ -556,7 +676,11 @@ export type InquiryMessageUncheckedUpdateManyWithoutEmailMessageInput = {
   inquiryCaseId?: Prisma.StringFieldUpdateOperationsInput | string
   relationType?: Prisma.StringFieldUpdateOperationsInput | string
   direction?: Prisma.StringFieldUpdateOperationsInput | string
+  createdByType?: Prisma.StringFieldUpdateOperationsInput | string
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type InquiryMessageCreateManyInquiryCaseInput = {
@@ -564,14 +688,22 @@ export type InquiryMessageCreateManyInquiryCaseInput = {
   emailMessageId: string
   relationType?: string
   direction: string
+  createdByType?: string
+  createdBy?: string | null
+  relationReason?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type InquiryMessageUpdateWithoutInquiryCaseInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   relationType?: Prisma.StringFieldUpdateOperationsInput | string
   direction?: Prisma.StringFieldUpdateOperationsInput | string
+  createdByType?: Prisma.StringFieldUpdateOperationsInput | string
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   emailMessage?: Prisma.EmailMessageUpdateOneRequiredWithoutInquiryMessagesNestedInput
 }
 
@@ -580,7 +712,11 @@ export type InquiryMessageUncheckedUpdateWithoutInquiryCaseInput = {
   emailMessageId?: Prisma.StringFieldUpdateOperationsInput | string
   relationType?: Prisma.StringFieldUpdateOperationsInput | string
   direction?: Prisma.StringFieldUpdateOperationsInput | string
+  createdByType?: Prisma.StringFieldUpdateOperationsInput | string
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type InquiryMessageUncheckedUpdateManyWithoutInquiryCaseInput = {
@@ -588,7 +724,11 @@ export type InquiryMessageUncheckedUpdateManyWithoutInquiryCaseInput = {
   emailMessageId?: Prisma.StringFieldUpdateOperationsInput | string
   relationType?: Prisma.StringFieldUpdateOperationsInput | string
   direction?: Prisma.StringFieldUpdateOperationsInput | string
+  createdByType?: Prisma.StringFieldUpdateOperationsInput | string
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -599,7 +739,11 @@ export type InquiryMessageSelect<ExtArgs extends runtime.Types.Extensions.Intern
   emailMessageId?: boolean
   relationType?: boolean
   direction?: boolean
+  createdByType?: boolean
+  createdBy?: boolean
+  relationReason?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   inquiryCase?: boolean | Prisma.InquiryCaseDefaultArgs<ExtArgs>
   emailMessage?: boolean | Prisma.EmailMessageDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["inquiryMessage"]>
@@ -610,7 +754,11 @@ export type InquiryMessageSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   emailMessageId?: boolean
   relationType?: boolean
   direction?: boolean
+  createdByType?: boolean
+  createdBy?: boolean
+  relationReason?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   inquiryCase?: boolean | Prisma.InquiryCaseDefaultArgs<ExtArgs>
   emailMessage?: boolean | Prisma.EmailMessageDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["inquiryMessage"]>
@@ -621,7 +769,11 @@ export type InquiryMessageSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   emailMessageId?: boolean
   relationType?: boolean
   direction?: boolean
+  createdByType?: boolean
+  createdBy?: boolean
+  relationReason?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   inquiryCase?: boolean | Prisma.InquiryCaseDefaultArgs<ExtArgs>
   emailMessage?: boolean | Prisma.EmailMessageDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["inquiryMessage"]>
@@ -632,10 +784,14 @@ export type InquiryMessageSelectScalar = {
   emailMessageId?: boolean
   relationType?: boolean
   direction?: boolean
+  createdByType?: boolean
+  createdBy?: boolean
+  relationReason?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type InquiryMessageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "inquiryCaseId" | "emailMessageId" | "relationType" | "direction" | "createdAt", ExtArgs["result"]["inquiryMessage"]>
+export type InquiryMessageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "inquiryCaseId" | "emailMessageId" | "relationType" | "direction" | "createdByType" | "createdBy" | "relationReason" | "createdAt" | "updatedAt", ExtArgs["result"]["inquiryMessage"]>
 export type InquiryMessageInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   inquiryCase?: boolean | Prisma.InquiryCaseDefaultArgs<ExtArgs>
   emailMessage?: boolean | Prisma.EmailMessageDefaultArgs<ExtArgs>
@@ -661,7 +817,11 @@ export type $InquiryMessagePayload<ExtArgs extends runtime.Types.Extensions.Inte
     emailMessageId: string
     relationType: string
     direction: string
+    createdByType: string
+    createdBy: string | null
+    relationReason: string | null
     createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["inquiryMessage"]>
   composites: {}
 }
@@ -1092,7 +1252,11 @@ export interface InquiryMessageFieldRefs {
   readonly emailMessageId: Prisma.FieldRef<"InquiryMessage", 'String'>
   readonly relationType: Prisma.FieldRef<"InquiryMessage", 'String'>
   readonly direction: Prisma.FieldRef<"InquiryMessage", 'String'>
+  readonly createdByType: Prisma.FieldRef<"InquiryMessage", 'String'>
+  readonly createdBy: Prisma.FieldRef<"InquiryMessage", 'String'>
+  readonly relationReason: Prisma.FieldRef<"InquiryMessage", 'String'>
   readonly createdAt: Prisma.FieldRef<"InquiryMessage", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"InquiryMessage", 'DateTime'>
 }
     
 
