@@ -69,7 +69,7 @@ contextPayload
 1. 接入 `GET /inquiries/:id/thread`。
 2. 接入 `GET /inquiries/:id/messages`。
 3. 接入 `GET /messages/:id`。
-4. 上下文快照详情优先展示 `contextPayload`，不要只展示转义 JSON 字符串。
+4. 上下文快照详情优先展示 `contextPayload`，不要只展示转义 JSON 字符串，至少解码为js对象让人看起来好阅读。
 5. 对 `recentThreadMessages` 按时间升序渲染。
 6. `currentEmail` 单独渲染，并加高亮边框。
 7. 对 `threadSummary` 单独渲染，不混入邮件列表。

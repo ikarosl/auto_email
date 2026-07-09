@@ -16,6 +16,7 @@
     "demo:imap": "tsx src/modules/email/infrastructure/adapters/imap-pull-demo.ts",
     "demo:imap-to-inquiry": "tsx src/modules/email/infrastructure/adapters/imap-to-inquiry-demo.ts",
     "demo:poll-inbox": "tsx src/modules/email/infrastructure/adapters/imap-poll-inbox-service.ts",
+    "data:audit": "tsx src/scripts/data-audit.ts",
     "build": "pnpm --filter @email-inquiry/shared build && tsc -p tsconfig.build.json",
     "typecheck": "pnpm --filter @email-inquiry/shared build && tsc -p tsconfig.json --noEmit",
     "test": "tsx --test \"src/**/*.spec.ts\"",

@@ -1,4 +1,4 @@
-import { Controller, Get, NotFoundException, Param, Query } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Param, Patch, Post, Query } from '@nestjs/common';
 import { API_ROUTE_SEGMENTS } from '@email-inquiry/shared';
 
 import {
@@ -134,6 +134,37 @@ export class OrganizationController {
           : null,
       })),
     });
+  }
+
+  @Post()
+  async create(@Body() body: { name: string; domain?: string; remark?: string }) {
+    const record = await this.prisma.organization.create({
+      data: { name: body.name, domain: body.domain ?? null, remark: body.remark ?? null },
+      include: { _count: { select: { customers: true, inquiryCases: true } } },
+    });
+    return itemResponse(mapOrganization(record));
+  }
+
+  @Patch(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() body: { name?: string; domain?: string; remark?: string; status?: string },
+  ) {
+    const existing = await this.prisma.organization.findUnique({ where: { id } });
+    if (!existing || existing.deletedAt) throw new NotFoundException(`Organization not found: ${id}`);
+
+    const record = await this.prisma.organization.update({
+      where: { id },
+      data: {
+        ...(body.name !== undefined ? { name: body.name } : {}),
+        ...(body.domain !== undefined ? { domain: body.domain } : {}),
+        ...(body.remark !== undefined ? { remark: body.remark } : {}),
+        ...(body.status !== undefined ? { status: body.status } : {}),
+        updatedAt: new Date(),
+      },
+      include: { _count: { select: { customers: true, inquiryCases: true } } },
+    });
+    return itemResponse(mapOrganization(record));
   }
 }
 
