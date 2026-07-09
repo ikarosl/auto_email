@@ -18,11 +18,12 @@ import { PrismaInquiryStatusLogRepository } from './infrastructure/repositories/
 import { InquiryStatusLogRepository } from './application/ports/inquiry-status-log.repository.js';
 import { CustomerController } from './presentation/customer.controller.js';
 import { InquiryController } from './presentation/inquiry.controller.js';
+import { OrganizationController } from './presentation/organization.controller.js';
 import { CUSTOMER_REPOSITORY, INQUIRY_MESSAGE_REPOSITORY, INQUIRY_REPOSITORY, INQUIRY_STATUS_LOG_REPOSITORY } from './inquiry.tokens.js';
 import { InquiryRepository } from './application/ports/inquiry.repository.js';
 
 @Module({
-  controllers: [InquiryController, CustomerController],
+  controllers: [InquiryController, CustomerController, OrganizationController],
   providers: [
     InquiryStateMachine,
     {

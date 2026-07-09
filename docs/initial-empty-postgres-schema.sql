@@ -12,6 +12,7 @@ DROP TABLE IF EXISTS inquiry_cases CASCADE;
 DROP TABLE IF EXISTS email_messages CASCADE;
 DROP TABLE IF EXISTS email_threads CASCADE;
 DROP TABLE IF EXISTS customers CASCADE;
+DROP TABLE IF EXISTS organizations CASCADE;
 DROP TABLE IF EXISTS mailbox_sync_states CASCADE;
 DROP TABLE IF EXISTS mailbox_accounts CASCADE;
 
@@ -40,8 +41,24 @@ CREATE TABLE IF NOT EXISTS mailbox_sync_states (
   UNIQUE (mailbox_account_id, mailbox_name)
 );
 
+CREATE TABLE IF NOT EXISTS organizations (
+  id TEXT PRIMARY KEY DEFAULT ('org_' || gen_random_uuid()::TEXT),
+  name TEXT NOT NULL,
+  domain TEXT UNIQUE,
+  status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'disabled', 'merged')),
+  source TEXT NOT NULL DEFAULT 'email_domain',
+  remark TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  deleted_at TIMESTAMPTZ
+);
+
+CREATE INDEX IF NOT EXISTS organizations_domain_idx ON organizations(domain);
+CREATE INDEX IF NOT EXISTS organizations_status_idx ON organizations(status);
+
 CREATE TABLE IF NOT EXISTS customers (
   id TEXT PRIMARY KEY DEFAULT ('customer_' || gen_random_uuid()::TEXT),
+  organization_id TEXT REFERENCES organizations(id) ON DELETE SET NULL,
   email TEXT NOT NULL UNIQUE,
   name TEXT,
   domain TEXT,
@@ -58,6 +75,8 @@ CREATE TABLE IF NOT EXISTS customers (
 );
 
 CREATE INDEX IF NOT EXISTS customers_status_idx ON customers(status);
+CREATE INDEX IF NOT EXISTS customers_domain_idx ON customers(domain);
+CREATE INDEX IF NOT EXISTS customers_organization_idx ON customers(organization_id);
 
 CREATE TABLE IF NOT EXISTS email_threads (
   id TEXT PRIMARY KEY DEFAULT ('thread_' || gen_random_uuid()::TEXT),
@@ -114,6 +133,8 @@ CREATE INDEX IF NOT EXISTS email_messages_direction_idx ON email_messages(direct
 CREATE TABLE IF NOT EXISTS inquiry_cases (
   id TEXT PRIMARY KEY DEFAULT ('inquiry_' || gen_random_uuid()::TEXT),
   customer_id TEXT NOT NULL REFERENCES customers(id) ON DELETE RESTRICT,
+  organization_id TEXT REFERENCES organizations(id) ON DELETE SET NULL,
+  primary_customer_id TEXT REFERENCES customers(id) ON DELETE SET NULL,
   status TEXT NOT NULL DEFAULT 'new' CHECK (
     status IN (
       'new',
@@ -126,6 +147,13 @@ CREATE TABLE IF NOT EXISTS inquiry_cases (
     )
   ),
   subject TEXT,
+  raw_subject TEXT,
+  business_subject TEXT,
+  business_subject_source TEXT NOT NULL DEFAULT 'raw_email' CHECK (
+    business_subject_source IN ('raw_email', 'ai_generated', 'human')
+  ),
+  business_subject_locked BOOLEAN NOT NULL DEFAULT FALSE,
+  business_subject_updated_at TIMESTAMPTZ,
   product_type TEXT,
   latest_message_at TIMESTAMPTZ,
   closed_at TIMESTAMPTZ,
@@ -135,6 +163,8 @@ CREATE TABLE IF NOT EXISTS inquiry_cases (
 );
 
 CREATE INDEX IF NOT EXISTS inquiry_cases_customer_idx ON inquiry_cases(customer_id);
+CREATE INDEX IF NOT EXISTS inquiry_cases_organization_idx ON inquiry_cases(organization_id);
+CREATE INDEX IF NOT EXISTS inquiry_cases_primary_customer_idx ON inquiry_cases(primary_customer_id);
 CREATE INDEX IF NOT EXISTS inquiry_cases_status_idx ON inquiry_cases(status);
 CREATE INDEX IF NOT EXISTS inquiry_cases_latest_message_at_idx ON inquiry_cases(latest_message_at);
 

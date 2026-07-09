@@ -142,6 +142,72 @@ describe('ReceiveInboundEmailUseCase', () => {
     assert.equal((await inquiryRepository.list()).length, 1);
   });
 
+  it('merges into the only recent open inquiry from the same organization domain', async () => {
+    const { receiveInboundEmailUseCase, inquiryRepository } = createUseCaseWithMatcher();
+
+    const first = await receiveInboundEmailUseCase.execute({
+      messageId: 'mock-message-domain-001',
+      threadId: 'thread-domain-001',
+      fromEmail: 'dykim@rfhic.com',
+      toEmails: ['sales@example.com'],
+      ccEmails: [],
+      subject: 'RF isolator inquiry',
+      bodyText: 'We need a 12-15GHz isolator.',
+      receivedAt: new Date(),
+      source: EmailSource.MOCK,
+      mailboxAccountId: 'mock-account',
+    });
+
+    const second = await receiveInboundEmailUseCase.execute({
+      messageId: 'mock-message-domain-002',
+      threadId: 'thread-domain-002',
+      fromEmail: 'hshan@rfhic.com',
+      toEmails: ['sales@example.com'],
+      ccEmails: [],
+      subject: 'Parameter supplement',
+      bodyText: 'Please add SMA female connector requirement.',
+      receivedAt: new Date(),
+      source: EmailSource.MOCK,
+      mailboxAccountId: 'mock-account',
+    });
+
+    assert.equal(expectInquiryCase(second).id, expectInquiryCase(first).id);
+    assert.equal((await inquiryRepository.list()).length, 1);
+  });
+
+  it('does not merge public mailbox contacts by shared public domain', async () => {
+    const { receiveInboundEmailUseCase, inquiryRepository } = createUseCaseWithMatcher();
+
+    await receiveInboundEmailUseCase.execute({
+      messageId: 'mock-message-public-001',
+      threadId: 'thread-public-001',
+      fromEmail: 'buyer-a@gmail.com',
+      toEmails: ['sales@example.com'],
+      ccEmails: [],
+      subject: 'RF isolator inquiry',
+      bodyText: 'We need an RF isolator.',
+      receivedAt: new Date(),
+      source: EmailSource.MOCK,
+      mailboxAccountId: 'mock-account',
+    });
+
+    const second = await receiveInboundEmailUseCase.execute({
+      messageId: 'mock-message-public-002',
+      threadId: 'thread-public-002',
+      fromEmail: 'buyer-b@gmail.com',
+      toEmails: ['sales@example.com'],
+      ccEmails: [],
+      subject: 'Different inquiry',
+      bodyText: 'We need a different RF product.',
+      receivedAt: new Date(),
+      source: EmailSource.MOCK,
+      mailboxAccountId: 'mock-account',
+    });
+
+    assert.equal(expectInquiryCase(second).customerEmail, 'buyer-b@gmail.com');
+    assert.equal((await inquiryRepository.list()).length, 2);
+  });
+
   it('does not auto-merge when the same customer has multiple open inquiries', async () => {
     const { receiveInboundEmailUseCase, inquiryRepository } = createUseCaseWithMatcher();
     const now = new Date();
@@ -203,7 +269,7 @@ describe('ReceiveInboundEmailUseCase', () => {
     const second = await receiveInboundEmailUseCase.execute({
       messageId: 'mock-message-002',
       threadId: 'thread-002',
-      fromEmail: 'second@example.com',
+      fromEmail: 'second@another-example.com',
       toEmails: ['sales@example.com'],
       ccEmails: [],
       subject: 'second inquiry',
@@ -213,7 +279,7 @@ describe('ReceiveInboundEmailUseCase', () => {
       mailboxAccountId: 'mock-account',
     });
 
-    assert.equal(expectInquiryCase(second).customerEmail, 'second@example.com');
+    assert.equal(expectInquiryCase(second).customerEmail, 'second@another-example.com');
     assert.equal((await inquiryRepository.list()).length, 2);
   });
 

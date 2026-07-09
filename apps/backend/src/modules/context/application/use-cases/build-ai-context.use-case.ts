@@ -184,7 +184,7 @@ function buildContextPayload(
     inquiryState: {
       status: input.inquiryCase.status,
       customerEmail: input.inquiryCase.customerEmail,
-      subject: formatSubject(input.inquiryCase.subject),
+      subject: formatSubject(input.inquiryCase.businessSubject ?? input.inquiryCase.subject),
       latestMessageAt: input.inquiryCase.latestMessageAt.toISOString(),
     },
     ...(summary ? { threadSummary: formatThreadSummary(summary) } : {}),

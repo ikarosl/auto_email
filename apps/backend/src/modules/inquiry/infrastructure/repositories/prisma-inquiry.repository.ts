@@ -1,31 +1,39 @@
 import { PrismaService } from '../../../../common/database/prisma.service.js';
-import { InquiryRepository } from '../../application/ports/inquiry.repository.js';
+import {
+  EnsureCustomerContactInput,
+  InquiryRepository,
+} from '../../application/ports/inquiry.repository.js';
 import { InquiryCase } from '../../domain/entities/inquiry-case.entity.js';
+import {
+  canUseDomainForOrganizationMatching,
+  extractEmailDomain,
+} from '../../domain/matching/email-domain-policy.js';
 
 export class PrismaInquiryRepository implements InquiryRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async save(inquiryCase: InquiryCase): Promise<InquiryCase> {
-    // 先查找或创建 Customer
-    const customer = await this.prisma.customer.upsert({
-      where: { email: inquiryCase.customerEmail.toLowerCase().trim() },
-      create: {
-        email: inquiryCase.customerEmail.toLowerCase().trim(),
-        name: inquiryCase.customerName ?? null,
-      },
-      update: {
-        name: inquiryCase.customerName ?? undefined,
-      },
+    const contact = await this.resolveCustomerContact({
+      email: inquiryCase.customerEmail,
+      name: inquiryCase.customerName,
     });
 
+    const now = new Date();
     const data = {
       id: inquiryCase.id,
-      customerId: customer.id,
+      customerId: contact.customer.id,
+      organizationId: contact.organization?.id ?? inquiryCase.organizationId ?? null,
+      primaryCustomerId: contact.customer.id,
       status: inquiryCase.status,
       subject: inquiryCase.subject,
+      rawSubject: inquiryCase.rawSubject ?? inquiryCase.subject,
+      businessSubject: inquiryCase.businessSubject ?? inquiryCase.subject,
+      businessSubjectSource: inquiryCase.businessSubjectSource ?? 'raw_email',
+      businessSubjectLocked: inquiryCase.businessSubjectLocked ?? false,
+      businessSubjectUpdatedAt: inquiryCase.businessSubjectUpdatedAt ?? now,
       latestMessageAt: inquiryCase.latestMessageAt,
       createdAt: inquiryCase.createdAt,
-      updatedAt: new Date(),
+      updatedAt: now,
     };
 
     await this.prisma.inquiryCase.upsert({
@@ -34,13 +42,28 @@ export class PrismaInquiryRepository implements InquiryRepository {
       update: data,
     });
 
-    return inquiryCase;
+    return {
+      ...inquiryCase,
+      customerDomain: contact.domain,
+      organizationId: data.organizationId ?? undefined,
+      primaryCustomerId: contact.customer.id,
+      rawSubject: data.rawSubject,
+      businessSubject: data.businessSubject,
+      businessSubjectSource: data.businessSubjectSource as InquiryCase['businessSubjectSource'],
+      businessSubjectLocked: data.businessSubjectLocked,
+      businessSubjectUpdatedAt: data.businessSubjectUpdatedAt,
+      updatedAt: data.updatedAt,
+    };
+  }
+
+  async ensureCustomerContact(input: EnsureCustomerContactInput): Promise<void> {
+    await this.resolveCustomerContact(input);
   }
 
   async findById(id: string): Promise<InquiryCase | undefined> {
     const record = await this.prisma.inquiryCase.findUnique({
       where: { id },
-      include: { customer: true },
+      include: { customer: true, organization: true },
     });
     return record ? toDomain(record) : undefined;
   }
@@ -56,7 +79,27 @@ export class PrismaInquiryRepository implements InquiryRepository {
         customerId: customer.id,
         status: { not: 'closed' },
       },
-      include: { customer: true },
+      include: { customer: true, organization: true },
+      orderBy: { updatedAt: 'desc' },
+    });
+    return records.map(toDomain);
+  }
+
+  async listOpenByCustomerDomain(customerDomain: string): Promise<InquiryCase[]> {
+    const domain = customerDomain.toLowerCase().trim();
+    if (!canUseDomainForOrganizationMatching(domain)) {
+      return [];
+    }
+
+    const records = await this.prisma.inquiryCase.findMany({
+      where: {
+        status: { not: 'closed' },
+        OR: [
+          { organization: { domain } },
+          { customer: { domain } },
+        ],
+      },
+      include: { customer: true, organization: true },
       orderBy: { updatedAt: 'desc' },
     });
     return records.map(toDomain);
@@ -64,27 +107,87 @@ export class PrismaInquiryRepository implements InquiryRepository {
 
   async list(): Promise<InquiryCase[]> {
     const records = await this.prisma.inquiryCase.findMany({
-      include: { customer: true },
+      include: { customer: true, organization: true },
       orderBy: { updatedAt: 'desc' },
     });
     return records.map(toDomain);
   }
+
+  private async resolveCustomerContact(input: EnsureCustomerContactInput) {
+    const normalizedEmail = input.email.toLowerCase().trim();
+    const domain = extractEmailDomain(normalizedEmail);
+    const organization = await upsertOrganization(this.prisma, domain, input.name);
+    const customer = await this.prisma.customer.upsert({
+      where: { email: normalizedEmail },
+      create: {
+        email: normalizedEmail,
+        name: input.name ?? null,
+        domain: domain ?? null,
+        organizationId: organization?.id ?? null,
+      },
+      update: {
+        name: input.name ?? undefined,
+        domain: domain ?? undefined,
+        organizationId: organization?.id ?? undefined,
+      },
+    });
+
+    return { customer, organization, domain };
+  }
+}
+
+async function upsertOrganization(
+  prisma: PrismaService,
+  domain: string | undefined,
+  customerName?: string,
+) {
+  if (!canUseDomainForOrganizationMatching(domain)) {
+    return undefined;
+  }
+
+  return prisma.organization.upsert({
+    where: { domain },
+    create: {
+      domain,
+      name: customerName ? `${domain} (${customerName})` : domain,
+      source: 'email_domain',
+    },
+    update: {
+      updatedAt: new Date(),
+    },
+  });
 }
 
 function toDomain(record: {
   id: string;
   status: string;
   subject: string | null;
+  rawSubject?: string | null;
+  businessSubject?: string | null;
+  businessSubjectSource?: string | null;
+  businessSubjectLocked?: boolean | null;
+  businessSubjectUpdatedAt?: Date | null;
+  organizationId?: string | null;
+  primaryCustomerId?: string | null;
   latestMessageAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
-  customer: { email: string; name: string | null };
+  customer: { id?: string; email: string; name: string | null; domain?: string | null };
+  organization?: { id: string; domain: string | null } | null;
 }): InquiryCase {
   return {
     id: record.id,
     customerEmail: record.customer.email,
     customerName: record.customer.name ?? undefined,
+    customerDomain: record.customer.domain ?? extractEmailDomain(record.customer.email),
+    organizationId: record.organizationId ?? record.organization?.id ?? undefined,
+    primaryCustomerId: record.primaryCustomerId ?? record.customer.id ?? undefined,
     subject: record.subject ?? '',
+    rawSubject: record.rawSubject ?? record.subject ?? undefined,
+    businessSubject: record.businessSubject ?? record.subject ?? undefined,
+    businessSubjectSource: (record.businessSubjectSource as InquiryCase['businessSubjectSource']) ?? undefined,
+    businessSubjectLocked: record.businessSubjectLocked ?? undefined,
+    businessSubjectUpdatedAt: record.businessSubjectUpdatedAt ?? undefined,
     status: record.status as InquiryCase['status'],
     latestMessageAt: record.latestMessageAt ?? record.createdAt,
     createdAt: record.createdAt,

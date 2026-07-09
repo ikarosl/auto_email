@@ -64,6 +64,8 @@ export class InquiryController {
         ? {
             OR: [
               { subject: { contains: q, mode: 'insensitive' as const } },
+              { rawSubject: { contains: q, mode: 'insensitive' as const } },
+              { businessSubject: { contains: q, mode: 'insensitive' as const } },
               { productType: { contains: q, mode: 'insensitive' as const } },
               { customer: { email: { contains: q, mode: 'insensitive' as const } } },
               { customer: { name: { contains: q, mode: 'insensitive' as const } } },
@@ -78,6 +80,8 @@ export class InquiryController {
         where,
         include: {
           customer: true,
+          organization: true,
+          primaryCustomer: true,
           structuredFacts: true,
           _count: {
             select: {
@@ -110,6 +114,8 @@ export class InquiryController {
         where: { id },
         include: {
           customer: true,
+          organization: true,
+          primaryCustomer: true,
           structuredFacts: true,
           statusLogs: { orderBy: { createdAt: 'desc' }, take: 20 },
           _count: {
@@ -184,8 +190,15 @@ function mapInquiryCase(record: any) {
   return {
     id: record.id,
     customerId: record.customerId,
+    organizationId: record.organizationId,
+    primaryCustomerId: record.primaryCustomerId,
     status: record.status,
     subject: record.subject,
+    rawSubject: record.rawSubject,
+    businessSubject: record.businessSubject,
+    businessSubjectSource: record.businessSubjectSource,
+    businessSubjectLocked: record.businessSubjectLocked,
+    businessSubjectUpdatedAt: toDateIso(record.businessSubjectUpdatedAt),
     productType: record.productType,
     latestMessageAt: toDateIso(record.latestMessageAt),
     closedAt: toDateIso(record.closedAt),
@@ -203,6 +216,26 @@ function mapInquiryCase(record: any) {
           status: record.customer.status,
           invalidReason: record.customer.invalidReason,
           statusUpdatedAt: toDateIso(record.customer.statusUpdatedAt),
+        }
+      : null,
+    organization: record.organization
+      ? {
+          id: record.organization.id,
+          name: record.organization.name,
+          domain: record.organization.domain,
+          status: record.organization.status,
+          source: record.organization.source,
+          remark: record.organization.remark,
+        }
+      : null,
+    primaryCustomer: record.primaryCustomer
+      ? {
+          id: record.primaryCustomer.id,
+          email: record.primaryCustomer.email,
+          name: record.primaryCustomer.name,
+          domain: record.primaryCustomer.domain,
+          companyName: record.primaryCustomer.companyName,
+          status: record.primaryCustomer.status,
         }
       : null,
     structuredFacts: record.structuredFacts ?? null,

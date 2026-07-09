@@ -6,6 +6,10 @@ import { InquiryRepository } from '../ports/inquiry.repository.js';
 import { InquiryMessageRepository } from '../ports/inquiry-message.repository.js';
 import { INQUIRY_MATCHING_POLICY } from '../../domain/matching/inquiry-matching-policy.js';
 import {
+  canUseDomainForOrganizationMatching,
+  extractEmailDomain,
+} from '../../domain/matching/email-domain-policy.js';
+import {
   InquiryMatchingReason,
   InquiryMatchingResult,
 } from '../../domain/matching/inquiry-matching-result.js';
@@ -54,6 +58,36 @@ export class FindInquiryForInboundEmailUseCase {
       };
     }
 
+    const participantDomains = uniqueStrings(
+      participantEmails
+        .map(extractEmailDomain)
+        .filter(canUseDomainForOrganizationMatching),
+    );
+    const organizationInquiriesNested = await Promise.all(
+      participantDomains.map((domain) => this.inquiryRepository.listOpenByCustomerDomain(domain)),
+    );
+    const organizationInquiries = uniqueInquiries(organizationInquiriesNested.flat());
+    const recentOrganizationInquiries = organizationInquiries.filter((inquiryCase) =>
+      isWithinRecentWindow(inquiryCase.updatedAt),
+    );
+
+    if (recentOrganizationInquiries.length === 1) {
+      return {
+        matched: true,
+        reason: InquiryMatchingReason.SAME_ORGANIZATION_RECENT_OPEN_INQUIRY,
+        inquiryCase: recentOrganizationInquiries[0],
+        manualReviewRequired: false,
+      };
+    }
+
+    if (recentOrganizationInquiries.length > 1) {
+      return {
+        matched: false,
+        reason: InquiryMatchingReason.MULTIPLE_OPEN_INQUIRIES,
+        manualReviewRequired: true,
+      };
+    }
+
     return {
       matched: false,
       reason: InquiryMatchingReason.NO_MATCH,
@@ -86,6 +120,10 @@ export class FindInquiryForInboundEmailUseCase {
 
     return undefined;
   }
+}
+
+function uniqueStrings(values: string[]): string[] {
+  return Array.from(new Set(values));
 }
 
 function resolveCustomerCandidateEmails(emailMessage: EmailMessage): string[] {

@@ -1,5 +1,34 @@
 # 数据库持久化方案
 
+## 2026-07-09 补充：组织归并与业务主题字段
+
+本阶段在原有 `customers -> inquiry_cases` 基础上补充组织维度：
+
+```text
+organizations
+  └── customers
+        └── inquiry_cases
+```
+
+关键调整：
+
+- 新增 `organizations`：用于表达公司/组织，企业邮箱域名如 `rfhic.com` 可自动创建组织。
+- `customers` 语义收敛为联系人，新增 `organization_id`，同一组织下可以有多个联系人。
+- 公共邮箱域名如 `gmail.com / qq.com / outlook.com` 不作为自动组织归并键，但联系人和询盘仍然正常入库；后续可人工绑定到组织。
+- `inquiry_cases` 新增 `organization_id / primary_customer_id`，用于组织视角和主联系人视角。
+- `inquiry_cases` 新增 `raw_subject / business_subject / business_subject_source / business_subject_locked / business_subject_updated_at`。
+- AI 上下文中的 `inquiryState.subject` 应优先使用 `business_subject`，邮件时间线里的 `subject` 仍保留原始邮件标题。
+
+第一阶段自动归并规则：
+
+```text
+1. 邮件线程命中
+2. 同联系人邮箱近期唯一打开询盘
+3. 同企业组织域名 2 个月内唯一打开询盘
+4. 多个候选进入人工校正
+5. 无候选创建新询盘
+```
+
 ## 1. 当前结论
 
 当前阶段采用 PostgreSQL 作为主数据库，先用 SQL 迁移文件完成建表，再逐步接入 NestJS Repository 与 Prisma。

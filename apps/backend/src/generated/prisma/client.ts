@@ -57,6 +57,11 @@ export type MailboxSyncState = Prisma.MailboxSyncStateModel
  */
 export type Customer = Prisma.CustomerModel
 /**
+ * Model Organization
+ * 
+ */
+export type Organization = Prisma.OrganizationModel
+/**
  * Model EmailThread
  * 
  */
@@ -101,6 +106,11 @@ export type ReplyDraft = Prisma.ReplyDraftModel
  * 
  */
 export type AiContextSnapshot = Prisma.AiContextSnapshotModel
+/**
+ * Model InquiryContextSummary
+ * 
+ */
+export type InquiryContextSummary = Prisma.InquiryContextSummaryModel
 /**
  * Model InquiryStatusLog
  * 

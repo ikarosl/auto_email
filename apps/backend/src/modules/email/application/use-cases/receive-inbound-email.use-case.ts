@@ -139,6 +139,9 @@ export class ReceiveInboundEmailUseCase {
           updatedAt: new Date(),
         };
 
+        if (emailMessage.direction === EmailDirection.INBOUND) {
+          await this.createInquiryFromEmailUseCase.ensureCustomerContactFromEmail(emailMessage);
+        }
         await this.createInquiryFromEmailUseCase.saveExistingInquiry(updatedInquiryCase);
         await this.linkEmailToInquiry(
           emailMessage,

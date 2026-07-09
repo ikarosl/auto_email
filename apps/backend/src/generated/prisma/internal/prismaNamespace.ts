@@ -387,6 +387,7 @@ export const ModelName = {
   MailboxAccount: 'MailboxAccount',
   MailboxSyncState: 'MailboxSyncState',
   Customer: 'Customer',
+  Organization: 'Organization',
   EmailThread: 'EmailThread',
   EmailMessage: 'EmailMessage',
   InquiryCase: 'InquiryCase',
@@ -396,6 +397,7 @@ export const ModelName = {
   InquiryStructuredFact: 'InquiryStructuredFact',
   ReplyDraft: 'ReplyDraft',
   AiContextSnapshot: 'AiContextSnapshot',
+  InquiryContextSummary: 'InquiryContextSummary',
   InquiryStatusLog: 'InquiryStatusLog'
 } as const
 
@@ -412,7 +414,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "mailboxAccount" | "mailboxSyncState" | "customer" | "emailThread" | "emailMessage" | "inquiryCase" | "inquiryMessage" | "processedEmail" | "aiDecision" | "inquiryStructuredFact" | "replyDraft" | "aiContextSnapshot" | "inquiryStatusLog"
+    modelProps: "mailboxAccount" | "mailboxSyncState" | "customer" | "organization" | "emailThread" | "emailMessage" | "inquiryCase" | "inquiryMessage" | "processedEmail" | "aiDecision" | "inquiryStructuredFact" | "replyDraft" | "aiContextSnapshot" | "inquiryContextSummary" | "inquiryStatusLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -635,6 +637,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.CustomerCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.CustomerCountAggregateOutputType> | number
+        }
+      }
+    }
+    Organization: {
+      payload: Prisma.$OrganizationPayload<ExtArgs>
+      fields: Prisma.OrganizationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.OrganizationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.OrganizationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationPayload>
+        }
+        findFirst: {
+          args: Prisma.OrganizationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.OrganizationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationPayload>
+        }
+        findMany: {
+          args: Prisma.OrganizationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationPayload>[]
+        }
+        create: {
+          args: Prisma.OrganizationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationPayload>
+        }
+        createMany: {
+          args: Prisma.OrganizationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.OrganizationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationPayload>[]
+        }
+        delete: {
+          args: Prisma.OrganizationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationPayload>
+        }
+        update: {
+          args: Prisma.OrganizationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationPayload>
+        }
+        deleteMany: {
+          args: Prisma.OrganizationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.OrganizationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.OrganizationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationPayload>[]
+        }
+        upsert: {
+          args: Prisma.OrganizationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationPayload>
+        }
+        aggregate: {
+          args: Prisma.OrganizationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOrganization>
+        }
+        groupBy: {
+          args: Prisma.OrganizationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OrganizationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.OrganizationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OrganizationCountAggregateOutputType> | number
         }
       }
     }
@@ -1304,6 +1380,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    InquiryContextSummary: {
+      payload: Prisma.$InquiryContextSummaryPayload<ExtArgs>
+      fields: Prisma.InquiryContextSummaryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.InquiryContextSummaryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryContextSummaryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.InquiryContextSummaryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryContextSummaryPayload>
+        }
+        findFirst: {
+          args: Prisma.InquiryContextSummaryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryContextSummaryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.InquiryContextSummaryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryContextSummaryPayload>
+        }
+        findMany: {
+          args: Prisma.InquiryContextSummaryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryContextSummaryPayload>[]
+        }
+        create: {
+          args: Prisma.InquiryContextSummaryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryContextSummaryPayload>
+        }
+        createMany: {
+          args: Prisma.InquiryContextSummaryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.InquiryContextSummaryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryContextSummaryPayload>[]
+        }
+        delete: {
+          args: Prisma.InquiryContextSummaryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryContextSummaryPayload>
+        }
+        update: {
+          args: Prisma.InquiryContextSummaryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryContextSummaryPayload>
+        }
+        deleteMany: {
+          args: Prisma.InquiryContextSummaryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.InquiryContextSummaryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.InquiryContextSummaryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryContextSummaryPayload>[]
+        }
+        upsert: {
+          args: Prisma.InquiryContextSummaryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryContextSummaryPayload>
+        }
+        aggregate: {
+          args: Prisma.InquiryContextSummaryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateInquiryContextSummary>
+        }
+        groupBy: {
+          args: Prisma.InquiryContextSummaryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InquiryContextSummaryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.InquiryContextSummaryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InquiryContextSummaryCountAggregateOutputType> | number
+        }
+      }
+    }
     InquiryStatusLog: {
       payload: Prisma.$InquiryStatusLogPayload<ExtArgs>
       fields: Prisma.InquiryStatusLogFieldRefs
@@ -1449,6 +1599,7 @@ export type MailboxSyncStateScalarFieldEnum = (typeof MailboxSyncStateScalarFiel
 
 export const CustomerScalarFieldEnum = {
   id: 'id',
+  organizationId: 'organizationId',
   email: 'email',
   name: 'name',
   domain: 'domain',
@@ -1465,6 +1616,21 @@ export const CustomerScalarFieldEnum = {
 } as const
 
 export type CustomerScalarFieldEnum = (typeof CustomerScalarFieldEnum)[keyof typeof CustomerScalarFieldEnum]
+
+
+export const OrganizationScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  domain: 'domain',
+  status: 'status',
+  source: 'source',
+  remark: 'remark',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type OrganizationScalarFieldEnum = (typeof OrganizationScalarFieldEnum)[keyof typeof OrganizationScalarFieldEnum]
 
 
 export const EmailThreadScalarFieldEnum = {
@@ -1514,8 +1680,15 @@ export type EmailMessageScalarFieldEnum = (typeof EmailMessageScalarFieldEnum)[k
 export const InquiryCaseScalarFieldEnum = {
   id: 'id',
   customerId: 'customerId',
+  organizationId: 'organizationId',
+  primaryCustomerId: 'primaryCustomerId',
   status: 'status',
   subject: 'subject',
+  rawSubject: 'rawSubject',
+  businessSubject: 'businessSubject',
+  businessSubjectSource: 'businessSubjectSource',
+  businessSubjectLocked: 'businessSubjectLocked',
+  businessSubjectUpdatedAt: 'businessSubjectUpdatedAt',
   productType: 'productType',
   latestMessageAt: 'latestMessageAt',
   closedAt: 'closedAt',
@@ -1641,6 +1814,25 @@ export const AiContextSnapshotScalarFieldEnum = {
 } as const
 
 export type AiContextSnapshotScalarFieldEnum = (typeof AiContextSnapshotScalarFieldEnum)[keyof typeof AiContextSnapshotScalarFieldEnum]
+
+
+export const InquiryContextSummaryScalarFieldEnum = {
+  id: 'id',
+  inquiryCaseId: 'inquiryCaseId',
+  summaryText: 'summaryText',
+  knownFactsJson: 'knownFactsJson',
+  customerDecisionsJson: 'customerDecisionsJson',
+  ourCommitmentsJson: 'ourCommitmentsJson',
+  openQuestionsJson: 'openQuestionsJson',
+  coveredEmailIdsJson: 'coveredEmailIdsJson',
+  coveredMessageCount: 'coveredMessageCount',
+  coveredFrom: 'coveredFrom',
+  coveredTo: 'coveredTo',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type InquiryContextSummaryScalarFieldEnum = (typeof InquiryContextSummaryScalarFieldEnum)[keyof typeof InquiryContextSummaryScalarFieldEnum]
 
 
 export const InquiryStatusLogScalarFieldEnum = {
@@ -1920,6 +2112,7 @@ export type GlobalOmitConfig = {
   mailboxAccount?: Prisma.MailboxAccountOmit
   mailboxSyncState?: Prisma.MailboxSyncStateOmit
   customer?: Prisma.CustomerOmit
+  organization?: Prisma.OrganizationOmit
   emailThread?: Prisma.EmailThreadOmit
   emailMessage?: Prisma.EmailMessageOmit
   inquiryCase?: Prisma.InquiryCaseOmit
@@ -1929,6 +2122,7 @@ export type GlobalOmitConfig = {
   inquiryStructuredFact?: Prisma.InquiryStructuredFactOmit
   replyDraft?: Prisma.ReplyDraftOmit
   aiContextSnapshot?: Prisma.AiContextSnapshotOmit
+  inquiryContextSummary?: Prisma.InquiryContextSummaryOmit
   inquiryStatusLog?: Prisma.InquiryStatusLogOmit
 }
 

@@ -10,8 +10,8 @@ import {
 } from '../../../common/http/api-response.js';
 import { PrismaService } from '../../../common/database/prisma.service.js';
 
-@Controller(API_ROUTE_SEGMENTS.customers)
-export class CustomerController {
+@Controller(API_ROUTE_SEGMENTS.organizations)
+export class OrganizationController {
   constructor(private readonly prisma: PrismaService) {}
 
   @Get()
@@ -29,25 +29,21 @@ export class CustomerController {
       ...(q
         ? {
             OR: [
-              { email: { contains: q, mode: 'insensitive' as const } },
               { name: { contains: q, mode: 'insensitive' as const } },
               { domain: { contains: q, mode: 'insensitive' as const } },
-              { companyName: { contains: q, mode: 'insensitive' as const } },
-              { organization: { name: { contains: q, mode: 'insensitive' as const } } },
-              { organization: { domain: { contains: q, mode: 'insensitive' as const } } },
+              { remark: { contains: q, mode: 'insensitive' as const } },
             ],
           }
         : {}),
     };
-
     const [total, records] = await Promise.all([
-      this.prisma.customer.count({ where }),
-      this.prisma.customer.findMany({
+      this.prisma.organization.count({ where }),
+      this.prisma.organization.findMany({
         where,
         include: {
-          organization: true,
           _count: {
             select: {
+              customers: true,
               inquiryCases: true,
             },
           },
@@ -59,7 +55,7 @@ export class CustomerController {
     ]);
 
     return pageResponse({
-      data: records.map(mapCustomer),
+      data: records.map(mapOrganization),
       total,
       page,
       limit,
@@ -68,61 +64,87 @@ export class CustomerController {
 
   @Get(':id')
   async get(@Param('id') id: string) {
-    const record = await this.prisma.customer.findUnique({
+    const record = await this.prisma.organization.findUnique({
       where: { id },
       include: {
-        organization: true,
+        customers: {
+          where: { deletedAt: null },
+          orderBy: [{ updatedAt: 'desc' }, { createdAt: 'desc' }],
+          take: 50,
+        },
         inquiryCases: {
           where: { deletedAt: null },
+          include: {
+            customer: true,
+            primaryCustomer: true,
+          },
           orderBy: [{ latestMessageAt: 'desc' }, { createdAt: 'desc' }],
-          take: 20,
+          take: 50,
         },
         _count: {
           select: {
+            customers: true,
             inquiryCases: true,
           },
         },
       },
     });
-    if (!record || record.deletedAt) throw new NotFoundException(`Customer not found: ${id}`);
+    if (!record || record.deletedAt) throw new NotFoundException(`Organization not found: ${id}`);
+
     return itemResponse({
-      ...mapCustomer(record),
+      ...mapOrganization(record),
+      customers: record.customers.map((customer) => ({
+        id: customer.id,
+        email: customer.email,
+        name: customer.name,
+        domain: customer.domain,
+        companyName: customer.companyName,
+        status: customer.status,
+        invalidReason: customer.invalidReason,
+        createdAt: toDateIso(customer.createdAt),
+        updatedAt: toDateIso(customer.updatedAt),
+      })),
       inquiryCases: record.inquiryCases.map((inquiry) => ({
         id: inquiry.id,
+        customerId: inquiry.customerId,
+        primaryCustomerId: inquiry.primaryCustomerId,
         status: inquiry.status,
         subject: inquiry.subject,
+        rawSubject: inquiry.rawSubject,
+        businessSubject: inquiry.businessSubject,
+        businessSubjectSource: inquiry.businessSubjectSource,
+        businessSubjectLocked: inquiry.businessSubjectLocked,
         productType: inquiry.productType,
         latestMessageAt: toDateIso(inquiry.latestMessageAt),
         createdAt: toDateIso(inquiry.createdAt),
         updatedAt: toDateIso(inquiry.updatedAt),
+        customer: inquiry.customer
+          ? {
+              id: inquiry.customer.id,
+              email: inquiry.customer.email,
+              name: inquiry.customer.name,
+            }
+          : null,
+        primaryCustomer: inquiry.primaryCustomer
+          ? {
+              id: inquiry.primaryCustomer.id,
+              email: inquiry.primaryCustomer.email,
+              name: inquiry.primaryCustomer.name,
+            }
+          : null,
       })),
     });
   }
 }
 
-function mapCustomer(record: any) {
+function mapOrganization(record: any) {
   return {
     id: record.id,
-    organizationId: record.organizationId,
-    email: record.email,
     name: record.name,
     domain: record.domain,
-    companyName: record.companyName,
-    country: record.country,
-    source: record.source,
     status: record.status,
-    invalidReason: record.invalidReason,
-    statusUpdatedAt: toDateIso(record.statusUpdatedAt),
+    source: record.source,
     remark: record.remark,
-    organization: record.organization
-      ? {
-          id: record.organization.id,
-          name: record.organization.name,
-          domain: record.organization.domain,
-          status: record.organization.status,
-          source: record.organization.source,
-        }
-      : null,
     createdAt: toDateIso(record.createdAt),
     updatedAt: toDateIso(record.updatedAt),
     counts: record._count ?? undefined,

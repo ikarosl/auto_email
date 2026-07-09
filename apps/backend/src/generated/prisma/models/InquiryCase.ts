@@ -27,8 +27,15 @@ export type AggregateInquiryCase = {
 export type InquiryCaseMinAggregateOutputType = {
   id: string | null
   customerId: string | null
+  organizationId: string | null
+  primaryCustomerId: string | null
   status: string | null
   subject: string | null
+  rawSubject: string | null
+  businessSubject: string | null
+  businessSubjectSource: string | null
+  businessSubjectLocked: boolean | null
+  businessSubjectUpdatedAt: Date | null
   productType: string | null
   latestMessageAt: Date | null
   closedAt: Date | null
@@ -40,8 +47,15 @@ export type InquiryCaseMinAggregateOutputType = {
 export type InquiryCaseMaxAggregateOutputType = {
   id: string | null
   customerId: string | null
+  organizationId: string | null
+  primaryCustomerId: string | null
   status: string | null
   subject: string | null
+  rawSubject: string | null
+  businessSubject: string | null
+  businessSubjectSource: string | null
+  businessSubjectLocked: boolean | null
+  businessSubjectUpdatedAt: Date | null
   productType: string | null
   latestMessageAt: Date | null
   closedAt: Date | null
@@ -53,8 +67,15 @@ export type InquiryCaseMaxAggregateOutputType = {
 export type InquiryCaseCountAggregateOutputType = {
   id: number
   customerId: number
+  organizationId: number
+  primaryCustomerId: number
   status: number
   subject: number
+  rawSubject: number
+  businessSubject: number
+  businessSubjectSource: number
+  businessSubjectLocked: number
+  businessSubjectUpdatedAt: number
   productType: number
   latestMessageAt: number
   closedAt: number
@@ -68,8 +89,15 @@ export type InquiryCaseCountAggregateOutputType = {
 export type InquiryCaseMinAggregateInputType = {
   id?: true
   customerId?: true
+  organizationId?: true
+  primaryCustomerId?: true
   status?: true
   subject?: true
+  rawSubject?: true
+  businessSubject?: true
+  businessSubjectSource?: true
+  businessSubjectLocked?: true
+  businessSubjectUpdatedAt?: true
   productType?: true
   latestMessageAt?: true
   closedAt?: true
@@ -81,8 +109,15 @@ export type InquiryCaseMinAggregateInputType = {
 export type InquiryCaseMaxAggregateInputType = {
   id?: true
   customerId?: true
+  organizationId?: true
+  primaryCustomerId?: true
   status?: true
   subject?: true
+  rawSubject?: true
+  businessSubject?: true
+  businessSubjectSource?: true
+  businessSubjectLocked?: true
+  businessSubjectUpdatedAt?: true
   productType?: true
   latestMessageAt?: true
   closedAt?: true
@@ -94,8 +129,15 @@ export type InquiryCaseMaxAggregateInputType = {
 export type InquiryCaseCountAggregateInputType = {
   id?: true
   customerId?: true
+  organizationId?: true
+  primaryCustomerId?: true
   status?: true
   subject?: true
+  rawSubject?: true
+  businessSubject?: true
+  businessSubjectSource?: true
+  businessSubjectLocked?: true
+  businessSubjectUpdatedAt?: true
   productType?: true
   latestMessageAt?: true
   closedAt?: true
@@ -180,8 +222,15 @@ export type InquiryCaseGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
 export type InquiryCaseGroupByOutputType = {
   id: string
   customerId: string
+  organizationId: string | null
+  primaryCustomerId: string | null
   status: string
   subject: string | null
+  rawSubject: string | null
+  businessSubject: string | null
+  businessSubjectSource: string
+  businessSubjectLocked: boolean
+  businessSubjectUpdatedAt: Date | null
   productType: string | null
   latestMessageAt: Date | null
   closedAt: Date | null
@@ -214,8 +263,15 @@ export type InquiryCaseWhereInput = {
   NOT?: Prisma.InquiryCaseWhereInput | Prisma.InquiryCaseWhereInput[]
   id?: Prisma.StringFilter<"InquiryCase"> | string
   customerId?: Prisma.StringFilter<"InquiryCase"> | string
+  organizationId?: Prisma.StringNullableFilter<"InquiryCase"> | string | null
+  primaryCustomerId?: Prisma.StringNullableFilter<"InquiryCase"> | string | null
   status?: Prisma.StringFilter<"InquiryCase"> | string
   subject?: Prisma.StringNullableFilter<"InquiryCase"> | string | null
+  rawSubject?: Prisma.StringNullableFilter<"InquiryCase"> | string | null
+  businessSubject?: Prisma.StringNullableFilter<"InquiryCase"> | string | null
+  businessSubjectSource?: Prisma.StringFilter<"InquiryCase"> | string
+  businessSubjectLocked?: Prisma.BoolFilter<"InquiryCase"> | boolean
+  businessSubjectUpdatedAt?: Prisma.DateTimeNullableFilter<"InquiryCase"> | Date | string | null
   productType?: Prisma.StringNullableFilter<"InquiryCase"> | string | null
   latestMessageAt?: Prisma.DateTimeNullableFilter<"InquiryCase"> | Date | string | null
   closedAt?: Prisma.DateTimeNullableFilter<"InquiryCase"> | Date | string | null
@@ -223,19 +279,29 @@ export type InquiryCaseWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"InquiryCase"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"InquiryCase"> | Date | string | null
   customer?: Prisma.XOR<Prisma.CustomerScalarRelationFilter, Prisma.CustomerWhereInput>
+  organization?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
+  primaryCustomer?: Prisma.XOR<Prisma.CustomerNullableScalarRelationFilter, Prisma.CustomerWhereInput> | null
   inquiryMessages?: Prisma.InquiryMessageListRelationFilter
   aiDecisions?: Prisma.AiDecisionListRelationFilter
   structuredFacts?: Prisma.XOR<Prisma.InquiryStructuredFactNullableScalarRelationFilter, Prisma.InquiryStructuredFactWhereInput> | null
   replyDrafts?: Prisma.ReplyDraftListRelationFilter
   contextSnapshots?: Prisma.AiContextSnapshotListRelationFilter
+  contextSummary?: Prisma.XOR<Prisma.InquiryContextSummaryNullableScalarRelationFilter, Prisma.InquiryContextSummaryWhereInput> | null
   statusLogs?: Prisma.InquiryStatusLogListRelationFilter
 }
 
 export type InquiryCaseOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
+  organizationId?: Prisma.SortOrderInput | Prisma.SortOrder
+  primaryCustomerId?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   subject?: Prisma.SortOrderInput | Prisma.SortOrder
+  rawSubject?: Prisma.SortOrderInput | Prisma.SortOrder
+  businessSubject?: Prisma.SortOrderInput | Prisma.SortOrder
+  businessSubjectSource?: Prisma.SortOrder
+  businessSubjectLocked?: Prisma.SortOrder
+  businessSubjectUpdatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   productType?: Prisma.SortOrderInput | Prisma.SortOrder
   latestMessageAt?: Prisma.SortOrderInput | Prisma.SortOrder
   closedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -243,11 +309,14 @@ export type InquiryCaseOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   customer?: Prisma.CustomerOrderByWithRelationInput
+  organization?: Prisma.OrganizationOrderByWithRelationInput
+  primaryCustomer?: Prisma.CustomerOrderByWithRelationInput
   inquiryMessages?: Prisma.InquiryMessageOrderByRelationAggregateInput
   aiDecisions?: Prisma.AiDecisionOrderByRelationAggregateInput
   structuredFacts?: Prisma.InquiryStructuredFactOrderByWithRelationInput
   replyDrafts?: Prisma.ReplyDraftOrderByRelationAggregateInput
   contextSnapshots?: Prisma.AiContextSnapshotOrderByRelationAggregateInput
+  contextSummary?: Prisma.InquiryContextSummaryOrderByWithRelationInput
   statusLogs?: Prisma.InquiryStatusLogOrderByRelationAggregateInput
 }
 
@@ -257,8 +326,15 @@ export type InquiryCaseWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.InquiryCaseWhereInput[]
   NOT?: Prisma.InquiryCaseWhereInput | Prisma.InquiryCaseWhereInput[]
   customerId?: Prisma.StringFilter<"InquiryCase"> | string
+  organizationId?: Prisma.StringNullableFilter<"InquiryCase"> | string | null
+  primaryCustomerId?: Prisma.StringNullableFilter<"InquiryCase"> | string | null
   status?: Prisma.StringFilter<"InquiryCase"> | string
   subject?: Prisma.StringNullableFilter<"InquiryCase"> | string | null
+  rawSubject?: Prisma.StringNullableFilter<"InquiryCase"> | string | null
+  businessSubject?: Prisma.StringNullableFilter<"InquiryCase"> | string | null
+  businessSubjectSource?: Prisma.StringFilter<"InquiryCase"> | string
+  businessSubjectLocked?: Prisma.BoolFilter<"InquiryCase"> | boolean
+  businessSubjectUpdatedAt?: Prisma.DateTimeNullableFilter<"InquiryCase"> | Date | string | null
   productType?: Prisma.StringNullableFilter<"InquiryCase"> | string | null
   latestMessageAt?: Prisma.DateTimeNullableFilter<"InquiryCase"> | Date | string | null
   closedAt?: Prisma.DateTimeNullableFilter<"InquiryCase"> | Date | string | null
@@ -266,19 +342,29 @@ export type InquiryCaseWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"InquiryCase"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"InquiryCase"> | Date | string | null
   customer?: Prisma.XOR<Prisma.CustomerScalarRelationFilter, Prisma.CustomerWhereInput>
+  organization?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
+  primaryCustomer?: Prisma.XOR<Prisma.CustomerNullableScalarRelationFilter, Prisma.CustomerWhereInput> | null
   inquiryMessages?: Prisma.InquiryMessageListRelationFilter
   aiDecisions?: Prisma.AiDecisionListRelationFilter
   structuredFacts?: Prisma.XOR<Prisma.InquiryStructuredFactNullableScalarRelationFilter, Prisma.InquiryStructuredFactWhereInput> | null
   replyDrafts?: Prisma.ReplyDraftListRelationFilter
   contextSnapshots?: Prisma.AiContextSnapshotListRelationFilter
+  contextSummary?: Prisma.XOR<Prisma.InquiryContextSummaryNullableScalarRelationFilter, Prisma.InquiryContextSummaryWhereInput> | null
   statusLogs?: Prisma.InquiryStatusLogListRelationFilter
 }, "id">
 
 export type InquiryCaseOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
+  organizationId?: Prisma.SortOrderInput | Prisma.SortOrder
+  primaryCustomerId?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   subject?: Prisma.SortOrderInput | Prisma.SortOrder
+  rawSubject?: Prisma.SortOrderInput | Prisma.SortOrder
+  businessSubject?: Prisma.SortOrderInput | Prisma.SortOrder
+  businessSubjectSource?: Prisma.SortOrder
+  businessSubjectLocked?: Prisma.SortOrder
+  businessSubjectUpdatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   productType?: Prisma.SortOrderInput | Prisma.SortOrder
   latestMessageAt?: Prisma.SortOrderInput | Prisma.SortOrder
   closedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -296,8 +382,15 @@ export type InquiryCaseScalarWhereWithAggregatesInput = {
   NOT?: Prisma.InquiryCaseScalarWhereWithAggregatesInput | Prisma.InquiryCaseScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"InquiryCase"> | string
   customerId?: Prisma.StringWithAggregatesFilter<"InquiryCase"> | string
+  organizationId?: Prisma.StringNullableWithAggregatesFilter<"InquiryCase"> | string | null
+  primaryCustomerId?: Prisma.StringNullableWithAggregatesFilter<"InquiryCase"> | string | null
   status?: Prisma.StringWithAggregatesFilter<"InquiryCase"> | string
   subject?: Prisma.StringNullableWithAggregatesFilter<"InquiryCase"> | string | null
+  rawSubject?: Prisma.StringNullableWithAggregatesFilter<"InquiryCase"> | string | null
+  businessSubject?: Prisma.StringNullableWithAggregatesFilter<"InquiryCase"> | string | null
+  businessSubjectSource?: Prisma.StringWithAggregatesFilter<"InquiryCase"> | string
+  businessSubjectLocked?: Prisma.BoolWithAggregatesFilter<"InquiryCase"> | boolean
+  businessSubjectUpdatedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"InquiryCase"> | Date | string | null
   productType?: Prisma.StringNullableWithAggregatesFilter<"InquiryCase"> | string | null
   latestMessageAt?: Prisma.DateTimeNullableWithAggregatesFilter<"InquiryCase"> | Date | string | null
   closedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"InquiryCase"> | Date | string | null
@@ -310,6 +403,11 @@ export type InquiryCaseCreateInput = {
   id?: string
   status?: string
   subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
   productType?: string | null
   latestMessageAt?: Date | string | null
   closedAt?: Date | string | null
@@ -317,19 +415,29 @@ export type InquiryCaseCreateInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   customer: Prisma.CustomerCreateNestedOneWithoutInquiryCasesInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutInquiryCasesInput
+  primaryCustomer?: Prisma.CustomerCreateNestedOneWithoutPrimaryInquiryCasesInput
   inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutInquiryCaseInput
   aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutInquiryCaseInput
   structuredFacts?: Prisma.InquiryStructuredFactCreateNestedOneWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutInquiryCaseInput
+  contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogCreateNestedManyWithoutInquiryCaseInput
 }
 
 export type InquiryCaseUncheckedCreateInput = {
   id?: string
   customerId: string
+  organizationId?: string | null
+  primaryCustomerId?: string | null
   status?: string
   subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
   productType?: string | null
   latestMessageAt?: Date | string | null
   closedAt?: Date | string | null
@@ -341,6 +449,7 @@ export type InquiryCaseUncheckedCreateInput = {
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedOneWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutInquiryCaseInput
+  contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedCreateNestedManyWithoutInquiryCaseInput
 }
 
@@ -348,6 +457,11 @@ export type InquiryCaseUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -355,19 +469,29 @@ export type InquiryCaseUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   customer?: Prisma.CustomerUpdateOneRequiredWithoutInquiryCasesNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutInquiryCasesNestedInput
+  primaryCustomer?: Prisma.CustomerUpdateOneWithoutPrimaryInquiryCasesNestedInput
   inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutInquiryCaseNestedInput
   aiDecisions?: Prisma.AiDecisionUpdateManyWithoutInquiryCaseNestedInput
   structuredFacts?: Prisma.InquiryStructuredFactUpdateOneWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUpdateManyWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutInquiryCaseNestedInput
+  contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -379,14 +503,22 @@ export type InquiryCaseUncheckedUpdateInput = {
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateOneWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseCreateManyInput = {
   id?: string
   customerId: string
+  organizationId?: string | null
+  primaryCustomerId?: string | null
   status?: string
   subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
   productType?: string | null
   latestMessageAt?: Date | string | null
   closedAt?: Date | string | null
@@ -399,6 +531,11 @@ export type InquiryCaseUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -410,8 +547,15 @@ export type InquiryCaseUpdateManyMutationInput = {
 export type InquiryCaseUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -433,8 +577,15 @@ export type InquiryCaseOrderByRelationAggregateInput = {
 export type InquiryCaseCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
+  organizationId?: Prisma.SortOrder
+  primaryCustomerId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   subject?: Prisma.SortOrder
+  rawSubject?: Prisma.SortOrder
+  businessSubject?: Prisma.SortOrder
+  businessSubjectSource?: Prisma.SortOrder
+  businessSubjectLocked?: Prisma.SortOrder
+  businessSubjectUpdatedAt?: Prisma.SortOrder
   productType?: Prisma.SortOrder
   latestMessageAt?: Prisma.SortOrder
   closedAt?: Prisma.SortOrder
@@ -446,8 +597,15 @@ export type InquiryCaseCountOrderByAggregateInput = {
 export type InquiryCaseMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
+  organizationId?: Prisma.SortOrder
+  primaryCustomerId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   subject?: Prisma.SortOrder
+  rawSubject?: Prisma.SortOrder
+  businessSubject?: Prisma.SortOrder
+  businessSubjectSource?: Prisma.SortOrder
+  businessSubjectLocked?: Prisma.SortOrder
+  businessSubjectUpdatedAt?: Prisma.SortOrder
   productType?: Prisma.SortOrder
   latestMessageAt?: Prisma.SortOrder
   closedAt?: Prisma.SortOrder
@@ -459,8 +617,15 @@ export type InquiryCaseMaxOrderByAggregateInput = {
 export type InquiryCaseMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
+  organizationId?: Prisma.SortOrder
+  primaryCustomerId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   subject?: Prisma.SortOrder
+  rawSubject?: Prisma.SortOrder
+  businessSubject?: Prisma.SortOrder
+  businessSubjectSource?: Prisma.SortOrder
+  businessSubjectLocked?: Prisma.SortOrder
+  businessSubjectUpdatedAt?: Prisma.SortOrder
   productType?: Prisma.SortOrder
   latestMessageAt?: Prisma.SortOrder
   closedAt?: Prisma.SortOrder
@@ -486,10 +651,24 @@ export type InquiryCaseCreateNestedManyWithoutCustomerInput = {
   connect?: Prisma.InquiryCaseWhereUniqueInput | Prisma.InquiryCaseWhereUniqueInput[]
 }
 
+export type InquiryCaseCreateNestedManyWithoutPrimaryCustomerInput = {
+  create?: Prisma.XOR<Prisma.InquiryCaseCreateWithoutPrimaryCustomerInput, Prisma.InquiryCaseUncheckedCreateWithoutPrimaryCustomerInput> | Prisma.InquiryCaseCreateWithoutPrimaryCustomerInput[] | Prisma.InquiryCaseUncheckedCreateWithoutPrimaryCustomerInput[]
+  connectOrCreate?: Prisma.InquiryCaseCreateOrConnectWithoutPrimaryCustomerInput | Prisma.InquiryCaseCreateOrConnectWithoutPrimaryCustomerInput[]
+  createMany?: Prisma.InquiryCaseCreateManyPrimaryCustomerInputEnvelope
+  connect?: Prisma.InquiryCaseWhereUniqueInput | Prisma.InquiryCaseWhereUniqueInput[]
+}
+
 export type InquiryCaseUncheckedCreateNestedManyWithoutCustomerInput = {
   create?: Prisma.XOR<Prisma.InquiryCaseCreateWithoutCustomerInput, Prisma.InquiryCaseUncheckedCreateWithoutCustomerInput> | Prisma.InquiryCaseCreateWithoutCustomerInput[] | Prisma.InquiryCaseUncheckedCreateWithoutCustomerInput[]
   connectOrCreate?: Prisma.InquiryCaseCreateOrConnectWithoutCustomerInput | Prisma.InquiryCaseCreateOrConnectWithoutCustomerInput[]
   createMany?: Prisma.InquiryCaseCreateManyCustomerInputEnvelope
+  connect?: Prisma.InquiryCaseWhereUniqueInput | Prisma.InquiryCaseWhereUniqueInput[]
+}
+
+export type InquiryCaseUncheckedCreateNestedManyWithoutPrimaryCustomerInput = {
+  create?: Prisma.XOR<Prisma.InquiryCaseCreateWithoutPrimaryCustomerInput, Prisma.InquiryCaseUncheckedCreateWithoutPrimaryCustomerInput> | Prisma.InquiryCaseCreateWithoutPrimaryCustomerInput[] | Prisma.InquiryCaseUncheckedCreateWithoutPrimaryCustomerInput[]
+  connectOrCreate?: Prisma.InquiryCaseCreateOrConnectWithoutPrimaryCustomerInput | Prisma.InquiryCaseCreateOrConnectWithoutPrimaryCustomerInput[]
+  createMany?: Prisma.InquiryCaseCreateManyPrimaryCustomerInputEnvelope
   connect?: Prisma.InquiryCaseWhereUniqueInput | Prisma.InquiryCaseWhereUniqueInput[]
 }
 
@@ -507,6 +686,20 @@ export type InquiryCaseUpdateManyWithoutCustomerNestedInput = {
   deleteMany?: Prisma.InquiryCaseScalarWhereInput | Prisma.InquiryCaseScalarWhereInput[]
 }
 
+export type InquiryCaseUpdateManyWithoutPrimaryCustomerNestedInput = {
+  create?: Prisma.XOR<Prisma.InquiryCaseCreateWithoutPrimaryCustomerInput, Prisma.InquiryCaseUncheckedCreateWithoutPrimaryCustomerInput> | Prisma.InquiryCaseCreateWithoutPrimaryCustomerInput[] | Prisma.InquiryCaseUncheckedCreateWithoutPrimaryCustomerInput[]
+  connectOrCreate?: Prisma.InquiryCaseCreateOrConnectWithoutPrimaryCustomerInput | Prisma.InquiryCaseCreateOrConnectWithoutPrimaryCustomerInput[]
+  upsert?: Prisma.InquiryCaseUpsertWithWhereUniqueWithoutPrimaryCustomerInput | Prisma.InquiryCaseUpsertWithWhereUniqueWithoutPrimaryCustomerInput[]
+  createMany?: Prisma.InquiryCaseCreateManyPrimaryCustomerInputEnvelope
+  set?: Prisma.InquiryCaseWhereUniqueInput | Prisma.InquiryCaseWhereUniqueInput[]
+  disconnect?: Prisma.InquiryCaseWhereUniqueInput | Prisma.InquiryCaseWhereUniqueInput[]
+  delete?: Prisma.InquiryCaseWhereUniqueInput | Prisma.InquiryCaseWhereUniqueInput[]
+  connect?: Prisma.InquiryCaseWhereUniqueInput | Prisma.InquiryCaseWhereUniqueInput[]
+  update?: Prisma.InquiryCaseUpdateWithWhereUniqueWithoutPrimaryCustomerInput | Prisma.InquiryCaseUpdateWithWhereUniqueWithoutPrimaryCustomerInput[]
+  updateMany?: Prisma.InquiryCaseUpdateManyWithWhereWithoutPrimaryCustomerInput | Prisma.InquiryCaseUpdateManyWithWhereWithoutPrimaryCustomerInput[]
+  deleteMany?: Prisma.InquiryCaseScalarWhereInput | Prisma.InquiryCaseScalarWhereInput[]
+}
+
 export type InquiryCaseUncheckedUpdateManyWithoutCustomerNestedInput = {
   create?: Prisma.XOR<Prisma.InquiryCaseCreateWithoutCustomerInput, Prisma.InquiryCaseUncheckedCreateWithoutCustomerInput> | Prisma.InquiryCaseCreateWithoutCustomerInput[] | Prisma.InquiryCaseUncheckedCreateWithoutCustomerInput[]
   connectOrCreate?: Prisma.InquiryCaseCreateOrConnectWithoutCustomerInput | Prisma.InquiryCaseCreateOrConnectWithoutCustomerInput[]
@@ -518,6 +711,62 @@ export type InquiryCaseUncheckedUpdateManyWithoutCustomerNestedInput = {
   connect?: Prisma.InquiryCaseWhereUniqueInput | Prisma.InquiryCaseWhereUniqueInput[]
   update?: Prisma.InquiryCaseUpdateWithWhereUniqueWithoutCustomerInput | Prisma.InquiryCaseUpdateWithWhereUniqueWithoutCustomerInput[]
   updateMany?: Prisma.InquiryCaseUpdateManyWithWhereWithoutCustomerInput | Prisma.InquiryCaseUpdateManyWithWhereWithoutCustomerInput[]
+  deleteMany?: Prisma.InquiryCaseScalarWhereInput | Prisma.InquiryCaseScalarWhereInput[]
+}
+
+export type InquiryCaseUncheckedUpdateManyWithoutPrimaryCustomerNestedInput = {
+  create?: Prisma.XOR<Prisma.InquiryCaseCreateWithoutPrimaryCustomerInput, Prisma.InquiryCaseUncheckedCreateWithoutPrimaryCustomerInput> | Prisma.InquiryCaseCreateWithoutPrimaryCustomerInput[] | Prisma.InquiryCaseUncheckedCreateWithoutPrimaryCustomerInput[]
+  connectOrCreate?: Prisma.InquiryCaseCreateOrConnectWithoutPrimaryCustomerInput | Prisma.InquiryCaseCreateOrConnectWithoutPrimaryCustomerInput[]
+  upsert?: Prisma.InquiryCaseUpsertWithWhereUniqueWithoutPrimaryCustomerInput | Prisma.InquiryCaseUpsertWithWhereUniqueWithoutPrimaryCustomerInput[]
+  createMany?: Prisma.InquiryCaseCreateManyPrimaryCustomerInputEnvelope
+  set?: Prisma.InquiryCaseWhereUniqueInput | Prisma.InquiryCaseWhereUniqueInput[]
+  disconnect?: Prisma.InquiryCaseWhereUniqueInput | Prisma.InquiryCaseWhereUniqueInput[]
+  delete?: Prisma.InquiryCaseWhereUniqueInput | Prisma.InquiryCaseWhereUniqueInput[]
+  connect?: Prisma.InquiryCaseWhereUniqueInput | Prisma.InquiryCaseWhereUniqueInput[]
+  update?: Prisma.InquiryCaseUpdateWithWhereUniqueWithoutPrimaryCustomerInput | Prisma.InquiryCaseUpdateWithWhereUniqueWithoutPrimaryCustomerInput[]
+  updateMany?: Prisma.InquiryCaseUpdateManyWithWhereWithoutPrimaryCustomerInput | Prisma.InquiryCaseUpdateManyWithWhereWithoutPrimaryCustomerInput[]
+  deleteMany?: Prisma.InquiryCaseScalarWhereInput | Prisma.InquiryCaseScalarWhereInput[]
+}
+
+export type InquiryCaseCreateNestedManyWithoutOrganizationInput = {
+  create?: Prisma.XOR<Prisma.InquiryCaseCreateWithoutOrganizationInput, Prisma.InquiryCaseUncheckedCreateWithoutOrganizationInput> | Prisma.InquiryCaseCreateWithoutOrganizationInput[] | Prisma.InquiryCaseUncheckedCreateWithoutOrganizationInput[]
+  connectOrCreate?: Prisma.InquiryCaseCreateOrConnectWithoutOrganizationInput | Prisma.InquiryCaseCreateOrConnectWithoutOrganizationInput[]
+  createMany?: Prisma.InquiryCaseCreateManyOrganizationInputEnvelope
+  connect?: Prisma.InquiryCaseWhereUniqueInput | Prisma.InquiryCaseWhereUniqueInput[]
+}
+
+export type InquiryCaseUncheckedCreateNestedManyWithoutOrganizationInput = {
+  create?: Prisma.XOR<Prisma.InquiryCaseCreateWithoutOrganizationInput, Prisma.InquiryCaseUncheckedCreateWithoutOrganizationInput> | Prisma.InquiryCaseCreateWithoutOrganizationInput[] | Prisma.InquiryCaseUncheckedCreateWithoutOrganizationInput[]
+  connectOrCreate?: Prisma.InquiryCaseCreateOrConnectWithoutOrganizationInput | Prisma.InquiryCaseCreateOrConnectWithoutOrganizationInput[]
+  createMany?: Prisma.InquiryCaseCreateManyOrganizationInputEnvelope
+  connect?: Prisma.InquiryCaseWhereUniqueInput | Prisma.InquiryCaseWhereUniqueInput[]
+}
+
+export type InquiryCaseUpdateManyWithoutOrganizationNestedInput = {
+  create?: Prisma.XOR<Prisma.InquiryCaseCreateWithoutOrganizationInput, Prisma.InquiryCaseUncheckedCreateWithoutOrganizationInput> | Prisma.InquiryCaseCreateWithoutOrganizationInput[] | Prisma.InquiryCaseUncheckedCreateWithoutOrganizationInput[]
+  connectOrCreate?: Prisma.InquiryCaseCreateOrConnectWithoutOrganizationInput | Prisma.InquiryCaseCreateOrConnectWithoutOrganizationInput[]
+  upsert?: Prisma.InquiryCaseUpsertWithWhereUniqueWithoutOrganizationInput | Prisma.InquiryCaseUpsertWithWhereUniqueWithoutOrganizationInput[]
+  createMany?: Prisma.InquiryCaseCreateManyOrganizationInputEnvelope
+  set?: Prisma.InquiryCaseWhereUniqueInput | Prisma.InquiryCaseWhereUniqueInput[]
+  disconnect?: Prisma.InquiryCaseWhereUniqueInput | Prisma.InquiryCaseWhereUniqueInput[]
+  delete?: Prisma.InquiryCaseWhereUniqueInput | Prisma.InquiryCaseWhereUniqueInput[]
+  connect?: Prisma.InquiryCaseWhereUniqueInput | Prisma.InquiryCaseWhereUniqueInput[]
+  update?: Prisma.InquiryCaseUpdateWithWhereUniqueWithoutOrganizationInput | Prisma.InquiryCaseUpdateWithWhereUniqueWithoutOrganizationInput[]
+  updateMany?: Prisma.InquiryCaseUpdateManyWithWhereWithoutOrganizationInput | Prisma.InquiryCaseUpdateManyWithWhereWithoutOrganizationInput[]
+  deleteMany?: Prisma.InquiryCaseScalarWhereInput | Prisma.InquiryCaseScalarWhereInput[]
+}
+
+export type InquiryCaseUncheckedUpdateManyWithoutOrganizationNestedInput = {
+  create?: Prisma.XOR<Prisma.InquiryCaseCreateWithoutOrganizationInput, Prisma.InquiryCaseUncheckedCreateWithoutOrganizationInput> | Prisma.InquiryCaseCreateWithoutOrganizationInput[] | Prisma.InquiryCaseUncheckedCreateWithoutOrganizationInput[]
+  connectOrCreate?: Prisma.InquiryCaseCreateOrConnectWithoutOrganizationInput | Prisma.InquiryCaseCreateOrConnectWithoutOrganizationInput[]
+  upsert?: Prisma.InquiryCaseUpsertWithWhereUniqueWithoutOrganizationInput | Prisma.InquiryCaseUpsertWithWhereUniqueWithoutOrganizationInput[]
+  createMany?: Prisma.InquiryCaseCreateManyOrganizationInputEnvelope
+  set?: Prisma.InquiryCaseWhereUniqueInput | Prisma.InquiryCaseWhereUniqueInput[]
+  disconnect?: Prisma.InquiryCaseWhereUniqueInput | Prisma.InquiryCaseWhereUniqueInput[]
+  delete?: Prisma.InquiryCaseWhereUniqueInput | Prisma.InquiryCaseWhereUniqueInput[]
+  connect?: Prisma.InquiryCaseWhereUniqueInput | Prisma.InquiryCaseWhereUniqueInput[]
+  update?: Prisma.InquiryCaseUpdateWithWhereUniqueWithoutOrganizationInput | Prisma.InquiryCaseUpdateWithWhereUniqueWithoutOrganizationInput[]
+  updateMany?: Prisma.InquiryCaseUpdateManyWithWhereWithoutOrganizationInput | Prisma.InquiryCaseUpdateManyWithWhereWithoutOrganizationInput[]
   deleteMany?: Prisma.InquiryCaseScalarWhereInput | Prisma.InquiryCaseScalarWhereInput[]
 }
 
@@ -595,6 +844,20 @@ export type InquiryCaseUpdateOneWithoutContextSnapshotsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.InquiryCaseUpdateToOneWithWhereWithoutContextSnapshotsInput, Prisma.InquiryCaseUpdateWithoutContextSnapshotsInput>, Prisma.InquiryCaseUncheckedUpdateWithoutContextSnapshotsInput>
 }
 
+export type InquiryCaseCreateNestedOneWithoutContextSummaryInput = {
+  create?: Prisma.XOR<Prisma.InquiryCaseCreateWithoutContextSummaryInput, Prisma.InquiryCaseUncheckedCreateWithoutContextSummaryInput>
+  connectOrCreate?: Prisma.InquiryCaseCreateOrConnectWithoutContextSummaryInput
+  connect?: Prisma.InquiryCaseWhereUniqueInput
+}
+
+export type InquiryCaseUpdateOneRequiredWithoutContextSummaryNestedInput = {
+  create?: Prisma.XOR<Prisma.InquiryCaseCreateWithoutContextSummaryInput, Prisma.InquiryCaseUncheckedCreateWithoutContextSummaryInput>
+  connectOrCreate?: Prisma.InquiryCaseCreateOrConnectWithoutContextSummaryInput
+  upsert?: Prisma.InquiryCaseUpsertWithoutContextSummaryInput
+  connect?: Prisma.InquiryCaseWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.InquiryCaseUpdateToOneWithWhereWithoutContextSummaryInput, Prisma.InquiryCaseUpdateWithoutContextSummaryInput>, Prisma.InquiryCaseUncheckedUpdateWithoutContextSummaryInput>
+}
+
 export type InquiryCaseCreateNestedOneWithoutStatusLogsInput = {
   create?: Prisma.XOR<Prisma.InquiryCaseCreateWithoutStatusLogsInput, Prisma.InquiryCaseUncheckedCreateWithoutStatusLogsInput>
   connectOrCreate?: Prisma.InquiryCaseCreateOrConnectWithoutStatusLogsInput
@@ -613,24 +876,39 @@ export type InquiryCaseCreateWithoutCustomerInput = {
   id?: string
   status?: string
   subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
   productType?: string | null
   latestMessageAt?: Date | string | null
   closedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  organization?: Prisma.OrganizationCreateNestedOneWithoutInquiryCasesInput
+  primaryCustomer?: Prisma.CustomerCreateNestedOneWithoutPrimaryInquiryCasesInput
   inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutInquiryCaseInput
   aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutInquiryCaseInput
   structuredFacts?: Prisma.InquiryStructuredFactCreateNestedOneWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutInquiryCaseInput
+  contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogCreateNestedManyWithoutInquiryCaseInput
 }
 
 export type InquiryCaseUncheckedCreateWithoutCustomerInput = {
   id?: string
+  organizationId?: string | null
+  primaryCustomerId?: string | null
   status?: string
   subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
   productType?: string | null
   latestMessageAt?: Date | string | null
   closedAt?: Date | string | null
@@ -642,6 +920,7 @@ export type InquiryCaseUncheckedCreateWithoutCustomerInput = {
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedOneWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutInquiryCaseInput
+  contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedCreateNestedManyWithoutInquiryCaseInput
 }
 
@@ -652,6 +931,68 @@ export type InquiryCaseCreateOrConnectWithoutCustomerInput = {
 
 export type InquiryCaseCreateManyCustomerInputEnvelope = {
   data: Prisma.InquiryCaseCreateManyCustomerInput | Prisma.InquiryCaseCreateManyCustomerInput[]
+  skipDuplicates?: boolean
+}
+
+export type InquiryCaseCreateWithoutPrimaryCustomerInput = {
+  id?: string
+  status?: string
+  subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
+  productType?: string | null
+  latestMessageAt?: Date | string | null
+  closedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  customer: Prisma.CustomerCreateNestedOneWithoutInquiryCasesInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutInquiryCasesInput
+  inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutInquiryCaseInput
+  aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutInquiryCaseInput
+  structuredFacts?: Prisma.InquiryStructuredFactCreateNestedOneWithoutInquiryCaseInput
+  replyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutInquiryCaseInput
+  contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutInquiryCaseInput
+  contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
+  statusLogs?: Prisma.InquiryStatusLogCreateNestedManyWithoutInquiryCaseInput
+}
+
+export type InquiryCaseUncheckedCreateWithoutPrimaryCustomerInput = {
+  id?: string
+  customerId: string
+  organizationId?: string | null
+  status?: string
+  subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
+  productType?: string | null
+  latestMessageAt?: Date | string | null
+  closedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutInquiryCaseInput
+  aiDecisions?: Prisma.AiDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  structuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedOneWithoutInquiryCaseInput
+  replyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutInquiryCaseInput
+  contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutInquiryCaseInput
+  contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
+  statusLogs?: Prisma.InquiryStatusLogUncheckedCreateNestedManyWithoutInquiryCaseInput
+}
+
+export type InquiryCaseCreateOrConnectWithoutPrimaryCustomerInput = {
+  where: Prisma.InquiryCaseWhereUniqueInput
+  create: Prisma.XOR<Prisma.InquiryCaseCreateWithoutPrimaryCustomerInput, Prisma.InquiryCaseUncheckedCreateWithoutPrimaryCustomerInput>
+}
+
+export type InquiryCaseCreateManyPrimaryCustomerInputEnvelope = {
+  data: Prisma.InquiryCaseCreateManyPrimaryCustomerInput | Prisma.InquiryCaseCreateManyPrimaryCustomerInput[]
   skipDuplicates?: boolean
 }
 
@@ -677,8 +1018,15 @@ export type InquiryCaseScalarWhereInput = {
   NOT?: Prisma.InquiryCaseScalarWhereInput | Prisma.InquiryCaseScalarWhereInput[]
   id?: Prisma.StringFilter<"InquiryCase"> | string
   customerId?: Prisma.StringFilter<"InquiryCase"> | string
+  organizationId?: Prisma.StringNullableFilter<"InquiryCase"> | string | null
+  primaryCustomerId?: Prisma.StringNullableFilter<"InquiryCase"> | string | null
   status?: Prisma.StringFilter<"InquiryCase"> | string
   subject?: Prisma.StringNullableFilter<"InquiryCase"> | string | null
+  rawSubject?: Prisma.StringNullableFilter<"InquiryCase"> | string | null
+  businessSubject?: Prisma.StringNullableFilter<"InquiryCase"> | string | null
+  businessSubjectSource?: Prisma.StringFilter<"InquiryCase"> | string
+  businessSubjectLocked?: Prisma.BoolFilter<"InquiryCase"> | boolean
+  businessSubjectUpdatedAt?: Prisma.DateTimeNullableFilter<"InquiryCase"> | Date | string | null
   productType?: Prisma.StringNullableFilter<"InquiryCase"> | string | null
   latestMessageAt?: Prisma.DateTimeNullableFilter<"InquiryCase"> | Date | string | null
   closedAt?: Prisma.DateTimeNullableFilter<"InquiryCase"> | Date | string | null
@@ -687,10 +1035,31 @@ export type InquiryCaseScalarWhereInput = {
   deletedAt?: Prisma.DateTimeNullableFilter<"InquiryCase"> | Date | string | null
 }
 
-export type InquiryCaseCreateWithoutInquiryMessagesInput = {
+export type InquiryCaseUpsertWithWhereUniqueWithoutPrimaryCustomerInput = {
+  where: Prisma.InquiryCaseWhereUniqueInput
+  update: Prisma.XOR<Prisma.InquiryCaseUpdateWithoutPrimaryCustomerInput, Prisma.InquiryCaseUncheckedUpdateWithoutPrimaryCustomerInput>
+  create: Prisma.XOR<Prisma.InquiryCaseCreateWithoutPrimaryCustomerInput, Prisma.InquiryCaseUncheckedCreateWithoutPrimaryCustomerInput>
+}
+
+export type InquiryCaseUpdateWithWhereUniqueWithoutPrimaryCustomerInput = {
+  where: Prisma.InquiryCaseWhereUniqueInput
+  data: Prisma.XOR<Prisma.InquiryCaseUpdateWithoutPrimaryCustomerInput, Prisma.InquiryCaseUncheckedUpdateWithoutPrimaryCustomerInput>
+}
+
+export type InquiryCaseUpdateManyWithWhereWithoutPrimaryCustomerInput = {
+  where: Prisma.InquiryCaseScalarWhereInput
+  data: Prisma.XOR<Prisma.InquiryCaseUpdateManyMutationInput, Prisma.InquiryCaseUncheckedUpdateManyWithoutPrimaryCustomerInput>
+}
+
+export type InquiryCaseCreateWithoutOrganizationInput = {
   id?: string
   status?: string
   subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
   productType?: string | null
   latestMessageAt?: Date | string | null
   closedAt?: Date | string | null
@@ -698,18 +1067,106 @@ export type InquiryCaseCreateWithoutInquiryMessagesInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   customer: Prisma.CustomerCreateNestedOneWithoutInquiryCasesInput
+  primaryCustomer?: Prisma.CustomerCreateNestedOneWithoutPrimaryInquiryCasesInput
+  inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutInquiryCaseInput
   aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutInquiryCaseInput
   structuredFacts?: Prisma.InquiryStructuredFactCreateNestedOneWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutInquiryCaseInput
+  contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
+  statusLogs?: Prisma.InquiryStatusLogCreateNestedManyWithoutInquiryCaseInput
+}
+
+export type InquiryCaseUncheckedCreateWithoutOrganizationInput = {
+  id?: string
+  customerId: string
+  primaryCustomerId?: string | null
+  status?: string
+  subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
+  productType?: string | null
+  latestMessageAt?: Date | string | null
+  closedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutInquiryCaseInput
+  aiDecisions?: Prisma.AiDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  structuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedOneWithoutInquiryCaseInput
+  replyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutInquiryCaseInput
+  contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutInquiryCaseInput
+  contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
+  statusLogs?: Prisma.InquiryStatusLogUncheckedCreateNestedManyWithoutInquiryCaseInput
+}
+
+export type InquiryCaseCreateOrConnectWithoutOrganizationInput = {
+  where: Prisma.InquiryCaseWhereUniqueInput
+  create: Prisma.XOR<Prisma.InquiryCaseCreateWithoutOrganizationInput, Prisma.InquiryCaseUncheckedCreateWithoutOrganizationInput>
+}
+
+export type InquiryCaseCreateManyOrganizationInputEnvelope = {
+  data: Prisma.InquiryCaseCreateManyOrganizationInput | Prisma.InquiryCaseCreateManyOrganizationInput[]
+  skipDuplicates?: boolean
+}
+
+export type InquiryCaseUpsertWithWhereUniqueWithoutOrganizationInput = {
+  where: Prisma.InquiryCaseWhereUniqueInput
+  update: Prisma.XOR<Prisma.InquiryCaseUpdateWithoutOrganizationInput, Prisma.InquiryCaseUncheckedUpdateWithoutOrganizationInput>
+  create: Prisma.XOR<Prisma.InquiryCaseCreateWithoutOrganizationInput, Prisma.InquiryCaseUncheckedCreateWithoutOrganizationInput>
+}
+
+export type InquiryCaseUpdateWithWhereUniqueWithoutOrganizationInput = {
+  where: Prisma.InquiryCaseWhereUniqueInput
+  data: Prisma.XOR<Prisma.InquiryCaseUpdateWithoutOrganizationInput, Prisma.InquiryCaseUncheckedUpdateWithoutOrganizationInput>
+}
+
+export type InquiryCaseUpdateManyWithWhereWithoutOrganizationInput = {
+  where: Prisma.InquiryCaseScalarWhereInput
+  data: Prisma.XOR<Prisma.InquiryCaseUpdateManyMutationInput, Prisma.InquiryCaseUncheckedUpdateManyWithoutOrganizationInput>
+}
+
+export type InquiryCaseCreateWithoutInquiryMessagesInput = {
+  id?: string
+  status?: string
+  subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
+  productType?: string | null
+  latestMessageAt?: Date | string | null
+  closedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  customer: Prisma.CustomerCreateNestedOneWithoutInquiryCasesInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutInquiryCasesInput
+  primaryCustomer?: Prisma.CustomerCreateNestedOneWithoutPrimaryInquiryCasesInput
+  aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutInquiryCaseInput
+  structuredFacts?: Prisma.InquiryStructuredFactCreateNestedOneWithoutInquiryCaseInput
+  replyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutInquiryCaseInput
+  contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutInquiryCaseInput
+  contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogCreateNestedManyWithoutInquiryCaseInput
 }
 
 export type InquiryCaseUncheckedCreateWithoutInquiryMessagesInput = {
   id?: string
   customerId: string
+  organizationId?: string | null
+  primaryCustomerId?: string | null
   status?: string
   subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
   productType?: string | null
   latestMessageAt?: Date | string | null
   closedAt?: Date | string | null
@@ -720,6 +1177,7 @@ export type InquiryCaseUncheckedCreateWithoutInquiryMessagesInput = {
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedOneWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutInquiryCaseInput
+  contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedCreateNestedManyWithoutInquiryCaseInput
 }
 
@@ -743,6 +1201,11 @@ export type InquiryCaseUpdateWithoutInquiryMessagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -750,18 +1213,28 @@ export type InquiryCaseUpdateWithoutInquiryMessagesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   customer?: Prisma.CustomerUpdateOneRequiredWithoutInquiryCasesNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutInquiryCasesNestedInput
+  primaryCustomer?: Prisma.CustomerUpdateOneWithoutPrimaryInquiryCasesNestedInput
   aiDecisions?: Prisma.AiDecisionUpdateManyWithoutInquiryCaseNestedInput
   structuredFacts?: Prisma.InquiryStructuredFactUpdateOneWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUpdateManyWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutInquiryCaseNestedInput
+  contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseUncheckedUpdateWithoutInquiryMessagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -772,6 +1245,7 @@ export type InquiryCaseUncheckedUpdateWithoutInquiryMessagesInput = {
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateOneWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedUpdateManyWithoutInquiryCaseNestedInput
 }
 
@@ -779,6 +1253,11 @@ export type InquiryCaseCreateWithoutAiDecisionsInput = {
   id?: string
   status?: string
   subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
   productType?: string | null
   latestMessageAt?: Date | string | null
   closedAt?: Date | string | null
@@ -786,18 +1265,28 @@ export type InquiryCaseCreateWithoutAiDecisionsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   customer: Prisma.CustomerCreateNestedOneWithoutInquiryCasesInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutInquiryCasesInput
+  primaryCustomer?: Prisma.CustomerCreateNestedOneWithoutPrimaryInquiryCasesInput
   inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutInquiryCaseInput
   structuredFacts?: Prisma.InquiryStructuredFactCreateNestedOneWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutInquiryCaseInput
+  contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogCreateNestedManyWithoutInquiryCaseInput
 }
 
 export type InquiryCaseUncheckedCreateWithoutAiDecisionsInput = {
   id?: string
   customerId: string
+  organizationId?: string | null
+  primaryCustomerId?: string | null
   status?: string
   subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
   productType?: string | null
   latestMessageAt?: Date | string | null
   closedAt?: Date | string | null
@@ -808,6 +1297,7 @@ export type InquiryCaseUncheckedCreateWithoutAiDecisionsInput = {
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedOneWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutInquiryCaseInput
+  contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedCreateNestedManyWithoutInquiryCaseInput
 }
 
@@ -831,6 +1321,11 @@ export type InquiryCaseUpdateWithoutAiDecisionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -838,18 +1333,28 @@ export type InquiryCaseUpdateWithoutAiDecisionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   customer?: Prisma.CustomerUpdateOneRequiredWithoutInquiryCasesNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutInquiryCasesNestedInput
+  primaryCustomer?: Prisma.CustomerUpdateOneWithoutPrimaryInquiryCasesNestedInput
   inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutInquiryCaseNestedInput
   structuredFacts?: Prisma.InquiryStructuredFactUpdateOneWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUpdateManyWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutInquiryCaseNestedInput
+  contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseUncheckedUpdateWithoutAiDecisionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -860,6 +1365,7 @@ export type InquiryCaseUncheckedUpdateWithoutAiDecisionsInput = {
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateOneWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedUpdateManyWithoutInquiryCaseNestedInput
 }
 
@@ -867,6 +1373,11 @@ export type InquiryCaseCreateWithoutStructuredFactsInput = {
   id?: string
   status?: string
   subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
   productType?: string | null
   latestMessageAt?: Date | string | null
   closedAt?: Date | string | null
@@ -874,18 +1385,28 @@ export type InquiryCaseCreateWithoutStructuredFactsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   customer: Prisma.CustomerCreateNestedOneWithoutInquiryCasesInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutInquiryCasesInput
+  primaryCustomer?: Prisma.CustomerCreateNestedOneWithoutPrimaryInquiryCasesInput
   inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutInquiryCaseInput
   aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutInquiryCaseInput
+  contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogCreateNestedManyWithoutInquiryCaseInput
 }
 
 export type InquiryCaseUncheckedCreateWithoutStructuredFactsInput = {
   id?: string
   customerId: string
+  organizationId?: string | null
+  primaryCustomerId?: string | null
   status?: string
   subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
   productType?: string | null
   latestMessageAt?: Date | string | null
   closedAt?: Date | string | null
@@ -896,6 +1417,7 @@ export type InquiryCaseUncheckedCreateWithoutStructuredFactsInput = {
   aiDecisions?: Prisma.AiDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutInquiryCaseInput
+  contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedCreateNestedManyWithoutInquiryCaseInput
 }
 
@@ -919,6 +1441,11 @@ export type InquiryCaseUpdateWithoutStructuredFactsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -926,18 +1453,28 @@ export type InquiryCaseUpdateWithoutStructuredFactsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   customer?: Prisma.CustomerUpdateOneRequiredWithoutInquiryCasesNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutInquiryCasesNestedInput
+  primaryCustomer?: Prisma.CustomerUpdateOneWithoutPrimaryInquiryCasesNestedInput
   inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutInquiryCaseNestedInput
   aiDecisions?: Prisma.AiDecisionUpdateManyWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUpdateManyWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutInquiryCaseNestedInput
+  contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseUncheckedUpdateWithoutStructuredFactsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -948,6 +1485,7 @@ export type InquiryCaseUncheckedUpdateWithoutStructuredFactsInput = {
   aiDecisions?: Prisma.AiDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedUpdateManyWithoutInquiryCaseNestedInput
 }
 
@@ -955,6 +1493,11 @@ export type InquiryCaseCreateWithoutReplyDraftsInput = {
   id?: string
   status?: string
   subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
   productType?: string | null
   latestMessageAt?: Date | string | null
   closedAt?: Date | string | null
@@ -962,18 +1505,28 @@ export type InquiryCaseCreateWithoutReplyDraftsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   customer: Prisma.CustomerCreateNestedOneWithoutInquiryCasesInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutInquiryCasesInput
+  primaryCustomer?: Prisma.CustomerCreateNestedOneWithoutPrimaryInquiryCasesInput
   inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutInquiryCaseInput
   aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutInquiryCaseInput
   structuredFacts?: Prisma.InquiryStructuredFactCreateNestedOneWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutInquiryCaseInput
+  contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogCreateNestedManyWithoutInquiryCaseInput
 }
 
 export type InquiryCaseUncheckedCreateWithoutReplyDraftsInput = {
   id?: string
   customerId: string
+  organizationId?: string | null
+  primaryCustomerId?: string | null
   status?: string
   subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
   productType?: string | null
   latestMessageAt?: Date | string | null
   closedAt?: Date | string | null
@@ -984,6 +1537,7 @@ export type InquiryCaseUncheckedCreateWithoutReplyDraftsInput = {
   aiDecisions?: Prisma.AiDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedOneWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutInquiryCaseInput
+  contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedCreateNestedManyWithoutInquiryCaseInput
 }
 
@@ -1007,6 +1561,11 @@ export type InquiryCaseUpdateWithoutReplyDraftsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1014,18 +1573,28 @@ export type InquiryCaseUpdateWithoutReplyDraftsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   customer?: Prisma.CustomerUpdateOneRequiredWithoutInquiryCasesNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutInquiryCasesNestedInput
+  primaryCustomer?: Prisma.CustomerUpdateOneWithoutPrimaryInquiryCasesNestedInput
   inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutInquiryCaseNestedInput
   aiDecisions?: Prisma.AiDecisionUpdateManyWithoutInquiryCaseNestedInput
   structuredFacts?: Prisma.InquiryStructuredFactUpdateOneWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutInquiryCaseNestedInput
+  contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseUncheckedUpdateWithoutReplyDraftsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1036,6 +1605,7 @@ export type InquiryCaseUncheckedUpdateWithoutReplyDraftsInput = {
   aiDecisions?: Prisma.AiDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateOneWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedUpdateManyWithoutInquiryCaseNestedInput
 }
 
@@ -1043,6 +1613,11 @@ export type InquiryCaseCreateWithoutContextSnapshotsInput = {
   id?: string
   status?: string
   subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
   productType?: string | null
   latestMessageAt?: Date | string | null
   closedAt?: Date | string | null
@@ -1050,18 +1625,28 @@ export type InquiryCaseCreateWithoutContextSnapshotsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   customer: Prisma.CustomerCreateNestedOneWithoutInquiryCasesInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutInquiryCasesInput
+  primaryCustomer?: Prisma.CustomerCreateNestedOneWithoutPrimaryInquiryCasesInput
   inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutInquiryCaseInput
   aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutInquiryCaseInput
   structuredFacts?: Prisma.InquiryStructuredFactCreateNestedOneWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutInquiryCaseInput
+  contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogCreateNestedManyWithoutInquiryCaseInput
 }
 
 export type InquiryCaseUncheckedCreateWithoutContextSnapshotsInput = {
   id?: string
   customerId: string
+  organizationId?: string | null
+  primaryCustomerId?: string | null
   status?: string
   subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
   productType?: string | null
   latestMessageAt?: Date | string | null
   closedAt?: Date | string | null
@@ -1072,6 +1657,7 @@ export type InquiryCaseUncheckedCreateWithoutContextSnapshotsInput = {
   aiDecisions?: Prisma.AiDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedOneWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutInquiryCaseInput
+  contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedCreateNestedManyWithoutInquiryCaseInput
 }
 
@@ -1095,6 +1681,11 @@ export type InquiryCaseUpdateWithoutContextSnapshotsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1102,18 +1693,28 @@ export type InquiryCaseUpdateWithoutContextSnapshotsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   customer?: Prisma.CustomerUpdateOneRequiredWithoutInquiryCasesNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutInquiryCasesNestedInput
+  primaryCustomer?: Prisma.CustomerUpdateOneWithoutPrimaryInquiryCasesNestedInput
   inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutInquiryCaseNestedInput
   aiDecisions?: Prisma.AiDecisionUpdateManyWithoutInquiryCaseNestedInput
   structuredFacts?: Prisma.InquiryStructuredFactUpdateOneWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUpdateManyWithoutInquiryCaseNestedInput
+  contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseUncheckedUpdateWithoutContextSnapshotsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1124,13 +1725,19 @@ export type InquiryCaseUncheckedUpdateWithoutContextSnapshotsInput = {
   aiDecisions?: Prisma.AiDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateOneWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedUpdateManyWithoutInquiryCaseNestedInput
 }
 
-export type InquiryCaseCreateWithoutStatusLogsInput = {
+export type InquiryCaseCreateWithoutContextSummaryInput = {
   id?: string
   status?: string
   subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
   productType?: string | null
   latestMessageAt?: Date | string | null
   closedAt?: Date | string | null
@@ -1138,18 +1745,28 @@ export type InquiryCaseCreateWithoutStatusLogsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   customer: Prisma.CustomerCreateNestedOneWithoutInquiryCasesInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutInquiryCasesInput
+  primaryCustomer?: Prisma.CustomerCreateNestedOneWithoutPrimaryInquiryCasesInput
   inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutInquiryCaseInput
   aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutInquiryCaseInput
   structuredFacts?: Prisma.InquiryStructuredFactCreateNestedOneWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutInquiryCaseInput
+  statusLogs?: Prisma.InquiryStatusLogCreateNestedManyWithoutInquiryCaseInput
 }
 
-export type InquiryCaseUncheckedCreateWithoutStatusLogsInput = {
+export type InquiryCaseUncheckedCreateWithoutContextSummaryInput = {
   id?: string
   customerId: string
+  organizationId?: string | null
+  primaryCustomerId?: string | null
   status?: string
   subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
   productType?: string | null
   latestMessageAt?: Date | string | null
   closedAt?: Date | string | null
@@ -1161,6 +1778,127 @@ export type InquiryCaseUncheckedCreateWithoutStatusLogsInput = {
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedOneWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutInquiryCaseInput
+  statusLogs?: Prisma.InquiryStatusLogUncheckedCreateNestedManyWithoutInquiryCaseInput
+}
+
+export type InquiryCaseCreateOrConnectWithoutContextSummaryInput = {
+  where: Prisma.InquiryCaseWhereUniqueInput
+  create: Prisma.XOR<Prisma.InquiryCaseCreateWithoutContextSummaryInput, Prisma.InquiryCaseUncheckedCreateWithoutContextSummaryInput>
+}
+
+export type InquiryCaseUpsertWithoutContextSummaryInput = {
+  update: Prisma.XOR<Prisma.InquiryCaseUpdateWithoutContextSummaryInput, Prisma.InquiryCaseUncheckedUpdateWithoutContextSummaryInput>
+  create: Prisma.XOR<Prisma.InquiryCaseCreateWithoutContextSummaryInput, Prisma.InquiryCaseUncheckedCreateWithoutContextSummaryInput>
+  where?: Prisma.InquiryCaseWhereInput
+}
+
+export type InquiryCaseUpdateToOneWithWhereWithoutContextSummaryInput = {
+  where?: Prisma.InquiryCaseWhereInput
+  data: Prisma.XOR<Prisma.InquiryCaseUpdateWithoutContextSummaryInput, Prisma.InquiryCaseUncheckedUpdateWithoutContextSummaryInput>
+}
+
+export type InquiryCaseUpdateWithoutContextSummaryInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutInquiryCasesNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutInquiryCasesNestedInput
+  primaryCustomer?: Prisma.CustomerUpdateOneWithoutPrimaryInquiryCasesNestedInput
+  inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutInquiryCaseNestedInput
+  aiDecisions?: Prisma.AiDecisionUpdateManyWithoutInquiryCaseNestedInput
+  structuredFacts?: Prisma.InquiryStructuredFactUpdateOneWithoutInquiryCaseNestedInput
+  replyDrafts?: Prisma.ReplyDraftUpdateManyWithoutInquiryCaseNestedInput
+  contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutInquiryCaseNestedInput
+  statusLogs?: Prisma.InquiryStatusLogUpdateManyWithoutInquiryCaseNestedInput
+}
+
+export type InquiryCaseUncheckedUpdateWithoutContextSummaryInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  aiDecisions?: Prisma.AiDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  structuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateOneWithoutInquiryCaseNestedInput
+  replyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  statusLogs?: Prisma.InquiryStatusLogUncheckedUpdateManyWithoutInquiryCaseNestedInput
+}
+
+export type InquiryCaseCreateWithoutStatusLogsInput = {
+  id?: string
+  status?: string
+  subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
+  productType?: string | null
+  latestMessageAt?: Date | string | null
+  closedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  customer: Prisma.CustomerCreateNestedOneWithoutInquiryCasesInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutInquiryCasesInput
+  primaryCustomer?: Prisma.CustomerCreateNestedOneWithoutPrimaryInquiryCasesInput
+  inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutInquiryCaseInput
+  aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutInquiryCaseInput
+  structuredFacts?: Prisma.InquiryStructuredFactCreateNestedOneWithoutInquiryCaseInput
+  replyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutInquiryCaseInput
+  contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutInquiryCaseInput
+  contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
+}
+
+export type InquiryCaseUncheckedCreateWithoutStatusLogsInput = {
+  id?: string
+  customerId: string
+  organizationId?: string | null
+  primaryCustomerId?: string | null
+  status?: string
+  subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
+  productType?: string | null
+  latestMessageAt?: Date | string | null
+  closedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutInquiryCaseInput
+  aiDecisions?: Prisma.AiDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  structuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedOneWithoutInquiryCaseInput
+  replyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutInquiryCaseInput
+  contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutInquiryCaseInput
+  contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
 }
 
 export type InquiryCaseCreateOrConnectWithoutStatusLogsInput = {
@@ -1183,6 +1921,11 @@ export type InquiryCaseUpdateWithoutStatusLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1190,18 +1933,28 @@ export type InquiryCaseUpdateWithoutStatusLogsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   customer?: Prisma.CustomerUpdateOneRequiredWithoutInquiryCasesNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutInquiryCasesNestedInput
+  primaryCustomer?: Prisma.CustomerUpdateOneWithoutPrimaryInquiryCasesNestedInput
   inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutInquiryCaseNestedInput
   aiDecisions?: Prisma.AiDecisionUpdateManyWithoutInquiryCaseNestedInput
   structuredFacts?: Prisma.InquiryStructuredFactUpdateOneWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUpdateManyWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutInquiryCaseNestedInput
+  contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseUncheckedUpdateWithoutStatusLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1213,12 +1966,39 @@ export type InquiryCaseUncheckedUpdateWithoutStatusLogsInput = {
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateOneWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseCreateManyCustomerInput = {
   id?: string
+  organizationId?: string | null
+  primaryCustomerId?: string | null
   status?: string
   subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
+  productType?: string | null
+  latestMessageAt?: Date | string | null
+  closedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+}
+
+export type InquiryCaseCreateManyPrimaryCustomerInput = {
+  id?: string
+  customerId: string
+  organizationId?: string | null
+  status?: string
+  subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
   productType?: string | null
   latestMessageAt?: Date | string | null
   closedAt?: Date | string | null
@@ -1231,24 +2011,39 @@ export type InquiryCaseUpdateWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  organization?: Prisma.OrganizationUpdateOneWithoutInquiryCasesNestedInput
+  primaryCustomer?: Prisma.CustomerUpdateOneWithoutPrimaryInquiryCasesNestedInput
   inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutInquiryCaseNestedInput
   aiDecisions?: Prisma.AiDecisionUpdateManyWithoutInquiryCaseNestedInput
   structuredFacts?: Prisma.InquiryStructuredFactUpdateOneWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUpdateManyWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutInquiryCaseNestedInput
+  contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseUncheckedUpdateWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1260,13 +2055,182 @@ export type InquiryCaseUncheckedUpdateWithoutCustomerInput = {
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateOneWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseUncheckedUpdateManyWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type InquiryCaseUpdateWithoutPrimaryCustomerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutInquiryCasesNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutInquiryCasesNestedInput
+  inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutInquiryCaseNestedInput
+  aiDecisions?: Prisma.AiDecisionUpdateManyWithoutInquiryCaseNestedInput
+  structuredFacts?: Prisma.InquiryStructuredFactUpdateOneWithoutInquiryCaseNestedInput
+  replyDrafts?: Prisma.ReplyDraftUpdateManyWithoutInquiryCaseNestedInput
+  contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutInquiryCaseNestedInput
+  contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
+  statusLogs?: Prisma.InquiryStatusLogUpdateManyWithoutInquiryCaseNestedInput
+}
+
+export type InquiryCaseUncheckedUpdateWithoutPrimaryCustomerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  aiDecisions?: Prisma.AiDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  structuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateOneWithoutInquiryCaseNestedInput
+  replyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
+  statusLogs?: Prisma.InquiryStatusLogUncheckedUpdateManyWithoutInquiryCaseNestedInput
+}
+
+export type InquiryCaseUncheckedUpdateManyWithoutPrimaryCustomerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type InquiryCaseCreateManyOrganizationInput = {
+  id?: string
+  customerId: string
+  primaryCustomerId?: string | null
+  status?: string
+  subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
+  productType?: string | null
+  latestMessageAt?: Date | string | null
+  closedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+}
+
+export type InquiryCaseUpdateWithoutOrganizationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutInquiryCasesNestedInput
+  primaryCustomer?: Prisma.CustomerUpdateOneWithoutPrimaryInquiryCasesNestedInput
+  inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutInquiryCaseNestedInput
+  aiDecisions?: Prisma.AiDecisionUpdateManyWithoutInquiryCaseNestedInput
+  structuredFacts?: Prisma.InquiryStructuredFactUpdateOneWithoutInquiryCaseNestedInput
+  replyDrafts?: Prisma.ReplyDraftUpdateManyWithoutInquiryCaseNestedInput
+  contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutInquiryCaseNestedInput
+  contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
+  statusLogs?: Prisma.InquiryStatusLogUpdateManyWithoutInquiryCaseNestedInput
+}
+
+export type InquiryCaseUncheckedUpdateWithoutOrganizationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  primaryCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  aiDecisions?: Prisma.AiDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  structuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateOneWithoutInquiryCaseNestedInput
+  replyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
+  statusLogs?: Prisma.InquiryStatusLogUncheckedUpdateManyWithoutInquiryCaseNestedInput
+}
+
+export type InquiryCaseUncheckedUpdateManyWithoutOrganizationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  primaryCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1345,8 +2309,15 @@ export type InquiryCaseCountOutputTypeCountStatusLogsArgs<ExtArgs extends runtim
 export type InquiryCaseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   customerId?: boolean
+  organizationId?: boolean
+  primaryCustomerId?: boolean
   status?: boolean
   subject?: boolean
+  rawSubject?: boolean
+  businessSubject?: boolean
+  businessSubjectSource?: boolean
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: boolean
   productType?: boolean
   latestMessageAt?: boolean
   closedAt?: boolean
@@ -1354,11 +2325,14 @@ export type InquiryCaseSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   updatedAt?: boolean
   deletedAt?: boolean
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
+  organization?: boolean | Prisma.InquiryCase$organizationArgs<ExtArgs>
+  primaryCustomer?: boolean | Prisma.InquiryCase$primaryCustomerArgs<ExtArgs>
   inquiryMessages?: boolean | Prisma.InquiryCase$inquiryMessagesArgs<ExtArgs>
   aiDecisions?: boolean | Prisma.InquiryCase$aiDecisionsArgs<ExtArgs>
   structuredFacts?: boolean | Prisma.InquiryCase$structuredFactsArgs<ExtArgs>
   replyDrafts?: boolean | Prisma.InquiryCase$replyDraftsArgs<ExtArgs>
   contextSnapshots?: boolean | Prisma.InquiryCase$contextSnapshotsArgs<ExtArgs>
+  contextSummary?: boolean | Prisma.InquiryCase$contextSummaryArgs<ExtArgs>
   statusLogs?: boolean | Prisma.InquiryCase$statusLogsArgs<ExtArgs>
   _count?: boolean | Prisma.InquiryCaseCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["inquiryCase"]>
@@ -1366,8 +2340,15 @@ export type InquiryCaseSelect<ExtArgs extends runtime.Types.Extensions.InternalA
 export type InquiryCaseSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   customerId?: boolean
+  organizationId?: boolean
+  primaryCustomerId?: boolean
   status?: boolean
   subject?: boolean
+  rawSubject?: boolean
+  businessSubject?: boolean
+  businessSubjectSource?: boolean
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: boolean
   productType?: boolean
   latestMessageAt?: boolean
   closedAt?: boolean
@@ -1375,13 +2356,22 @@ export type InquiryCaseSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   updatedAt?: boolean
   deletedAt?: boolean
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
+  organization?: boolean | Prisma.InquiryCase$organizationArgs<ExtArgs>
+  primaryCustomer?: boolean | Prisma.InquiryCase$primaryCustomerArgs<ExtArgs>
 }, ExtArgs["result"]["inquiryCase"]>
 
 export type InquiryCaseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   customerId?: boolean
+  organizationId?: boolean
+  primaryCustomerId?: boolean
   status?: boolean
   subject?: boolean
+  rawSubject?: boolean
+  businessSubject?: boolean
+  businessSubjectSource?: boolean
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: boolean
   productType?: boolean
   latestMessageAt?: boolean
   closedAt?: boolean
@@ -1389,13 +2379,22 @@ export type InquiryCaseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   updatedAt?: boolean
   deletedAt?: boolean
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
+  organization?: boolean | Prisma.InquiryCase$organizationArgs<ExtArgs>
+  primaryCustomer?: boolean | Prisma.InquiryCase$primaryCustomerArgs<ExtArgs>
 }, ExtArgs["result"]["inquiryCase"]>
 
 export type InquiryCaseSelectScalar = {
   id?: boolean
   customerId?: boolean
+  organizationId?: boolean
+  primaryCustomerId?: boolean
   status?: boolean
   subject?: boolean
+  rawSubject?: boolean
+  businessSubject?: boolean
+  businessSubjectSource?: boolean
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: boolean
   productType?: boolean
   latestMessageAt?: boolean
   closedAt?: boolean
@@ -1404,40 +2403,57 @@ export type InquiryCaseSelectScalar = {
   deletedAt?: boolean
 }
 
-export type InquiryCaseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "customerId" | "status" | "subject" | "productType" | "latestMessageAt" | "closedAt" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["inquiryCase"]>
+export type InquiryCaseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "customerId" | "organizationId" | "primaryCustomerId" | "status" | "subject" | "rawSubject" | "businessSubject" | "businessSubjectSource" | "businessSubjectLocked" | "businessSubjectUpdatedAt" | "productType" | "latestMessageAt" | "closedAt" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["inquiryCase"]>
 export type InquiryCaseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
+  organization?: boolean | Prisma.InquiryCase$organizationArgs<ExtArgs>
+  primaryCustomer?: boolean | Prisma.InquiryCase$primaryCustomerArgs<ExtArgs>
   inquiryMessages?: boolean | Prisma.InquiryCase$inquiryMessagesArgs<ExtArgs>
   aiDecisions?: boolean | Prisma.InquiryCase$aiDecisionsArgs<ExtArgs>
   structuredFacts?: boolean | Prisma.InquiryCase$structuredFactsArgs<ExtArgs>
   replyDrafts?: boolean | Prisma.InquiryCase$replyDraftsArgs<ExtArgs>
   contextSnapshots?: boolean | Prisma.InquiryCase$contextSnapshotsArgs<ExtArgs>
+  contextSummary?: boolean | Prisma.InquiryCase$contextSummaryArgs<ExtArgs>
   statusLogs?: boolean | Prisma.InquiryCase$statusLogsArgs<ExtArgs>
   _count?: boolean | Prisma.InquiryCaseCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type InquiryCaseIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
+  organization?: boolean | Prisma.InquiryCase$organizationArgs<ExtArgs>
+  primaryCustomer?: boolean | Prisma.InquiryCase$primaryCustomerArgs<ExtArgs>
 }
 export type InquiryCaseIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
+  organization?: boolean | Prisma.InquiryCase$organizationArgs<ExtArgs>
+  primaryCustomer?: boolean | Prisma.InquiryCase$primaryCustomerArgs<ExtArgs>
 }
 
 export type $InquiryCasePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "InquiryCase"
   objects: {
     customer: Prisma.$CustomerPayload<ExtArgs>
+    organization: Prisma.$OrganizationPayload<ExtArgs> | null
+    primaryCustomer: Prisma.$CustomerPayload<ExtArgs> | null
     inquiryMessages: Prisma.$InquiryMessagePayload<ExtArgs>[]
     aiDecisions: Prisma.$AiDecisionPayload<ExtArgs>[]
     structuredFacts: Prisma.$InquiryStructuredFactPayload<ExtArgs> | null
     replyDrafts: Prisma.$ReplyDraftPayload<ExtArgs>[]
     contextSnapshots: Prisma.$AiContextSnapshotPayload<ExtArgs>[]
+    contextSummary: Prisma.$InquiryContextSummaryPayload<ExtArgs> | null
     statusLogs: Prisma.$InquiryStatusLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     customerId: string
+    organizationId: string | null
+    primaryCustomerId: string | null
     status: string
     subject: string | null
+    rawSubject: string | null
+    businessSubject: string | null
+    businessSubjectSource: string
+    businessSubjectLocked: boolean
+    businessSubjectUpdatedAt: Date | null
     productType: string | null
     latestMessageAt: Date | null
     closedAt: Date | null
@@ -1839,11 +2855,14 @@ readonly fields: InquiryCaseFieldRefs;
 export interface Prisma__InquiryCaseClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   customer<T extends Prisma.CustomerDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CustomerDefaultArgs<ExtArgs>>): Prisma.Prisma__CustomerClient<runtime.Types.Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  organization<T extends Prisma.InquiryCase$organizationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InquiryCase$organizationArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  primaryCustomer<T extends Prisma.InquiryCase$primaryCustomerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InquiryCase$primaryCustomerArgs<ExtArgs>>): Prisma.Prisma__CustomerClient<runtime.Types.Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   inquiryMessages<T extends Prisma.InquiryCase$inquiryMessagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InquiryCase$inquiryMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InquiryMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   aiDecisions<T extends Prisma.InquiryCase$aiDecisionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InquiryCase$aiDecisionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiDecisionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   structuredFacts<T extends Prisma.InquiryCase$structuredFactsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InquiryCase$structuredFactsArgs<ExtArgs>>): Prisma.Prisma__InquiryStructuredFactClient<runtime.Types.Result.GetResult<Prisma.$InquiryStructuredFactPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   replyDrafts<T extends Prisma.InquiryCase$replyDraftsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InquiryCase$replyDraftsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReplyDraftPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   contextSnapshots<T extends Prisma.InquiryCase$contextSnapshotsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InquiryCase$contextSnapshotsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiContextSnapshotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  contextSummary<T extends Prisma.InquiryCase$contextSummaryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InquiryCase$contextSummaryArgs<ExtArgs>>): Prisma.Prisma__InquiryContextSummaryClient<runtime.Types.Result.GetResult<Prisma.$InquiryContextSummaryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   statusLogs<T extends Prisma.InquiryCase$statusLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InquiryCase$statusLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InquiryStatusLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1876,8 +2895,15 @@ export interface Prisma__InquiryCaseClient<T, Null = never, ExtArgs extends runt
 export interface InquiryCaseFieldRefs {
   readonly id: Prisma.FieldRef<"InquiryCase", 'String'>
   readonly customerId: Prisma.FieldRef<"InquiryCase", 'String'>
+  readonly organizationId: Prisma.FieldRef<"InquiryCase", 'String'>
+  readonly primaryCustomerId: Prisma.FieldRef<"InquiryCase", 'String'>
   readonly status: Prisma.FieldRef<"InquiryCase", 'String'>
   readonly subject: Prisma.FieldRef<"InquiryCase", 'String'>
+  readonly rawSubject: Prisma.FieldRef<"InquiryCase", 'String'>
+  readonly businessSubject: Prisma.FieldRef<"InquiryCase", 'String'>
+  readonly businessSubjectSource: Prisma.FieldRef<"InquiryCase", 'String'>
+  readonly businessSubjectLocked: Prisma.FieldRef<"InquiryCase", 'Boolean'>
+  readonly businessSubjectUpdatedAt: Prisma.FieldRef<"InquiryCase", 'DateTime'>
   readonly productType: Prisma.FieldRef<"InquiryCase", 'String'>
   readonly latestMessageAt: Prisma.FieldRef<"InquiryCase", 'DateTime'>
   readonly closedAt: Prisma.FieldRef<"InquiryCase", 'DateTime'>
@@ -2285,6 +3311,44 @@ export type InquiryCaseDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.I
 }
 
 /**
+ * InquiryCase.organization
+ */
+export type InquiryCase$organizationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Organization
+   */
+  select?: Prisma.OrganizationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Organization
+   */
+  omit?: Prisma.OrganizationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrganizationInclude<ExtArgs> | null
+  where?: Prisma.OrganizationWhereInput
+}
+
+/**
+ * InquiryCase.primaryCustomer
+ */
+export type InquiryCase$primaryCustomerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Customer
+   */
+  select?: Prisma.CustomerSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Customer
+   */
+  omit?: Prisma.CustomerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CustomerInclude<ExtArgs> | null
+  where?: Prisma.CustomerWhereInput
+}
+
+/**
  * InquiryCase.inquiryMessages
  */
 export type InquiryCase$inquiryMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2397,6 +3461,25 @@ export type InquiryCase$contextSnapshotsArgs<ExtArgs extends runtime.Types.Exten
   take?: number
   skip?: number
   distinct?: Prisma.AiContextSnapshotScalarFieldEnum | Prisma.AiContextSnapshotScalarFieldEnum[]
+}
+
+/**
+ * InquiryCase.contextSummary
+ */
+export type InquiryCase$contextSummaryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InquiryContextSummary
+   */
+  select?: Prisma.InquiryContextSummarySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the InquiryContextSummary
+   */
+  omit?: Prisma.InquiryContextSummaryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InquiryContextSummaryInclude<ExtArgs> | null
+  where?: Prisma.InquiryContextSummaryWhereInput
 }
 
 /**

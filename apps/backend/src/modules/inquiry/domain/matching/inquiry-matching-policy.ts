@@ -1,4 +1,4 @@
 export const INQUIRY_MATCHING_POLICY = {
-  recentOpenInquiryWindowDays: 14,
+  recentOpenInquiryWindowDays: 60,
   allowAutoMergeWhenMultipleOpenInquiries: false,
 } as const;

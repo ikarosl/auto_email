@@ -17,6 +17,8 @@ export type InquiryStatus =
 
 export type CustomerStatus = 'unknown' | 'active' | 'invalid';
 
+export type BusinessSubjectSource = 'raw_email' | 'ai_generated' | 'human';
+
 export type EmailDirection = 'inbound' | 'outbound' | 'internal';
 
 export type AiClassification =
@@ -28,6 +30,7 @@ export type AiClassification =
 
 export interface CustomerListItem {
   id: string;
+  organizationId?: string | null;
   email: string;
   name?: string | null;
   domain?: string | null;
@@ -43,19 +46,44 @@ export interface CustomerListItem {
   counts?: {
     inquiryCases?: number;
   };
+  organization?: OrganizationListItem | null;
+}
+
+export interface OrganizationListItem {
+  id: string;
+  name: string;
+  domain?: string | null;
+  status: string;
+  source: string;
+  remark?: string | null;
+  createdAt: string | null;
+  updatedAt: string | null;
+  counts?: {
+    customers?: number;
+    inquiryCases?: number;
+  };
 }
 
 export interface InquiryListItem {
   id: string;
   customerId: string;
+  organizationId?: string | null;
+  primaryCustomerId?: string | null;
   status: InquiryStatus | string;
   subject?: string | null;
+  rawSubject?: string | null;
+  businessSubject?: string | null;
+  businessSubjectSource?: BusinessSubjectSource | string | null;
+  businessSubjectLocked?: boolean;
+  businessSubjectUpdatedAt?: string | null;
   productType?: string | null;
   latestMessageAt?: string | null;
   closedAt?: string | null;
   createdAt: string | null;
   updatedAt: string | null;
   customer?: CustomerListItem | null;
+  organization?: OrganizationListItem | null;
+  primaryCustomer?: CustomerListItem | null;
   structuredFacts?: unknown;
   contextSummary?: unknown;
   statusLogs?: unknown;

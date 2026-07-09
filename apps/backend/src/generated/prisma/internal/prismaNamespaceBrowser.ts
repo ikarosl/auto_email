@@ -54,6 +54,7 @@ export const ModelName = {
   MailboxAccount: 'MailboxAccount',
   MailboxSyncState: 'MailboxSyncState',
   Customer: 'Customer',
+  Organization: 'Organization',
   EmailThread: 'EmailThread',
   EmailMessage: 'EmailMessage',
   InquiryCase: 'InquiryCase',
@@ -63,6 +64,7 @@ export const ModelName = {
   InquiryStructuredFact: 'InquiryStructuredFact',
   ReplyDraft: 'ReplyDraft',
   AiContextSnapshot: 'AiContextSnapshot',
+  InquiryContextSummary: 'InquiryContextSummary',
   InquiryStatusLog: 'InquiryStatusLog'
 } as const
 
@@ -114,6 +116,7 @@ export type MailboxSyncStateScalarFieldEnum = (typeof MailboxSyncStateScalarFiel
 
 export const CustomerScalarFieldEnum = {
   id: 'id',
+  organizationId: 'organizationId',
   email: 'email',
   name: 'name',
   domain: 'domain',
@@ -130,6 +133,21 @@ export const CustomerScalarFieldEnum = {
 } as const
 
 export type CustomerScalarFieldEnum = (typeof CustomerScalarFieldEnum)[keyof typeof CustomerScalarFieldEnum]
+
+
+export const OrganizationScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  domain: 'domain',
+  status: 'status',
+  source: 'source',
+  remark: 'remark',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type OrganizationScalarFieldEnum = (typeof OrganizationScalarFieldEnum)[keyof typeof OrganizationScalarFieldEnum]
 
 
 export const EmailThreadScalarFieldEnum = {
@@ -179,8 +197,15 @@ export type EmailMessageScalarFieldEnum = (typeof EmailMessageScalarFieldEnum)[k
 export const InquiryCaseScalarFieldEnum = {
   id: 'id',
   customerId: 'customerId',
+  organizationId: 'organizationId',
+  primaryCustomerId: 'primaryCustomerId',
   status: 'status',
   subject: 'subject',
+  rawSubject: 'rawSubject',
+  businessSubject: 'businessSubject',
+  businessSubjectSource: 'businessSubjectSource',
+  businessSubjectLocked: 'businessSubjectLocked',
+  businessSubjectUpdatedAt: 'businessSubjectUpdatedAt',
   productType: 'productType',
   latestMessageAt: 'latestMessageAt',
   closedAt: 'closedAt',
@@ -306,6 +331,25 @@ export const AiContextSnapshotScalarFieldEnum = {
 } as const
 
 export type AiContextSnapshotScalarFieldEnum = (typeof AiContextSnapshotScalarFieldEnum)[keyof typeof AiContextSnapshotScalarFieldEnum]
+
+
+export const InquiryContextSummaryScalarFieldEnum = {
+  id: 'id',
+  inquiryCaseId: 'inquiryCaseId',
+  summaryText: 'summaryText',
+  knownFactsJson: 'knownFactsJson',
+  customerDecisionsJson: 'customerDecisionsJson',
+  ourCommitmentsJson: 'ourCommitmentsJson',
+  openQuestionsJson: 'openQuestionsJson',
+  coveredEmailIdsJson: 'coveredEmailIdsJson',
+  coveredMessageCount: 'coveredMessageCount',
+  coveredFrom: 'coveredFrom',
+  coveredTo: 'coveredTo',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type InquiryContextSummaryScalarFieldEnum = (typeof InquiryContextSummaryScalarFieldEnum)[keyof typeof InquiryContextSummaryScalarFieldEnum]
 
 
 export const InquiryStatusLogScalarFieldEnum = {

@@ -42,24 +42,47 @@ model MailboxSyncState {
 }
 
 model Customer {
-  id           String        @id @default(dbgenerated("'customer_' || gen_random_uuid()::TEXT"))
-  email        String        @unique
-  name         String?
-  domain       String?
-  companyName  String?       @map("company_name")
-  country      String?
-  source       String        @default("email")
-  status       String        @default("unknown")
-  invalidReason String?      @map("invalid_reason")
-  statusUpdatedAt DateTime?  @map("status_updated_at") @db.Timestamptz(6)
+  id                  String        @id @default(dbgenerated("'customer_' || gen_random_uuid()::TEXT"))
+  organizationId      String?       @map("organization_id")
+  email               String        @unique
+  name                String?
+  domain              String?
+  companyName         String?       @map("company_name")
+  country             String?
+  source              String        @default("email")
+  status              String        @default("unknown")
+  invalidReason       String?       @map("invalid_reason")
+  statusUpdatedAt     DateTime?     @map("status_updated_at") @db.Timestamptz(6)
+  remark              String?
+  createdAt           DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt           DateTime      @default(now()) @map("updated_at") @db.Timestamptz(6)
+  deletedAt           DateTime?     @map("deleted_at") @db.Timestamptz(6)
+  organization        Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  inquiryCases        InquiryCase[] @relation("InquiryCustomer")
+  primaryInquiryCases InquiryCase[] @relation("InquiryPrimaryCustomer")
+
+  @@index([status])
+  @@index([domain])
+  @@index([organizationId])
+  @@map("customers")
+}
+
+model Organization {
+  id           String        @id @default(dbgenerated("'org_' || gen_random_uuid()::TEXT"))
+  name         String
+  domain       String?       @unique
+  status       String        @default("active")
+  source       String        @default("email_domain")
   remark       String?
   createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt    DateTime      @default(now()) @map("updated_at") @db.Timestamptz(6)
   deletedAt    DateTime?     @map("deleted_at") @db.Timestamptz(6)
+  customers    Customer[]
   inquiryCases InquiryCase[]
 
+  @@index([domain])
   @@index([status])
-  @@map("customers")
+  @@map("organizations")
 }
 
 model EmailThread {
@@ -122,15 +145,24 @@ model EmailMessage {
 model InquiryCase {
   id              String                  @id @default(dbgenerated("'inquiry_' || gen_random_uuid()::TEXT"))
   customerId      String                  @map("customer_id")
+  organizationId  String?                 @map("organization_id")
+  primaryCustomerId String?               @map("primary_customer_id")
   status          String                  @default("new")
   subject         String?
+  rawSubject      String?                 @map("raw_subject")
+  businessSubject String?                 @map("business_subject")
+  businessSubjectSource String            @default("raw_email") @map("business_subject_source")
+  businessSubjectLocked Boolean           @default(false) @map("business_subject_locked")
+  businessSubjectUpdatedAt DateTime?      @map("business_subject_updated_at") @db.Timestamptz(6)
   productType     String?                 @map("product_type")
   latestMessageAt DateTime?               @map("latest_message_at") @db.Timestamptz(6)
   closedAt        DateTime?               @map("closed_at") @db.Timestamptz(6)
   createdAt       DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt       DateTime                @default(now()) @map("updated_at") @db.Timestamptz(6)
   deletedAt       DateTime?               @map("deleted_at") @db.Timestamptz(6)
-  customer        Customer                @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  customer        Customer                @relation("InquiryCustomer", fields: [customerId], references: [id], onDelete: Restrict)
+  organization    Organization?           @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  primaryCustomer Customer?               @relation("InquiryPrimaryCustomer", fields: [primaryCustomerId], references: [id], onDelete: SetNull)
   inquiryMessages InquiryMessage[]
   aiDecisions     AiDecision[]
   structuredFacts InquiryStructuredFact?
@@ -140,6 +172,8 @@ model InquiryCase {
   statusLogs      InquiryStatusLog[]
 
   @@index([customerId])
+  @@index([organizationId])
+  @@index([primaryCustomerId])
   @@index([status])
   @@index([latestMessageAt])
   @@map("inquiry_cases")

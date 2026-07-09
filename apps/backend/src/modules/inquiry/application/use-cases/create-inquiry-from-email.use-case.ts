@@ -3,6 +3,7 @@ import { randomUUID } from 'node:crypto';
 import { EmailMessage } from '../../../email/domain/entities/email-message.entity.js';
 import { InquiryCase } from '../../domain/entities/inquiry-case.entity.js';
 import { InquiryStatus } from '../../domain/enums/inquiry-status.enum.js';
+import { extractEmailDomain } from '../../domain/matching/email-domain-policy.js';
 import { InquiryRepository } from '../ports/inquiry.repository.js';
 
 export interface CreateInquiryFromEmailResult {
@@ -19,7 +20,13 @@ export class CreateInquiryFromEmailUseCase {
       sourceEmailMessageId: emailMessage.id,
       customerEmail: emailMessage.fromEmail,
       customerName: emailMessage.fromName,
+      customerDomain: extractEmailDomain(emailMessage.fromEmail),
       subject: emailMessage.subject,
+      rawSubject: emailMessage.subject,
+      businessSubject: emailMessage.subject,
+      businessSubjectSource: 'raw_email',
+      businessSubjectLocked: false,
+      businessSubjectUpdatedAt: now,
       status: InquiryStatus.NEW,
       latestMessageAt: emailMessage.receivedAt,
       createdAt: now,
@@ -33,5 +40,12 @@ export class CreateInquiryFromEmailUseCase {
 
   async saveExistingInquiry(inquiryCase: InquiryCase): Promise<InquiryCase> {
     return this.inquiryRepository.save(inquiryCase);
+  }
+
+  async ensureCustomerContactFromEmail(emailMessage: EmailMessage): Promise<void> {
+    await this.inquiryRepository.ensureCustomerContact({
+      email: emailMessage.fromEmail,
+      name: emailMessage.fromName,
+    });
   }
 }
