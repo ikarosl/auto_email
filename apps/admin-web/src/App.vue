@@ -60,7 +60,7 @@ const pageTitle = computed(() => navItems.find((item) => route.path.startsWith(i
     </aside>
 
     <div class="lg:pl-64">
-      <header class="sticky top-0 z-10 border-b border-border bg-background/95 backdrop-blur">
+      <!-- <header class="sticky top-0 z-10 border-b border-border bg-background/95 backdrop-blur">
         <div class="flex min-h-16 flex-wrap items-center justify-between gap-3 px-5 py-3">
           <div>
             <div class="text-lg font-semibold">{{ pageTitle }}</div>
@@ -76,7 +76,7 @@ const pageTitle = computed(() => navItems.find((item) => route.path.startsWith(i
             </Button>
           </div>
         </div>
-      </header>
+      </header> -->
 
       <main class="px-5 py-5">
         <RouterView />

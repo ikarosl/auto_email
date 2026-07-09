@@ -11,35 +11,115 @@ import PageHeader from '@/components/workbench/PageHeader.vue';
 import { formatDateTime, truncate } from '@/lib/format';
 
 const loading = ref(false);
+const loadingMore = ref(false);
 const error = ref('');
 const threads = ref<EmailThreadListItem[]>([]);
 const messages = ref<EmailMessageListItem[]>([]);
 const selectedThreadId = ref('');
 const total = ref(0);
+const messageTotal = ref(0);
+const threadPage = ref(1);
+const threadLimit = 30;
+const messagePage = ref(1);
+const messageLimit = 50;
+const messageLoading = ref(false);
+const messageLoadingMore = ref(false);
 
 const selectedThread = computed(() => threads.value.find((item) => item.id === selectedThreadId.value));
+const hasMoreThreads = computed(() => threads.value.length < total.value);
+const hasMoreMessages = computed(() => messages.value.length < messageTotal.value);
 
-async function loadThreads() {
-  loading.value = true;
+async function loadThreads(reset = true) {
+  if (reset) {
+    loading.value = true;
+    threadPage.value = 1;
+  } else {
+    loadingMore.value = true;
+  }
   error.value = '';
   try {
-    const result = await fetchEmailThreads({ page: 1, limit: 30 });
-    threads.value = result.data;
+    const result = await fetchEmailThreads({ page: threadPage.value, limit: threadLimit });
+    threads.value = reset ? result.data : mergeThreads(threads.value, result.data);
     total.value = result.total;
-    if (!selectedThreadId.value && threads.value[0]) {
+
+    const selectedStillExists = threads.value.some((item) => item.id === selectedThreadId.value);
+    if ((!selectedThreadId.value || !selectedStillExists) && threads.value[0]) {
       await selectThread(threads.value[0].id);
     }
   } catch (err) {
+    if (!reset) threadPage.value -= 1;
     error.value = err instanceof Error ? err.message : String(err);
   } finally {
     loading.value = false;
+    loadingMore.value = false;
+  }
+}
+
+async function loadNextThreads() {
+  if (loading.value || loadingMore.value || !hasMoreThreads.value) return;
+  threadPage.value += 1;
+  await loadThreads(false);
+}
+
+function handleThreadListScroll(event: Event) {
+  const target = event.currentTarget as HTMLElement;
+  const distanceToBottom = target.scrollHeight - target.scrollTop - target.clientHeight;
+  if (distanceToBottom <= 120) {
+    void loadNextThreads();
   }
 }
 
 async function selectThread(threadId: string) {
   selectedThreadId.value = threadId;
-  const result = await fetchEmailThreadMessages(threadId, { page: 1, limit: 100 });
-  messages.value = result.data;
+  messagePage.value = 1;
+  await loadThreadMessages(true);
+}
+
+async function loadThreadMessages(reset = true) {
+  if (!selectedThreadId.value) return;
+  if (reset) {
+    messageLoading.value = true;
+  } else {
+    messageLoadingMore.value = true;
+  }
+  try {
+    const result = await fetchEmailThreadMessages(selectedThreadId.value, {
+      page: messagePage.value,
+      limit: messageLimit,
+    });
+    messages.value = reset ? result.data : mergeMessages(messages.value, result.data);
+    messageTotal.value = result.total;
+  } catch (err) {
+    if (!reset) messagePage.value -= 1;
+    error.value = err instanceof Error ? err.message : String(err);
+  } finally {
+    messageLoading.value = false;
+    messageLoadingMore.value = false;
+  }
+}
+
+async function loadNextMessages() {
+  if (messageLoading.value || messageLoadingMore.value || !hasMoreMessages.value) return;
+  messagePage.value += 1;
+  await loadThreadMessages(false);
+}
+
+function handleMessageListScroll(event: Event) {
+  const target = event.currentTarget as HTMLElement;
+  const distanceToBottom = target.scrollHeight - target.scrollTop - target.clientHeight;
+  if (distanceToBottom <= 120) {
+    void loadNextMessages();
+  }
+}
+
+function mergeThreads(current: EmailThreadListItem[], incoming: EmailThreadListItem[]) {
+  const seen = new Set(current.map((item) => item.id));
+  return [...current, ...incoming.filter((item) => !seen.has(item.id))];
+}
+
+function mergeMessages(current: EmailMessageListItem[], incoming: EmailMessageListItem[]) {
+  const seen = new Set(current.map((item) => item.id));
+  return [...current, ...incoming.filter((item) => !seen.has(item.id))];
 }
 
 onMounted(loadThreads);
@@ -67,7 +147,7 @@ onMounted(loadThreads);
           <div class="font-semibold">线程列表</div>
           <div class="text-sm text-muted-foreground">共 {{ total }} 条</div>
         </div>
-        <div class="max-h-[720px] overflow-auto">
+        <div class="max-h-[720px] overflow-auto" @scroll.passive="handleThreadListScroll">
           <button
             v-for="thread in threads"
             :key="thread.id"
@@ -84,7 +164,16 @@ onMounted(loadThreads);
             </div>
             <div class="mt-2 text-xs text-muted-foreground">{{ formatDateTime(thread.latestMessageAt) }}</div>
           </button>
-          <EmptyState v-if="threads.length === 0">暂无邮件线程</EmptyState>
+          <EmptyState v-if="!loading && threads.length === 0">暂无邮件线程</EmptyState>
+          <div v-if="loadingMore" class="px-4 py-3 text-center text-xs text-muted-foreground">
+            正在加载更多线程...
+          </div>
+          <div
+            v-else-if="threads.length > 0 && !hasMoreThreads"
+            class="px-4 py-3 text-center text-xs text-muted-foreground"
+          >
+            已加载全部线程
+          </div>
         </div>
       </Card>
 
@@ -97,7 +186,7 @@ onMounted(loadThreads);
           <div class="mt-1 text-sm text-muted-foreground">{{ selectedThread?.customerEmail || '请选择线程' }}</div>
         </div>
 
-        <div class="space-y-3 p-4">
+        <div class="max-h-[720px] space-y-3 overflow-y-auto p-4" @scroll.passive="handleMessageListScroll">
           <article
             v-for="message in messages"
             :key="message.id"
@@ -120,8 +209,17 @@ onMounted(loadThreads);
               AI: {{ message.latestAiDecision.classification }} → {{ message.latestAiDecision.suggestedStatus }}
             </div>
           </article>
-          <EmptyState v-if="selectedThreadId && messages.length === 0">该线程暂无邮件</EmptyState>
+          <EmptyState v-if="selectedThreadId && !messageLoading && messages.length === 0">该线程暂无邮件</EmptyState>
           <EmptyState v-if="!selectedThreadId">请选择左侧线程</EmptyState>
+          <div v-if="messageLoadingMore" class="py-3 text-center text-xs text-muted-foreground">
+            正在加载更多邮件...
+          </div>
+          <div
+            v-else-if="messages.length > 0 && !hasMoreMessages"
+            class="py-3 text-center text-xs text-muted-foreground"
+          >
+            已加载全部邮件
+          </div>
         </div>
       </Card>
     </div>

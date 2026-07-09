@@ -19,22 +19,48 @@ const detail = ref<any>(null);
 const detailLoading = ref(false);
 const activeTab = ref<'payload' | 'messages' | 'output' | 'sources' | 'email'>('payload');
 const total = ref(0);
+const page = ref(1);
+const limit = 30;
+const loadingMore = ref(false);
 
 const selected = computed(() => items.value.find((item) => item.id === selectedId.value));
+const hasMore = computed(() => items.value.length < total.value);
 
-async function load() {
-  loading.value = true;
+async function load(reset = true) {
+  if (reset) {
+    loading.value = true;
+    page.value = 1;
+  } else {
+    loadingMore.value = true;
+  }
   error.value = '';
   try {
-    const result = await fetchContextSnapshots({ page: 1, limit: 30 });
-    items.value = result.data;
+    const result = await fetchContextSnapshots({ page: page.value, limit });
+    items.value = reset ? result.data : mergeSnapshots(items.value, result.data);
     total.value = result.total;
-    selectedId.value = selectedId.value || items.value[0]?.id || '';
-    if (selectedId.value) loadDetail(selectedId.value);
+    const selectedStillExists = items.value.some((item) => item.id === selectedId.value);
+    selectedId.value = selectedStillExists ? selectedId.value : items.value[0]?.id || '';
+    if (reset && selectedId.value) loadDetail(selectedId.value);
   } catch (err) {
+    if (!reset) page.value -= 1;
     error.value = err instanceof Error ? err.message : String(err);
   } finally {
     loading.value = false;
+    loadingMore.value = false;
+  }
+}
+
+async function loadNext() {
+  if (loading.value || loadingMore.value || !hasMore.value) return;
+  page.value += 1;
+  await load(false);
+}
+
+function handleSnapshotListScroll(event: Event) {
+  const target = event.currentTarget as HTMLElement;
+  const distanceToBottom = target.scrollHeight - target.scrollTop - target.clientHeight;
+  if (distanceToBottom <= 120) {
+    void loadNext();
   }
 }
 
@@ -52,6 +78,11 @@ async function loadDetail(id: string) {
 function onSelect(id: string) {
   selectedId.value = id;
   loadDetail(id);
+}
+
+function mergeSnapshots(current: ContextSnapshotListItem[], incoming: ContextSnapshotListItem[]) {
+  const seen = new Set(current.map((item) => item.id));
+  return [...current, ...incoming.filter((item) => !seen.has(item.id))];
 }
 
 onMounted(load);
@@ -77,23 +108,34 @@ onMounted(load);
       <!-- Sidebar: snapshot list -->
       <Card class="overflow-hidden">
         <div class="border-b border-border px-4 py-3 text-sm text-muted-foreground">共 {{ total }} 个快照</div>
-        <button
-          v-for="item in items"
-          :key="item.id"
-          class="block w-full border-b border-border px-4 py-3 text-left last:border-0 hover:bg-muted/50"
-          :class="{ 'bg-muted': selectedId === item.id }"
-          @click="onSelect(item.id)"
-        >
-          <div class="flex items-center justify-between gap-2">
-            <div class="truncate font-medium">{{ item.inquiryCase?.subject || item.purpose }}</div>
-            <Badge tone="muted">{{ item.estimatedTokens ?? '-' }} tok</Badge>
+        <div class="max-h-[870px] overflow-y-auto" @scroll.passive="handleSnapshotListScroll">
+          <button
+            v-for="item in items"
+            :key="item.id"
+            class="block w-full border-b border-border px-4 py-3 text-left last:border-0 hover:bg-muted/50"
+            :class="{ 'bg-muted': selectedId === item.id }"
+            @click="onSelect(item.id)"
+          >
+            <div class="flex items-center justify-between gap-2">
+              <div class="truncate font-medium">{{ item.inquiryCase?.subject || item.purpose }}</div>
+              <Badge tone="muted">{{ item.estimatedTokens ?? '-' }} tok</Badge>
+            </div>
+            <div class="mt-1 flex items-center gap-2 text-xs">
+              <Badge tone="default" size="sm">{{ item.purpose }}</Badge>
+              <span class="text-muted-foreground">{{ formatDateTime(item.createdAt) }}</span>
+            </div>
+          </button>
+          <EmptyState v-if="!loading && items.length === 0">暂无上下文快照</EmptyState>
+          <div v-if="loadingMore" class="px-4 py-3 text-center text-xs text-muted-foreground">
+            正在加载更多快照...
           </div>
-          <div class="mt-1 flex items-center gap-2 text-xs">
-            <Badge tone="default" size="sm">{{ item.purpose }}</Badge>
-            <span class="text-muted-foreground">{{ formatDateTime(item.createdAt) }}</span>
+          <div
+            v-else-if="items.length > 0 && !hasMore"
+            class="px-4 py-3 text-center text-xs text-muted-foreground"
+          >
+            已加载全部快照
           </div>
-        </button>
-        <EmptyState v-if="!loading && items.length === 0">暂无上下文快照</EmptyState>
+        </div>
       </Card>
 
       <!-- Detail Panel -->
@@ -161,7 +203,8 @@ onMounted(load);
                 {{ msg.role === 'system' ? 'System Prompt' : msg.role === 'user' ? 'User (Payload)' : 'Assistant' }}
               </div>
               <div class="max-h-96 overflow-y-auto whitespace-pre-wrap text-sm">
-                {{ msg.role === 'assistant' ? msg.content : msg.content?.slice(0, 2000) }}{{ msg.content?.length > 2000 ? '...' : '' }}
+                <!-- 截断展示备选：{{ msg.role === 'assistant' ? msg.content : msg.content?.slice(0, 2000) }}{{ msg.content?.length > 2000 ? '...' : '' }} -->
+                {{ msg.content }}
               </div>
             </div>
           </div>

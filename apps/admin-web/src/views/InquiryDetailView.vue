@@ -9,7 +9,7 @@ import {
   RefreshCcw,
   Unlock,
 } from 'lucide-vue-next';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import { WEB_ROUTES } from '@email-inquiry/shared';
 
@@ -35,6 +35,10 @@ const loading = ref(false);
 const error = ref('');
 const item = ref<InquiryListItem | null>(null);
 const messages = ref<any[]>([]);
+const messagesTotal = ref(0);
+const messagesPage = ref(1);
+const messagesLimit = 30;
+const messagesLoadingMore = ref(false);
 const threadData = ref<any>(null);
 const activeTab = ref<'messages' | 'thread' | 'context'>('messages');
 
@@ -58,18 +62,55 @@ const moveTargetId = ref('');
 const showLinkDialog = ref(false);
 const linkEmailId = ref('');
 
+const hasMoreMessages = computed(() => messages.value.length < messagesTotal.value);
+
 async function load() {
   loading.value = true;
   error.value = '';
   try {
     const inquiryId = String(route.params.id);
-    item.value = await fetchInquiry(inquiryId);
-    messages.value = (await fetchInquiryMessages(inquiryId)).data;
-    threadData.value = await fetchInquiryThread(inquiryId);
+    messagesPage.value = 1;
+    const [inquiryResult, messagesResult, threadResult] = await Promise.all([
+      fetchInquiry(inquiryId),
+      fetchInquiryMessages(inquiryId, { page: messagesPage.value, limit: messagesLimit }),
+      fetchInquiryThread(inquiryId),
+    ]);
+    item.value = inquiryResult;
+    messages.value = messagesResult.data;
+    messagesTotal.value = messagesResult.total;
+    threadData.value = threadResult;
   } catch (err) {
     error.value = err instanceof Error ? err.message : String(err);
   } finally {
     loading.value = false;
+  }
+}
+
+async function loadNextMessages() {
+  if (loading.value || messagesLoadingMore.value || !hasMoreMessages.value) return;
+  messagesLoadingMore.value = true;
+  error.value = '';
+  try {
+    messagesPage.value += 1;
+    const result = await fetchInquiryMessages(String(route.params.id), {
+      page: messagesPage.value,
+      limit: messagesLimit,
+    });
+    messages.value = mergeMessages(messages.value, result.data);
+    messagesTotal.value = result.total;
+  } catch (err) {
+    messagesPage.value -= 1;
+    error.value = err instanceof Error ? err.message : String(err);
+  } finally {
+    messagesLoadingMore.value = false;
+  }
+}
+
+function handleMessagesScroll(event: Event) {
+  const target = event.currentTarget as HTMLElement;
+  const distanceToBottom = target.scrollHeight - target.scrollTop - target.clientHeight;
+  if (distanceToBottom <= 120) {
+    void loadNextMessages();
   }
 }
 
@@ -163,6 +204,11 @@ async function doLinkEmail() {
 function showSuccess(msg: string) {
   successMsg.value = msg;
   setTimeout(() => { successMsg.value = ''; }, 3000);
+}
+
+function mergeMessages(current: any[], incoming: any[]) {
+  const seen = new Set(current.map((message) => message.emailMessageId));
+  return [...current, ...incoming.filter((message) => !seen.has(message.emailMessageId))];
 }
 
 onMounted(load);
@@ -278,7 +324,11 @@ onMounted(load);
         </div>
 
         <!-- Messages Tab -->
-        <div v-if="activeTab === 'messages'" class="space-y-3">
+        <div
+          v-if="activeTab === 'messages'"
+          class="max-h-[720px] space-y-3 overflow-y-auto pr-1 border-b border-gray-200"
+          @scroll.passive="handleMessagesScroll"
+        >
           <div v-for="msg in messages" :key="msg.emailMessageId" class="rounded-lg border p-3">
             <div class="flex items-start justify-between">
               <div class="flex items-center gap-2">
@@ -303,6 +353,15 @@ onMounted(load);
           </div>
           <div v-if="messages.length === 0" class="py-8 text-center text-sm text-muted-foreground">
             暂无关联邮件
+          </div>
+          <div v-if="messagesLoadingMore" class="py-3 text-center text-xs text-muted-foreground">
+            正在加载更多关联邮件...
+          </div>
+          <div
+            v-else-if="messages.length > 0 && !hasMoreMessages"
+            class="py-3 text-center text-xs text-muted-foreground"
+          >
+            已加载全部关联邮件
           </div>
         </div>
 
