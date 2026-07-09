@@ -5,6 +5,7 @@ export const API_ROUTE_SEGMENTS = {
   customers: 'customers',
   organizations: 'organizations',
   emailThreads: 'email-threads',
+  messages: 'messages',
   contextSnapshots: 'context-snapshots',
   aiDecisions: 'ai-decisions',
   replyDrafts: 'reply-drafts',

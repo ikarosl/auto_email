@@ -24,8 +24,6 @@ export type EmailDirection = 'inbound' | 'outbound' | 'internal';
 export type AiClassification =
   | 'valid_inquiry'
   | 'invalid'
-  | 'unrelated_product'
-  | 'commercial'
   | 'unknown';
 
 export interface CustomerListItem {

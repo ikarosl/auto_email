@@ -34,6 +34,7 @@ import { AiDecisionController } from './presentation/ai-decision.controller.js';
 import { EmailThreadController } from './presentation/email-thread.controller.js';
 import { EmailWebhookController } from './presentation/email-webhook.controller.js';
 import { ReplyDraftController } from './presentation/reply-draft.controller.js';
+import { MessageController } from './presentation/message.controller.js';
 import {
   AI_DECISION_REPOSITORY,
   EMAIL_AI_ANALYSIS_ADAPTER,
@@ -44,7 +45,7 @@ import {
 
 @Module({
   imports: [InquiryModule, ContextModule],
-  controllers: [EmailWebhookController, EmailThreadController, AiDecisionController, ReplyDraftController],
+  controllers: [EmailWebhookController, EmailThreadController, AiDecisionController, ReplyDraftController, MessageController],
   providers: [
     {
       provide: EMAIL_MESSAGE_REPOSITORY,

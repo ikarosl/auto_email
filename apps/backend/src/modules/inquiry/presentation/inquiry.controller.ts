@@ -9,6 +9,7 @@ import {
   parseLimit,
   parsePage,
   toDateIso,
+  toNumber,
 } from '../../../common/http/api-response.js';
 import { PrismaService } from '../../../common/database/prisma.service.js';
 import { CreateInquiryDto } from '../application/dto/create-inquiry.dto.js';
@@ -332,6 +333,162 @@ export class InquiryController {
     });
 
     return itemResponse(mapInquiryMessage(record));
+  }
+
+  @Get(':id/messages')
+  async listMessages(
+    @Param('id') id: string,
+    @Query('page') pageQuery?: string,
+    @Query('limit') limitQuery?: string,
+    @Query('direction') direction?: string,
+  ) {
+    const inquiryCase = await this.prisma.inquiryCase.findUnique({ where: { id } });
+    if (!inquiryCase || inquiryCase.deletedAt) throw new NotFoundException(`Inquiry not found: ${id}`);
+
+    const page = parsePage(pageQuery);
+    const limit = parseLimit(limitQuery);
+
+    const messageWhere: any = { inquiryCaseId: id };
+    if (direction === 'inbound' || direction === 'outbound') {
+      messageWhere.emailMessage = { direction };
+    }
+
+    const [total, records] = await Promise.all([
+      this.prisma.inquiryMessage.count({
+        where: { inquiryCaseId: id, ...(direction ? { emailMessage: { direction } } : {}) },
+      }),
+      this.prisma.inquiryMessage.findMany({
+        where: messageWhere,
+        include: {
+          emailMessage: {
+            include: {
+              aiDecisions: { orderBy: { createdAt: 'desc' }, take: 1 },
+            },
+          },
+        },
+        orderBy: { createdAt: 'asc' },
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+    ]);
+
+    return pageResponse({
+      data: records.map((r) => ({
+        inquiryMessageId: r.id,
+        emailMessageId: r.emailMessageId,
+        relationType: r.relationType,
+        relationReason: r.relationReason,
+        direction: r.direction,
+        source: r.emailMessage?.source ?? null,
+        fromEmail: r.emailMessage?.fromEmail ?? null,
+        fromName: r.emailMessage?.fromName ?? null,
+        toEmails: r.emailMessage?.toEmails ?? [],
+        ccEmails: r.emailMessage?.ccEmails ?? [],
+        subject: r.emailMessage?.subject ?? null,
+        bodyTextPreview: r.emailMessage?.bodyText
+          ? r.emailMessage.bodyText.slice(0, 200)
+          : null,
+        receivedAt: toDateIso(r.emailMessage?.receivedAt),
+        latestAiDecision: r.emailMessage?.aiDecisions?.[0]
+          ? {
+              classification: r.emailMessage.aiDecisions[0].classification,
+              suggestedStatus: r.emailMessage.aiDecisions[0].suggestedStatus,
+              confidence: toNumber(r.emailMessage.aiDecisions[0].confidence),
+            }
+          : null,
+      })),
+      total,
+      page,
+      limit,
+    });
+  }
+
+  @Get(':id/thread')
+  async thread(@Param('id') id: string) {
+    const inquiryCase = await this.prisma.inquiryCase.findUnique({
+      where: { id },
+      include: {
+        customer: true,
+        organization: true,
+        primaryCustomer: true,
+        structuredFacts: true,
+        statusLogs: { orderBy: { createdAt: 'desc' }, take: 20 },
+        _count: {
+          select: {
+            inquiryMessages: true,
+            aiDecisions: true,
+            replyDrafts: true,
+            contextSnapshots: true,
+            statusLogs: true,
+          },
+        },
+      },
+    });
+    if (!inquiryCase || inquiryCase.deletedAt) throw new NotFoundException(`Inquiry not found: ${id}`);
+
+    const [messages, latestAiDecision, latestContextSnapshot, latestDraft, allowedTransitions] =
+      await Promise.all([
+        this.prisma.inquiryMessage.findMany({
+          where: { inquiryCaseId: id },
+          include: { emailMessage: true },
+          orderBy: { createdAt: 'asc' },
+        }),
+        this.prisma.aiDecision.findFirst({
+          where: { inquiryCaseId: id },
+          orderBy: { createdAt: 'desc' },
+        }),
+        this.prisma.aiContextSnapshot.findFirst({
+          where: { inquiryCaseId: id },
+          orderBy: { createdAt: 'desc' },
+        }),
+        this.prisma.replyDraft.findFirst({
+          where: { inquiryCaseId: id },
+          orderBy: { createdAt: 'desc' },
+        }),
+        this.listAllowedTransitionsUseCase.execute(id),
+      ]);
+
+    return itemResponse({
+      inquiry: mapInquiryCase(inquiryCase),
+      messages: messages.map((m) => ({
+        inquiryMessageId: m.id,
+        emailMessageId: m.emailMessageId,
+        relationType: m.relationType,
+        direction: m.direction,
+        fromEmail: m.emailMessage?.fromEmail ?? null,
+        fromName: m.emailMessage?.fromName ?? null,
+        subject: m.emailMessage?.subject ?? null,
+        bodyText: m.emailMessage?.bodyText ?? null,
+        receivedAt: toDateIso(m.emailMessage?.receivedAt),
+      })),
+      latestAiDecision: latestAiDecision
+        ? {
+            id: latestAiDecision.id,
+            classification: latestAiDecision.classification,
+            suggestedStatus: latestAiDecision.suggestedStatus,
+            confidence: toNumber(latestAiDecision.confidence),
+            reason: latestAiDecision.reason,
+            createdAt: toDateIso(latestAiDecision.createdAt),
+          }
+        : null,
+      latestContextSnapshot: latestContextSnapshot
+        ? {
+            id: latestContextSnapshot.id,
+            purpose: latestContextSnapshot.purpose,
+            estimatedTokens: latestContextSnapshot.estimatedTokens,
+            createdAt: toDateIso(latestContextSnapshot.createdAt),
+          }
+        : null,
+      latestDraft: latestDraft
+        ? {
+            id: latestDraft.id,
+            draftType: latestDraft.draftType,
+            status: latestDraft.status,
+            createdAt: toDateIso(latestDraft.createdAt),
+          }
+        : null,
+      allowedTransitions,
+    });
   }
 }
 
