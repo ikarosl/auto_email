@@ -19,6 +19,7 @@ import { InquiryStateMachine } from '../../../inquiry/domain/state-machine/inqui
 import { InquiryRepository } from '../../../inquiry/application/ports/inquiry.repository.js';
 import { InquiryMessageRepository } from '../../../inquiry/application/ports/inquiry-message.repository.js';
 import { UpdateCustomerStatusFromAiAnalysisUseCase } from '../../../inquiry/application/use-cases/update-customer-status-from-ai-analysis.use-case.js';
+import { GenerateBusinessSubjectUseCase } from '../../../inquiry/application/use-cases/generate-business-subject.use-case.js';
 import { InquiryStatusLogRepository } from '../../../inquiry/application/ports/inquiry-status-log.repository.js';
 import { EmailMessageRepository } from '../ports/email-message.repository.js';
 import { AiDecisionRepository } from '../ports/ai-decision.repository.js';
@@ -50,6 +51,7 @@ export class PollEmailInboxUseCase {
     private readonly inquiryStateMachine?: InquiryStateMachine,
     private readonly inquiryRepository?: InquiryRepository,
     private readonly inquiryStatusLogRepository?: InquiryStatusLogRepository,
+    private readonly generateBusinessSubjectUseCase?: GenerateBusinessSubjectUseCase,
   ) {}
 
   async markExistingSeen(candidates: PollEmailCandidate[]): Promise<void> {
@@ -117,6 +119,15 @@ export class PollEmailInboxUseCase {
         await this.updateCustomerStatusFromAiAnalysisUseCase.execute({
           customerEmail: receiveResult.inquiryCase.customerEmail,
           analysis: aiAnalysisResult.analysis,
+        });
+      }
+
+      // AI 生成业务主题（跳过已锁定/人工设置）
+      if (this.generateBusinessSubjectUseCase && receiveResult.inquiryCase) {
+        await this.generateBusinessSubjectUseCase.execute({
+          inquiryCaseId: receiveResult.inquiryCase.id,
+          currentEmail: receiveResult.emailMessage,
+          knownFacts: aiAnalysisResult.analysis.extractedRequirements,
         });
       }
 

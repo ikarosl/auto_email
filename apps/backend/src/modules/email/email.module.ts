@@ -6,6 +6,7 @@ import { ContextModule } from '../context/context.module.js';
 import { FindInquiryForInboundEmailUseCase } from '../inquiry/application/use-cases/find-inquiry-for-inbound-email.use-case.js';
 import { CreateInquiryFromEmailUseCase } from '../inquiry/application/use-cases/create-inquiry-from-email.use-case.js';
 import { UpdateCustomerStatusFromAiAnalysisUseCase } from '../inquiry/application/use-cases/update-customer-status-from-ai-analysis.use-case.js';
+import { GenerateBusinessSubjectUseCase } from '../inquiry/application/use-cases/generate-business-subject.use-case.js';
 import { InquiryMessageRepository } from '../inquiry/application/ports/inquiry-message.repository.js';
 import { InquiryRepository } from '../inquiry/application/ports/inquiry.repository.js';
 import { InquiryStatusLogRepository } from '../inquiry/application/ports/inquiry-status-log.repository.js';
@@ -145,6 +146,7 @@ import {
         inquiryStateMachine: InquiryStateMachine,
         inquiryRepository: InquiryRepository,
         inquiryStatusLogRepository: InquiryStatusLogRepository,
+        generateBusinessSubjectUseCase: GenerateBusinessSubjectUseCase,
       ) => new PollEmailInboxUseCase(
         processedEmailTracker,
         receiveInboundEmailUseCase,
@@ -156,6 +158,7 @@ import {
         inquiryStateMachine,
         inquiryRepository,
         inquiryStatusLogRepository,
+        generateBusinessSubjectUseCase,
       ),
       inject: [
         PROCESSED_EMAIL_TRACKER,
@@ -168,6 +171,7 @@ import {
         InquiryStateMachine,
         INQUIRY_REPOSITORY,
         INQUIRY_STATUS_LOG_REPOSITORY,
+        GenerateBusinessSubjectUseCase,
       ],
     },
   ],

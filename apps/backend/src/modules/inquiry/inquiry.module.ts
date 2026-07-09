@@ -16,11 +16,20 @@ import { PrismaInquiryMessageRepository } from './infrastructure/repositories/pr
 import { PrismaInquiryRepository } from './infrastructure/repositories/prisma-inquiry.repository.js';
 import { PrismaInquiryStatusLogRepository } from './infrastructure/repositories/prisma-inquiry-status-log.repository.js';
 import { InquiryStatusLogRepository } from './application/ports/inquiry-status-log.repository.js';
+import { GenerateBusinessSubjectUseCase } from './application/use-cases/generate-business-subject.use-case.js';
+import { BusinessSubjectGeneratorAdapter } from './application/ports/business-subject-generator.adapter.js';
+import { DeepseekBusinessSubjectGenerator } from './infrastructure/adapters/deepseek-business-subject-generator.adapter.js';
 import { CustomerController } from './presentation/customer.controller.js';
 import { InquiryController } from './presentation/inquiry.controller.js';
 import { InquiryMessageController } from './presentation/inquiry-message.controller.js';
 import { OrganizationController } from './presentation/organization.controller.js';
-import { CUSTOMER_REPOSITORY, INQUIRY_MESSAGE_REPOSITORY, INQUIRY_REPOSITORY, INQUIRY_STATUS_LOG_REPOSITORY } from './inquiry.tokens.js';
+import {
+  BUSINESS_SUBJECT_GENERATOR,
+  CUSTOMER_REPOSITORY,
+  INQUIRY_MESSAGE_REPOSITORY,
+  INQUIRY_REPOSITORY,
+  INQUIRY_STATUS_LOG_REPOSITORY,
+} from './inquiry.tokens.js';
 import { InquiryRepository } from './application/ports/inquiry.repository.js';
 
 @Module({
@@ -93,6 +102,18 @@ import { InquiryRepository } from './application/ports/inquiry.repository.js';
       ),
       inject: [INQUIRY_REPOSITORY, GetInquiryUseCase, InquiryStateMachine, INQUIRY_STATUS_LOG_REPOSITORY],
     },
+    {
+      provide: BUSINESS_SUBJECT_GENERATOR,
+      useClass: DeepseekBusinessSubjectGenerator,
+    },
+    {
+      provide: GenerateBusinessSubjectUseCase,
+      useFactory: (
+        inquiryRepository: InquiryRepository,
+        generator: BusinessSubjectGeneratorAdapter,
+      ) => new GenerateBusinessSubjectUseCase(inquiryRepository, generator),
+      inject: [INQUIRY_REPOSITORY, BUSINESS_SUBJECT_GENERATOR],
+    },
   ],
   exports: [
     INQUIRY_REPOSITORY,
@@ -102,6 +123,7 @@ import { InquiryRepository } from './application/ports/inquiry.repository.js';
     InquiryStateMachine,
     CreateInquiryFromEmailUseCase,
     UpdateCustomerStatusFromAiAnalysisUseCase,
+    GenerateBusinessSubjectUseCase,
   ],
 })
 export class InquiryModule {}
