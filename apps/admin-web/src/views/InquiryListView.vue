@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { WEB_ROUTES, type InquiryListItem, type InquiryStatus } from '@email-inquiry/shared';
-import { RefreshCcw } from 'lucide-vue-next';
+import { RefreshCcw, Search, X } from 'lucide-vue-next';
 import { computed, onMounted, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 
@@ -20,6 +20,8 @@ const total = ref(0);
 const page = ref(1);
 const limit = 20;
 const selectedStatus = ref<InquiryStatus | 'all'>('all');
+const searchInput = ref('');
+const searchQuery = ref('');
 
 const statusFilters: Array<{ label: string; value: InquiryStatus | 'all' }> = [
   { label: '全部', value: 'all' },
@@ -44,6 +46,7 @@ async function load(targetPage = page.value) {
       page: targetPage,
       limit,
       status: selectedStatus.value === 'all' ? undefined : selectedStatus.value,
+      q: searchQuery.value || undefined,
     });
     items.value = result.data;
     total.value = result.total;
@@ -76,6 +79,20 @@ function selectStatus(status: InquiryStatus | 'all') {
   void load(1);
 }
 
+function applySearch() {
+  const nextQuery = searchInput.value.trim();
+  if (searchQuery.value === nextQuery && page.value === 1) return;
+  searchQuery.value = nextQuery;
+  void load(1);
+}
+
+function clearSearch() {
+  if (!searchInput.value && !searchQuery.value) return;
+  searchInput.value = '';
+  searchQuery.value = '';
+  void load(1);
+}
+
 onMounted(load);
 </script>
 
@@ -98,6 +115,26 @@ onMounted(load);
     <Card class="overflow-hidden">
       <div class="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
         <div class="text-sm text-muted-foreground">询盘列表</div>
+        <div class="flex min-w-[280px] flex-1 items-center justify-end gap-2">
+          <div class="relative w-full max-w-[420px]">
+            <Search class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <input
+              v-model="searchInput"
+              class="h-9 w-full rounded-md border border-input bg-background pl-9 pr-9 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              placeholder="搜索客户域名、邮箱或主题"
+              @keyup.enter="applySearch"
+            />
+            <button
+              v-if="searchInput || searchQuery"
+              class="absolute right-2 top-1/2 inline-flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded hover:bg-muted"
+              type="button"
+              @click="clearSearch"
+            >
+              <X class="h-4 w-4 text-muted-foreground" />
+            </button>
+          </div>
+          <Button size="sm" variant="outline" :disabled="loading" @click="applySearch">查询</Button>
+        </div>
         <div class="flex flex-wrap gap-2">
           <Button
             v-for="filter in statusFilters"
@@ -127,8 +164,14 @@ onMounted(load);
             <tr v-for="item in items" :key="item.id" class="border-b border-border last:border-0 hover:bg-muted/40">
               <td class="max-w-[320px] px-4 py-3">
                 <RouterLink class="font-medium hover:underline" :to="`${WEB_ROUTES.inquiries}/${item.id}`">
-                  {{ item.subject || '(no subject)' }}
+                  {{ item.businessSubject || item.subject || '(no subject)' }}
                 </RouterLink>
+                <div
+                  v-if="item.rawSubject && item.rawSubject !== item.businessSubject"
+                  class="mt-1 truncate text-xs text-muted-foreground"
+                >
+                  原始主题：{{ item.rawSubject }}
+                </div>
               </td>
               <td class="px-4 py-3">
                 <div>{{ item.customer?.name || item.customer?.email || '-' }}</div>

@@ -7,6 +7,7 @@ import { InquiryCase } from '../../domain/entities/inquiry-case.entity.js';
 import {
   canUseDomainForOrganizationMatching,
   extractEmailDomain,
+  inferCompanyNameFromEmailDomain,
 } from '../../domain/matching/email-domain-policy.js';
 
 export class PrismaInquiryRepository implements InquiryRepository {
@@ -116,6 +117,7 @@ export class PrismaInquiryRepository implements InquiryRepository {
   private async resolveCustomerContact(input: EnsureCustomerContactInput) {
     const normalizedEmail = input.email.toLowerCase().trim();
     const domain = extractEmailDomain(normalizedEmail);
+    const inferredCompanyName = inferCompanyNameFromEmailDomain(domain);
     const organization = await upsertOrganization(this.prisma, domain, input.name);
     const customer = await this.prisma.customer.upsert({
       where: { email: normalizedEmail },
@@ -123,6 +125,7 @@ export class PrismaInquiryRepository implements InquiryRepository {
         email: normalizedEmail,
         name: input.name ?? null,
         domain: domain ?? null,
+        companyName: inferredCompanyName ?? null,
         organizationId: organization?.id ?? null,
       },
       update: {
@@ -132,7 +135,15 @@ export class PrismaInquiryRepository implements InquiryRepository {
       },
     });
 
-    return { customer, organization, domain };
+    const updatedCustomer =
+      inferredCompanyName && !customer.companyName
+        ? await this.prisma.customer.update({
+            where: { id: customer.id },
+            data: { companyName: inferredCompanyName },
+          })
+        : customer;
+
+    return { customer: updatedCustomer, organization, domain };
   }
 }
 

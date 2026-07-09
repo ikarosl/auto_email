@@ -88,8 +88,11 @@ export async function updateInquiry(id: string, data: Record<string, unknown>) {
 }
 
 export async function updateCustomer(id: string, data: Record<string, unknown>) {
-  const response = await http.patch(`/${API_ROUTE_SEGMENTS.customers}/${id}`, data);
-  return response.data;
+  const response = await http.patch<ApiPageResult<CustomerListItem>>(
+    `/${API_ROUTE_SEGMENTS.customers}/${id}`,
+    data,
+  );
+  return response.data.data;
 }
 
 export async function transitionInquiryStatus(inquiryId: string, data: {

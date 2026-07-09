@@ -34,6 +34,20 @@ export function canUseDomainForOrganizationMatching(domain: string | undefined):
   return !PUBLIC_EMAIL_DOMAINS.has(domain.toLowerCase());
 }
 
+export function inferCompanyNameFromEmailDomain(domain: string | undefined): string | undefined {
+  const normalized = domain?.trim().toLowerCase();
+  if (!canUseDomainForOrganizationMatching(normalized)) {
+    return undefined;
+  }
+
+  const companyToken = normalized.split('.')[0]?.trim();
+  if (!companyToken) {
+    return undefined;
+  }
+
+  return companyToken;
+}
+
 export function getPublicEmailDomains(): string[] {
   return Array.from(PUBLIC_EMAIL_DOMAINS);
 }

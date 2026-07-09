@@ -1,17 +1,19 @@
 <script setup lang="ts">
-import type { InquiryListItem } from '@email-inquiry/shared';
+import type { InquiryListItem, InquiryStatus } from '@email-inquiry/shared';
 import {
   ArrowLeft,
+  BrainCircuit,
+  CheckCircle2,
   ExternalLink,
   Lock,
-  MessageSquare,
   Move,
   RefreshCcw,
+  ShieldAlert,
   Unlock,
 } from 'lucide-vue-next';
 import { computed, onMounted, ref } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
-import { WEB_ROUTES } from '@email-inquiry/shared';
+import { getInquiryStatusLabel, WEB_ROUTES, INQUIRY_STATUS_LABELS } from '@email-inquiry/shared';
 
 import {
   fetchInquiry,
@@ -63,6 +65,16 @@ const showLinkDialog = ref(false);
 const linkEmailId = ref('');
 
 const hasMoreMessages = computed(() => messages.value.length < messagesTotal.value);
+const allowedTransitionStatuses = computed<InquiryStatus[]>(() => {
+  const allowed = threadData.value?.allowedTransitions?.allowedNextStatuses;
+  return Array.isArray(allowed) ? allowed : [];
+});
+const latestAiDecision = computed(() => threadData.value?.latestAiDecision ?? null);
+const latestAiConfidencePercent = computed(() => {
+  const confidence = Number(latestAiDecision.value?.confidence);
+  return Number.isFinite(confidence) ? Math.round(confidence * 100) : null;
+});
+const latestAiMissingFields = computed(() => normalizeStringList(latestAiDecision.value?.missingFields));
 
 async function load() {
   loading.value = true;
@@ -163,6 +175,11 @@ async function doTransition() {
   }
 }
 
+function openTransition(status?: string) {
+  transitionStatus.value = status ?? allowedTransitionStatuses.value[0] ?? '';
+  showTransition.value = true;
+}
+
 async function doMoveMessage() {
   if (!moveMessageId.value || !moveTargetId.value) return;
   saving.value = true;
@@ -211,21 +228,42 @@ function mergeMessages(current: any[], incoming: any[]) {
   return [...current, ...incoming.filter((message) => !seen.has(message.emailMessageId))];
 }
 
+function normalizeStringList(value: unknown): string[] {
+  if (Array.isArray(value)) {
+    return value.map((item) => String(item)).filter(Boolean);
+  }
+
+  return [];
+}
+
+function classificationTone(classification: string | null | undefined) {
+  if (classification === 'valid_inquiry') return 'success';
+  if (classification === 'invalid' || classification === 'unrelated_product' || classification === 'commercial') {
+    return 'danger';
+  }
+  return 'muted';
+}
+
+function riskTone(riskLevel: string | null | undefined) {
+  if (riskLevel === 'high') return 'danger';
+  if (riskLevel === 'medium') return 'warning';
+  if (riskLevel === 'low') return 'success';
+  return 'muted';
+}
+
 onMounted(load);
 </script>
 
 <template>
   <section class="space-y-4">
     <RouterLink :to="WEB_ROUTES.inquiries">
-      <Button variant="ghost" size="sm"><ArrowLeft class="h-4 w-4" /> 返回询盘列表</Button>
+      <Button variant="ghost" size="sm">
+        <ArrowLeft class="h-4 w-4" /> 返回询盘列表
+      </Button>
     </RouterLink>
 
-    <PageHeader
-      title="询盘详情"
-      :description="item?.businessSubject || item?.subject || ''"
-      :loading="loading"
-      @refresh="load"
-    />
+    <PageHeader title="询盘详情" :description="item?.businessSubject || item?.subject || ''" :loading="loading"
+      @refresh="load" />
 
     <!-- Success / Error -->
     <Card v-if="successMsg" class="border-green-200 bg-green-50 p-4 text-green-700">
@@ -241,7 +279,10 @@ onMounted(load);
             <div class="text-sm text-muted-foreground">当前状态</div>
             <div class="mt-2 flex items-center gap-2">
               <StatusPill :status="item.status" />
-              <Button size="sm" variant="outline" @click="showTransition = true">流转</Button>
+              <Button size="sm" variant="outline" :disabled="allowedTransitionStatuses.length === 0"
+                @click="openTransition()">
+                流转
+              </Button>
             </div>
           </div>
 
@@ -249,13 +290,10 @@ onMounted(load);
             <div class="text-sm text-muted-foreground">业务主题</div>
             <div class="mt-1 flex items-center gap-2">
               <span v-if="!editingSubject" class="font-medium">{{ item.businessSubject || '(未设置)' }}</span>
-              <input
-                v-else
-                v-model="subjectDraft"
-                class="flex-1 rounded border px-2 py-1 text-sm"
-                @keyup.enter="saveSubject"
-              />
-              <Button v-if="!editingSubject" size="sm" variant="ghost" @click="subjectDraft = item.businessSubject || ''; editingSubject = true">
+              <input v-else v-model="subjectDraft" class="flex-1 rounded border px-2 py-1 text-sm"
+                @keyup.enter="saveSubject" />
+              <Button v-if="!editingSubject" size="sm" variant="ghost" style="background-color: #bbf7d0;"
+                @click="subjectDraft = item.businessSubject || ''; editingSubject = true">
                 编辑
               </Button>
               <Button v-else size="sm" variant="default" :disabled="saving" @click="saveSubject">
@@ -306,29 +344,21 @@ onMounted(load);
       <div class="space-y-4">
         <!-- Tabs -->
         <div class="flex gap-2 border-b">
-          <button
-            class="px-3 py-2 text-sm font-medium"
+          <button class="px-3 py-2 text-sm font-medium"
             :class="activeTab === 'messages' ? 'border-b-2 border-primary text-primary' : 'text-muted-foreground'"
-            @click="activeTab = 'messages'"
-          >邮件时间线</button>
-          <button
-            class="px-3 py-2 text-sm font-medium"
+            @click="activeTab = 'messages'">邮件时间线</button>
+          <button class="px-3 py-2 text-sm font-medium"
             :class="activeTab === 'thread' ? 'border-b-2 border-primary text-primary' : 'text-muted-foreground'"
-            @click="activeTab = 'thread'"
-          >聚合视图</button>
-          <button
-            class="px-3 py-2 text-sm font-medium"
+            @click="activeTab = 'thread'">聚合视图</button>
+          <button class="px-3 py-2 text-sm font-medium"
             :class="activeTab === 'context' ? 'border-b-2 border-primary text-primary' : 'text-muted-foreground'"
-            @click="activeTab = 'context'"
-          >上下文</button>
+            @click="activeTab = 'context'">上下文</button>
         </div>
 
         <!-- Messages Tab -->
-        <div
-          v-if="activeTab === 'messages'"
+        <div v-if="activeTab === 'messages'"
           class="max-h-[720px] space-y-3 overflow-y-auto pr-1 border-b border-gray-200"
-          @scroll.passive="handleMessagesScroll"
-        >
+          @scroll.passive="handleMessagesScroll">
           <div v-for="msg in messages" :key="msg.emailMessageId" class="rounded-lg border p-3">
             <div class="flex items-start justify-between">
               <div class="flex items-center gap-2">
@@ -357,10 +387,8 @@ onMounted(load);
           <div v-if="messagesLoadingMore" class="py-3 text-center text-xs text-muted-foreground">
             正在加载更多关联邮件...
           </div>
-          <div
-            v-else-if="messages.length > 0 && !hasMoreMessages"
-            class="py-3 text-center text-xs text-muted-foreground"
-          >
+          <div v-else-if="messages.length > 0 && !hasMoreMessages"
+            class="py-3 text-center text-xs text-muted-foreground">
             已加载全部关联邮件
           </div>
         </div>
@@ -368,20 +396,92 @@ onMounted(load);
         <!-- Thread Tab -->
         <div v-if="activeTab === 'thread' && threadData">
           <Card class="p-4">
-            <h2 class="font-semibold">最新 AI 决策</h2>
-            <div class="mt-2"><JsonBlock :value="threadData.latestAiDecision || {}" /></div>
+            <div class="flex items-center justify-between gap-3">
+              <div class="flex items-center gap-2">
+                <BrainCircuit class="h-4 w-4 text-primary" />
+                <h2 class="font-semibold">最新 AI 决策</h2>
+              </div>
+              <span v-if="latestAiDecision?.createdAt" class="text-xs text-muted-foreground">
+                {{ formatDateTime(latestAiDecision.createdAt) }}
+              </span>
+            </div>
+
+            <div v-if="latestAiDecision" class="mt-4 space-y-4">
+              <div class="grid gap-3 md:grid-cols-4">
+                <div class="rounded-md border border-border bg-muted/30 p-3">
+                  <div class="text-xs text-muted-foreground">分类</div>
+                  <Badge class="mt-2" :tone="classificationTone(latestAiDecision.classification)">
+                    {{ latestAiDecision.classification || '-' }}
+                  </Badge>
+                </div>
+                <div class="rounded-md border border-border bg-muted/30 p-3">
+                  <div class="text-xs text-muted-foreground">建议状态</div>
+                  <div class="mt-2 text-sm font-medium">
+                    {{ getInquiryStatusLabel(latestAiDecision.suggestedStatus || '') }}
+                  </div>
+                </div>
+                <div class="rounded-md border border-border bg-muted/30 p-3">
+                  <div class="text-xs text-muted-foreground">置信度</div>
+                  <div class="mt-2 text-sm font-medium">{{ latestAiConfidencePercent ?? '-' }}%</div>
+                </div>
+                <div class="rounded-md border border-border bg-muted/30 p-3">
+                  <div class="text-xs text-muted-foreground">风险</div>
+                  <Badge class="mt-2" :tone="riskTone(latestAiDecision.riskLevel)">
+                    {{ latestAiDecision.riskLevel || '-' }}
+                  </Badge>
+                </div>
+              </div>
+
+              <div class="grid gap-3 md:grid-cols-2">
+                <div class="rounded-md border border-border p-3">
+                  <div class="flex items-center gap-2 text-sm font-medium">
+                    <CheckCircle2 class="h-4 w-4 text-emerald-600" />
+                    判断原因
+                  </div>
+                  <p class="mt-2 whitespace-pre-wrap text-sm text-muted-foreground">
+                    {{ latestAiDecision.reason || '暂无原因' }}
+                  </p>
+                </div>
+                <div class="rounded-md border border-border p-3">
+                  <!-- <div class="mt-2"><JsonBlock :value="threadData.latestAiDecision || {}" /></div> -->
+                  <div class="flex items-center gap-2 text-sm font-medium">
+                    <ShieldAlert class="h-4 w-4 text-amber-600" />
+                    下一步动作
+                  </div>
+                  <p class="mt-3 whitespace-pre-wrap text-sm text-muted-foreground text-sky-500">
+                    {{ (latestAiDecision?.suggestedStatus ? INQUIRY_STATUS_LABELS[latestAiDecision.suggestedStatus as InquiryStatus] : '暂无建议') + '-->' + latestAiDecision.suggestedStatus }}
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-2">
+                <Badge :tone="latestAiDecision.humanReviewRequired ? 'warning' : 'muted'">
+                  {{ latestAiDecision.humanReviewRequired ? '需要人工审核' : '无需人工审核' }}
+                </Badge>
+                <Badge :tone="latestAiDecision.quoteBoundaryDetected ? 'warning' : 'muted'">
+                  {{ latestAiDecision.quoteBoundaryDetected ? '检测到报价边界' : '未检测到报价边界' }}
+                </Badge>
+              </div>
+
+              <div>
+                <div class="text-sm font-medium">缺失字段</div>
+                <div v-if="latestAiMissingFields.length" class="mt-2 flex flex-wrap gap-2">
+                  <Badge v-for="field in latestAiMissingFields" :key="field" tone="warning">{{ field }}</Badge>
+                </div>
+                <div v-else class="mt-2 text-sm text-muted-foreground">无明显缺失字段</div>
+              </div>
+            </div>
+            <div v-else
+              class="mt-4 rounded-md border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
+              暂无 AI 决策
+            </div>
           </Card>
           <Card class="mt-4 p-4">
             <h2 class="font-semibold">允许的状态流转</h2>
-            <div v-if="threadData.allowedTransitions?.length" class="mt-2 flex flex-wrap gap-2">
-              <Button
-                v-for="s in threadData.allowedTransitions"
-                :key="s"
-                size="sm"
-                variant="outline"
-                @click="transitionStatus = s; showTransition = true"
-              >
-                {{ s }}
+            <div v-if="allowedTransitionStatuses.length" class="mt-2 flex flex-wrap gap-2">
+              <Button v-for="s in allowedTransitionStatuses" :key="s" size="sm" variant="outline"
+                @click="openTransition(s)">
+                {{ getInquiryStatusLabel(s) }}
               </Button>
             </div>
             <div v-else class="mt-2 text-sm text-muted-foreground">无可用流转</div>
@@ -404,11 +504,15 @@ onMounted(load);
         <div v-if="activeTab === 'context'">
           <Card class="p-4">
             <h2 class="font-semibold">最新快照</h2>
-            <div class="mt-3"><JsonBlock :value="threadData?.latestContextSnapshot || {}" /></div>
+            <div class="mt-3">
+              <JsonBlock :value="threadData?.latestContextSnapshot || {}" />
+            </div>
           </Card>
           <Card class="mt-4 p-4">
             <h2 class="font-semibold">最新草稿</h2>
-            <div class="mt-3"><JsonBlock :value="threadData?.latestDraft || {}" /></div>
+            <div class="mt-3">
+              <JsonBlock :value="threadData?.latestDraft || {}" />
+            </div>
           </Card>
         </div>
       </div>
@@ -416,13 +520,20 @@ onMounted(load);
 
     <!-- Transition Dialog -->
     <Teleport to="body">
-      <div v-if="showTransition" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40" @click.self="showTransition = false">
+      <div v-if="showTransition" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+        @click.self="showTransition = false">
         <Card class="w-full max-w-md p-4">
           <h2 class="font-semibold">状态流转</h2>
           <div class="mt-3 space-y-3">
             <div>
               <label class="text-sm text-muted-foreground">目标状态</label>
-              <input v-model="transitionStatus" class="mt-1 w-full rounded border px-2 py-1" placeholder="如: need_clarification" />
+              <select v-model="transitionStatus" class="mt-1 w-full rounded border px-2 py-1"
+                :disabled="allowedTransitionStatuses.length === 0">
+                <option value="" disabled>请选择目标状态</option>
+                <option v-for="status in allowedTransitionStatuses" :key="status" :value="status">
+                  {{ getInquiryStatusLabel(status) }} ({{ status }})
+                </option>
+              </select>
             </div>
             <div>
               <label class="text-sm text-muted-foreground">原因</label>
@@ -441,7 +552,8 @@ onMounted(load);
 
     <!-- Move Message Dialog -->
     <Teleport to="body">
-      <div v-if="showMoveDialog" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40" @click.self="showMoveDialog = false">
+      <div v-if="showMoveDialog" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+        @click.self="showMoveDialog = false">
         <Card class="w-full max-w-md p-4">
           <h2 class="font-semibold">移动邮件到其他询盘</h2>
           <div class="mt-3 space-y-3">
@@ -462,7 +574,8 @@ onMounted(load);
 
     <!-- Link Email Dialog -->
     <Teleport to="body">
-      <div v-if="showLinkDialog" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40" @click.self="showLinkDialog = false">
+      <div v-if="showLinkDialog" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+        @click.self="showLinkDialog = false">
         <Card class="w-full max-w-md p-4">
           <h2 class="font-semibold">关联已有邮件</h2>
           <div class="mt-3 space-y-3">

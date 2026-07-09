@@ -75,7 +75,10 @@ export class InquiryController {
               { productType: { contains: q, mode: 'insensitive' as const } },
               { customer: { email: { contains: q, mode: 'insensitive' as const } } },
               { customer: { name: { contains: q, mode: 'insensitive' as const } } },
+              { customer: { domain: { contains: q, mode: 'insensitive' as const } } },
               { customer: { companyName: { contains: q, mode: 'insensitive' as const } } },
+              { organization: { domain: { contains: q, mode: 'insensitive' as const } } },
+              { organization: { name: { contains: q, mode: 'insensitive' as const } } },
             ],
           }
         : {}),

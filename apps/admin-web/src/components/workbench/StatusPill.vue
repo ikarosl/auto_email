@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import { getInquiryStatusLabel } from '@email-inquiry/shared';
 
 import Badge from '@/components/ui/Badge.vue';
 
@@ -17,6 +18,6 @@ const tone = computed<BadgeTone>(() => {
 
 <template>
   <Badge :tone="tone">
-    {{ status }}
+    {{ getInquiryStatusLabel(status) }}
   </Badge>
 </template>

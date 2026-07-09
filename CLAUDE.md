@@ -438,6 +438,63 @@ pnpm --filter @email-inquiry/backend db:check      # 验证数据库表是否存
 - ID 生成使用 `randomUUID()` 配合可读前缀（如 `inquiry_`、`email_`）
 - 所有控制器返回统一格式 `{ success: true, ... }
 
+## 调试方法论
+
+### 核心原则：找根因，而非就近修复
+
+错误出现时，不要只看错误信息表面就猜测修复方案。每一步修复前应问：
+
+1. **这个错误的完整链路是什么？** — 从请求入口到抛出异常，数据经过了哪些层？
+2. **近因和根因是否分离？** — 某个变量是 undefined，不是因为缺少 @Inject()，而是因为
+   整条编译/运行链路就没有给它注入的能力。加 @Inject() 只是掩盖了近因，真正的根因
+   可能是启动方式（tsx vs tsc）、依赖版本冲突、模块导入顺序等。
+3. **如果对某个领域不熟悉，先查官方文档再下手。** — 例如 pnpm v11 的配置变更，
+   应先看 pnpm 官方文档确认配置位置，而不是凭旧版经验在 package.json 里反复尝试。
+
+### 本次错误的教训
+
+同时遇到两个 500 错误时，正确的排查顺序是：
+
+1. **分离 Bug** — GET 列表接口炸了 vs PATCH/POST 炸了，先确认是否同一个根因
+2. **缩小范围** — 究竟哪一层出错？controller? service? body-parser? database?
+3. **验证方向** — 换一条链路验证：`tsc build + node dist/main.js` 而非只盯着 tsx 下的表现
+4. **查文档** — pnpm 配置报错提示了 "See https://pnpm.io/settings"，应该第一时间去看，
+   而不是反复试旧写法
+
+### NestJS 注入失败排查
+
+当遇到 `Cannot read properties of undefined (reading '<Model>')` 时：
+
+```
+第一步：换编译链路验证
+  tsx watch src/main.ts    → 可能有问题
+  tsc build + node dist/main.js → 如果正常，根因在 tsx
+
+第二步：确认根因
+  如果 tsc 编译后正常 → 是 tsx 的 emitDecoratorMetadata 支持不完整，
+  修正 dev 脚本而非批量加 @Inject()
+
+第三步：修正启动方式
+  dev 脚本用 tsc build + node --watch，demo/test 可以继续用 tsx
+```
+
+### pnpm 依赖版本冲突排查
+
+当遇到 `TypeError: xxx is not a function` 来自 node_modules 内部时：
+
+```
+第一步：确认冲突
+  pnpm ls <package-name> --depth=3  看是否有多个版本共存
+
+第二步：查官方文档
+  pnpm 报错提示的 URL（如 https://pnpm.io/settings）先去读，
+  确认当前版本（pnpm --version）的配置规则
+
+第三步：正确的位置
+  pnpm v11 → pnpm-workspace.yaml
+  pnpm v10 及以下 → package.json 的 "pnpm" 字段
+```
+
 ## 文档参考
 
 `docs/` 目录中的关键文档：

@@ -8,12 +8,13 @@ export interface ApiPageResult<T> {
 
 export type InquiryStatus =
   | 'new'
+  | 'invalid'
   | 'need_clarification'
   | 'need_engineer_review'
+  | 'waiting_customer'
   | 'ready_for_quote'
   | 'quoted'
-  | 'closed'
-  | 'invalid';
+  | 'closed';
 
 export type CustomerStatus = 'unknown' | 'active' | 'invalid';
 

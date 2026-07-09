@@ -1,4 +1,4 @@
-import { Body, Controller, Get, NotFoundException, Param, Patch, Query } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, NotFoundException, Param, Patch, Query } from '@nestjs/common';
 import { API_ROUTE_SEGMENTS } from '@email-inquiry/shared';
 
 import {
@@ -10,6 +10,11 @@ import {
 } from '../../../common/http/api-response.js';
 import { PrismaService } from '../../../common/database/prisma.service.js';
 import { UpdateCustomerDto } from '../application/dto/update-customer.dto.js';
+import {
+  extractEmailDomain,
+  inferCompanyNameFromEmailDomain,
+} from '../domain/matching/email-domain-policy.js';
+import { CustomerStatus } from '../domain/enums/customer-status.enum.js';
 
 @Controller(API_ROUTE_SEGMENTS.customers)
 export class CustomerController {
@@ -24,19 +29,20 @@ export class CustomerController {
   ) {
     const page = parsePage(pageQuery);
     const limit = parseLimit(limitQuery);
+    const searchTerms = buildCustomerSearchTerms(q);
     const where = {
       deletedAt: null,
       ...(status ? { status } : {}),
-      ...(q
+      ...(searchTerms.length > 0
         ? {
-            OR: [
-              { email: { contains: q, mode: 'insensitive' as const } },
-              { name: { contains: q, mode: 'insensitive' as const } },
-              { domain: { contains: q, mode: 'insensitive' as const } },
-              { companyName: { contains: q, mode: 'insensitive' as const } },
-              { organization: { name: { contains: q, mode: 'insensitive' as const } } },
-              { organization: { domain: { contains: q, mode: 'insensitive' as const } } },
-            ],
+            OR: searchTerms.flatMap((term) => [
+              { email: { contains: term, mode: 'insensitive' as const } },
+              { name: { contains: term, mode: 'insensitive' as const } },
+              { domain: { contains: term, mode: 'insensitive' as const } },
+              { companyName: { contains: term, mode: 'insensitive' as const } },
+              { organization: { name: { contains: term, mode: 'insensitive' as const } } },
+              { organization: { domain: { contains: term, mode: 'insensitive' as const } } },
+            ]),
           }
         : {}),
     };
@@ -120,6 +126,7 @@ export class CustomerController {
         ...(body.organizationId !== undefined ? { organizationId: body.organizationId } : {}),
         ...(body.name !== undefined ? { name: body.name } : {}),
         ...(body.companyName !== undefined ? { companyName: body.companyName } : {}),
+        ...resolveCustomerStatusUpdate(body),
         ...(body.remark !== undefined ? { remark: body.remark } : {}),
         updatedAt: new Date(),
       },
@@ -135,6 +142,72 @@ export class CustomerController {
 
     return itemResponse(mapCustomer(updated));
   }
+}
+
+function resolveCustomerStatusUpdate(body: UpdateCustomerDto) {
+  if (body.status === undefined && body.invalidReason === undefined) {
+    return {};
+  }
+
+  if (body.status !== undefined && !isCustomerStatus(body.status)) {
+    throw new BadRequestException(`Invalid customer status: ${body.status}`);
+  }
+
+  if (body.status === CustomerStatus.INVALID) {
+    return {
+      status: body.status,
+      invalidReason: normalizeNullableText(body.invalidReason),
+      statusUpdatedAt: new Date(),
+    };
+  }
+
+  if (body.status === CustomerStatus.ACTIVE || body.status === CustomerStatus.UNKNOWN) {
+    return {
+      status: body.status,
+      invalidReason: null,
+      statusUpdatedAt: new Date(),
+    };
+  }
+
+  return {
+    invalidReason: normalizeNullableText(body.invalidReason),
+  };
+}
+
+function isCustomerStatus(value: string): value is CustomerStatus {
+  return Object.values(CustomerStatus).includes(value as CustomerStatus);
+}
+
+function normalizeNullableText(value: string | null | undefined) {
+  if (value === undefined || value === null) {
+    return null;
+  }
+
+  const trimmed = value.trim();
+  return trimmed || null;
+}
+
+function buildCustomerSearchTerms(query: string | undefined): string[] {
+  const normalized = query?.trim().toLowerCase();
+  if (!normalized) {
+    return [];
+  }
+
+  const terms = new Set<string>([normalized]);
+  const domain = normalized.includes('@')
+    ? extractEmailDomain(normalized)
+    : normalized.includes('.')
+      ? normalized.replace(/^@/, '')
+      : undefined;
+  if (domain) {
+    terms.add(domain);
+    const companyName = inferCompanyNameFromEmailDomain(domain);
+    if (companyName) {
+      terms.add(companyName);
+    }
+  }
+
+  return Array.from(terms);
 }
 
 function mapCustomer(record: any) {
