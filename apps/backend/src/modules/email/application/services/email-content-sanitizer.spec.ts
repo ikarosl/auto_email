@@ -15,7 +15,8 @@ describe('EmailContentSanitizer', () => {
       '<html><style>.hidden { display: none; }</style><body><p>Need&nbsp;an RF circulator.</p><div>Quantity: 50 &amp; urgent</div></body></html>',
     );
 
-    assert.equal(result, 'Need an RF circulator.\nQuantity: 50 & urgent');
+    assert.equal(result.cleaned, 'Need an RF circulator.\nQuantity: 50 & urgent');
+    assert.equal(result.quotedHistory, undefined);
   });
 
   it('uses decoded plain text without treating its characters as HTML entities', () => {
@@ -24,7 +25,8 @@ describe('EmailContentSanitizer', () => {
       '<p>This alternative must not replace the plain text.</p>',
     );
 
-    assert.equal(result, 'The literal product code is RF&amp;MW <sample>.');
+    assert.equal(result.cleaned, 'The literal product code is RF&amp;MW <sample>.');
+    assert.equal(result.quotedHistory, undefined);
   });
 
   it('prefers the HTML representation when it contains a table', () => {
@@ -36,14 +38,14 @@ describe('EmailContentSanitizer', () => {
         '<tr><th>Parameter</th><th>Value</th></tr>',
         '<tr><td>Frequency</td><td>12-15GHz</td></tr>',
         '<tr><td>Quantity</td><td>50 pcs</td></tr>',
-        '</table>',
       ].join(''),
     );
 
-    assert.match(result ?? '', /Parameter\s+Value/);
-    assert.match(result ?? '', /Frequency\s+12-15GHz/);
-    assert.match(result ?? '', /Quantity\s+50 pcs/);
-    assert.doesNotMatch(result ?? '', /attached as a table/);
+    assert.match(result.cleaned ?? '', /Parameter\s+Value/);
+    assert.match(result.cleaned ?? '', /Frequency\s+12-15GHz/);
+    assert.match(result.cleaned ?? '', /Quantity\s+50 pcs/);
+    assert.doesNotMatch(result.cleaned ?? '', /attached as a table/);
+    assert.equal(result.quotedHistory, undefined);
   });
 
   it('removes quoted reply history and keeps the new message', () => {
@@ -55,7 +57,8 @@ describe('EmailContentSanitizer', () => {
       '> Please also provide the quantity.',
     ].join('\r\n'));
 
-    assert.equal(result, 'The required frequency is 12-15GHz.');
+    assert.equal(result.cleaned, 'The required frequency is 12-15GHz.');
+    assert.ok(result.quotedHistory?.includes('wrote'));
   });
 
   it('removes Chinese wrote reply history and keeps the new message', () => {
@@ -66,7 +69,8 @@ describe('EmailContentSanitizer', () => {
       '我们有现货方案可以满足需求。',
     ].join('\n'));
 
-    assert.equal(result, '我们接受 4 到 6 周交期。');
+    assert.equal(result.cleaned, '我们接受 4 到 6 周交期。');
+    assert.ok(result.quotedHistory?.includes('写道'));
   });
 
   it('removes reply attribution lines with email, date, and localized wrote signal', () => {
@@ -89,9 +93,9 @@ describe('EmailContentSanitizer', () => {
       'Previous reply body.',
     ].join('\n'));
 
-    assert.equal(chinese, 'Current reply: please proceed with the quotation.');
-    assert.equal(italian, 'Current reply: accepted.');
-    assert.equal(english, 'Current reply: contract received.');
+    assert.equal(chinese.cleaned, 'Current reply: please proceed with the quotation.');
+    assert.equal(italian.cleaned, 'Current reply: accepted.');
+    assert.equal(english.cleaned, 'Current reply: contract received.');
   });
 
   it('does not remove a business line that has email and date but no reply attribution verb', () => {
@@ -102,13 +106,14 @@ describe('EmailContentSanitizer', () => {
     ].join('\n'));
 
     assert.equal(
-      result,
+      result.cleaned,
       [
         'Schedule:',
         'Please contact buyer@example.com before 2 Jul 2026 for delivery confirmation.',
         'Quantity: 50 pcs.',
       ].join('\n'),
     );
+    assert.equal(result.quotedHistory, undefined);
   });
 
   it('keeps ordinary UTF-8 Chinese body text', () => {
@@ -118,7 +123,8 @@ describe('EmailContentSanitizer', () => {
       '数量：50 件。',
     ].join('\n'));
 
-    assert.equal(result, '这是一封新的询盘邮件。\n频率范围：12-15GHz。\n数量：50 件。');
+    assert.equal(result.cleaned, '这是一封新的询盘邮件。\n频率范围：12-15GHz。\n数量：50 件。');
+    assert.equal(result.quotedHistory, undefined);
   });
 
   it('writes original sanitizer input diagnostics before quote matching when enabled', () => {
@@ -179,7 +185,7 @@ describe('EmailContentSanitizer', () => {
       ].join(''),
     );
 
-    assert.equal(result, 'Please update the quantity to 100 pcs.');
+    assert.equal(result.cleaned, 'Please update the quantity to 100 pcs.');
   });
 
   it('removes an HTML blockquote before converting the body', () => {
@@ -188,7 +194,7 @@ describe('EmailContentSanitizer', () => {
       '<p>Current reply.</p><blockquote><p>Previous reply.</p></blockquote>',
     );
 
-    assert.equal(result, 'Current reply.');
+    assert.equal(result.cleaned, 'Current reply.');
   });
 
   it('removes a complete mail header block using the scoring rules', () => {
@@ -205,13 +211,14 @@ describe('EmailContentSanitizer', () => {
     ].join('\n'));
 
     assert.equal(
-      result,
+      result.cleaned,
       [
         'Thank you for following up.',
         'We reviewed the current requirement.',
         'The order has now been cancelled.',
       ].join('\n'),
     );
+    assert.ok(result.quotedHistory?.includes('From: sales@example.com'));
   });
 
   it('keeps mail headers near the beginning of the body', () => {
@@ -225,7 +232,7 @@ describe('EmailContentSanitizer', () => {
     ].join('\n'));
 
     assert.equal(
-      result,
+      result.cleaned,
       [
         'From: buyer@example.com',
         'Sent: Wednesday, June 24, 2026',
@@ -235,6 +242,7 @@ describe('EmailContentSanitizer', () => {
         'Please quote 50 pcs.',
       ].join('\n'),
     );
+    assert.equal(result.quotedHistory, undefined);
   });
 
   it('keeps quoted headers after an extremely short reply', () => {
@@ -248,7 +256,7 @@ describe('EmailContentSanitizer', () => {
       'Previous message body.',
     ].join('\n'));
 
-    assert.match(result ?? '', /From: sales@example\.com/);
+    assert.match(result.cleaned ?? '', /From: sales@example\.com/);
   });
 
   it('keeps a weak From signal below the score threshold', () => {
@@ -260,26 +268,29 @@ describe('EmailContentSanitizer', () => {
     ].join('\n'));
 
     assert.equal(
-      result,
+      result.cleaned,
       'Shipping requirements:\nFrom: sales@example.com\nWarehouse: Shanghai\nQuantity: 20 pcs',
     );
+    assert.equal(result.quotedHistory, undefined);
   });
 
   it('removes three consecutive quoted lines but keeps one quoted business line', () => {
-    const quotedHistory = sanitizer.sanitize([
+    const quotedResult = sanitizer.sanitize([
       'Current reply.',
       '> Previous line one',
       '> Previous line two',
       '> Previous line three',
     ].join('\n'));
-    const businessText = sanitizer.sanitize([
+    const businessResult = sanitizer.sanitize([
       'Required marking:',
       '> FRONT',
       'Quantity: 20 pcs',
     ].join('\n'));
 
-    assert.equal(quotedHistory, 'Current reply.');
-    assert.equal(businessText, 'Required marking:\n> FRONT\nQuantity: 20 pcs');
+    assert.equal(quotedResult.cleaned, 'Current reply.');
+    assert.ok(quotedResult.quotedHistory?.includes('Previous line'));
+    assert.equal(businessResult.cleaned, 'Required marking:\n> FRONT\nQuantity: 20 pcs');
+    assert.equal(businessResult.quotedHistory, undefined);
   });
 
   it('removes a trailing signature and disclaimer', () => {
@@ -292,7 +303,7 @@ describe('EmailContentSanitizer', () => {
       'Confidentiality Notice: this email is confidential.',
     ].join('\n'));
 
-    assert.equal(result, 'Please quote 50 pcs.');
+    assert.equal(result.cleaned, 'Please quote 50 pcs.');
   });
 
   it('does not remove ordinary business content containing a From label', () => {
@@ -302,7 +313,8 @@ describe('EmailContentSanitizer', () => {
       'Quantity: 20 pcs',
     ].join('\n'));
 
-    assert.equal(result, 'Ship from: Shanghai\nDeliver to: Shenzhen\nQuantity: 20 pcs');
+    assert.equal(result.cleaned, 'Ship from: Shanghai\nDeliver to: Shenzhen\nQuantity: 20 pcs');
+    assert.equal(result.quotedHistory, undefined);
   });
 });
 

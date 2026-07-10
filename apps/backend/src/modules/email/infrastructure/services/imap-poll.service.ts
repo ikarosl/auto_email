@@ -401,10 +401,19 @@ export class ImapPollService implements OnApplicationBootstrap, OnApplicationShu
     const from = firstAddress(message.envelope?.from);
     if (!from?.address) throw new Error(`邮件 UID=${uid} 没有发件人地址`);
 
+    const rawReferences = parsed.references;
+    const normalizedReferences = Array.isArray(rawReferences)
+      ? rawReferences
+      : rawReferences
+        ? [rawReferences]
+        : undefined;
+
     const inboundEmail: InboundEmail = {
       messageId: parsed.messageId || `imap:${mailbox}:${message.uid}`,
       mailboxAccountId: this.mailboxAccountId,
-      threadId: parsed.inReplyTo || parsed.references?.at(0),
+      threadId: parsed.inReplyTo || normalizedReferences?.at(0),
+      inReplyTo: parsed.inReplyTo,
+      references: normalizedReferences,
       fromEmail: from.address,
       fromName: from.name,
       toEmails: toAddressList(message.envelope?.to),

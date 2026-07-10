@@ -12,6 +12,13 @@ interface QuoteCandidate {
   score: number;
 }
 
+export interface SanitizeResult {
+  /** 清洗后的正文（移除了引用历史、签名、免责声明） */
+  cleaned: string | undefined;
+  /** 被移除的引用历史文本（引用的旧邮件内容），无引用时 undefined */
+  quotedHistory: string | undefined;
+}
+
 export interface EmailContentSanitizerMetadata {
   emailMessageId?: string;
   externalMessageId?: string;
@@ -25,10 +32,10 @@ export class EmailContentSanitizer {
     bodyText?: string,
     bodyHtml?: string,
     metadata?: EmailContentSanitizerMetadata,
-  ): string | undefined {
+  ): SanitizeResult {
     const selected = selectBodySource(bodyText, bodyHtml);
     if (!selected.text) {
-      return undefined;
+      return { cleaned: undefined, quotedHistory: undefined };
     }
 
     logSanitizerInput({
@@ -40,11 +47,14 @@ export class EmailContentSanitizer {
     });
 
     const normalized = normalizeWhitespace(selected.text);
-    const withoutQuotedHistory = stripQuotedHistory(normalized);
+    const { clean: withoutQuotedHistory, quoted: quotedHistory } = stripQuotedHistory(normalized);
     const withoutSignature = stripSignatureAndDisclaimer(withoutQuotedHistory);
     const cleaned = normalizeWhitespace(withoutSignature);
 
-    return cleaned || undefined;
+    return {
+      cleaned: cleaned || undefined,
+      quotedHistory: quotedHistory || undefined,
+    };
   }
 }
 
@@ -124,11 +134,23 @@ function convertHtmlToText(html: string): string {
   });
 }
 
-function stripQuotedHistory(value: string): string {
+/**
+ * 移除引用历史，同时返回被移除的引用文本。
+ *
+ * @returns clean - 引用历史前的正文；quoted - 被移除的引用文本（无引用时 undefined）
+ */
+function stripQuotedHistory(value: string): { clean: string; quoted: string | undefined } {
   const lines = value.split('\n');
   const boundary = findQuotedHistoryBoundary(lines);
 
-  return boundary === undefined ? value : lines.slice(0, boundary).join('\n');
+  if (boundary === undefined) {
+    return { clean: value, quoted: undefined };
+  }
+
+  return {
+    clean: lines.slice(0, boundary).join('\n'),
+    quoted: lines.slice(boundary).join('\n'),
+  };
 }
 
 function findQuotedHistoryBoundary(lines: string[]): number | undefined {

@@ -1,4 +1,6 @@
 import { randomUUID } from 'node:crypto';
+import { appendFileSync, mkdirSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
 
 import { Inject } from '@nestjs/common';
 
@@ -15,6 +17,7 @@ import { InboundEmail } from '../../domain/value-objects/inbound-email.vo.js';
 import { EmailThreadRepository } from '../ports/email-thread.repository.js';
 import { EmailMessageRepository } from '../ports/email-message.repository.js';
 import { EmailContentSanitizer } from '../services/email-content-sanitizer.js';
+import { recoverParentEmailFromQuote, RecoveredEmail } from '../services/email-quote-recovery.service.js';
 import { isRelayDomain, extractContactInfoFromBody } from '../services/email-relay-extractor.js';
 import { EMAIL_THREAD_REPOSITORY } from '../../email.tokens.js';
 import { SaveEmailAttachmentsUseCase } from './save-email-attachments.use-case.js';
@@ -48,7 +51,7 @@ export class ReceiveInboundEmailUseCase {
     }
 
     const emailMessageId = `email_${randomUUID()}`;
-    const cleanedBodyText = this.emailContentSanitizer.sanitize(
+    const sanitizeResult = this.emailContentSanitizer.sanitize(
       inboundEmail.bodyText,
       inboundEmail.bodyHtml,
       {
@@ -59,6 +62,22 @@ export class ReceiveInboundEmailUseCase {
         sourceKind: inboundEmail.source,
       },
     );
+    const cleanedBodyText = sanitizeResult.cleaned;
+
+    // Phase 1 调试日志：记录引用文本内容，用于分析 Message-ID 提取策略
+    if (sanitizeResult.quotedHistory) {
+      writeQuotedRecoveryDebugLog({
+        currentEmailMessageId: emailMessageId,
+        currentSubject: inboundEmail.subject,
+        currentFrom: inboundEmail.fromEmail,
+        inReplyTo: inboundEmail.inReplyTo,
+        references: inboundEmail.references,
+        quotedHistoryChars: sanitizeResult.quotedHistory.length,
+        quotedHistoryPreview: truncatePreview(sanitizeResult.quotedHistory, 500),
+        hasMessageIdHeader: /^>?\s*Message-ID\s*:/im.test(sanitizeResult.quotedHistory),
+        extractedMessageIds: extractMessageIdsFromText(sanitizeResult.quotedHistory),
+      });
+    }
 
     // 中转服务检测：来自已知中转域名的邮件，从正文提取真实客户邮箱/姓名
     // （如 tatasoft.com 网站留言表单，Envelope From 为中转服务而非客户）
@@ -74,6 +93,15 @@ export class ReceiveInboundEmailUseCase {
 
     // 解析/创建邮件线程：先确保 email_threads 记录存在，email_messages 才能引用
     const thread = await this.resolveOrCreateThread(inboundEmail);
+
+    // ── 引用邮件恢复：从被移除的引用文本中提取缺失邮件 ──
+    // 不设 threadId，让 Prisma 仓库通过 externalMessageId(=inReplyTo) 自动匹配线程
+    const recoveredEmails: RecoveredEmail[] = await this.tryRecoverMissingEmail(
+      sanitizeResult.quotedHistory,
+      inboundEmail.inReplyTo,
+      inboundEmail.subject,
+      inboundEmail.fromEmail,
+    );
 
     const emailMessage: EmailMessage = {
       id: emailMessageId,
@@ -130,6 +158,12 @@ export class ReceiveInboundEmailUseCase {
       };
     }
     const inquiryCase = await this.findOrCreateInquiryForEmail(savedEmailMessage);
+
+    // 将恢复的邮件关联到同一询盘
+    if (inquiryCase && recoveredEmails.length > 0) {
+      await this.linkRecoveredEmailsToInquiry(recoveredEmails, inquiryCase);
+    }
+
     if (inquiryCase && this.saveEmailAttachmentsUseCase && inboundEmail.attachments?.length) {
       await this.saveEmailAttachmentsUseCase.updateInquiryCaseId(
         savedEmailMessage.id,
@@ -226,6 +260,54 @@ export class ReceiveInboundEmailUseCase {
       createdAt: new Date(),
     });
   }
+
+  /**
+   * 尝试从引用文本中恢复缺失的父邮件。
+   * 如果 inReplyTo 存在且库中查不到，则从引用文本中提取内容并入库。
+   */
+  private async tryRecoverMissingEmail(
+    quotedHistory: string | undefined,
+    inReplyTo: string | undefined,
+    currentSubject: string,
+    currentFromEmail: string,
+  ): Promise<RecoveredEmail[]> {
+    if (!quotedHistory || !inReplyTo) return [];
+
+    // 先检查父邮件是否已入库
+    const existing = await this.emailMessageRepository.findByExternalMessageId(inReplyTo);
+    if (existing) return [];
+
+    const recovered = recoverParentEmailFromQuote(
+      quotedHistory, inReplyTo, currentSubject, currentFromEmail,
+    );
+    if (!recovered) return [];
+
+    // 保存恢复的邮件（含完整 threadId + toEmails）
+    await this.emailMessageRepository.save(recovered.emailMessage);
+
+    return [recovered];
+  }
+
+  /**
+   * 将恢复的邮件全部关联到指定询盘。
+   */
+  private async linkRecoveredEmailsToInquiry(
+    recoveredEmails: RecoveredEmail[],
+    inquiryCase: InquiryCase,
+  ): Promise<void> {
+    if (!this.inquiryMessageRepository) return;
+
+    for (const recovered of recoveredEmails) {
+      await this.inquiryMessageRepository.save({
+        id: `inquiry_message_${randomUUID()}`,
+        inquiryCaseId: inquiryCase.id,
+        emailMessageId: recovered.emailMessage.id,
+        direction: recovered.emailMessage.direction,
+        relationType: InquiryMessageRelationType.RELATED_CONTEXT,
+        createdAt: new Date(),
+      });
+    }
+  }
 }
 
 function resolveEmailDirection(inboundEmail: InboundEmail): EmailDirection {
@@ -234,4 +316,69 @@ function resolveEmailDirection(inboundEmail: InboundEmail): EmailDirection {
   }
 
   return EmailDirection.OUTBOUND;
+}
+
+// ---------------------------------------------------------------------------
+// Phase 1 调试日志：引用文本恢复分析
+// ---------------------------------------------------------------------------
+
+const QUOTED_RECOVERY_DEBUG_LOG_PATH = resolve(
+  process.cwd(),
+  'logs/quoted-recovery-debug.jsonl',
+);
+
+interface QuotedRecoveryDebugEntry {
+  occurredAt: string;
+  currentEmailMessageId: string;
+  currentSubject: string;
+  currentFrom: string;
+  inReplyTo?: string;
+  references?: string[];
+  quotedHistoryChars: number;
+  quotedHistoryPreview: string;
+  hasMessageIdHeader: boolean;
+  extractedMessageIds: string[];
+}
+
+function writeQuotedRecoveryDebugLog(
+  input: Omit<QuotedRecoveryDebugEntry, 'occurredAt'>,
+): void {
+  try {
+    mkdirSync(dirname(QUOTED_RECOVERY_DEBUG_LOG_PATH), { recursive: true });
+    appendFileSync(
+      QUOTED_RECOVERY_DEBUG_LOG_PATH,
+      `${JSON.stringify({ ...input, occurredAt: new Date().toISOString() })}\n`,
+      'utf8',
+    );
+  } catch {
+    // 调试日志不能阻塞主流程
+  }
+}
+
+/**
+ * 从文本中正则提取可能的 Message-ID 值。
+ * 匹配格式：<xxx@yyy> 或 Message-ID: <xxx@yyy>
+ */
+function extractMessageIdsFromText(text: string): string[] {
+  const ids: string[] = [];
+  const patterns = [
+    /Message-ID\s*:\s*<([^>]+)>/gi,
+    /<([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?::[0-9]+)?(?:\.[a-zA-Z]{2,})?)>/g,
+  ];
+
+  for (const pattern of patterns) {
+    let match: RegExpExecArray | null;
+    while ((match = pattern.exec(text)) !== null) {
+      if (match[1]) {
+        ids.push(match[1]);
+      }
+    }
+  }
+
+  return [...new Set(ids)];
+}
+
+function truncatePreview(text: string, maxChars: number): string {
+  if (text.length <= maxChars) return text;
+  return text.slice(0, maxChars) + `\n... [truncated, total ${text.length} chars]`;
 }

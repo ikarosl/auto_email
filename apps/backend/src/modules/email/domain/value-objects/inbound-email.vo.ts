@@ -20,6 +20,10 @@ export interface InboundEmail {
    * This is not the database email_threads.id.
    */
   threadId?: string;
+  /** In-Reply-To 头（直接父邮件 Message-ID） */
+  inReplyTo?: string;
+  /** References 头完整引用链 */
+  references?: string[];
   fromEmail: string;
   fromName?: string;
   toEmails: string[];

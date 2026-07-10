@@ -369,7 +369,7 @@ export class InquiryController {
             },
           },
         },
-        orderBy: { createdAt: 'asc' },
+        orderBy: { emailMessage: { receivedAt: 'asc' } },
         skip: (page - 1) * limit,
         take: limit,
       }),
