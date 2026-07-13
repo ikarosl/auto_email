@@ -7,7 +7,7 @@ export const INQUIRY_TRANSITIONS = {
     InquiryStatus.NEED_ENGINEER_REVIEW,
     InquiryStatus.CLOSED,
   ],
-  [InquiryStatus.INVALID]: [],
+  [InquiryStatus.INVALID]: [InquiryStatus.NEW],
   [InquiryStatus.NEED_CLARIFICATION]: [
     InquiryStatus.WAITING_CUSTOMER,
     InquiryStatus.NEED_ENGINEER_REVIEW,
@@ -26,7 +26,7 @@ export const INQUIRY_TRANSITIONS = {
     InquiryStatus.CLOSED,
   ],
   [InquiryStatus.READY_FOR_QUOTE]: [InquiryStatus.CLOSED],
-  [InquiryStatus.CLOSED]: [],
+  [InquiryStatus.CLOSED]: [InquiryStatus.NEW],
 } as const satisfies Record<InquiryStatus, readonly InquiryStatus[]>;
 
 export function getConfiguredNextStatuses(fromStatus: InquiryStatus): readonly InquiryStatus[] {

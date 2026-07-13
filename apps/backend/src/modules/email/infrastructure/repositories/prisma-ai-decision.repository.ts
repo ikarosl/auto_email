@@ -9,9 +9,9 @@ import { EmailAiAnalysis } from '../../domain/value-objects/email-ai-analysis.vo
 export class PrismaAiDecisionRepository implements AiDecisionRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async save(input: SaveAiDecisionInput): Promise<void> {
+  async save(input: SaveAiDecisionInput): Promise<string> {
     if (isAiFailure(input.result)) {
-      await this.prisma.aiDecision.create({
+      const decision = await this.prisma.aiDecision.create({
         data: {
           emailMessageId: input.emailMessageId,
           inquiryCaseId: input.inquiryCaseId,
@@ -25,11 +25,11 @@ export class PrismaAiDecisionRepository implements AiDecisionRepository {
           },
         },
       });
-      return;
+      return decision.id;
     }
 
     const analysis = input.result;
-    await this.prisma.aiDecision.create({
+    const decision = await this.prisma.aiDecision.create({
       data: {
         emailMessageId: input.emailMessageId,
         inquiryCaseId: input.inquiryCaseId,
@@ -47,6 +47,7 @@ export class PrismaAiDecisionRepository implements AiDecisionRepository {
         success: true,
       },
     });
+    return decision.id;
   }
 }
 

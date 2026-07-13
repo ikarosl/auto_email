@@ -16,6 +16,7 @@ import { RouterLink, useRoute } from 'vue-router';
 import { getInquiryStatusLabel, WEB_ROUTES, INQUIRY_STATUS_LABELS } from '@email-inquiry/shared';
 
 import {
+  fetchContextSnapshot,
   fetchInquiry,
   fetchInquiryMessages,
   fetchInquiryThread,
@@ -64,11 +65,16 @@ const moveTargetId = ref('');
 const showLinkDialog = ref(false);
 const linkEmailId = ref('');
 
+const email_source={
+  system_detected: '系统检测历史补录',
+}
+
 const hasMoreMessages = computed(() => messages.value.length < messagesTotal.value);
 const allowedTransitionStatuses = computed<InquiryStatus[]>(() => {
   const allowed = threadData.value?.allowedTransitions?.allowedNextStatuses;
   return Array.isArray(allowed) ? allowed : [];
 });
+const fullSnapshot = ref<any>(null);
 const latestAiDecision = computed(() => threadData.value?.latestAiDecision ?? null);
 const latestAiConfidencePercent = computed(() => {
   const confidence = Number(latestAiDecision.value?.confidence);
@@ -91,6 +97,14 @@ async function load() {
     messages.value = messagesResult.data;
     messagesTotal.value = messagesResult.total;
     threadData.value = threadResult;
+
+    // 如果有最新快照 ID，拉取完整快照数据（含 contextPayload）
+    const snapshotId = threadResult?.latestContextSnapshot?.id;
+    if (snapshotId) {
+      fullSnapshot.value = await fetchContextSnapshot(snapshotId);
+    } else {
+      fullSnapshot.value = null;
+    }
   } catch (err) {
     error.value = err instanceof Error ? err.message : String(err);
   } finally {
@@ -368,7 +382,7 @@ onMounted(load);
                 <span class="font-medium">{{ msg.subject || '(无主题)' }}</span>
               </div>
               <div class="flex items-center gap-1">
-                <Badge v-if="msg.source !== 'imap'" tone="muted" size="sm">{{ msg.source }}</Badge>
+                <Badge v-if="msg.source !== 'imap'" tone="muted" size="sm">{{ email_source['system_detected'] }}</Badge>
                 <Button size="sm" variant="ghost" @click="moveMessageId = msg.emailMessageId; showMoveDialog = true">
                   <Move class="h-3 w-3" />
                 </Button>
@@ -505,7 +519,7 @@ onMounted(load);
           <Card class="p-4">
             <h2 class="font-semibold">最新快照</h2>
             <div class="mt-3">
-              <JsonBlock :value="threadData?.latestContextSnapshot || {}" />
+              <JsonBlock :value="fullSnapshot?.messages || threadData?.latestContextSnapshot || {}" />
             </div>
           </Card>
           <Card class="mt-4 p-4">

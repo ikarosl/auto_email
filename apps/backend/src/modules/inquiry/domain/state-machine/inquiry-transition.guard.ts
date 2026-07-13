@@ -46,6 +46,16 @@ export function validateInquiryTransition(
     };
   }
 
+  if (
+    (fromStatus === InquiryStatus.INVALID || fromStatus === InquiryStatus.CLOSED) &&
+    (context.operatorType !== 'human' || !hasReason(context))
+  ) {
+    return {
+      allowed: false,
+      reason: `Restoring an inquiry from ${fromStatus} requires a human operator and a reason.`,
+    };
+  }
+
   // ready_for_quote 是报价边界，只允许人工确认进入，AI 和系统都不能自动推进。
   if (toStatus === InquiryStatus.READY_FOR_QUOTE && context.operatorType !== 'human') {
     return {

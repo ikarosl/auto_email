@@ -1865,6 +1865,12 @@ export const AiDecisionScalarFieldEnum = {
   success: 'success',
   errorCode: 'errorCode',
   errorMessage: 'errorMessage',
+  executionStatus: 'executionStatus',
+  executionFromStatus: 'executionFromStatus',
+  executionToStatus: 'executionToStatus',
+  executionReason: 'executionReason',
+  executionPolicyVersion: 'executionPolicyVersion',
+  executedAt: 'executedAt',
   createdAt: 'createdAt'
 } as const
 

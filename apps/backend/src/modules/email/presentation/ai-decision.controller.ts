@@ -115,6 +115,12 @@ function mapAiDecision(record: any) {
     success: record.success,
     errorCode: record.errorCode,
     errorMessage: record.errorMessage,
+    executionStatus: record.executionStatus,
+    executionFromStatus: record.executionFromStatus,
+    executionToStatus: record.executionToStatus,
+    executionReason: record.executionReason,
+    executionPolicyVersion: record.executionPolicyVersion,
+    executedAt: toDateIso(record.executedAt),
     createdAt: toDateIso(record.createdAt),
     emailMessage: record.emailMessage
       ? {

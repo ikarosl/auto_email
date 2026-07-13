@@ -85,13 +85,20 @@ describe('InquiryStateMachine', () => {
     );
   });
 
-  it('does not allow transitions from closed', () => {
-    assert.deepEqual(
-      stateMachine.getAllowedNextStatuses(InquiryStatus.CLOSED, {
-        operatorType: 'human',
-        reason: 'Manual restore.',
+  it('allows only a reasoned human operation to restore terminal states', () => {
+    assert.equal(
+      stateMachine.canTransition(InquiryStatus.INVALID, InquiryStatus.NEW, {
+        operatorType: 'ai',
+        reason: 'Changed assessment.',
       }),
-      [],
+      false,
+    );
+    assert.equal(
+      stateMachine.canTransition(InquiryStatus.CLOSED, InquiryStatus.NEW, {
+        operatorType: 'human',
+        reason: 'Customer reopened the inquiry.',
+      }),
+      true,
     );
   });
 

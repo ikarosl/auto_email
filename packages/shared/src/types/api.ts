@@ -213,6 +213,12 @@ export interface AiDecisionListItem {
   success: boolean;
   errorCode?: string | null;
   errorMessage?: string | null;
+  executionStatus?: 'not_evaluated' | 'disabled' | 'rejected' | 'dry_run' | 'applied' | 'conflict';
+  executionFromStatus?: InquiryStatus | string | null;
+  executionToStatus?: InquiryStatus | string | null;
+  executionReason?: string | null;
+  executionPolicyVersion?: string | null;
+  executedAt?: string | null;
   createdAt: string | null;
   emailMessage?: {
     id: string;

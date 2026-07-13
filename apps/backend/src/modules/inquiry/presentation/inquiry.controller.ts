@@ -471,6 +471,12 @@ export class InquiryController {
             suggestedStatus: latestAiDecision.suggestedStatus,
             confidence: toNumber(latestAiDecision.confidence),
             reason: latestAiDecision.reason,
+            executionStatus: latestAiDecision.executionStatus,
+            executionFromStatus: latestAiDecision.executionFromStatus,
+            executionToStatus: latestAiDecision.executionToStatus,
+            executionReason: latestAiDecision.executionReason,
+            executionPolicyVersion: latestAiDecision.executionPolicyVersion,
+            executedAt: toDateIso(latestAiDecision.executedAt),
             createdAt: toDateIso(latestAiDecision.createdAt),
           }
         : null,

@@ -8,6 +8,8 @@ import { InquiryMessageRepository } from './application/ports/inquiry-message.re
 import { ListAllowedTransitionsUseCase } from './application/use-cases/list-allowed-transitions.use-case.js';
 import { ListInquiriesUseCase } from './application/use-cases/list-inquiries.use-case.js';
 import { TransitionInquiryStatusUseCase } from './application/use-cases/transition-inquiry-status.use-case.js';
+import { ApplyAiSuggestedStatusUseCase } from './application/use-cases/apply-ai-suggested-status.use-case.js';
+import { UpdateInquiryStructuredFactsFromAiUseCase } from './application/use-cases/update-inquiry-structured-facts-from-ai.use-case.js';
 import { UpdateCustomerStatusFromAiAnalysisUseCase } from './application/use-cases/update-customer-status-from-ai-analysis.use-case.js';
 import { CustomerRepository } from './application/ports/customer.repository.js';
 import { InquiryStateMachine } from './domain/state-machine/inquiry-state-machine.js';
@@ -103,6 +105,17 @@ import { InquiryRepository } from './application/ports/inquiry.repository.js';
       inject: [INQUIRY_REPOSITORY, GetInquiryUseCase, InquiryStateMachine, INQUIRY_STATUS_LOG_REPOSITORY],
     },
     {
+      provide: ApplyAiSuggestedStatusUseCase,
+      useFactory: (prisma: PrismaService, inquiryStateMachine: InquiryStateMachine) =>
+        new ApplyAiSuggestedStatusUseCase(prisma, inquiryStateMachine),
+      inject: [PrismaService, InquiryStateMachine],
+    },
+    {
+      provide: UpdateInquiryStructuredFactsFromAiUseCase,
+      useFactory: (prisma: PrismaService) => new UpdateInquiryStructuredFactsFromAiUseCase(prisma),
+      inject: [PrismaService],
+    },
+    {
       provide: BUSINESS_SUBJECT_GENERATOR,
       useClass: DeepseekBusinessSubjectGenerator,
     },
@@ -123,6 +136,8 @@ import { InquiryRepository } from './application/ports/inquiry.repository.js';
     InquiryStateMachine,
     CreateInquiryFromEmailUseCase,
     UpdateCustomerStatusFromAiAnalysisUseCase,
+    ApplyAiSuggestedStatusUseCase,
+    UpdateInquiryStructuredFactsFromAiUseCase,
     GenerateBusinessSubjectUseCase,
   ],
 })

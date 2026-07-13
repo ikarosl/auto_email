@@ -6,8 +6,9 @@ import {
 export class InMemoryAiDecisionRepository implements AiDecisionRepository {
   private readonly decisions: SaveAiDecisionInput[] = [];
 
-  async save(input: SaveAiDecisionInput): Promise<void> {
+  async save(input: SaveAiDecisionInput): Promise<string> {
     this.decisions.push(input);
+    return `ai_decision_${this.decisions.length}`;
   }
 
   async list(): Promise<SaveAiDecisionInput[]> {

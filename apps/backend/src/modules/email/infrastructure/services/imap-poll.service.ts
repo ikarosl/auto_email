@@ -17,6 +17,7 @@ import { simpleParser } from 'mailparser';
 
 import { PrismaService } from '../../../../common/database/prisma.service.js';
 import { InquiryStatus } from '../../../inquiry/domain/enums/inquiry-status.enum.js';
+import { ApplyAiSuggestedStatusResult } from '../../../inquiry/application/use-cases/apply-ai-suggested-status.use-case.js';
 import {
   AnalyzeEmailWithAiResult,
   AnalyzeEmailWithAiUseCase,
@@ -360,7 +361,11 @@ export class ImapPollService implements OnApplicationBootstrap, OnApplicationShu
       return;
     }
 
-    this.logAiResultV2(result.aiAnalysisResult, result.inquiryCase.status);
+    this.logAiResultV2(
+      result.aiAnalysisResult,
+      result.inquiryCase.status,
+      result.aiTransitionResult,
+    );
   }
 
   // -----------------------------------------------------------------------
@@ -491,7 +496,11 @@ export class ImapPollService implements OnApplicationBootstrap, OnApplicationShu
     };
   }
 
-  private logAiResultV2(result?: AnalyzeEmailWithAiResult, currentInquiryStatus?: string): void {
+  private logAiResultV2(
+    result?: AnalyzeEmailWithAiResult,
+    currentInquiryStatus?: string,
+    transitionResult?: ApplyAiSuggestedStatusResult,
+  ): void {
     if (!result) return;
     if (result.success) {
       const {
@@ -509,14 +518,15 @@ export class ImapPollService implements OnApplicationBootstrap, OnApplicationShu
       this.logger.log(
         [
           'AI suggestion only:',
-          `currentStatus=${currentInquiryStatus ?? 'unknown'}`,
+          `currentStatus=${transitionResult?.fromStatus ?? currentInquiryStatus ?? 'unknown'}`,
           `classification=${classification}`,
           `suggestedStatus=${suggestedStatus}`,
           `confidence=${Math.round(confidence * 100)}%`,
           `humanReviewRequired=${humanReviewRequired}`,
           `quoteBoundaryDetected=${quoteBoundaryDetected}`,
           `contextSnapshotId=${result.contextSnapshotId ?? 'none'}`,
-          'statusTransitionApplied=false',
+          `transitionExecution=${transitionResult?.status ?? 'not_evaluated'}`,
+          `statusTransitionApplied=${transitionResult?.status === 'applied'}`,
         ].join(' '),
       );
       this.logger.log(`AI reason: ${reason}`);

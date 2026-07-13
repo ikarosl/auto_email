@@ -50,6 +50,12 @@ export type AiDecisionMinAggregateOutputType = {
   success: boolean | null
   errorCode: string | null
   errorMessage: string | null
+  executionStatus: string | null
+  executionFromStatus: string | null
+  executionToStatus: string | null
+  executionReason: string | null
+  executionPolicyVersion: string | null
+  executedAt: Date | null
   createdAt: Date | null
 }
 
@@ -69,6 +75,12 @@ export type AiDecisionMaxAggregateOutputType = {
   success: boolean | null
   errorCode: string | null
   errorMessage: string | null
+  executionStatus: string | null
+  executionFromStatus: string | null
+  executionToStatus: string | null
+  executionReason: string | null
+  executionPolicyVersion: string | null
+  executedAt: Date | null
   createdAt: Date | null
 }
 
@@ -91,6 +103,12 @@ export type AiDecisionCountAggregateOutputType = {
   success: number
   errorCode: number
   errorMessage: number
+  executionStatus: number
+  executionFromStatus: number
+  executionToStatus: number
+  executionReason: number
+  executionPolicyVersion: number
+  executedAt: number
   createdAt: number
   _all: number
 }
@@ -120,6 +138,12 @@ export type AiDecisionMinAggregateInputType = {
   success?: true
   errorCode?: true
   errorMessage?: true
+  executionStatus?: true
+  executionFromStatus?: true
+  executionToStatus?: true
+  executionReason?: true
+  executionPolicyVersion?: true
+  executedAt?: true
   createdAt?: true
 }
 
@@ -139,6 +163,12 @@ export type AiDecisionMaxAggregateInputType = {
   success?: true
   errorCode?: true
   errorMessage?: true
+  executionStatus?: true
+  executionFromStatus?: true
+  executionToStatus?: true
+  executionReason?: true
+  executionPolicyVersion?: true
+  executedAt?: true
   createdAt?: true
 }
 
@@ -161,6 +191,12 @@ export type AiDecisionCountAggregateInputType = {
   success?: true
   errorCode?: true
   errorMessage?: true
+  executionStatus?: true
+  executionFromStatus?: true
+  executionToStatus?: true
+  executionReason?: true
+  executionPolicyVersion?: true
+  executedAt?: true
   createdAt?: true
   _all?: true
 }
@@ -270,6 +306,12 @@ export type AiDecisionGroupByOutputType = {
   success: boolean
   errorCode: string | null
   errorMessage: string | null
+  executionStatus: string
+  executionFromStatus: string | null
+  executionToStatus: string | null
+  executionReason: string | null
+  executionPolicyVersion: string | null
+  executedAt: Date | null
   createdAt: Date
   _count: AiDecisionCountAggregateOutputType | null
   _avg: AiDecisionAvgAggregateOutputType | null
@@ -315,6 +357,12 @@ export type AiDecisionWhereInput = {
   success?: Prisma.BoolFilter<"AiDecision"> | boolean
   errorCode?: Prisma.StringNullableFilter<"AiDecision"> | string | null
   errorMessage?: Prisma.StringNullableFilter<"AiDecision"> | string | null
+  executionStatus?: Prisma.StringFilter<"AiDecision"> | string
+  executionFromStatus?: Prisma.StringNullableFilter<"AiDecision"> | string | null
+  executionToStatus?: Prisma.StringNullableFilter<"AiDecision"> | string | null
+  executionReason?: Prisma.StringNullableFilter<"AiDecision"> | string | null
+  executionPolicyVersion?: Prisma.StringNullableFilter<"AiDecision"> | string | null
+  executedAt?: Prisma.DateTimeNullableFilter<"AiDecision"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"AiDecision"> | Date | string
   emailMessage?: Prisma.XOR<Prisma.EmailMessageNullableScalarRelationFilter, Prisma.EmailMessageWhereInput> | null
   inquiryCase?: Prisma.XOR<Prisma.InquiryCaseNullableScalarRelationFilter, Prisma.InquiryCaseWhereInput> | null
@@ -339,6 +387,12 @@ export type AiDecisionOrderByWithRelationInput = {
   success?: Prisma.SortOrder
   errorCode?: Prisma.SortOrderInput | Prisma.SortOrder
   errorMessage?: Prisma.SortOrderInput | Prisma.SortOrder
+  executionStatus?: Prisma.SortOrder
+  executionFromStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  executionToStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  executionReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  executionPolicyVersion?: Prisma.SortOrderInput | Prisma.SortOrder
+  executedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   emailMessage?: Prisma.EmailMessageOrderByWithRelationInput
   inquiryCase?: Prisma.InquiryCaseOrderByWithRelationInput
@@ -366,6 +420,12 @@ export type AiDecisionWhereUniqueInput = Prisma.AtLeast<{
   success?: Prisma.BoolFilter<"AiDecision"> | boolean
   errorCode?: Prisma.StringNullableFilter<"AiDecision"> | string | null
   errorMessage?: Prisma.StringNullableFilter<"AiDecision"> | string | null
+  executionStatus?: Prisma.StringFilter<"AiDecision"> | string
+  executionFromStatus?: Prisma.StringNullableFilter<"AiDecision"> | string | null
+  executionToStatus?: Prisma.StringNullableFilter<"AiDecision"> | string | null
+  executionReason?: Prisma.StringNullableFilter<"AiDecision"> | string | null
+  executionPolicyVersion?: Prisma.StringNullableFilter<"AiDecision"> | string | null
+  executedAt?: Prisma.DateTimeNullableFilter<"AiDecision"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"AiDecision"> | Date | string
   emailMessage?: Prisma.XOR<Prisma.EmailMessageNullableScalarRelationFilter, Prisma.EmailMessageWhereInput> | null
   inquiryCase?: Prisma.XOR<Prisma.InquiryCaseNullableScalarRelationFilter, Prisma.InquiryCaseWhereInput> | null
@@ -390,6 +450,12 @@ export type AiDecisionOrderByWithAggregationInput = {
   success?: Prisma.SortOrder
   errorCode?: Prisma.SortOrderInput | Prisma.SortOrder
   errorMessage?: Prisma.SortOrderInput | Prisma.SortOrder
+  executionStatus?: Prisma.SortOrder
+  executionFromStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  executionToStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  executionReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  executionPolicyVersion?: Prisma.SortOrderInput | Prisma.SortOrder
+  executedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.AiDecisionCountOrderByAggregateInput
   _avg?: Prisma.AiDecisionAvgOrderByAggregateInput
@@ -420,6 +486,12 @@ export type AiDecisionScalarWhereWithAggregatesInput = {
   success?: Prisma.BoolWithAggregatesFilter<"AiDecision"> | boolean
   errorCode?: Prisma.StringNullableWithAggregatesFilter<"AiDecision"> | string | null
   errorMessage?: Prisma.StringNullableWithAggregatesFilter<"AiDecision"> | string | null
+  executionStatus?: Prisma.StringWithAggregatesFilter<"AiDecision"> | string
+  executionFromStatus?: Prisma.StringNullableWithAggregatesFilter<"AiDecision"> | string | null
+  executionToStatus?: Prisma.StringNullableWithAggregatesFilter<"AiDecision"> | string | null
+  executionReason?: Prisma.StringNullableWithAggregatesFilter<"AiDecision"> | string | null
+  executionPolicyVersion?: Prisma.StringNullableWithAggregatesFilter<"AiDecision"> | string | null
+  executedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"AiDecision"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"AiDecision"> | Date | string
 }
 
@@ -440,6 +512,12 @@ export type AiDecisionCreateInput = {
   success?: boolean
   errorCode?: string | null
   errorMessage?: string | null
+  executionStatus?: string
+  executionFromStatus?: string | null
+  executionToStatus?: string | null
+  executionReason?: string | null
+  executionPolicyVersion?: string | null
+  executedAt?: Date | string | null
   createdAt?: Date | string
   emailMessage?: Prisma.EmailMessageCreateNestedOneWithoutAiDecisionsInput
   inquiryCase?: Prisma.InquiryCaseCreateNestedOneWithoutAiDecisionsInput
@@ -464,6 +542,12 @@ export type AiDecisionUncheckedCreateInput = {
   success?: boolean
   errorCode?: string | null
   errorMessage?: string | null
+  executionStatus?: string
+  executionFromStatus?: string | null
+  executionToStatus?: string | null
+  executionReason?: string | null
+  executionPolicyVersion?: string | null
+  executedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -484,6 +568,12 @@ export type AiDecisionUpdateInput = {
   success?: Prisma.BoolFieldUpdateOperationsInput | boolean
   errorCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  executionFromStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionToStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionPolicyVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   emailMessage?: Prisma.EmailMessageUpdateOneWithoutAiDecisionsNestedInput
   inquiryCase?: Prisma.InquiryCaseUpdateOneWithoutAiDecisionsNestedInput
@@ -508,6 +598,12 @@ export type AiDecisionUncheckedUpdateInput = {
   success?: Prisma.BoolFieldUpdateOperationsInput | boolean
   errorCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  executionFromStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionToStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionPolicyVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -530,6 +626,12 @@ export type AiDecisionCreateManyInput = {
   success?: boolean
   errorCode?: string | null
   errorMessage?: string | null
+  executionStatus?: string
+  executionFromStatus?: string | null
+  executionToStatus?: string | null
+  executionReason?: string | null
+  executionPolicyVersion?: string | null
+  executedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -550,6 +652,12 @@ export type AiDecisionUpdateManyMutationInput = {
   success?: Prisma.BoolFieldUpdateOperationsInput | boolean
   errorCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  executionFromStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionToStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionPolicyVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -572,6 +680,12 @@ export type AiDecisionUncheckedUpdateManyInput = {
   success?: Prisma.BoolFieldUpdateOperationsInput | boolean
   errorCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  executionFromStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionToStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionPolicyVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -604,6 +718,12 @@ export type AiDecisionCountOrderByAggregateInput = {
   success?: Prisma.SortOrder
   errorCode?: Prisma.SortOrder
   errorMessage?: Prisma.SortOrder
+  executionStatus?: Prisma.SortOrder
+  executionFromStatus?: Prisma.SortOrder
+  executionToStatus?: Prisma.SortOrder
+  executionReason?: Prisma.SortOrder
+  executionPolicyVersion?: Prisma.SortOrder
+  executedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -627,6 +747,12 @@ export type AiDecisionMaxOrderByAggregateInput = {
   success?: Prisma.SortOrder
   errorCode?: Prisma.SortOrder
   errorMessage?: Prisma.SortOrder
+  executionStatus?: Prisma.SortOrder
+  executionFromStatus?: Prisma.SortOrder
+  executionToStatus?: Prisma.SortOrder
+  executionReason?: Prisma.SortOrder
+  executionPolicyVersion?: Prisma.SortOrder
+  executedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -646,6 +772,12 @@ export type AiDecisionMinOrderByAggregateInput = {
   success?: Prisma.SortOrder
   errorCode?: Prisma.SortOrder
   errorMessage?: Prisma.SortOrder
+  executionStatus?: Prisma.SortOrder
+  executionFromStatus?: Prisma.SortOrder
+  executionToStatus?: Prisma.SortOrder
+  executionReason?: Prisma.SortOrder
+  executionPolicyVersion?: Prisma.SortOrder
+  executedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -762,6 +894,12 @@ export type AiDecisionCreateWithoutEmailMessageInput = {
   success?: boolean
   errorCode?: string | null
   errorMessage?: string | null
+  executionStatus?: string
+  executionFromStatus?: string | null
+  executionToStatus?: string | null
+  executionReason?: string | null
+  executionPolicyVersion?: string | null
+  executedAt?: Date | string | null
   createdAt?: Date | string
   inquiryCase?: Prisma.InquiryCaseCreateNestedOneWithoutAiDecisionsInput
 }
@@ -784,6 +922,12 @@ export type AiDecisionUncheckedCreateWithoutEmailMessageInput = {
   success?: boolean
   errorCode?: string | null
   errorMessage?: string | null
+  executionStatus?: string
+  executionFromStatus?: string | null
+  executionToStatus?: string | null
+  executionReason?: string | null
+  executionPolicyVersion?: string | null
+  executedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -835,6 +979,12 @@ export type AiDecisionScalarWhereInput = {
   success?: Prisma.BoolFilter<"AiDecision"> | boolean
   errorCode?: Prisma.StringNullableFilter<"AiDecision"> | string | null
   errorMessage?: Prisma.StringNullableFilter<"AiDecision"> | string | null
+  executionStatus?: Prisma.StringFilter<"AiDecision"> | string
+  executionFromStatus?: Prisma.StringNullableFilter<"AiDecision"> | string | null
+  executionToStatus?: Prisma.StringNullableFilter<"AiDecision"> | string | null
+  executionReason?: Prisma.StringNullableFilter<"AiDecision"> | string | null
+  executionPolicyVersion?: Prisma.StringNullableFilter<"AiDecision"> | string | null
+  executedAt?: Prisma.DateTimeNullableFilter<"AiDecision"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"AiDecision"> | Date | string
 }
 
@@ -855,6 +1005,12 @@ export type AiDecisionCreateWithoutInquiryCaseInput = {
   success?: boolean
   errorCode?: string | null
   errorMessage?: string | null
+  executionStatus?: string
+  executionFromStatus?: string | null
+  executionToStatus?: string | null
+  executionReason?: string | null
+  executionPolicyVersion?: string | null
+  executedAt?: Date | string | null
   createdAt?: Date | string
   emailMessage?: Prisma.EmailMessageCreateNestedOneWithoutAiDecisionsInput
 }
@@ -877,6 +1033,12 @@ export type AiDecisionUncheckedCreateWithoutInquiryCaseInput = {
   success?: boolean
   errorCode?: string | null
   errorMessage?: string | null
+  executionStatus?: string
+  executionFromStatus?: string | null
+  executionToStatus?: string | null
+  executionReason?: string | null
+  executionPolicyVersion?: string | null
+  executedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -924,6 +1086,12 @@ export type AiDecisionCreateManyEmailMessageInput = {
   success?: boolean
   errorCode?: string | null
   errorMessage?: string | null
+  executionStatus?: string
+  executionFromStatus?: string | null
+  executionToStatus?: string | null
+  executionReason?: string | null
+  executionPolicyVersion?: string | null
+  executedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -944,6 +1112,12 @@ export type AiDecisionUpdateWithoutEmailMessageInput = {
   success?: Prisma.BoolFieldUpdateOperationsInput | boolean
   errorCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  executionFromStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionToStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionPolicyVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   inquiryCase?: Prisma.InquiryCaseUpdateOneWithoutAiDecisionsNestedInput
 }
@@ -966,6 +1140,12 @@ export type AiDecisionUncheckedUpdateWithoutEmailMessageInput = {
   success?: Prisma.BoolFieldUpdateOperationsInput | boolean
   errorCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  executionFromStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionToStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionPolicyVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -987,6 +1167,12 @@ export type AiDecisionUncheckedUpdateManyWithoutEmailMessageInput = {
   success?: Prisma.BoolFieldUpdateOperationsInput | boolean
   errorCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  executionFromStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionToStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionPolicyVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -1008,6 +1194,12 @@ export type AiDecisionCreateManyInquiryCaseInput = {
   success?: boolean
   errorCode?: string | null
   errorMessage?: string | null
+  executionStatus?: string
+  executionFromStatus?: string | null
+  executionToStatus?: string | null
+  executionReason?: string | null
+  executionPolicyVersion?: string | null
+  executedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -1028,6 +1220,12 @@ export type AiDecisionUpdateWithoutInquiryCaseInput = {
   success?: Prisma.BoolFieldUpdateOperationsInput | boolean
   errorCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  executionFromStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionToStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionPolicyVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   emailMessage?: Prisma.EmailMessageUpdateOneWithoutAiDecisionsNestedInput
 }
@@ -1050,6 +1248,12 @@ export type AiDecisionUncheckedUpdateWithoutInquiryCaseInput = {
   success?: Prisma.BoolFieldUpdateOperationsInput | boolean
   errorCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  executionFromStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionToStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionPolicyVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -1071,6 +1275,12 @@ export type AiDecisionUncheckedUpdateManyWithoutInquiryCaseInput = {
   success?: Prisma.BoolFieldUpdateOperationsInput | boolean
   errorCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  executionFromStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionToStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionPolicyVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -1095,6 +1305,12 @@ export type AiDecisionSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   success?: boolean
   errorCode?: boolean
   errorMessage?: boolean
+  executionStatus?: boolean
+  executionFromStatus?: boolean
+  executionToStatus?: boolean
+  executionReason?: boolean
+  executionPolicyVersion?: boolean
+  executedAt?: boolean
   createdAt?: boolean
   emailMessage?: boolean | Prisma.AiDecision$emailMessageArgs<ExtArgs>
   inquiryCase?: boolean | Prisma.AiDecision$inquiryCaseArgs<ExtArgs>
@@ -1119,6 +1335,12 @@ export type AiDecisionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   success?: boolean
   errorCode?: boolean
   errorMessage?: boolean
+  executionStatus?: boolean
+  executionFromStatus?: boolean
+  executionToStatus?: boolean
+  executionReason?: boolean
+  executionPolicyVersion?: boolean
+  executedAt?: boolean
   createdAt?: boolean
   emailMessage?: boolean | Prisma.AiDecision$emailMessageArgs<ExtArgs>
   inquiryCase?: boolean | Prisma.AiDecision$inquiryCaseArgs<ExtArgs>
@@ -1143,6 +1365,12 @@ export type AiDecisionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   success?: boolean
   errorCode?: boolean
   errorMessage?: boolean
+  executionStatus?: boolean
+  executionFromStatus?: boolean
+  executionToStatus?: boolean
+  executionReason?: boolean
+  executionPolicyVersion?: boolean
+  executedAt?: boolean
   createdAt?: boolean
   emailMessage?: boolean | Prisma.AiDecision$emailMessageArgs<ExtArgs>
   inquiryCase?: boolean | Prisma.AiDecision$inquiryCaseArgs<ExtArgs>
@@ -1167,10 +1395,16 @@ export type AiDecisionSelectScalar = {
   success?: boolean
   errorCode?: boolean
   errorMessage?: boolean
+  executionStatus?: boolean
+  executionFromStatus?: boolean
+  executionToStatus?: boolean
+  executionReason?: boolean
+  executionPolicyVersion?: boolean
+  executedAt?: boolean
   createdAt?: boolean
 }
 
-export type AiDecisionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "emailMessageId" | "inquiryCaseId" | "classification" | "suggestedStatus" | "confidence" | "riskLevel" | "reason" | "missingFields" | "extractedRequirements" | "quoteBoundaryDetected" | "humanReviewRequired" | "nextAction" | "rawResult" | "modelName" | "success" | "errorCode" | "errorMessage" | "createdAt", ExtArgs["result"]["aiDecision"]>
+export type AiDecisionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "emailMessageId" | "inquiryCaseId" | "classification" | "suggestedStatus" | "confidence" | "riskLevel" | "reason" | "missingFields" | "extractedRequirements" | "quoteBoundaryDetected" | "humanReviewRequired" | "nextAction" | "rawResult" | "modelName" | "success" | "errorCode" | "errorMessage" | "executionStatus" | "executionFromStatus" | "executionToStatus" | "executionReason" | "executionPolicyVersion" | "executedAt" | "createdAt", ExtArgs["result"]["aiDecision"]>
 export type AiDecisionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   emailMessage?: boolean | Prisma.AiDecision$emailMessageArgs<ExtArgs>
   inquiryCase?: boolean | Prisma.AiDecision$inquiryCaseArgs<ExtArgs>
@@ -1209,6 +1443,12 @@ export type $AiDecisionPayload<ExtArgs extends runtime.Types.Extensions.Internal
     success: boolean
     errorCode: string | null
     errorMessage: string | null
+    executionStatus: string
+    executionFromStatus: string | null
+    executionToStatus: string | null
+    executionReason: string | null
+    executionPolicyVersion: string | null
+    executedAt: Date | null
     createdAt: Date
   }, ExtArgs["result"]["aiDecision"]>
   composites: {}
@@ -1653,6 +1893,12 @@ export interface AiDecisionFieldRefs {
   readonly success: Prisma.FieldRef<"AiDecision", 'Boolean'>
   readonly errorCode: Prisma.FieldRef<"AiDecision", 'String'>
   readonly errorMessage: Prisma.FieldRef<"AiDecision", 'String'>
+  readonly executionStatus: Prisma.FieldRef<"AiDecision", 'String'>
+  readonly executionFromStatus: Prisma.FieldRef<"AiDecision", 'String'>
+  readonly executionToStatus: Prisma.FieldRef<"AiDecision", 'String'>
+  readonly executionReason: Prisma.FieldRef<"AiDecision", 'String'>
+  readonly executionPolicyVersion: Prisma.FieldRef<"AiDecision", 'String'>
+  readonly executedAt: Prisma.FieldRef<"AiDecision", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"AiDecision", 'DateTime'>
 }
     

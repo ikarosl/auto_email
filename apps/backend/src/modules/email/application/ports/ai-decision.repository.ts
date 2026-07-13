@@ -9,5 +9,5 @@ export interface SaveAiDecisionInput {
 }
 
 export interface AiDecisionRepository {
-  save(input: SaveAiDecisionInput): Promise<void>;
+  save(input: SaveAiDecisionInput): Promise<string>;
 }
