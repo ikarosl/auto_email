@@ -29,11 +29,20 @@ export class UpdateInquiryStructuredFactsFromAiUseCase {
     ]));
     const data = {
       productType: requirements.productType,
+      structureType: requirements.structureType,
       frequencyRange: requirements.frequencyRange,
       power: requirements.power,
+      insertionLoss: requirements.insertionLoss,
+      isolation: requirements.isolation,
+      vswr: requirements.vswr,
+      connector: requirements.connector,
       quantity: requirements.quantity,
       sizeRequirement: requirements.sizeRequirement,
       application: requirements.application,
+      deliveryRequirement: requirements.deliveryRequirement,
+      specialRequirements: requirements.specialRequirements
+        ? { summary: requirements.specialRequirements }
+        : undefined,
       missingFields: input.analysis.missingFields,
       confirmedFields,
       sourceEmailMessageIds,

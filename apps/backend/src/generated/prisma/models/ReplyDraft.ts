@@ -20,8 +20,18 @@ export type ReplyDraftModel = runtime.Types.Result.DefaultSelection<Prisma.$Repl
 
 export type AggregateReplyDraft = {
   _count: ReplyDraftCountAggregateOutputType | null
+  _avg: ReplyDraftAvgAggregateOutputType | null
+  _sum: ReplyDraftSumAggregateOutputType | null
   _min: ReplyDraftMinAggregateOutputType | null
   _max: ReplyDraftMaxAggregateOutputType | null
+}
+
+export type ReplyDraftAvgAggregateOutputType = {
+  version: number | null
+}
+
+export type ReplyDraftSumAggregateOutputType = {
+  version: number | null
 }
 
 export type ReplyDraftMinAggregateOutputType = {
@@ -29,12 +39,28 @@ export type ReplyDraftMinAggregateOutputType = {
   inquiryCaseId: string | null
   sourceEmailMessageId: string | null
   sentEmailMessageId: string | null
+  contextSnapshotId: string | null
+  aiDecisionId: string | null
+  idempotencyKey: string | null
   draftType: string | null
   status: string | null
   subject: string | null
   bodyText: string | null
+  originalSubject: string | null
+  originalBodyText: string | null
+  language: string | null
+  requiresCommercialReview: boolean | null
+  promptVersion: string | null
   modelName: string | null
+  version: number | null
   createdByType: string | null
+  approvedBy: string | null
+  approvedAt: Date | null
+  rejectedBy: string | null
+  rejectedAt: Date | null
+  rejectionReason: string | null
+  sentAt: Date | null
+  lastSendError: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -44,12 +70,28 @@ export type ReplyDraftMaxAggregateOutputType = {
   inquiryCaseId: string | null
   sourceEmailMessageId: string | null
   sentEmailMessageId: string | null
+  contextSnapshotId: string | null
+  aiDecisionId: string | null
+  idempotencyKey: string | null
   draftType: string | null
   status: string | null
   subject: string | null
   bodyText: string | null
+  originalSubject: string | null
+  originalBodyText: string | null
+  language: string | null
+  requiresCommercialReview: boolean | null
+  promptVersion: string | null
   modelName: string | null
+  version: number | null
   createdByType: string | null
+  approvedBy: string | null
+  approvedAt: Date | null
+  rejectedBy: string | null
+  rejectedAt: Date | null
+  rejectionReason: string | null
+  sentAt: Date | null
+  lastSendError: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -59,29 +101,72 @@ export type ReplyDraftCountAggregateOutputType = {
   inquiryCaseId: number
   sourceEmailMessageId: number
   sentEmailMessageId: number
+  contextSnapshotId: number
+  aiDecisionId: number
+  idempotencyKey: number
   draftType: number
   status: number
   subject: number
   bodyText: number
+  originalSubject: number
+  originalBodyText: number
+  language: number
+  usedFactsJson: number
+  unresolvedQuestionsJson: number
+  warningsJson: number
+  requiresCommercialReview: number
+  promptVersion: number
   modelName: number
+  version: number
   createdByType: number
+  approvedBy: number
+  approvedAt: number
+  rejectedBy: number
+  rejectedAt: number
+  rejectionReason: number
+  sentAt: number
+  lastSendError: number
   createdAt: number
   updatedAt: number
   _all: number
 }
 
 
+export type ReplyDraftAvgAggregateInputType = {
+  version?: true
+}
+
+export type ReplyDraftSumAggregateInputType = {
+  version?: true
+}
+
 export type ReplyDraftMinAggregateInputType = {
   id?: true
   inquiryCaseId?: true
   sourceEmailMessageId?: true
   sentEmailMessageId?: true
+  contextSnapshotId?: true
+  aiDecisionId?: true
+  idempotencyKey?: true
   draftType?: true
   status?: true
   subject?: true
   bodyText?: true
+  originalSubject?: true
+  originalBodyText?: true
+  language?: true
+  requiresCommercialReview?: true
+  promptVersion?: true
   modelName?: true
+  version?: true
   createdByType?: true
+  approvedBy?: true
+  approvedAt?: true
+  rejectedBy?: true
+  rejectedAt?: true
+  rejectionReason?: true
+  sentAt?: true
+  lastSendError?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -91,12 +176,28 @@ export type ReplyDraftMaxAggregateInputType = {
   inquiryCaseId?: true
   sourceEmailMessageId?: true
   sentEmailMessageId?: true
+  contextSnapshotId?: true
+  aiDecisionId?: true
+  idempotencyKey?: true
   draftType?: true
   status?: true
   subject?: true
   bodyText?: true
+  originalSubject?: true
+  originalBodyText?: true
+  language?: true
+  requiresCommercialReview?: true
+  promptVersion?: true
   modelName?: true
+  version?: true
   createdByType?: true
+  approvedBy?: true
+  approvedAt?: true
+  rejectedBy?: true
+  rejectedAt?: true
+  rejectionReason?: true
+  sentAt?: true
+  lastSendError?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -106,12 +207,31 @@ export type ReplyDraftCountAggregateInputType = {
   inquiryCaseId?: true
   sourceEmailMessageId?: true
   sentEmailMessageId?: true
+  contextSnapshotId?: true
+  aiDecisionId?: true
+  idempotencyKey?: true
   draftType?: true
   status?: true
   subject?: true
   bodyText?: true
+  originalSubject?: true
+  originalBodyText?: true
+  language?: true
+  usedFactsJson?: true
+  unresolvedQuestionsJson?: true
+  warningsJson?: true
+  requiresCommercialReview?: true
+  promptVersion?: true
   modelName?: true
+  version?: true
   createdByType?: true
+  approvedBy?: true
+  approvedAt?: true
+  rejectedBy?: true
+  rejectedAt?: true
+  rejectionReason?: true
+  sentAt?: true
+  lastSendError?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -155,6 +275,18 @@ export type ReplyDraftAggregateArgs<ExtArgs extends runtime.Types.Extensions.Int
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: ReplyDraftAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: ReplyDraftSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: ReplyDraftMinAggregateInputType
@@ -185,6 +317,8 @@ export type ReplyDraftGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   _count?: ReplyDraftCountAggregateInputType | true
+  _avg?: ReplyDraftAvgAggregateInputType
+  _sum?: ReplyDraftSumAggregateInputType
   _min?: ReplyDraftMinAggregateInputType
   _max?: ReplyDraftMaxAggregateInputType
 }
@@ -194,15 +328,36 @@ export type ReplyDraftGroupByOutputType = {
   inquiryCaseId: string
   sourceEmailMessageId: string | null
   sentEmailMessageId: string | null
+  contextSnapshotId: string | null
+  aiDecisionId: string | null
+  idempotencyKey: string | null
   draftType: string
   status: string
   subject: string | null
   bodyText: string
+  originalSubject: string | null
+  originalBodyText: string | null
+  language: string | null
+  usedFactsJson: runtime.JsonValue
+  unresolvedQuestionsJson: runtime.JsonValue
+  warningsJson: runtime.JsonValue
+  requiresCommercialReview: boolean
+  promptVersion: string | null
   modelName: string | null
+  version: number
   createdByType: string
+  approvedBy: string | null
+  approvedAt: Date | null
+  rejectedBy: string | null
+  rejectedAt: Date | null
+  rejectionReason: string | null
+  sentAt: Date | null
+  lastSendError: string | null
   createdAt: Date
   updatedAt: Date
   _count: ReplyDraftCountAggregateOutputType | null
+  _avg: ReplyDraftAvgAggregateOutputType | null
+  _sum: ReplyDraftSumAggregateOutputType | null
   _min: ReplyDraftMinAggregateOutputType | null
   _max: ReplyDraftMaxAggregateOutputType | null
 }
@@ -230,17 +385,39 @@ export type ReplyDraftWhereInput = {
   inquiryCaseId?: Prisma.StringFilter<"ReplyDraft"> | string
   sourceEmailMessageId?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
   sentEmailMessageId?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
+  contextSnapshotId?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
+  aiDecisionId?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
+  idempotencyKey?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
   draftType?: Prisma.StringFilter<"ReplyDraft"> | string
   status?: Prisma.StringFilter<"ReplyDraft"> | string
   subject?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
   bodyText?: Prisma.StringFilter<"ReplyDraft"> | string
+  originalSubject?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
+  originalBodyText?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
+  language?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
+  usedFactsJson?: Prisma.JsonFilter<"ReplyDraft">
+  unresolvedQuestionsJson?: Prisma.JsonFilter<"ReplyDraft">
+  warningsJson?: Prisma.JsonFilter<"ReplyDraft">
+  requiresCommercialReview?: Prisma.BoolFilter<"ReplyDraft"> | boolean
+  promptVersion?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
   modelName?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
+  version?: Prisma.IntFilter<"ReplyDraft"> | number
   createdByType?: Prisma.StringFilter<"ReplyDraft"> | string
+  approvedBy?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
+  approvedAt?: Prisma.DateTimeNullableFilter<"ReplyDraft"> | Date | string | null
+  rejectedBy?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
+  rejectedAt?: Prisma.DateTimeNullableFilter<"ReplyDraft"> | Date | string | null
+  rejectionReason?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
+  sentAt?: Prisma.DateTimeNullableFilter<"ReplyDraft"> | Date | string | null
+  lastSendError?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
   createdAt?: Prisma.DateTimeFilter<"ReplyDraft"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ReplyDraft"> | Date | string
   inquiryCase?: Prisma.XOR<Prisma.InquiryCaseScalarRelationFilter, Prisma.InquiryCaseWhereInput>
   sourceEmailMessage?: Prisma.XOR<Prisma.EmailMessageNullableScalarRelationFilter, Prisma.EmailMessageWhereInput> | null
   sentEmailMessage?: Prisma.XOR<Prisma.EmailMessageNullableScalarRelationFilter, Prisma.EmailMessageWhereInput> | null
+  aiDecision?: Prisma.XOR<Prisma.AiDecisionNullableScalarRelationFilter, Prisma.AiDecisionWhereInput> | null
+  attachments?: Prisma.ReplyDraftAttachmentListRelationFilter
+  sendAttempts?: Prisma.EmailSendAttemptListRelationFilter
 }
 
 export type ReplyDraftOrderByWithRelationInput = {
@@ -248,56 +425,121 @@ export type ReplyDraftOrderByWithRelationInput = {
   inquiryCaseId?: Prisma.SortOrder
   sourceEmailMessageId?: Prisma.SortOrderInput | Prisma.SortOrder
   sentEmailMessageId?: Prisma.SortOrderInput | Prisma.SortOrder
+  contextSnapshotId?: Prisma.SortOrderInput | Prisma.SortOrder
+  aiDecisionId?: Prisma.SortOrderInput | Prisma.SortOrder
+  idempotencyKey?: Prisma.SortOrderInput | Prisma.SortOrder
   draftType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   subject?: Prisma.SortOrderInput | Prisma.SortOrder
   bodyText?: Prisma.SortOrder
+  originalSubject?: Prisma.SortOrderInput | Prisma.SortOrder
+  originalBodyText?: Prisma.SortOrderInput | Prisma.SortOrder
+  language?: Prisma.SortOrderInput | Prisma.SortOrder
+  usedFactsJson?: Prisma.SortOrder
+  unresolvedQuestionsJson?: Prisma.SortOrder
+  warningsJson?: Prisma.SortOrder
+  requiresCommercialReview?: Prisma.SortOrder
+  promptVersion?: Prisma.SortOrderInput | Prisma.SortOrder
   modelName?: Prisma.SortOrderInput | Prisma.SortOrder
+  version?: Prisma.SortOrder
   createdByType?: Prisma.SortOrder
+  approvedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  rejectedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  rejectedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  rejectionReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  sentAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastSendError?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   inquiryCase?: Prisma.InquiryCaseOrderByWithRelationInput
   sourceEmailMessage?: Prisma.EmailMessageOrderByWithRelationInput
   sentEmailMessage?: Prisma.EmailMessageOrderByWithRelationInput
+  aiDecision?: Prisma.AiDecisionOrderByWithRelationInput
+  attachments?: Prisma.ReplyDraftAttachmentOrderByRelationAggregateInput
+  sendAttempts?: Prisma.EmailSendAttemptOrderByRelationAggregateInput
 }
 
 export type ReplyDraftWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  idempotencyKey?: string
   AND?: Prisma.ReplyDraftWhereInput | Prisma.ReplyDraftWhereInput[]
   OR?: Prisma.ReplyDraftWhereInput[]
   NOT?: Prisma.ReplyDraftWhereInput | Prisma.ReplyDraftWhereInput[]
   inquiryCaseId?: Prisma.StringFilter<"ReplyDraft"> | string
   sourceEmailMessageId?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
   sentEmailMessageId?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
+  contextSnapshotId?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
+  aiDecisionId?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
   draftType?: Prisma.StringFilter<"ReplyDraft"> | string
   status?: Prisma.StringFilter<"ReplyDraft"> | string
   subject?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
   bodyText?: Prisma.StringFilter<"ReplyDraft"> | string
+  originalSubject?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
+  originalBodyText?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
+  language?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
+  usedFactsJson?: Prisma.JsonFilter<"ReplyDraft">
+  unresolvedQuestionsJson?: Prisma.JsonFilter<"ReplyDraft">
+  warningsJson?: Prisma.JsonFilter<"ReplyDraft">
+  requiresCommercialReview?: Prisma.BoolFilter<"ReplyDraft"> | boolean
+  promptVersion?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
   modelName?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
+  version?: Prisma.IntFilter<"ReplyDraft"> | number
   createdByType?: Prisma.StringFilter<"ReplyDraft"> | string
+  approvedBy?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
+  approvedAt?: Prisma.DateTimeNullableFilter<"ReplyDraft"> | Date | string | null
+  rejectedBy?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
+  rejectedAt?: Prisma.DateTimeNullableFilter<"ReplyDraft"> | Date | string | null
+  rejectionReason?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
+  sentAt?: Prisma.DateTimeNullableFilter<"ReplyDraft"> | Date | string | null
+  lastSendError?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
   createdAt?: Prisma.DateTimeFilter<"ReplyDraft"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ReplyDraft"> | Date | string
   inquiryCase?: Prisma.XOR<Prisma.InquiryCaseScalarRelationFilter, Prisma.InquiryCaseWhereInput>
   sourceEmailMessage?: Prisma.XOR<Prisma.EmailMessageNullableScalarRelationFilter, Prisma.EmailMessageWhereInput> | null
   sentEmailMessage?: Prisma.XOR<Prisma.EmailMessageNullableScalarRelationFilter, Prisma.EmailMessageWhereInput> | null
-}, "id">
+  aiDecision?: Prisma.XOR<Prisma.AiDecisionNullableScalarRelationFilter, Prisma.AiDecisionWhereInput> | null
+  attachments?: Prisma.ReplyDraftAttachmentListRelationFilter
+  sendAttempts?: Prisma.EmailSendAttemptListRelationFilter
+}, "id" | "idempotencyKey">
 
 export type ReplyDraftOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   inquiryCaseId?: Prisma.SortOrder
   sourceEmailMessageId?: Prisma.SortOrderInput | Prisma.SortOrder
   sentEmailMessageId?: Prisma.SortOrderInput | Prisma.SortOrder
+  contextSnapshotId?: Prisma.SortOrderInput | Prisma.SortOrder
+  aiDecisionId?: Prisma.SortOrderInput | Prisma.SortOrder
+  idempotencyKey?: Prisma.SortOrderInput | Prisma.SortOrder
   draftType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   subject?: Prisma.SortOrderInput | Prisma.SortOrder
   bodyText?: Prisma.SortOrder
+  originalSubject?: Prisma.SortOrderInput | Prisma.SortOrder
+  originalBodyText?: Prisma.SortOrderInput | Prisma.SortOrder
+  language?: Prisma.SortOrderInput | Prisma.SortOrder
+  usedFactsJson?: Prisma.SortOrder
+  unresolvedQuestionsJson?: Prisma.SortOrder
+  warningsJson?: Prisma.SortOrder
+  requiresCommercialReview?: Prisma.SortOrder
+  promptVersion?: Prisma.SortOrderInput | Prisma.SortOrder
   modelName?: Prisma.SortOrderInput | Prisma.SortOrder
+  version?: Prisma.SortOrder
   createdByType?: Prisma.SortOrder
+  approvedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  rejectedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  rejectedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  rejectionReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  sentAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastSendError?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ReplyDraftCountOrderByAggregateInput
+  _avg?: Prisma.ReplyDraftAvgOrderByAggregateInput
   _max?: Prisma.ReplyDraftMaxOrderByAggregateInput
   _min?: Prisma.ReplyDraftMinOrderByAggregateInput
+  _sum?: Prisma.ReplyDraftSumOrderByAggregateInput
 }
 
 export type ReplyDraftScalarWhereWithAggregatesInput = {
@@ -308,29 +550,69 @@ export type ReplyDraftScalarWhereWithAggregatesInput = {
   inquiryCaseId?: Prisma.StringWithAggregatesFilter<"ReplyDraft"> | string
   sourceEmailMessageId?: Prisma.StringNullableWithAggregatesFilter<"ReplyDraft"> | string | null
   sentEmailMessageId?: Prisma.StringNullableWithAggregatesFilter<"ReplyDraft"> | string | null
+  contextSnapshotId?: Prisma.StringNullableWithAggregatesFilter<"ReplyDraft"> | string | null
+  aiDecisionId?: Prisma.StringNullableWithAggregatesFilter<"ReplyDraft"> | string | null
+  idempotencyKey?: Prisma.StringNullableWithAggregatesFilter<"ReplyDraft"> | string | null
   draftType?: Prisma.StringWithAggregatesFilter<"ReplyDraft"> | string
   status?: Prisma.StringWithAggregatesFilter<"ReplyDraft"> | string
   subject?: Prisma.StringNullableWithAggregatesFilter<"ReplyDraft"> | string | null
   bodyText?: Prisma.StringWithAggregatesFilter<"ReplyDraft"> | string
+  originalSubject?: Prisma.StringNullableWithAggregatesFilter<"ReplyDraft"> | string | null
+  originalBodyText?: Prisma.StringNullableWithAggregatesFilter<"ReplyDraft"> | string | null
+  language?: Prisma.StringNullableWithAggregatesFilter<"ReplyDraft"> | string | null
+  usedFactsJson?: Prisma.JsonWithAggregatesFilter<"ReplyDraft">
+  unresolvedQuestionsJson?: Prisma.JsonWithAggregatesFilter<"ReplyDraft">
+  warningsJson?: Prisma.JsonWithAggregatesFilter<"ReplyDraft">
+  requiresCommercialReview?: Prisma.BoolWithAggregatesFilter<"ReplyDraft"> | boolean
+  promptVersion?: Prisma.StringNullableWithAggregatesFilter<"ReplyDraft"> | string | null
   modelName?: Prisma.StringNullableWithAggregatesFilter<"ReplyDraft"> | string | null
+  version?: Prisma.IntWithAggregatesFilter<"ReplyDraft"> | number
   createdByType?: Prisma.StringWithAggregatesFilter<"ReplyDraft"> | string
+  approvedBy?: Prisma.StringNullableWithAggregatesFilter<"ReplyDraft"> | string | null
+  approvedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"ReplyDraft"> | Date | string | null
+  rejectedBy?: Prisma.StringNullableWithAggregatesFilter<"ReplyDraft"> | string | null
+  rejectedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"ReplyDraft"> | Date | string | null
+  rejectionReason?: Prisma.StringNullableWithAggregatesFilter<"ReplyDraft"> | string | null
+  sentAt?: Prisma.DateTimeNullableWithAggregatesFilter<"ReplyDraft"> | Date | string | null
+  lastSendError?: Prisma.StringNullableWithAggregatesFilter<"ReplyDraft"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ReplyDraft"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"ReplyDraft"> | Date | string
 }
 
 export type ReplyDraftCreateInput = {
   id?: string
+  contextSnapshotId?: string | null
+  idempotencyKey?: string | null
   draftType: string
   status?: string
   subject?: string | null
   bodyText: string
+  originalSubject?: string | null
+  originalBodyText?: string | null
+  language?: string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: boolean
+  promptVersion?: string | null
   modelName?: string | null
+  version?: number
   createdByType?: string
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  rejectionReason?: string | null
+  sentAt?: Date | string | null
+  lastSendError?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   inquiryCase: Prisma.InquiryCaseCreateNestedOneWithoutReplyDraftsInput
   sourceEmailMessage?: Prisma.EmailMessageCreateNestedOneWithoutSourceReplyDraftsInput
   sentEmailMessage?: Prisma.EmailMessageCreateNestedOneWithoutSentReplyDraftsInput
+  aiDecision?: Prisma.AiDecisionCreateNestedOneWithoutReplyDraftsInput
+  attachments?: Prisma.ReplyDraftAttachmentCreateNestedManyWithoutReplyDraftInput
+  sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutReplyDraftInput
 }
 
 export type ReplyDraftUncheckedCreateInput = {
@@ -338,29 +620,71 @@ export type ReplyDraftUncheckedCreateInput = {
   inquiryCaseId: string
   sourceEmailMessageId?: string | null
   sentEmailMessageId?: string | null
+  contextSnapshotId?: string | null
+  aiDecisionId?: string | null
+  idempotencyKey?: string | null
   draftType: string
   status?: string
   subject?: string | null
   bodyText: string
+  originalSubject?: string | null
+  originalBodyText?: string | null
+  language?: string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: boolean
+  promptVersion?: string | null
   modelName?: string | null
+  version?: number
   createdByType?: string
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  rejectionReason?: string | null
+  sentAt?: Date | string | null
+  lastSendError?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  attachments?: Prisma.ReplyDraftAttachmentUncheckedCreateNestedManyWithoutReplyDraftInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutReplyDraftInput
 }
 
 export type ReplyDraftUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   draftType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyText?: Prisma.StringFieldUpdateOperationsInput | string
+  originalSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  originalBodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promptVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   modelName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   createdByType?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastSendError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   inquiryCase?: Prisma.InquiryCaseUpdateOneRequiredWithoutReplyDraftsNestedInput
   sourceEmailMessage?: Prisma.EmailMessageUpdateOneWithoutSourceReplyDraftsNestedInput
   sentEmailMessage?: Prisma.EmailMessageUpdateOneWithoutSentReplyDraftsNestedInput
+  aiDecision?: Prisma.AiDecisionUpdateOneWithoutReplyDraftsNestedInput
+  attachments?: Prisma.ReplyDraftAttachmentUpdateManyWithoutReplyDraftNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutReplyDraftNestedInput
 }
 
 export type ReplyDraftUncheckedUpdateInput = {
@@ -368,14 +692,35 @@ export type ReplyDraftUncheckedUpdateInput = {
   inquiryCaseId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sentEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   draftType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyText?: Prisma.StringFieldUpdateOperationsInput | string
+  originalSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  originalBodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promptVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   modelName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   createdByType?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastSendError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attachments?: Prisma.ReplyDraftAttachmentUncheckedUpdateManyWithoutReplyDraftNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutReplyDraftNestedInput
 }
 
 export type ReplyDraftCreateManyInput = {
@@ -383,24 +728,61 @@ export type ReplyDraftCreateManyInput = {
   inquiryCaseId: string
   sourceEmailMessageId?: string | null
   sentEmailMessageId?: string | null
+  contextSnapshotId?: string | null
+  aiDecisionId?: string | null
+  idempotencyKey?: string | null
   draftType: string
   status?: string
   subject?: string | null
   bodyText: string
+  originalSubject?: string | null
+  originalBodyText?: string | null
+  language?: string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: boolean
+  promptVersion?: string | null
   modelName?: string | null
+  version?: number
   createdByType?: string
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  rejectionReason?: string | null
+  sentAt?: Date | string | null
+  lastSendError?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type ReplyDraftUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   draftType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyText?: Prisma.StringFieldUpdateOperationsInput | string
+  originalSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  originalBodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promptVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   modelName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   createdByType?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastSendError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -410,12 +792,31 @@ export type ReplyDraftUncheckedUpdateManyInput = {
   inquiryCaseId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sentEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   draftType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyText?: Prisma.StringFieldUpdateOperationsInput | string
+  originalSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  originalBodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promptVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   modelName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   createdByType?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastSendError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -435,14 +836,37 @@ export type ReplyDraftCountOrderByAggregateInput = {
   inquiryCaseId?: Prisma.SortOrder
   sourceEmailMessageId?: Prisma.SortOrder
   sentEmailMessageId?: Prisma.SortOrder
+  contextSnapshotId?: Prisma.SortOrder
+  aiDecisionId?: Prisma.SortOrder
+  idempotencyKey?: Prisma.SortOrder
   draftType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   subject?: Prisma.SortOrder
   bodyText?: Prisma.SortOrder
+  originalSubject?: Prisma.SortOrder
+  originalBodyText?: Prisma.SortOrder
+  language?: Prisma.SortOrder
+  usedFactsJson?: Prisma.SortOrder
+  unresolvedQuestionsJson?: Prisma.SortOrder
+  warningsJson?: Prisma.SortOrder
+  requiresCommercialReview?: Prisma.SortOrder
+  promptVersion?: Prisma.SortOrder
   modelName?: Prisma.SortOrder
+  version?: Prisma.SortOrder
   createdByType?: Prisma.SortOrder
+  approvedBy?: Prisma.SortOrder
+  approvedAt?: Prisma.SortOrder
+  rejectedBy?: Prisma.SortOrder
+  rejectedAt?: Prisma.SortOrder
+  rejectionReason?: Prisma.SortOrder
+  sentAt?: Prisma.SortOrder
+  lastSendError?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type ReplyDraftAvgOrderByAggregateInput = {
+  version?: Prisma.SortOrder
 }
 
 export type ReplyDraftMaxOrderByAggregateInput = {
@@ -450,12 +874,28 @@ export type ReplyDraftMaxOrderByAggregateInput = {
   inquiryCaseId?: Prisma.SortOrder
   sourceEmailMessageId?: Prisma.SortOrder
   sentEmailMessageId?: Prisma.SortOrder
+  contextSnapshotId?: Prisma.SortOrder
+  aiDecisionId?: Prisma.SortOrder
+  idempotencyKey?: Prisma.SortOrder
   draftType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   subject?: Prisma.SortOrder
   bodyText?: Prisma.SortOrder
+  originalSubject?: Prisma.SortOrder
+  originalBodyText?: Prisma.SortOrder
+  language?: Prisma.SortOrder
+  requiresCommercialReview?: Prisma.SortOrder
+  promptVersion?: Prisma.SortOrder
   modelName?: Prisma.SortOrder
+  version?: Prisma.SortOrder
   createdByType?: Prisma.SortOrder
+  approvedBy?: Prisma.SortOrder
+  approvedAt?: Prisma.SortOrder
+  rejectedBy?: Prisma.SortOrder
+  rejectedAt?: Prisma.SortOrder
+  rejectionReason?: Prisma.SortOrder
+  sentAt?: Prisma.SortOrder
+  lastSendError?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -465,14 +905,39 @@ export type ReplyDraftMinOrderByAggregateInput = {
   inquiryCaseId?: Prisma.SortOrder
   sourceEmailMessageId?: Prisma.SortOrder
   sentEmailMessageId?: Prisma.SortOrder
+  contextSnapshotId?: Prisma.SortOrder
+  aiDecisionId?: Prisma.SortOrder
+  idempotencyKey?: Prisma.SortOrder
   draftType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   subject?: Prisma.SortOrder
   bodyText?: Prisma.SortOrder
+  originalSubject?: Prisma.SortOrder
+  originalBodyText?: Prisma.SortOrder
+  language?: Prisma.SortOrder
+  requiresCommercialReview?: Prisma.SortOrder
+  promptVersion?: Prisma.SortOrder
   modelName?: Prisma.SortOrder
+  version?: Prisma.SortOrder
   createdByType?: Prisma.SortOrder
+  approvedBy?: Prisma.SortOrder
+  approvedAt?: Prisma.SortOrder
+  rejectedBy?: Prisma.SortOrder
+  rejectedAt?: Prisma.SortOrder
+  rejectionReason?: Prisma.SortOrder
+  sentAt?: Prisma.SortOrder
+  lastSendError?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type ReplyDraftSumOrderByAggregateInput = {
+  version?: Prisma.SortOrder
+}
+
+export type ReplyDraftScalarRelationFilter = {
+  is?: Prisma.ReplyDraftWhereInput
+  isNot?: Prisma.ReplyDraftWhereInput
 }
 
 export type ReplyDraftCreateNestedManyWithoutSourceEmailMessageInput = {
@@ -601,32 +1066,144 @@ export type ReplyDraftUncheckedUpdateManyWithoutInquiryCaseNestedInput = {
   deleteMany?: Prisma.ReplyDraftScalarWhereInput | Prisma.ReplyDraftScalarWhereInput[]
 }
 
+export type ReplyDraftCreateNestedManyWithoutAiDecisionInput = {
+  create?: Prisma.XOR<Prisma.ReplyDraftCreateWithoutAiDecisionInput, Prisma.ReplyDraftUncheckedCreateWithoutAiDecisionInput> | Prisma.ReplyDraftCreateWithoutAiDecisionInput[] | Prisma.ReplyDraftUncheckedCreateWithoutAiDecisionInput[]
+  connectOrCreate?: Prisma.ReplyDraftCreateOrConnectWithoutAiDecisionInput | Prisma.ReplyDraftCreateOrConnectWithoutAiDecisionInput[]
+  createMany?: Prisma.ReplyDraftCreateManyAiDecisionInputEnvelope
+  connect?: Prisma.ReplyDraftWhereUniqueInput | Prisma.ReplyDraftWhereUniqueInput[]
+}
+
+export type ReplyDraftUncheckedCreateNestedManyWithoutAiDecisionInput = {
+  create?: Prisma.XOR<Prisma.ReplyDraftCreateWithoutAiDecisionInput, Prisma.ReplyDraftUncheckedCreateWithoutAiDecisionInput> | Prisma.ReplyDraftCreateWithoutAiDecisionInput[] | Prisma.ReplyDraftUncheckedCreateWithoutAiDecisionInput[]
+  connectOrCreate?: Prisma.ReplyDraftCreateOrConnectWithoutAiDecisionInput | Prisma.ReplyDraftCreateOrConnectWithoutAiDecisionInput[]
+  createMany?: Prisma.ReplyDraftCreateManyAiDecisionInputEnvelope
+  connect?: Prisma.ReplyDraftWhereUniqueInput | Prisma.ReplyDraftWhereUniqueInput[]
+}
+
+export type ReplyDraftUpdateManyWithoutAiDecisionNestedInput = {
+  create?: Prisma.XOR<Prisma.ReplyDraftCreateWithoutAiDecisionInput, Prisma.ReplyDraftUncheckedCreateWithoutAiDecisionInput> | Prisma.ReplyDraftCreateWithoutAiDecisionInput[] | Prisma.ReplyDraftUncheckedCreateWithoutAiDecisionInput[]
+  connectOrCreate?: Prisma.ReplyDraftCreateOrConnectWithoutAiDecisionInput | Prisma.ReplyDraftCreateOrConnectWithoutAiDecisionInput[]
+  upsert?: Prisma.ReplyDraftUpsertWithWhereUniqueWithoutAiDecisionInput | Prisma.ReplyDraftUpsertWithWhereUniqueWithoutAiDecisionInput[]
+  createMany?: Prisma.ReplyDraftCreateManyAiDecisionInputEnvelope
+  set?: Prisma.ReplyDraftWhereUniqueInput | Prisma.ReplyDraftWhereUniqueInput[]
+  disconnect?: Prisma.ReplyDraftWhereUniqueInput | Prisma.ReplyDraftWhereUniqueInput[]
+  delete?: Prisma.ReplyDraftWhereUniqueInput | Prisma.ReplyDraftWhereUniqueInput[]
+  connect?: Prisma.ReplyDraftWhereUniqueInput | Prisma.ReplyDraftWhereUniqueInput[]
+  update?: Prisma.ReplyDraftUpdateWithWhereUniqueWithoutAiDecisionInput | Prisma.ReplyDraftUpdateWithWhereUniqueWithoutAiDecisionInput[]
+  updateMany?: Prisma.ReplyDraftUpdateManyWithWhereWithoutAiDecisionInput | Prisma.ReplyDraftUpdateManyWithWhereWithoutAiDecisionInput[]
+  deleteMany?: Prisma.ReplyDraftScalarWhereInput | Prisma.ReplyDraftScalarWhereInput[]
+}
+
+export type ReplyDraftUncheckedUpdateManyWithoutAiDecisionNestedInput = {
+  create?: Prisma.XOR<Prisma.ReplyDraftCreateWithoutAiDecisionInput, Prisma.ReplyDraftUncheckedCreateWithoutAiDecisionInput> | Prisma.ReplyDraftCreateWithoutAiDecisionInput[] | Prisma.ReplyDraftUncheckedCreateWithoutAiDecisionInput[]
+  connectOrCreate?: Prisma.ReplyDraftCreateOrConnectWithoutAiDecisionInput | Prisma.ReplyDraftCreateOrConnectWithoutAiDecisionInput[]
+  upsert?: Prisma.ReplyDraftUpsertWithWhereUniqueWithoutAiDecisionInput | Prisma.ReplyDraftUpsertWithWhereUniqueWithoutAiDecisionInput[]
+  createMany?: Prisma.ReplyDraftCreateManyAiDecisionInputEnvelope
+  set?: Prisma.ReplyDraftWhereUniqueInput | Prisma.ReplyDraftWhereUniqueInput[]
+  disconnect?: Prisma.ReplyDraftWhereUniqueInput | Prisma.ReplyDraftWhereUniqueInput[]
+  delete?: Prisma.ReplyDraftWhereUniqueInput | Prisma.ReplyDraftWhereUniqueInput[]
+  connect?: Prisma.ReplyDraftWhereUniqueInput | Prisma.ReplyDraftWhereUniqueInput[]
+  update?: Prisma.ReplyDraftUpdateWithWhereUniqueWithoutAiDecisionInput | Prisma.ReplyDraftUpdateWithWhereUniqueWithoutAiDecisionInput[]
+  updateMany?: Prisma.ReplyDraftUpdateManyWithWhereWithoutAiDecisionInput | Prisma.ReplyDraftUpdateManyWithWhereWithoutAiDecisionInput[]
+  deleteMany?: Prisma.ReplyDraftScalarWhereInput | Prisma.ReplyDraftScalarWhereInput[]
+}
+
+export type ReplyDraftCreateNestedOneWithoutAttachmentsInput = {
+  create?: Prisma.XOR<Prisma.ReplyDraftCreateWithoutAttachmentsInput, Prisma.ReplyDraftUncheckedCreateWithoutAttachmentsInput>
+  connectOrCreate?: Prisma.ReplyDraftCreateOrConnectWithoutAttachmentsInput
+  connect?: Prisma.ReplyDraftWhereUniqueInput
+}
+
+export type ReplyDraftUpdateOneRequiredWithoutAttachmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.ReplyDraftCreateWithoutAttachmentsInput, Prisma.ReplyDraftUncheckedCreateWithoutAttachmentsInput>
+  connectOrCreate?: Prisma.ReplyDraftCreateOrConnectWithoutAttachmentsInput
+  upsert?: Prisma.ReplyDraftUpsertWithoutAttachmentsInput
+  connect?: Prisma.ReplyDraftWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ReplyDraftUpdateToOneWithWhereWithoutAttachmentsInput, Prisma.ReplyDraftUpdateWithoutAttachmentsInput>, Prisma.ReplyDraftUncheckedUpdateWithoutAttachmentsInput>
+}
+
+export type ReplyDraftCreateNestedOneWithoutSendAttemptsInput = {
+  create?: Prisma.XOR<Prisma.ReplyDraftCreateWithoutSendAttemptsInput, Prisma.ReplyDraftUncheckedCreateWithoutSendAttemptsInput>
+  connectOrCreate?: Prisma.ReplyDraftCreateOrConnectWithoutSendAttemptsInput
+  connect?: Prisma.ReplyDraftWhereUniqueInput
+}
+
+export type ReplyDraftUpdateOneRequiredWithoutSendAttemptsNestedInput = {
+  create?: Prisma.XOR<Prisma.ReplyDraftCreateWithoutSendAttemptsInput, Prisma.ReplyDraftUncheckedCreateWithoutSendAttemptsInput>
+  connectOrCreate?: Prisma.ReplyDraftCreateOrConnectWithoutSendAttemptsInput
+  upsert?: Prisma.ReplyDraftUpsertWithoutSendAttemptsInput
+  connect?: Prisma.ReplyDraftWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ReplyDraftUpdateToOneWithWhereWithoutSendAttemptsInput, Prisma.ReplyDraftUpdateWithoutSendAttemptsInput>, Prisma.ReplyDraftUncheckedUpdateWithoutSendAttemptsInput>
+}
+
 export type ReplyDraftCreateWithoutSourceEmailMessageInput = {
   id?: string
+  contextSnapshotId?: string | null
+  idempotencyKey?: string | null
   draftType: string
   status?: string
   subject?: string | null
   bodyText: string
+  originalSubject?: string | null
+  originalBodyText?: string | null
+  language?: string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: boolean
+  promptVersion?: string | null
   modelName?: string | null
+  version?: number
   createdByType?: string
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  rejectionReason?: string | null
+  sentAt?: Date | string | null
+  lastSendError?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   inquiryCase: Prisma.InquiryCaseCreateNestedOneWithoutReplyDraftsInput
   sentEmailMessage?: Prisma.EmailMessageCreateNestedOneWithoutSentReplyDraftsInput
+  aiDecision?: Prisma.AiDecisionCreateNestedOneWithoutReplyDraftsInput
+  attachments?: Prisma.ReplyDraftAttachmentCreateNestedManyWithoutReplyDraftInput
+  sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutReplyDraftInput
 }
 
 export type ReplyDraftUncheckedCreateWithoutSourceEmailMessageInput = {
   id?: string
   inquiryCaseId: string
   sentEmailMessageId?: string | null
+  contextSnapshotId?: string | null
+  aiDecisionId?: string | null
+  idempotencyKey?: string | null
   draftType: string
   status?: string
   subject?: string | null
   bodyText: string
+  originalSubject?: string | null
+  originalBodyText?: string | null
+  language?: string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: boolean
+  promptVersion?: string | null
   modelName?: string | null
+  version?: number
   createdByType?: string
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  rejectionReason?: string | null
+  sentAt?: Date | string | null
+  lastSendError?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  attachments?: Prisma.ReplyDraftAttachmentUncheckedCreateNestedManyWithoutReplyDraftInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutReplyDraftInput
 }
 
 export type ReplyDraftCreateOrConnectWithoutSourceEmailMessageInput = {
@@ -641,30 +1218,72 @@ export type ReplyDraftCreateManySourceEmailMessageInputEnvelope = {
 
 export type ReplyDraftCreateWithoutSentEmailMessageInput = {
   id?: string
+  contextSnapshotId?: string | null
+  idempotencyKey?: string | null
   draftType: string
   status?: string
   subject?: string | null
   bodyText: string
+  originalSubject?: string | null
+  originalBodyText?: string | null
+  language?: string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: boolean
+  promptVersion?: string | null
   modelName?: string | null
+  version?: number
   createdByType?: string
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  rejectionReason?: string | null
+  sentAt?: Date | string | null
+  lastSendError?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   inquiryCase: Prisma.InquiryCaseCreateNestedOneWithoutReplyDraftsInput
   sourceEmailMessage?: Prisma.EmailMessageCreateNestedOneWithoutSourceReplyDraftsInput
+  aiDecision?: Prisma.AiDecisionCreateNestedOneWithoutReplyDraftsInput
+  attachments?: Prisma.ReplyDraftAttachmentCreateNestedManyWithoutReplyDraftInput
+  sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutReplyDraftInput
 }
 
 export type ReplyDraftUncheckedCreateWithoutSentEmailMessageInput = {
   id?: string
   inquiryCaseId: string
   sourceEmailMessageId?: string | null
+  contextSnapshotId?: string | null
+  aiDecisionId?: string | null
+  idempotencyKey?: string | null
   draftType: string
   status?: string
   subject?: string | null
   bodyText: string
+  originalSubject?: string | null
+  originalBodyText?: string | null
+  language?: string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: boolean
+  promptVersion?: string | null
   modelName?: string | null
+  version?: number
   createdByType?: string
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  rejectionReason?: string | null
+  sentAt?: Date | string | null
+  lastSendError?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  attachments?: Prisma.ReplyDraftAttachmentUncheckedCreateNestedManyWithoutReplyDraftInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutReplyDraftInput
 }
 
 export type ReplyDraftCreateOrConnectWithoutSentEmailMessageInput = {
@@ -701,12 +1320,31 @@ export type ReplyDraftScalarWhereInput = {
   inquiryCaseId?: Prisma.StringFilter<"ReplyDraft"> | string
   sourceEmailMessageId?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
   sentEmailMessageId?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
+  contextSnapshotId?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
+  aiDecisionId?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
+  idempotencyKey?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
   draftType?: Prisma.StringFilter<"ReplyDraft"> | string
   status?: Prisma.StringFilter<"ReplyDraft"> | string
   subject?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
   bodyText?: Prisma.StringFilter<"ReplyDraft"> | string
+  originalSubject?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
+  originalBodyText?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
+  language?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
+  usedFactsJson?: Prisma.JsonFilter<"ReplyDraft">
+  unresolvedQuestionsJson?: Prisma.JsonFilter<"ReplyDraft">
+  warningsJson?: Prisma.JsonFilter<"ReplyDraft">
+  requiresCommercialReview?: Prisma.BoolFilter<"ReplyDraft"> | boolean
+  promptVersion?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
   modelName?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
+  version?: Prisma.IntFilter<"ReplyDraft"> | number
   createdByType?: Prisma.StringFilter<"ReplyDraft"> | string
+  approvedBy?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
+  approvedAt?: Prisma.DateTimeNullableFilter<"ReplyDraft"> | Date | string | null
+  rejectedBy?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
+  rejectedAt?: Prisma.DateTimeNullableFilter<"ReplyDraft"> | Date | string | null
+  rejectionReason?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
+  sentAt?: Prisma.DateTimeNullableFilter<"ReplyDraft"> | Date | string | null
+  lastSendError?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
   createdAt?: Prisma.DateTimeFilter<"ReplyDraft"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ReplyDraft"> | Date | string
 }
@@ -729,30 +1367,72 @@ export type ReplyDraftUpdateManyWithWhereWithoutSentEmailMessageInput = {
 
 export type ReplyDraftCreateWithoutInquiryCaseInput = {
   id?: string
+  contextSnapshotId?: string | null
+  idempotencyKey?: string | null
   draftType: string
   status?: string
   subject?: string | null
   bodyText: string
+  originalSubject?: string | null
+  originalBodyText?: string | null
+  language?: string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: boolean
+  promptVersion?: string | null
   modelName?: string | null
+  version?: number
   createdByType?: string
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  rejectionReason?: string | null
+  sentAt?: Date | string | null
+  lastSendError?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sourceEmailMessage?: Prisma.EmailMessageCreateNestedOneWithoutSourceReplyDraftsInput
   sentEmailMessage?: Prisma.EmailMessageCreateNestedOneWithoutSentReplyDraftsInput
+  aiDecision?: Prisma.AiDecisionCreateNestedOneWithoutReplyDraftsInput
+  attachments?: Prisma.ReplyDraftAttachmentCreateNestedManyWithoutReplyDraftInput
+  sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutReplyDraftInput
 }
 
 export type ReplyDraftUncheckedCreateWithoutInquiryCaseInput = {
   id?: string
   sourceEmailMessageId?: string | null
   sentEmailMessageId?: string | null
+  contextSnapshotId?: string | null
+  aiDecisionId?: string | null
+  idempotencyKey?: string | null
   draftType: string
   status?: string
   subject?: string | null
   bodyText: string
+  originalSubject?: string | null
+  originalBodyText?: string | null
+  language?: string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: boolean
+  promptVersion?: string | null
   modelName?: string | null
+  version?: number
   createdByType?: string
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  rejectionReason?: string | null
+  sentAt?: Date | string | null
+  lastSendError?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  attachments?: Prisma.ReplyDraftAttachmentUncheckedCreateNestedManyWithoutReplyDraftInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutReplyDraftInput
 }
 
 export type ReplyDraftCreateOrConnectWithoutInquiryCaseInput = {
@@ -781,16 +1461,443 @@ export type ReplyDraftUpdateManyWithWhereWithoutInquiryCaseInput = {
   data: Prisma.XOR<Prisma.ReplyDraftUpdateManyMutationInput, Prisma.ReplyDraftUncheckedUpdateManyWithoutInquiryCaseInput>
 }
 
-export type ReplyDraftCreateManySourceEmailMessageInput = {
+export type ReplyDraftCreateWithoutAiDecisionInput = {
   id?: string
-  inquiryCaseId: string
-  sentEmailMessageId?: string | null
+  contextSnapshotId?: string | null
+  idempotencyKey?: string | null
   draftType: string
   status?: string
   subject?: string | null
   bodyText: string
+  originalSubject?: string | null
+  originalBodyText?: string | null
+  language?: string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: boolean
+  promptVersion?: string | null
   modelName?: string | null
+  version?: number
   createdByType?: string
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  rejectionReason?: string | null
+  sentAt?: Date | string | null
+  lastSendError?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  inquiryCase: Prisma.InquiryCaseCreateNestedOneWithoutReplyDraftsInput
+  sourceEmailMessage?: Prisma.EmailMessageCreateNestedOneWithoutSourceReplyDraftsInput
+  sentEmailMessage?: Prisma.EmailMessageCreateNestedOneWithoutSentReplyDraftsInput
+  attachments?: Prisma.ReplyDraftAttachmentCreateNestedManyWithoutReplyDraftInput
+  sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutReplyDraftInput
+}
+
+export type ReplyDraftUncheckedCreateWithoutAiDecisionInput = {
+  id?: string
+  inquiryCaseId: string
+  sourceEmailMessageId?: string | null
+  sentEmailMessageId?: string | null
+  contextSnapshotId?: string | null
+  idempotencyKey?: string | null
+  draftType: string
+  status?: string
+  subject?: string | null
+  bodyText: string
+  originalSubject?: string | null
+  originalBodyText?: string | null
+  language?: string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: boolean
+  promptVersion?: string | null
+  modelName?: string | null
+  version?: number
+  createdByType?: string
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  rejectionReason?: string | null
+  sentAt?: Date | string | null
+  lastSendError?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  attachments?: Prisma.ReplyDraftAttachmentUncheckedCreateNestedManyWithoutReplyDraftInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutReplyDraftInput
+}
+
+export type ReplyDraftCreateOrConnectWithoutAiDecisionInput = {
+  where: Prisma.ReplyDraftWhereUniqueInput
+  create: Prisma.XOR<Prisma.ReplyDraftCreateWithoutAiDecisionInput, Prisma.ReplyDraftUncheckedCreateWithoutAiDecisionInput>
+}
+
+export type ReplyDraftCreateManyAiDecisionInputEnvelope = {
+  data: Prisma.ReplyDraftCreateManyAiDecisionInput | Prisma.ReplyDraftCreateManyAiDecisionInput[]
+  skipDuplicates?: boolean
+}
+
+export type ReplyDraftUpsertWithWhereUniqueWithoutAiDecisionInput = {
+  where: Prisma.ReplyDraftWhereUniqueInput
+  update: Prisma.XOR<Prisma.ReplyDraftUpdateWithoutAiDecisionInput, Prisma.ReplyDraftUncheckedUpdateWithoutAiDecisionInput>
+  create: Prisma.XOR<Prisma.ReplyDraftCreateWithoutAiDecisionInput, Prisma.ReplyDraftUncheckedCreateWithoutAiDecisionInput>
+}
+
+export type ReplyDraftUpdateWithWhereUniqueWithoutAiDecisionInput = {
+  where: Prisma.ReplyDraftWhereUniqueInput
+  data: Prisma.XOR<Prisma.ReplyDraftUpdateWithoutAiDecisionInput, Prisma.ReplyDraftUncheckedUpdateWithoutAiDecisionInput>
+}
+
+export type ReplyDraftUpdateManyWithWhereWithoutAiDecisionInput = {
+  where: Prisma.ReplyDraftScalarWhereInput
+  data: Prisma.XOR<Prisma.ReplyDraftUpdateManyMutationInput, Prisma.ReplyDraftUncheckedUpdateManyWithoutAiDecisionInput>
+}
+
+export type ReplyDraftCreateWithoutAttachmentsInput = {
+  id?: string
+  contextSnapshotId?: string | null
+  idempotencyKey?: string | null
+  draftType: string
+  status?: string
+  subject?: string | null
+  bodyText: string
+  originalSubject?: string | null
+  originalBodyText?: string | null
+  language?: string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: boolean
+  promptVersion?: string | null
+  modelName?: string | null
+  version?: number
+  createdByType?: string
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  rejectionReason?: string | null
+  sentAt?: Date | string | null
+  lastSendError?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  inquiryCase: Prisma.InquiryCaseCreateNestedOneWithoutReplyDraftsInput
+  sourceEmailMessage?: Prisma.EmailMessageCreateNestedOneWithoutSourceReplyDraftsInput
+  sentEmailMessage?: Prisma.EmailMessageCreateNestedOneWithoutSentReplyDraftsInput
+  aiDecision?: Prisma.AiDecisionCreateNestedOneWithoutReplyDraftsInput
+  sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutReplyDraftInput
+}
+
+export type ReplyDraftUncheckedCreateWithoutAttachmentsInput = {
+  id?: string
+  inquiryCaseId: string
+  sourceEmailMessageId?: string | null
+  sentEmailMessageId?: string | null
+  contextSnapshotId?: string | null
+  aiDecisionId?: string | null
+  idempotencyKey?: string | null
+  draftType: string
+  status?: string
+  subject?: string | null
+  bodyText: string
+  originalSubject?: string | null
+  originalBodyText?: string | null
+  language?: string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: boolean
+  promptVersion?: string | null
+  modelName?: string | null
+  version?: number
+  createdByType?: string
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  rejectionReason?: string | null
+  sentAt?: Date | string | null
+  lastSendError?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutReplyDraftInput
+}
+
+export type ReplyDraftCreateOrConnectWithoutAttachmentsInput = {
+  where: Prisma.ReplyDraftWhereUniqueInput
+  create: Prisma.XOR<Prisma.ReplyDraftCreateWithoutAttachmentsInput, Prisma.ReplyDraftUncheckedCreateWithoutAttachmentsInput>
+}
+
+export type ReplyDraftUpsertWithoutAttachmentsInput = {
+  update: Prisma.XOR<Prisma.ReplyDraftUpdateWithoutAttachmentsInput, Prisma.ReplyDraftUncheckedUpdateWithoutAttachmentsInput>
+  create: Prisma.XOR<Prisma.ReplyDraftCreateWithoutAttachmentsInput, Prisma.ReplyDraftUncheckedCreateWithoutAttachmentsInput>
+  where?: Prisma.ReplyDraftWhereInput
+}
+
+export type ReplyDraftUpdateToOneWithWhereWithoutAttachmentsInput = {
+  where?: Prisma.ReplyDraftWhereInput
+  data: Prisma.XOR<Prisma.ReplyDraftUpdateWithoutAttachmentsInput, Prisma.ReplyDraftUncheckedUpdateWithoutAttachmentsInput>
+}
+
+export type ReplyDraftUpdateWithoutAttachmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  draftType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyText?: Prisma.StringFieldUpdateOperationsInput | string
+  originalSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  originalBodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promptVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  modelName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdByType?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastSendError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inquiryCase?: Prisma.InquiryCaseUpdateOneRequiredWithoutReplyDraftsNestedInput
+  sourceEmailMessage?: Prisma.EmailMessageUpdateOneWithoutSourceReplyDraftsNestedInput
+  sentEmailMessage?: Prisma.EmailMessageUpdateOneWithoutSentReplyDraftsNestedInput
+  aiDecision?: Prisma.AiDecisionUpdateOneWithoutReplyDraftsNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutReplyDraftNestedInput
+}
+
+export type ReplyDraftUncheckedUpdateWithoutAttachmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  inquiryCaseId?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  draftType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyText?: Prisma.StringFieldUpdateOperationsInput | string
+  originalSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  originalBodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promptVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  modelName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdByType?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastSendError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutReplyDraftNestedInput
+}
+
+export type ReplyDraftCreateWithoutSendAttemptsInput = {
+  id?: string
+  contextSnapshotId?: string | null
+  idempotencyKey?: string | null
+  draftType: string
+  status?: string
+  subject?: string | null
+  bodyText: string
+  originalSubject?: string | null
+  originalBodyText?: string | null
+  language?: string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: boolean
+  promptVersion?: string | null
+  modelName?: string | null
+  version?: number
+  createdByType?: string
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  rejectionReason?: string | null
+  sentAt?: Date | string | null
+  lastSendError?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  inquiryCase: Prisma.InquiryCaseCreateNestedOneWithoutReplyDraftsInput
+  sourceEmailMessage?: Prisma.EmailMessageCreateNestedOneWithoutSourceReplyDraftsInput
+  sentEmailMessage?: Prisma.EmailMessageCreateNestedOneWithoutSentReplyDraftsInput
+  aiDecision?: Prisma.AiDecisionCreateNestedOneWithoutReplyDraftsInput
+  attachments?: Prisma.ReplyDraftAttachmentCreateNestedManyWithoutReplyDraftInput
+}
+
+export type ReplyDraftUncheckedCreateWithoutSendAttemptsInput = {
+  id?: string
+  inquiryCaseId: string
+  sourceEmailMessageId?: string | null
+  sentEmailMessageId?: string | null
+  contextSnapshotId?: string | null
+  aiDecisionId?: string | null
+  idempotencyKey?: string | null
+  draftType: string
+  status?: string
+  subject?: string | null
+  bodyText: string
+  originalSubject?: string | null
+  originalBodyText?: string | null
+  language?: string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: boolean
+  promptVersion?: string | null
+  modelName?: string | null
+  version?: number
+  createdByType?: string
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  rejectionReason?: string | null
+  sentAt?: Date | string | null
+  lastSendError?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  attachments?: Prisma.ReplyDraftAttachmentUncheckedCreateNestedManyWithoutReplyDraftInput
+}
+
+export type ReplyDraftCreateOrConnectWithoutSendAttemptsInput = {
+  where: Prisma.ReplyDraftWhereUniqueInput
+  create: Prisma.XOR<Prisma.ReplyDraftCreateWithoutSendAttemptsInput, Prisma.ReplyDraftUncheckedCreateWithoutSendAttemptsInput>
+}
+
+export type ReplyDraftUpsertWithoutSendAttemptsInput = {
+  update: Prisma.XOR<Prisma.ReplyDraftUpdateWithoutSendAttemptsInput, Prisma.ReplyDraftUncheckedUpdateWithoutSendAttemptsInput>
+  create: Prisma.XOR<Prisma.ReplyDraftCreateWithoutSendAttemptsInput, Prisma.ReplyDraftUncheckedCreateWithoutSendAttemptsInput>
+  where?: Prisma.ReplyDraftWhereInput
+}
+
+export type ReplyDraftUpdateToOneWithWhereWithoutSendAttemptsInput = {
+  where?: Prisma.ReplyDraftWhereInput
+  data: Prisma.XOR<Prisma.ReplyDraftUpdateWithoutSendAttemptsInput, Prisma.ReplyDraftUncheckedUpdateWithoutSendAttemptsInput>
+}
+
+export type ReplyDraftUpdateWithoutSendAttemptsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  draftType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyText?: Prisma.StringFieldUpdateOperationsInput | string
+  originalSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  originalBodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promptVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  modelName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdByType?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastSendError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inquiryCase?: Prisma.InquiryCaseUpdateOneRequiredWithoutReplyDraftsNestedInput
+  sourceEmailMessage?: Prisma.EmailMessageUpdateOneWithoutSourceReplyDraftsNestedInput
+  sentEmailMessage?: Prisma.EmailMessageUpdateOneWithoutSentReplyDraftsNestedInput
+  aiDecision?: Prisma.AiDecisionUpdateOneWithoutReplyDraftsNestedInput
+  attachments?: Prisma.ReplyDraftAttachmentUpdateManyWithoutReplyDraftNestedInput
+}
+
+export type ReplyDraftUncheckedUpdateWithoutSendAttemptsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  inquiryCaseId?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  draftType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyText?: Prisma.StringFieldUpdateOperationsInput | string
+  originalSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  originalBodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promptVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  modelName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdByType?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastSendError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attachments?: Prisma.ReplyDraftAttachmentUncheckedUpdateManyWithoutReplyDraftNestedInput
+}
+
+export type ReplyDraftCreateManySourceEmailMessageInput = {
+  id?: string
+  inquiryCaseId: string
+  sentEmailMessageId?: string | null
+  contextSnapshotId?: string | null
+  aiDecisionId?: string | null
+  idempotencyKey?: string | null
+  draftType: string
+  status?: string
+  subject?: string | null
+  bodyText: string
+  originalSubject?: string | null
+  originalBodyText?: string | null
+  language?: string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: boolean
+  promptVersion?: string | null
+  modelName?: string | null
+  version?: number
+  createdByType?: string
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  rejectionReason?: string | null
+  sentAt?: Date | string | null
+  lastSendError?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -799,96 +1906,237 @@ export type ReplyDraftCreateManySentEmailMessageInput = {
   id?: string
   inquiryCaseId: string
   sourceEmailMessageId?: string | null
+  contextSnapshotId?: string | null
+  aiDecisionId?: string | null
+  idempotencyKey?: string | null
   draftType: string
   status?: string
   subject?: string | null
   bodyText: string
+  originalSubject?: string | null
+  originalBodyText?: string | null
+  language?: string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: boolean
+  promptVersion?: string | null
   modelName?: string | null
+  version?: number
   createdByType?: string
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  rejectionReason?: string | null
+  sentAt?: Date | string | null
+  lastSendError?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type ReplyDraftUpdateWithoutSourceEmailMessageInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   draftType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyText?: Prisma.StringFieldUpdateOperationsInput | string
+  originalSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  originalBodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promptVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   modelName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   createdByType?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastSendError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   inquiryCase?: Prisma.InquiryCaseUpdateOneRequiredWithoutReplyDraftsNestedInput
   sentEmailMessage?: Prisma.EmailMessageUpdateOneWithoutSentReplyDraftsNestedInput
+  aiDecision?: Prisma.AiDecisionUpdateOneWithoutReplyDraftsNestedInput
+  attachments?: Prisma.ReplyDraftAttachmentUpdateManyWithoutReplyDraftNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutReplyDraftNestedInput
 }
 
 export type ReplyDraftUncheckedUpdateWithoutSourceEmailMessageInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   inquiryCaseId?: Prisma.StringFieldUpdateOperationsInput | string
   sentEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   draftType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyText?: Prisma.StringFieldUpdateOperationsInput | string
+  originalSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  originalBodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promptVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   modelName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   createdByType?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastSendError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attachments?: Prisma.ReplyDraftAttachmentUncheckedUpdateManyWithoutReplyDraftNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutReplyDraftNestedInput
 }
 
 export type ReplyDraftUncheckedUpdateManyWithoutSourceEmailMessageInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   inquiryCaseId?: Prisma.StringFieldUpdateOperationsInput | string
   sentEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   draftType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyText?: Prisma.StringFieldUpdateOperationsInput | string
+  originalSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  originalBodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promptVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   modelName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   createdByType?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastSendError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ReplyDraftUpdateWithoutSentEmailMessageInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   draftType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyText?: Prisma.StringFieldUpdateOperationsInput | string
+  originalSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  originalBodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promptVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   modelName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   createdByType?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastSendError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   inquiryCase?: Prisma.InquiryCaseUpdateOneRequiredWithoutReplyDraftsNestedInput
   sourceEmailMessage?: Prisma.EmailMessageUpdateOneWithoutSourceReplyDraftsNestedInput
+  aiDecision?: Prisma.AiDecisionUpdateOneWithoutReplyDraftsNestedInput
+  attachments?: Prisma.ReplyDraftAttachmentUpdateManyWithoutReplyDraftNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutReplyDraftNestedInput
 }
 
 export type ReplyDraftUncheckedUpdateWithoutSentEmailMessageInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   inquiryCaseId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   draftType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyText?: Prisma.StringFieldUpdateOperationsInput | string
+  originalSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  originalBodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promptVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   modelName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   createdByType?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastSendError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attachments?: Prisma.ReplyDraftAttachmentUncheckedUpdateManyWithoutReplyDraftNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutReplyDraftNestedInput
 }
 
 export type ReplyDraftUncheckedUpdateManyWithoutSentEmailMessageInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   inquiryCaseId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   draftType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyText?: Prisma.StringFieldUpdateOperationsInput | string
+  originalSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  originalBodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promptVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   modelName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   createdByType?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastSendError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -897,58 +2145,312 @@ export type ReplyDraftCreateManyInquiryCaseInput = {
   id?: string
   sourceEmailMessageId?: string | null
   sentEmailMessageId?: string | null
+  contextSnapshotId?: string | null
+  aiDecisionId?: string | null
+  idempotencyKey?: string | null
   draftType: string
   status?: string
   subject?: string | null
   bodyText: string
+  originalSubject?: string | null
+  originalBodyText?: string | null
+  language?: string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: boolean
+  promptVersion?: string | null
   modelName?: string | null
+  version?: number
   createdByType?: string
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  rejectionReason?: string | null
+  sentAt?: Date | string | null
+  lastSendError?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type ReplyDraftUpdateWithoutInquiryCaseInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   draftType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyText?: Prisma.StringFieldUpdateOperationsInput | string
+  originalSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  originalBodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promptVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   modelName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   createdByType?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastSendError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sourceEmailMessage?: Prisma.EmailMessageUpdateOneWithoutSourceReplyDraftsNestedInput
   sentEmailMessage?: Prisma.EmailMessageUpdateOneWithoutSentReplyDraftsNestedInput
+  aiDecision?: Prisma.AiDecisionUpdateOneWithoutReplyDraftsNestedInput
+  attachments?: Prisma.ReplyDraftAttachmentUpdateManyWithoutReplyDraftNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutReplyDraftNestedInput
 }
 
 export type ReplyDraftUncheckedUpdateWithoutInquiryCaseInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   sourceEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sentEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   draftType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyText?: Prisma.StringFieldUpdateOperationsInput | string
+  originalSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  originalBodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promptVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   modelName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   createdByType?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastSendError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attachments?: Prisma.ReplyDraftAttachmentUncheckedUpdateManyWithoutReplyDraftNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutReplyDraftNestedInput
 }
 
 export type ReplyDraftUncheckedUpdateManyWithoutInquiryCaseInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   sourceEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sentEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   draftType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bodyText?: Prisma.StringFieldUpdateOperationsInput | string
+  originalSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  originalBodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promptVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   modelName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   createdByType?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastSendError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type ReplyDraftCreateManyAiDecisionInput = {
+  id?: string
+  inquiryCaseId: string
+  sourceEmailMessageId?: string | null
+  sentEmailMessageId?: string | null
+  contextSnapshotId?: string | null
+  idempotencyKey?: string | null
+  draftType: string
+  status?: string
+  subject?: string | null
+  bodyText: string
+  originalSubject?: string | null
+  originalBodyText?: string | null
+  language?: string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: boolean
+  promptVersion?: string | null
+  modelName?: string | null
+  version?: number
+  createdByType?: string
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  rejectedBy?: string | null
+  rejectedAt?: Date | string | null
+  rejectionReason?: string | null
+  sentAt?: Date | string | null
+  lastSendError?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ReplyDraftUpdateWithoutAiDecisionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  draftType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyText?: Prisma.StringFieldUpdateOperationsInput | string
+  originalSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  originalBodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promptVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  modelName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdByType?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastSendError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inquiryCase?: Prisma.InquiryCaseUpdateOneRequiredWithoutReplyDraftsNestedInput
+  sourceEmailMessage?: Prisma.EmailMessageUpdateOneWithoutSourceReplyDraftsNestedInput
+  sentEmailMessage?: Prisma.EmailMessageUpdateOneWithoutSentReplyDraftsNestedInput
+  attachments?: Prisma.ReplyDraftAttachmentUpdateManyWithoutReplyDraftNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutReplyDraftNestedInput
+}
+
+export type ReplyDraftUncheckedUpdateWithoutAiDecisionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  inquiryCaseId?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  draftType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyText?: Prisma.StringFieldUpdateOperationsInput | string
+  originalSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  originalBodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promptVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  modelName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdByType?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastSendError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attachments?: Prisma.ReplyDraftAttachmentUncheckedUpdateManyWithoutReplyDraftNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutReplyDraftNestedInput
+}
+
+export type ReplyDraftUncheckedUpdateManyWithoutAiDecisionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  inquiryCaseId?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  draftType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyText?: Prisma.StringFieldUpdateOperationsInput | string
+  originalSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  originalBodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usedFactsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  unresolvedQuestionsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  warningsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  requiresCommercialReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promptVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  modelName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdByType?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastSendError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type ReplyDraftCountOutputType
+ */
+
+export type ReplyDraftCountOutputType = {
+  attachments: number
+  sendAttempts: number
+}
+
+export type ReplyDraftCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  attachments?: boolean | ReplyDraftCountOutputTypeCountAttachmentsArgs
+  sendAttempts?: boolean | ReplyDraftCountOutputTypeCountSendAttemptsArgs
+}
+
+/**
+ * ReplyDraftCountOutputType without action
+ */
+export type ReplyDraftCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ReplyDraftCountOutputType
+   */
+  select?: Prisma.ReplyDraftCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * ReplyDraftCountOutputType without action
+ */
+export type ReplyDraftCountOutputTypeCountAttachmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReplyDraftAttachmentWhereInput
+}
+
+/**
+ * ReplyDraftCountOutputType without action
+ */
+export type ReplyDraftCountOutputTypeCountSendAttemptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmailSendAttemptWhereInput
+}
 
 
 export type ReplyDraftSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -956,17 +2458,40 @@ export type ReplyDraftSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   inquiryCaseId?: boolean
   sourceEmailMessageId?: boolean
   sentEmailMessageId?: boolean
+  contextSnapshotId?: boolean
+  aiDecisionId?: boolean
+  idempotencyKey?: boolean
   draftType?: boolean
   status?: boolean
   subject?: boolean
   bodyText?: boolean
+  originalSubject?: boolean
+  originalBodyText?: boolean
+  language?: boolean
+  usedFactsJson?: boolean
+  unresolvedQuestionsJson?: boolean
+  warningsJson?: boolean
+  requiresCommercialReview?: boolean
+  promptVersion?: boolean
   modelName?: boolean
+  version?: boolean
   createdByType?: boolean
+  approvedBy?: boolean
+  approvedAt?: boolean
+  rejectedBy?: boolean
+  rejectedAt?: boolean
+  rejectionReason?: boolean
+  sentAt?: boolean
+  lastSendError?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   inquiryCase?: boolean | Prisma.InquiryCaseDefaultArgs<ExtArgs>
   sourceEmailMessage?: boolean | Prisma.ReplyDraft$sourceEmailMessageArgs<ExtArgs>
   sentEmailMessage?: boolean | Prisma.ReplyDraft$sentEmailMessageArgs<ExtArgs>
+  aiDecision?: boolean | Prisma.ReplyDraft$aiDecisionArgs<ExtArgs>
+  attachments?: boolean | Prisma.ReplyDraft$attachmentsArgs<ExtArgs>
+  sendAttempts?: boolean | Prisma.ReplyDraft$sendAttemptsArgs<ExtArgs>
+  _count?: boolean | Prisma.ReplyDraftCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["replyDraft"]>
 
 export type ReplyDraftSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -974,17 +2499,37 @@ export type ReplyDraftSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   inquiryCaseId?: boolean
   sourceEmailMessageId?: boolean
   sentEmailMessageId?: boolean
+  contextSnapshotId?: boolean
+  aiDecisionId?: boolean
+  idempotencyKey?: boolean
   draftType?: boolean
   status?: boolean
   subject?: boolean
   bodyText?: boolean
+  originalSubject?: boolean
+  originalBodyText?: boolean
+  language?: boolean
+  usedFactsJson?: boolean
+  unresolvedQuestionsJson?: boolean
+  warningsJson?: boolean
+  requiresCommercialReview?: boolean
+  promptVersion?: boolean
   modelName?: boolean
+  version?: boolean
   createdByType?: boolean
+  approvedBy?: boolean
+  approvedAt?: boolean
+  rejectedBy?: boolean
+  rejectedAt?: boolean
+  rejectionReason?: boolean
+  sentAt?: boolean
+  lastSendError?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   inquiryCase?: boolean | Prisma.InquiryCaseDefaultArgs<ExtArgs>
   sourceEmailMessage?: boolean | Prisma.ReplyDraft$sourceEmailMessageArgs<ExtArgs>
   sentEmailMessage?: boolean | Prisma.ReplyDraft$sentEmailMessageArgs<ExtArgs>
+  aiDecision?: boolean | Prisma.ReplyDraft$aiDecisionArgs<ExtArgs>
 }, ExtArgs["result"]["replyDraft"]>
 
 export type ReplyDraftSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -992,17 +2537,37 @@ export type ReplyDraftSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   inquiryCaseId?: boolean
   sourceEmailMessageId?: boolean
   sentEmailMessageId?: boolean
+  contextSnapshotId?: boolean
+  aiDecisionId?: boolean
+  idempotencyKey?: boolean
   draftType?: boolean
   status?: boolean
   subject?: boolean
   bodyText?: boolean
+  originalSubject?: boolean
+  originalBodyText?: boolean
+  language?: boolean
+  usedFactsJson?: boolean
+  unresolvedQuestionsJson?: boolean
+  warningsJson?: boolean
+  requiresCommercialReview?: boolean
+  promptVersion?: boolean
   modelName?: boolean
+  version?: boolean
   createdByType?: boolean
+  approvedBy?: boolean
+  approvedAt?: boolean
+  rejectedBy?: boolean
+  rejectedAt?: boolean
+  rejectionReason?: boolean
+  sentAt?: boolean
+  lastSendError?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   inquiryCase?: boolean | Prisma.InquiryCaseDefaultArgs<ExtArgs>
   sourceEmailMessage?: boolean | Prisma.ReplyDraft$sourceEmailMessageArgs<ExtArgs>
   sentEmailMessage?: boolean | Prisma.ReplyDraft$sentEmailMessageArgs<ExtArgs>
+  aiDecision?: boolean | Prisma.ReplyDraft$aiDecisionArgs<ExtArgs>
 }, ExtArgs["result"]["replyDraft"]>
 
 export type ReplyDraftSelectScalar = {
@@ -1010,31 +2575,56 @@ export type ReplyDraftSelectScalar = {
   inquiryCaseId?: boolean
   sourceEmailMessageId?: boolean
   sentEmailMessageId?: boolean
+  contextSnapshotId?: boolean
+  aiDecisionId?: boolean
+  idempotencyKey?: boolean
   draftType?: boolean
   status?: boolean
   subject?: boolean
   bodyText?: boolean
+  originalSubject?: boolean
+  originalBodyText?: boolean
+  language?: boolean
+  usedFactsJson?: boolean
+  unresolvedQuestionsJson?: boolean
+  warningsJson?: boolean
+  requiresCommercialReview?: boolean
+  promptVersion?: boolean
   modelName?: boolean
+  version?: boolean
   createdByType?: boolean
+  approvedBy?: boolean
+  approvedAt?: boolean
+  rejectedBy?: boolean
+  rejectedAt?: boolean
+  rejectionReason?: boolean
+  sentAt?: boolean
+  lastSendError?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ReplyDraftOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "inquiryCaseId" | "sourceEmailMessageId" | "sentEmailMessageId" | "draftType" | "status" | "subject" | "bodyText" | "modelName" | "createdByType" | "createdAt" | "updatedAt", ExtArgs["result"]["replyDraft"]>
+export type ReplyDraftOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "inquiryCaseId" | "sourceEmailMessageId" | "sentEmailMessageId" | "contextSnapshotId" | "aiDecisionId" | "idempotencyKey" | "draftType" | "status" | "subject" | "bodyText" | "originalSubject" | "originalBodyText" | "language" | "usedFactsJson" | "unresolvedQuestionsJson" | "warningsJson" | "requiresCommercialReview" | "promptVersion" | "modelName" | "version" | "createdByType" | "approvedBy" | "approvedAt" | "rejectedBy" | "rejectedAt" | "rejectionReason" | "sentAt" | "lastSendError" | "createdAt" | "updatedAt", ExtArgs["result"]["replyDraft"]>
 export type ReplyDraftInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   inquiryCase?: boolean | Prisma.InquiryCaseDefaultArgs<ExtArgs>
   sourceEmailMessage?: boolean | Prisma.ReplyDraft$sourceEmailMessageArgs<ExtArgs>
   sentEmailMessage?: boolean | Prisma.ReplyDraft$sentEmailMessageArgs<ExtArgs>
+  aiDecision?: boolean | Prisma.ReplyDraft$aiDecisionArgs<ExtArgs>
+  attachments?: boolean | Prisma.ReplyDraft$attachmentsArgs<ExtArgs>
+  sendAttempts?: boolean | Prisma.ReplyDraft$sendAttemptsArgs<ExtArgs>
+  _count?: boolean | Prisma.ReplyDraftCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ReplyDraftIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   inquiryCase?: boolean | Prisma.InquiryCaseDefaultArgs<ExtArgs>
   sourceEmailMessage?: boolean | Prisma.ReplyDraft$sourceEmailMessageArgs<ExtArgs>
   sentEmailMessage?: boolean | Prisma.ReplyDraft$sentEmailMessageArgs<ExtArgs>
+  aiDecision?: boolean | Prisma.ReplyDraft$aiDecisionArgs<ExtArgs>
 }
 export type ReplyDraftIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   inquiryCase?: boolean | Prisma.InquiryCaseDefaultArgs<ExtArgs>
   sourceEmailMessage?: boolean | Prisma.ReplyDraft$sourceEmailMessageArgs<ExtArgs>
   sentEmailMessage?: boolean | Prisma.ReplyDraft$sentEmailMessageArgs<ExtArgs>
+  aiDecision?: boolean | Prisma.ReplyDraft$aiDecisionArgs<ExtArgs>
 }
 
 export type $ReplyDraftPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1043,18 +2633,40 @@ export type $ReplyDraftPayload<ExtArgs extends runtime.Types.Extensions.Internal
     inquiryCase: Prisma.$InquiryCasePayload<ExtArgs>
     sourceEmailMessage: Prisma.$EmailMessagePayload<ExtArgs> | null
     sentEmailMessage: Prisma.$EmailMessagePayload<ExtArgs> | null
+    aiDecision: Prisma.$AiDecisionPayload<ExtArgs> | null
+    attachments: Prisma.$ReplyDraftAttachmentPayload<ExtArgs>[]
+    sendAttempts: Prisma.$EmailSendAttemptPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     inquiryCaseId: string
     sourceEmailMessageId: string | null
     sentEmailMessageId: string | null
+    contextSnapshotId: string | null
+    aiDecisionId: string | null
+    idempotencyKey: string | null
     draftType: string
     status: string
     subject: string | null
     bodyText: string
+    originalSubject: string | null
+    originalBodyText: string | null
+    language: string | null
+    usedFactsJson: runtime.JsonValue
+    unresolvedQuestionsJson: runtime.JsonValue
+    warningsJson: runtime.JsonValue
+    requiresCommercialReview: boolean
+    promptVersion: string | null
     modelName: string | null
+    version: number
     createdByType: string
+    approvedBy: string | null
+    approvedAt: Date | null
+    rejectedBy: string | null
+    rejectedAt: Date | null
+    rejectionReason: string | null
+    sentAt: Date | null
+    lastSendError: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["replyDraft"]>
@@ -1454,6 +3066,9 @@ export interface Prisma__ReplyDraftClient<T, Null = never, ExtArgs extends runti
   inquiryCase<T extends Prisma.InquiryCaseDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InquiryCaseDefaultArgs<ExtArgs>>): Prisma.Prisma__InquiryCaseClient<runtime.Types.Result.GetResult<Prisma.$InquiryCasePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   sourceEmailMessage<T extends Prisma.ReplyDraft$sourceEmailMessageArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ReplyDraft$sourceEmailMessageArgs<ExtArgs>>): Prisma.Prisma__EmailMessageClient<runtime.Types.Result.GetResult<Prisma.$EmailMessagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   sentEmailMessage<T extends Prisma.ReplyDraft$sentEmailMessageArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ReplyDraft$sentEmailMessageArgs<ExtArgs>>): Prisma.Prisma__EmailMessageClient<runtime.Types.Result.GetResult<Prisma.$EmailMessagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  aiDecision<T extends Prisma.ReplyDraft$aiDecisionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ReplyDraft$aiDecisionArgs<ExtArgs>>): Prisma.Prisma__AiDecisionClient<runtime.Types.Result.GetResult<Prisma.$AiDecisionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  attachments<T extends Prisma.ReplyDraft$attachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ReplyDraft$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReplyDraftAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  sendAttempts<T extends Prisma.ReplyDraft$sendAttemptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ReplyDraft$sendAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmailSendAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1487,12 +3102,31 @@ export interface ReplyDraftFieldRefs {
   readonly inquiryCaseId: Prisma.FieldRef<"ReplyDraft", 'String'>
   readonly sourceEmailMessageId: Prisma.FieldRef<"ReplyDraft", 'String'>
   readonly sentEmailMessageId: Prisma.FieldRef<"ReplyDraft", 'String'>
+  readonly contextSnapshotId: Prisma.FieldRef<"ReplyDraft", 'String'>
+  readonly aiDecisionId: Prisma.FieldRef<"ReplyDraft", 'String'>
+  readonly idempotencyKey: Prisma.FieldRef<"ReplyDraft", 'String'>
   readonly draftType: Prisma.FieldRef<"ReplyDraft", 'String'>
   readonly status: Prisma.FieldRef<"ReplyDraft", 'String'>
   readonly subject: Prisma.FieldRef<"ReplyDraft", 'String'>
   readonly bodyText: Prisma.FieldRef<"ReplyDraft", 'String'>
+  readonly originalSubject: Prisma.FieldRef<"ReplyDraft", 'String'>
+  readonly originalBodyText: Prisma.FieldRef<"ReplyDraft", 'String'>
+  readonly language: Prisma.FieldRef<"ReplyDraft", 'String'>
+  readonly usedFactsJson: Prisma.FieldRef<"ReplyDraft", 'Json'>
+  readonly unresolvedQuestionsJson: Prisma.FieldRef<"ReplyDraft", 'Json'>
+  readonly warningsJson: Prisma.FieldRef<"ReplyDraft", 'Json'>
+  readonly requiresCommercialReview: Prisma.FieldRef<"ReplyDraft", 'Boolean'>
+  readonly promptVersion: Prisma.FieldRef<"ReplyDraft", 'String'>
   readonly modelName: Prisma.FieldRef<"ReplyDraft", 'String'>
+  readonly version: Prisma.FieldRef<"ReplyDraft", 'Int'>
   readonly createdByType: Prisma.FieldRef<"ReplyDraft", 'String'>
+  readonly approvedBy: Prisma.FieldRef<"ReplyDraft", 'String'>
+  readonly approvedAt: Prisma.FieldRef<"ReplyDraft", 'DateTime'>
+  readonly rejectedBy: Prisma.FieldRef<"ReplyDraft", 'String'>
+  readonly rejectedAt: Prisma.FieldRef<"ReplyDraft", 'DateTime'>
+  readonly rejectionReason: Prisma.FieldRef<"ReplyDraft", 'String'>
+  readonly sentAt: Prisma.FieldRef<"ReplyDraft", 'DateTime'>
+  readonly lastSendError: Prisma.FieldRef<"ReplyDraft", 'String'>
   readonly createdAt: Prisma.FieldRef<"ReplyDraft", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"ReplyDraft", 'DateTime'>
 }
@@ -1931,6 +3565,73 @@ export type ReplyDraft$sentEmailMessageArgs<ExtArgs extends runtime.Types.Extens
    */
   include?: Prisma.EmailMessageInclude<ExtArgs> | null
   where?: Prisma.EmailMessageWhereInput
+}
+
+/**
+ * ReplyDraft.aiDecision
+ */
+export type ReplyDraft$aiDecisionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AiDecision
+   */
+  select?: Prisma.AiDecisionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AiDecision
+   */
+  omit?: Prisma.AiDecisionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AiDecisionInclude<ExtArgs> | null
+  where?: Prisma.AiDecisionWhereInput
+}
+
+/**
+ * ReplyDraft.attachments
+ */
+export type ReplyDraft$attachmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ReplyDraftAttachment
+   */
+  select?: Prisma.ReplyDraftAttachmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ReplyDraftAttachment
+   */
+  omit?: Prisma.ReplyDraftAttachmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReplyDraftAttachmentInclude<ExtArgs> | null
+  where?: Prisma.ReplyDraftAttachmentWhereInput
+  orderBy?: Prisma.ReplyDraftAttachmentOrderByWithRelationInput | Prisma.ReplyDraftAttachmentOrderByWithRelationInput[]
+  cursor?: Prisma.ReplyDraftAttachmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ReplyDraftAttachmentScalarFieldEnum | Prisma.ReplyDraftAttachmentScalarFieldEnum[]
+}
+
+/**
+ * ReplyDraft.sendAttempts
+ */
+export type ReplyDraft$sendAttemptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmailSendAttempt
+   */
+  select?: Prisma.EmailSendAttemptSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmailSendAttempt
+   */
+  omit?: Prisma.EmailSendAttemptOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmailSendAttemptInclude<ExtArgs> | null
+  where?: Prisma.EmailSendAttemptWhereInput
+  orderBy?: Prisma.EmailSendAttemptOrderByWithRelationInput | Prisma.EmailSendAttemptOrderByWithRelationInput[]
+  cursor?: Prisma.EmailSendAttemptWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EmailSendAttemptScalarFieldEnum | Prisma.EmailSendAttemptScalarFieldEnum[]
 }
 
 /**

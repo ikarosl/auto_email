@@ -17,17 +17,26 @@ import { ReceiveInboundEmailUseCase } from './application/use-cases/receive-inbo
 import { SaveEmailAttachmentsUseCase } from './application/use-cases/save-email-attachments.use-case.js';
 import { AnalyzeEmailWithAiUseCase } from './application/use-cases/analyze-email-with-ai.use-case.js';
 import { PollEmailInboxUseCase } from './application/use-cases/poll-email-inbox.use-case.js';
+import { GenerateReplyDraftUseCase } from './application/use-cases/generate-reply-draft.use-case.js';
+import { ManageReplyDraftUseCase } from './application/use-cases/manage-reply-draft.use-case.js';
+import { SendApprovedReplyUseCase } from './application/use-cases/send-approved-reply.use-case.js';
 import { EmailMessageRepository } from './application/ports/email-message.repository.js';
 import { EmailAttachmentRepository } from './application/ports/email-attachment.repository.js';
 import { AttachmentStorageAdapter } from './application/ports/attachment-storage.adapter.js';
 import { AttachmentParserAdapter } from './application/ports/attachment-parser.adapter.js';
 import { AttachmentAiReaderAdapter } from './application/ports/attachment-ai-reader.adapter.js';
 import { EmailAiAnalysisAdapter } from './application/ports/email-ai-analysis.adapter.js';
+import { EmailSenderAdapter } from './application/ports/email-sender.adapter.js';
+import { ReplyDraftAiAdapter } from './application/ports/reply-draft-ai.adapter.js';
 import { AiDecisionRepository } from './application/ports/ai-decision.repository.js';
 import { EmailThreadRepository } from './application/ports/email-thread.repository.js';
 import { ProcessedEmailTracker } from './application/ports/processed-email-tracker.js';
 import { AiInteractionDebugLogger } from './application/ports/ai-interaction-debug-logger.js';
 import { DeepseekEmailAnalysisAdapter } from './infrastructure/adapters/deepseek-email-analysis.adapter.js';
+import { DeepseekReplyDraftAdapter } from './infrastructure/adapters/deepseek-reply-draft.adapter.js';
+import { SimulatedEmailSenderAdapter } from './infrastructure/adapters/simulated-email-sender.adapter.js';
+import { SmtpEmailSenderAdapter } from './infrastructure/adapters/smtp-email-sender.adapter.js';
+import { MailRuntimeConfigService } from './infrastructure/config/mail-runtime-config.service.js';
 import { BasicAttachmentParserAdapter } from './infrastructure/adapters/basic-attachment-parser.adapter.js';
 import { LocalAttachmentStorageAdapter } from './infrastructure/adapters/local-attachment-storage.adapter.js';
 import { NoopAttachmentAiReaderAdapter } from './infrastructure/adapters/noop-attachment-ai-reader.adapter.js';
@@ -45,22 +54,46 @@ import { EmailThreadController } from './presentation/email-thread.controller.js
 import { EmailWebhookController } from './presentation/email-webhook.controller.js';
 import { ReplyDraftController } from './presentation/reply-draft.controller.js';
 import { MessageController } from './presentation/message.controller.js';
+import { InquiryReplyDraftController } from './presentation/inquiry-reply-draft.controller.js';
+import { MailRuntimeController } from './presentation/mail-runtime.controller.js';
 import {
   AI_DECISION_REPOSITORY,
   ATTACHMENT_AI_READER_ADAPTER,
   ATTACHMENT_PARSER_ADAPTER,
   ATTACHMENT_STORAGE_ADAPTER,
+  EMAIL_SENDER_ADAPTER,
   EMAIL_ATTACHMENT_REPOSITORY,
   EMAIL_AI_ANALYSIS_ADAPTER,
   EMAIL_MESSAGE_REPOSITORY,
   EMAIL_THREAD_REPOSITORY,
   PROCESSED_EMAIL_TRACKER,
+  REPLY_DRAFT_AI_ADAPTER,
 } from './email.tokens.js';
 
 @Module({
   imports: [InquiryModule, ContextModule],
-  controllers: [EmailWebhookController, EmailThreadController, AiDecisionController, ReplyDraftController, MessageController],
+  controllers: [
+    EmailWebhookController,
+    EmailThreadController,
+    AiDecisionController,
+    ReplyDraftController,
+    InquiryReplyDraftController,
+    MailRuntimeController,
+    MessageController,
+  ],
   providers: [
+    MailRuntimeConfigService,
+    {
+      provide: REPLY_DRAFT_AI_ADAPTER,
+      useClass: DeepseekReplyDraftAdapter,
+    },
+    {
+      provide: EMAIL_SENDER_ADAPTER,
+      useFactory: (config: MailRuntimeConfigService) => config.operationMode === 'production'
+        ? new SmtpEmailSenderAdapter(config.smtp!)
+        : new SimulatedEmailSenderAdapter(),
+      inject: [MailRuntimeConfigService],
+    },
     {
       provide: EMAIL_MESSAGE_REPOSITORY,
       useFactory: (prisma: PrismaService) => new PrismaEmailMessageRepository(prisma),
@@ -200,6 +233,46 @@ import {
       inject: [EMAIL_AI_ANALYSIS_ADAPTER, BuildAiContextUseCase, FileAiInteractionDebugLogger],
     },
     {
+      provide: GenerateReplyDraftUseCase,
+      useFactory: (
+        prisma: PrismaService,
+        inquiryRepository: InquiryRepository,
+        inquiryMessageRepository: InquiryMessageRepository,
+        emailMessageRepository: EmailMessageRepository,
+        buildAiContextUseCase: BuildAiContextUseCase,
+        aiAdapter: ReplyDraftAiAdapter,
+      ) => new GenerateReplyDraftUseCase(
+        prisma,
+        inquiryRepository,
+        inquiryMessageRepository,
+        emailMessageRepository,
+        buildAiContextUseCase,
+        aiAdapter,
+      ),
+      inject: [
+        PrismaService,
+        INQUIRY_REPOSITORY,
+        INQUIRY_MESSAGE_REPOSITORY,
+        EMAIL_MESSAGE_REPOSITORY,
+        BuildAiContextUseCase,
+        REPLY_DRAFT_AI_ADAPTER,
+      ],
+    },
+    {
+      provide: ManageReplyDraftUseCase,
+      useFactory: (prisma: PrismaService) => new ManageReplyDraftUseCase(prisma),
+      inject: [PrismaService],
+    },
+    {
+      provide: SendApprovedReplyUseCase,
+      useFactory: (
+        prisma: PrismaService,
+        config: MailRuntimeConfigService,
+        sender: EmailSenderAdapter,
+      ) => new SendApprovedReplyUseCase(prisma, config, sender),
+      inject: [PrismaService, MailRuntimeConfigService, EMAIL_SENDER_ADAPTER],
+    },
+    {
       provide: PollEmailInboxUseCase,
       useFactory: (
         processedEmailTracker: ProcessedEmailTracker,
@@ -212,6 +285,7 @@ import {
         updateInquiryStructuredFactsFromAiUseCase: UpdateInquiryStructuredFactsFromAiUseCase,
         applyAiSuggestedStatusUseCase: ApplyAiSuggestedStatusUseCase,
         generateBusinessSubjectUseCase: GenerateBusinessSubjectUseCase,
+        generateReplyDraftUseCase: GenerateReplyDraftUseCase,
       ) => new PollEmailInboxUseCase(
         processedEmailTracker,
         receiveInboundEmailUseCase,
@@ -223,6 +297,7 @@ import {
         updateInquiryStructuredFactsFromAiUseCase,
         applyAiSuggestedStatusUseCase,
         generateBusinessSubjectUseCase,
+        generateReplyDraftUseCase,
       ),
       inject: [
         PROCESSED_EMAIL_TRACKER,
@@ -235,6 +310,7 @@ import {
         UpdateInquiryStructuredFactsFromAiUseCase,
         ApplyAiSuggestedStatusUseCase,
         GenerateBusinessSubjectUseCase,
+        GenerateReplyDraftUseCase,
       ],
     },
   ],

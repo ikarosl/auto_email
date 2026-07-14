@@ -64,5 +64,16 @@ export function validateInquiryTransition(
     };
   }
 
+  if (
+    fromStatus === InquiryStatus.QUOTED &&
+    toStatus === InquiryStatus.READY_FOR_QUOTE &&
+    (context.operatorType !== 'human' || !hasReason(context))
+  ) {
+    return {
+      allowed: false,
+      reason: 'Returning a quoted inquiry to ready_for_quote requires a human reason.',
+    };
+  }
+
   return { allowed: true };
 }

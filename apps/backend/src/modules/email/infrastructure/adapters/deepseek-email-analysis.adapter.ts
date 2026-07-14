@@ -31,7 +31,6 @@ export class DeepseekEmailAnalysisAdapter implements EmailAiAnalysisAdapter {
     if (!this.client) {
       return '';
     }
-    console.log(messages);
     const request: DeepSeekChatCompletionCreateParams = {
       messages,
       model: env.AI_EMAIL_ANALYSIS_MODEL || env.DEEPSEEK_MODEL || 'deepseek-v4-pro',

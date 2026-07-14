@@ -107,6 +107,16 @@ export type InquiryStructuredFact = Prisma.InquiryStructuredFactModel
  */
 export type ReplyDraft = Prisma.ReplyDraftModel
 /**
+ * Model ReplyDraftAttachment
+ * 
+ */
+export type ReplyDraftAttachment = Prisma.ReplyDraftAttachmentModel
+/**
+ * Model EmailSendAttempt
+ * 
+ */
+export type EmailSendAttempt = Prisma.EmailSendAttemptModel
+/**
  * Model AiContextSnapshot
  * 
  */

@@ -433,7 +433,7 @@ export class InquiryController {
       await Promise.all([
         this.prisma.inquiryMessage.findMany({
           where: { inquiryCaseId: id },
-          include: { emailMessage: true },
+          include: { emailMessage: { include: { attachments: true } } },
           orderBy: { createdAt: 'asc' },
         }),
         this.prisma.aiDecision.findFirst({
@@ -463,6 +463,21 @@ export class InquiryController {
         subject: m.emailMessage?.subject ?? null,
         bodyText: m.emailMessage?.bodyText ?? null,
         receivedAt: toDateIso(m.emailMessage?.receivedAt),
+        attachments: (m.emailMessage?.attachments ?? []).map((attachment) => ({
+          id: attachment.id,
+          emailMessageId: attachment.emailMessageId,
+          inquiryCaseId: attachment.inquiryCaseId,
+          originalFileName: attachment.originalFileName,
+          safeFileName: attachment.safeFileName,
+          mimeType: attachment.mimeType,
+          fileSize: String(attachment.fileSize),
+          parseStatus: attachment.parseStatus,
+          ocrStatus: attachment.ocrStatus,
+          isInline: attachment.isInline,
+          isContextCandidate: attachment.isContextCandidate,
+          createdAt: toDateIso(attachment.createdAt),
+          updatedAt: toDateIso(attachment.updatedAt),
+        })),
       })),
       latestAiDecision: latestAiDecision
         ? {

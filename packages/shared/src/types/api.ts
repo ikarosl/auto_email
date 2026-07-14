@@ -243,6 +243,22 @@ export interface ReplyDraftListItem {
   subject?: string | null;
   bodyText: string;
   modelName?: string | null;
+  contextSnapshotId?: string | null;
+  aiDecisionId?: string | null;
+  language?: string | null;
+  usedFacts?: string[];
+  unresolvedQuestions?: string[];
+  warnings?: string[];
+  requiresCommercialReview?: boolean;
+  promptVersion?: string | null;
+  version: number;
+  approvedBy?: string | null;
+  approvedAt?: string | null;
+  rejectedBy?: string | null;
+  rejectedAt?: string | null;
+  rejectionReason?: string | null;
+  sentAt?: string | null;
+  lastSendError?: string | null;
   createdByType: string;
   createdAt: string | null;
   updatedAt: string | null;
@@ -255,4 +271,26 @@ export interface ReplyDraftListItem {
       name?: string | null;
     } | null;
   } | null;
+  attachments?: EmailAttachmentListItem[];
+  sendAttempts?: EmailSendAttemptListItem[];
+}
+
+export interface EmailSendAttemptListItem {
+  id: string;
+  operationMode: 'debug' | 'production';
+  provider: 'simulated' | 'smtp';
+  status: 'simulated' | 'accepted' | 'rejected' | 'failed' | 'unknown';
+  messageId?: string | null;
+  recipient: string;
+  subject: string;
+  initiatedBy: string;
+  errorCode?: string | null;
+  errorMessage?: string | null;
+  startedAt: string | null;
+  completedAt?: string | null;
+}
+
+export interface MailRuntimeInfo {
+  mailOperationMode: 'debug' | 'production';
+  imapPollEnabled: boolean;
 }

@@ -5,5 +5,6 @@ export enum InquiryStatus {
   NEED_ENGINEER_REVIEW = 'need_engineer_review',
   WAITING_CUSTOMER = 'waiting_customer',
   READY_FOR_QUOTE = 'ready_for_quote',
+  QUOTED = 'quoted',
   CLOSED = 'closed',
 }

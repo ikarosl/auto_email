@@ -9,6 +9,7 @@ export const API_ROUTE_SEGMENTS = {
   contextSnapshots: 'context-snapshots',
   aiDecisions: 'ai-decisions',
   replyDrafts: 'reply-drafts',
+  runtimeConfig: 'runtime-config',
 } as const;
 
 export const WEB_ROUTES = {

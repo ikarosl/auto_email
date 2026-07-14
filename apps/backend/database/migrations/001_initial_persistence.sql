@@ -186,6 +186,7 @@ CREATE TABLE IF NOT EXISTS inquiry_cases (
       'need_engineer_review',
       'waiting_customer',
       'ready_for_quote',
+      'quoted',
       'closed'
     )
   ),
@@ -300,6 +301,7 @@ CREATE TABLE IF NOT EXISTS ai_decisions (
       'need_engineer_review',
       'waiting_customer',
       'ready_for_quote',
+      'quoted',
       'closed'
     )
   ),
@@ -384,18 +386,37 @@ CREATE TABLE IF NOT EXISTS reply_drafts (
   draft_type TEXT NOT NULL CHECK (
     draft_type IN (
       'clarification_request',
-      'engineer_review_notice',
-      'quote_handoff_notice',
-      'invalid_notice'
+      'engineer_review_acknowledgement',
+      'quote_reply',
+      'general_reply'
     )
   ),
   status TEXT NOT NULL DEFAULT 'pending_review' CHECK (
-    status IN ('pending_review', 'approved', 'rejected', 'sent_manually', 'expired')
+    status IN ('pending_review', 'approved', 'rejected', 'sending', 'sent', 'simulated', 'send_failed', 'send_unknown', 'expired')
   ),
   subject TEXT,
   body_text TEXT NOT NULL,
+  context_snapshot_id TEXT,
+  ai_decision_id TEXT REFERENCES ai_decisions(id) ON DELETE SET NULL,
+  idempotency_key TEXT UNIQUE,
+  original_subject TEXT,
+  original_body_text TEXT,
+  language TEXT,
+  used_facts_json JSONB NOT NULL DEFAULT '[]'::JSONB,
+  unresolved_questions_json JSONB NOT NULL DEFAULT '[]'::JSONB,
+  warnings_json JSONB NOT NULL DEFAULT '[]'::JSONB,
+  requires_commercial_review BOOLEAN NOT NULL DEFAULT FALSE,
+  prompt_version TEXT,
   model_name TEXT,
-  created_by_type TEXT NOT NULL DEFAULT 'ai' CHECK (created_by_type IN ('ai', 'human', 'system')),
+  version INTEGER NOT NULL DEFAULT 1,
+  created_by_type TEXT NOT NULL DEFAULT 'ai' CHECK (created_by_type IN ('ai', 'human', 'system', 'human_ai_assisted')),
+  approved_by TEXT,
+  approved_at TIMESTAMPTZ,
+  rejected_by TEXT,
+  rejected_at TIMESTAMPTZ,
+  rejection_reason TEXT,
+  sent_at TIMESTAMPTZ,
+  last_send_error TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
@@ -404,6 +425,43 @@ CREATE INDEX IF NOT EXISTS reply_drafts_inquiry_idx ON reply_drafts(inquiry_case
 CREATE INDEX IF NOT EXISTS reply_drafts_status_idx ON reply_drafts(status);
 CREATE INDEX IF NOT EXISTS reply_drafts_source_email_idx ON reply_drafts(source_email_message_id);
 CREATE INDEX IF NOT EXISTS reply_drafts_sent_email_idx ON reply_drafts(sent_email_message_id);
+CREATE INDEX IF NOT EXISTS reply_drafts_ai_decision_id_idx ON reply_drafts(ai_decision_id);
+
+CREATE TABLE IF NOT EXISTS reply_draft_attachments (
+  reply_draft_id TEXT NOT NULL REFERENCES reply_drafts(id) ON DELETE CASCADE,
+  email_attachment_id TEXT NOT NULL REFERENCES email_attachments(id) ON DELETE RESTRICT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (reply_draft_id, email_attachment_id)
+);
+
+CREATE INDEX IF NOT EXISTS reply_draft_attachments_email_attachment_id_idx
+  ON reply_draft_attachments(email_attachment_id);
+
+CREATE TABLE IF NOT EXISTS email_send_attempts (
+  id TEXT PRIMARY KEY DEFAULT ('send_attempt_' || gen_random_uuid()::TEXT),
+  reply_draft_id TEXT NOT NULL REFERENCES reply_drafts(id) ON DELETE RESTRICT,
+  inquiry_case_id TEXT NOT NULL REFERENCES inquiry_cases(id) ON DELETE RESTRICT,
+  outbound_email_message_id TEXT REFERENCES email_messages(id) ON DELETE SET NULL,
+  operation_mode TEXT NOT NULL CHECK (operation_mode IN ('debug', 'production')),
+  provider TEXT NOT NULL CHECK (provider IN ('simulated', 'smtp')),
+  status TEXT NOT NULL CHECK (status IN ('simulated', 'accepted', 'rejected', 'failed', 'unknown')),
+  idempotency_key TEXT NOT NULL UNIQUE,
+  message_id TEXT,
+  recipient TEXT NOT NULL,
+  subject TEXT NOT NULL,
+  initiated_by TEXT NOT NULL,
+  provider_response_json JSONB NOT NULL DEFAULT '{}'::JSONB,
+  error_code TEXT,
+  error_message TEXT,
+  started_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  completed_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS email_send_attempts_reply_draft_id_idx ON email_send_attempts(reply_draft_id);
+CREATE INDEX IF NOT EXISTS email_send_attempts_inquiry_case_id_idx ON email_send_attempts(inquiry_case_id);
+CREATE INDEX IF NOT EXISTS email_send_attempts_status_idx ON email_send_attempts(status);
+CREATE INDEX IF NOT EXISTS email_send_attempts_started_at_idx ON email_send_attempts(started_at);
 
 CREATE TABLE IF NOT EXISTS ai_context_snapshots (
   id TEXT PRIMARY KEY DEFAULT ('context_snapshot_' || gen_random_uuid()::TEXT),
@@ -452,6 +510,7 @@ CREATE TABLE IF NOT EXISTS inquiry_status_logs (
       'need_engineer_review',
       'waiting_customer',
       'ready_for_quote',
+      'quoted',
       'closed'
     )
   ),

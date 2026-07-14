@@ -21,6 +21,8 @@ import { GenerateBusinessSubjectUseCase } from '../../../inquiry/application/use
 import { EmailMessageRepository } from '../ports/email-message.repository.js';
 import { AiDecisionRepository } from '../ports/ai-decision.repository.js';
 import { EmailDirection } from '../../domain/enums/email-direction.enum.js';
+import { InquiryStatus } from '../../../inquiry/domain/enums/inquiry-status.enum.js';
+import { GenerateReplyDraftUseCase } from './generate-reply-draft.use-case.js';
 
 export interface PollEmailCandidate {
   identity: ProcessedEmailIdentity;
@@ -34,6 +36,8 @@ export interface PollEmailProcessResult {
   inquiryCase?: InquiryCase;
   aiAnalysisResult?: AnalyzeEmailWithAiResult;
   aiTransitionResult?: ApplyAiSuggestedStatusResult;
+  replyDraftId?: string;
+  replyDraftError?: string;
   skippedReason?: string;
 }
 
@@ -49,6 +53,7 @@ export class PollEmailInboxUseCase {
     private readonly updateInquiryStructuredFactsFromAiUseCase?: UpdateInquiryStructuredFactsFromAiUseCase,
     private readonly applyAiSuggestedStatusUseCase?: ApplyAiSuggestedStatusUseCase,
     private readonly generateBusinessSubjectUseCase?: GenerateBusinessSubjectUseCase,
+    private readonly generateReplyDraftUseCase?: GenerateReplyDraftUseCase,
   ) {}
 
   async markExistingSeen(candidates: PollEmailCandidate[]): Promise<void> {
@@ -111,6 +116,8 @@ export class PollEmailInboxUseCase {
       : undefined;
 
     let aiTransitionResult: ApplyAiSuggestedStatusResult | undefined;
+    let replyDraftId: string | undefined;
+    let replyDraftError: string | undefined;
 
     if (aiAnalysisResult?.success) {
       // 更新客户状态（active / invalid / unknown）
@@ -148,6 +155,26 @@ export class PollEmailInboxUseCase {
           receiveResult.inquiryCase.status = aiTransitionResult.toStatus;
         }
       }
+
+      if (
+        this.generateReplyDraftUseCase &&
+        isEnabled(process.env.AI_REPLY_DRAFT_AUTO_GENERATE, true) &&
+        [InquiryStatus.NEED_CLARIFICATION, InquiryStatus.NEED_ENGINEER_REVIEW]
+          .includes(aiAnalysisResult.analysis.suggestedStatus)
+      ) {
+        try {
+          const draft = await this.generateReplyDraftUseCase.execute({
+            inquiryCaseId: receiveResult.inquiryCase.id,
+            sourceEmailMessageId: receiveResult.emailMessage.id,
+            aiDecisionId,
+            targetStatus: aiAnalysisResult.analysis.suggestedStatus,
+          });
+          replyDraftId = draft.id;
+        } catch (error) {
+          // Draft generation is secondary; email processing and AI decision persistence remain successful.
+          replyDraftError = error instanceof Error ? error.message : String(error);
+        }
+      }
     }
 
     await this.processedEmailTracker.markProcessed(candidate.identity);
@@ -159,6 +186,8 @@ export class PollEmailInboxUseCase {
       inquiryCase: receiveResult.inquiryCase,
       aiAnalysisResult,
       aiTransitionResult,
+      replyDraftId,
+      replyDraftError,
     };
   }
 
@@ -178,4 +207,9 @@ export class PollEmailInboxUseCase {
       .filter((emailMessage): emailMessage is EmailMessage => Boolean(emailMessage))
       .sort((a, b) => a.receivedAt.getTime() - b.receivedAt.getTime());
   }
+}
+
+function isEnabled(value: string | undefined, fallback: boolean): boolean {
+  if (value === undefined) return fallback;
+  return ['1', 'true', 'yes', 'on'].includes(value.trim().toLowerCase());
 }

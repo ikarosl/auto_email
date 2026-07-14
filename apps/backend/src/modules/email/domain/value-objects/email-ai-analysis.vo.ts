@@ -9,11 +9,18 @@ export type EmailAiRiskLevel = 'low' | 'medium' | 'high';
 
 export interface EmailExtractedRequirements {
   productType?: string;
+  structureType?: string;
   frequencyRange?: string;
   power?: string;
+  insertionLoss?: string;
+  isolation?: string;
+  vswr?: string;
+  connector?: string;
   quantity?: string;
   sizeRequirement?: string;
   application?: string;
+  deliveryRequirement?: string;
+  specialRequirements?: string;
 }
 
 export interface EmailAiAnalysis {

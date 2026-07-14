@@ -137,6 +137,7 @@ model EmailMessage {
   contextSnapshots     AiContextSnapshot[]
   updatedStructuredFacts InquiryStructuredFact[]
   attachments          EmailAttachment[]
+  sendAttempts         EmailSendAttempt[]
 
   @@index([emailThreadId])
   @@index([fromEmail])
@@ -180,6 +181,7 @@ model EmailAttachment {
   updatedAt          DateTime      @default(now()) @map("updated_at") @db.Timestamptz(6)
   emailMessage       EmailMessage  @relation(fields: [emailMessageId], references: [id], onDelete: Cascade)
   inquiryCase        InquiryCase?  @relation(fields: [inquiryCaseId], references: [id], onDelete: SetNull)
+  replyDraftLinks    ReplyDraftAttachment[]
 
   @@index([emailMessageId])
   @@index([inquiryCaseId])
@@ -217,6 +219,7 @@ model InquiryCase {
   contextSummary  InquiryContextSummary?
   statusLogs      InquiryStatusLog[]
   attachments     EmailAttachment[]
+  sendAttempts    EmailSendAttempt[]
 
   @@index([customerId])
   @@index([organizationId])
@@ -291,6 +294,7 @@ model AiDecision {
   createdAt              DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
   emailMessage           EmailMessage? @relation(fields: [emailMessageId], references: [id], onDelete: SetNull)
   inquiryCase            InquiryCase?  @relation(fields: [inquiryCaseId], references: [id], onDelete: SetNull)
+  replyDrafts            ReplyDraft[]
 
   @@index([emailMessageId])
   @@index([inquiryCaseId])
@@ -332,29 +336,93 @@ model InquiryStructuredFact {
 }
 
 model ReplyDraft {
-  id                   String        @id @default(dbgenerated("'draft_' || gen_random_uuid()::TEXT"))
-  inquiryCaseId        String        @map("inquiry_case_id")
-  sourceEmailMessageId String?       @map("source_email_message_id")
-  sentEmailMessageId   String?       @map("sent_email_message_id")
-  draftType            String        @map("draft_type")
-  status               String        @default("pending_review")
-  subject              String?
-  bodyText             String        @map("body_text")
-  modelName            String?       @map("model_name")
-  createdByType        String        @default("ai") @map("created_by_type")
-  createdAt            DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt            DateTime      @default(now()) @map("updated_at") @db.Timestamptz(6)
-  inquiryCase          InquiryCase   @relation(fields: [inquiryCaseId], references: [id], onDelete: Cascade)
-  sourceEmailMessage   EmailMessage? @relation("ReplyDraftSourceEmail", fields: [sourceEmailMessageId], references: [id], onDelete: SetNull)
-  sentEmailMessage     EmailMessage? @relation("ReplyDraftSentEmail", fields: [sentEmailMessageId], references: [id], onDelete: SetNull)
+  id                       String        @id @default(dbgenerated("'draft_' || gen_random_uuid()::TEXT"))
+  inquiryCaseId            String        @map("inquiry_case_id")
+  sourceEmailMessageId     String?       @map("source_email_message_id")
+  sentEmailMessageId       String?       @map("sent_email_message_id")
+  contextSnapshotId        String?       @map("context_snapshot_id")
+  aiDecisionId             String?       @map("ai_decision_id")
+  idempotencyKey           String?       @unique @map("idempotency_key")
+  draftType                String        @map("draft_type")
+  status                   String        @default("pending_review")
+  subject                  String?
+  bodyText                 String        @map("body_text")
+  originalSubject          String?       @map("original_subject")
+  originalBodyText         String?       @map("original_body_text")
+  language                 String?
+  usedFactsJson            Json          @default("[]") @map("used_facts_json")
+  unresolvedQuestionsJson  Json          @default("[]") @map("unresolved_questions_json")
+  warningsJson             Json          @default("[]") @map("warnings_json")
+  requiresCommercialReview Boolean       @default(false) @map("requires_commercial_review")
+  promptVersion            String?       @map("prompt_version")
+  modelName                String?       @map("model_name")
+  version                  Int           @default(1)
+  createdByType            String        @default("ai") @map("created_by_type")
+  approvedBy               String?       @map("approved_by")
+  approvedAt               DateTime?     @map("approved_at") @db.Timestamptz(6)
+  rejectedBy               String?       @map("rejected_by")
+  rejectedAt               DateTime?     @map("rejected_at") @db.Timestamptz(6)
+  rejectionReason          String?       @map("rejection_reason")
+  sentAt                   DateTime?     @map("sent_at") @db.Timestamptz(6)
+  lastSendError            String?       @map("last_send_error")
+  createdAt                DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                DateTime      @default(now()) @map("updated_at") @db.Timestamptz(6)
+  inquiryCase              InquiryCase   @relation(fields: [inquiryCaseId], references: [id], onDelete: Cascade)
+  sourceEmailMessage       EmailMessage? @relation("ReplyDraftSourceEmail", fields: [sourceEmailMessageId], references: [id], onDelete: SetNull)
+  sentEmailMessage         EmailMessage? @relation("ReplyDraftSentEmail", fields: [sentEmailMessageId], references: [id], onDelete: SetNull)
+  aiDecision               AiDecision?   @relation(fields: [aiDecisionId], references: [id], onDelete: SetNull)
+  attachments              ReplyDraftAttachment[]
+  sendAttempts             EmailSendAttempt[]
 
   @@index([inquiryCaseId])
   @@index([status])
   @@index([sourceEmailMessageId])
   @@index([sentEmailMessageId])
+  @@index([aiDecisionId])
   @@map("reply_drafts")
 }
 
+model ReplyDraftAttachment {
+  replyDraftId      String          @map("reply_draft_id")
+  emailAttachmentId String          @map("email_attachment_id")
+  createdAt         DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+  replyDraft        ReplyDraft      @relation(fields: [replyDraftId], references: [id], onDelete: Cascade)
+  emailAttachment   EmailAttachment @relation(fields: [emailAttachmentId], references: [id], onDelete: Restrict)
+
+  @@id([replyDraftId, emailAttachmentId])
+  @@index([emailAttachmentId])
+  @@map("reply_draft_attachments")
+}
+
+model EmailSendAttempt {
+  id                     String        @id @default(dbgenerated("'send_attempt_' || gen_random_uuid()::TEXT"))
+  replyDraftId           String        @map("reply_draft_id")
+  inquiryCaseId          String        @map("inquiry_case_id")
+  outboundEmailMessageId String?       @map("outbound_email_message_id")
+  operationMode          String        @map("operation_mode")
+  provider               String
+  status                 String
+  idempotencyKey         String        @unique @map("idempotency_key")
+  messageId              String?       @map("message_id")
+  recipient              String
+  subject                String
+  initiatedBy            String        @map("initiated_by")
+  providerResponseJson   Json          @default("{}") @map("provider_response_json")
+  errorCode              String?       @map("error_code")
+  errorMessage           String?       @map("error_message")
+  startedAt              DateTime      @default(now()) @map("started_at") @db.Timestamptz(6)
+  completedAt            DateTime?     @map("completed_at") @db.Timestamptz(6)
+  createdAt              DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  replyDraft             ReplyDraft    @relation(fields: [replyDraftId], references: [id], onDelete: Restrict)
+  inquiryCase            InquiryCase   @relation(fields: [inquiryCaseId], references: [id], onDelete: Restrict)
+  outboundEmailMessage   EmailMessage? @relation(fields: [outboundEmailMessageId], references: [id], onDelete: SetNull)
+
+  @@index([replyDraftId])
+  @@index([inquiryCaseId])
+  @@index([status])
+  @@index([startedAt])
+  @@map("email_send_attempts")
+}
 model AiContextSnapshot {
   id               String        @id @default(dbgenerated("'context_snapshot_' || gen_random_uuid()::TEXT"))
   inquiryCaseId    String?       @map("inquiry_case_id")

@@ -64,6 +64,8 @@ export const ModelName = {
   AiDecision: 'AiDecision',
   InquiryStructuredFact: 'InquiryStructuredFact',
   ReplyDraft: 'ReplyDraft',
+  ReplyDraftAttachment: 'ReplyDraftAttachment',
+  EmailSendAttempt: 'EmailSendAttempt',
   AiContextSnapshot: 'AiContextSnapshot',
   InquiryContextSummary: 'InquiryContextSummary',
   InquiryStatusLog: 'InquiryStatusLog'
@@ -355,17 +357,69 @@ export const ReplyDraftScalarFieldEnum = {
   inquiryCaseId: 'inquiryCaseId',
   sourceEmailMessageId: 'sourceEmailMessageId',
   sentEmailMessageId: 'sentEmailMessageId',
+  contextSnapshotId: 'contextSnapshotId',
+  aiDecisionId: 'aiDecisionId',
+  idempotencyKey: 'idempotencyKey',
   draftType: 'draftType',
   status: 'status',
   subject: 'subject',
   bodyText: 'bodyText',
+  originalSubject: 'originalSubject',
+  originalBodyText: 'originalBodyText',
+  language: 'language',
+  usedFactsJson: 'usedFactsJson',
+  unresolvedQuestionsJson: 'unresolvedQuestionsJson',
+  warningsJson: 'warningsJson',
+  requiresCommercialReview: 'requiresCommercialReview',
+  promptVersion: 'promptVersion',
   modelName: 'modelName',
+  version: 'version',
   createdByType: 'createdByType',
+  approvedBy: 'approvedBy',
+  approvedAt: 'approvedAt',
+  rejectedBy: 'rejectedBy',
+  rejectedAt: 'rejectedAt',
+  rejectionReason: 'rejectionReason',
+  sentAt: 'sentAt',
+  lastSendError: 'lastSendError',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type ReplyDraftScalarFieldEnum = (typeof ReplyDraftScalarFieldEnum)[keyof typeof ReplyDraftScalarFieldEnum]
+
+
+export const ReplyDraftAttachmentScalarFieldEnum = {
+  replyDraftId: 'replyDraftId',
+  emailAttachmentId: 'emailAttachmentId',
+  createdAt: 'createdAt'
+} as const
+
+export type ReplyDraftAttachmentScalarFieldEnum = (typeof ReplyDraftAttachmentScalarFieldEnum)[keyof typeof ReplyDraftAttachmentScalarFieldEnum]
+
+
+export const EmailSendAttemptScalarFieldEnum = {
+  id: 'id',
+  replyDraftId: 'replyDraftId',
+  inquiryCaseId: 'inquiryCaseId',
+  outboundEmailMessageId: 'outboundEmailMessageId',
+  operationMode: 'operationMode',
+  provider: 'provider',
+  status: 'status',
+  idempotencyKey: 'idempotencyKey',
+  messageId: 'messageId',
+  recipient: 'recipient',
+  subject: 'subject',
+  initiatedBy: 'initiatedBy',
+  providerResponseJson: 'providerResponseJson',
+  errorCode: 'errorCode',
+  errorMessage: 'errorMessage',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type EmailSendAttemptScalarFieldEnum = (typeof EmailSendAttemptScalarFieldEnum)[keyof typeof EmailSendAttemptScalarFieldEnum]
 
 
 export const AiContextSnapshotScalarFieldEnum = {

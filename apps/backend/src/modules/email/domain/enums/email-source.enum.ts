@@ -4,4 +4,6 @@ export enum EmailSource {
   WEBHOOK = 'webhook',
   MANUAL = 'manual',
   SYSTEM_DETECTED = 'system_detected',
+  SIMULATED_SEND = 'simulated_send',
+  SMTP = 'smtp',
 }

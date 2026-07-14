@@ -71,6 +71,7 @@ export const aiEmailAnalysisContextPayloadSchema = z.object({
   recentThreadMessages: z.array(aiEmailThreadMessageContextSchema),
   ragReferences: z.array(aiEmailRagReferenceContextSchema),
   currentEmail: aiEmailCurrentMessageContextSchema,
+  humanInstructions: z.string().trim().min(1).optional(),
   outputInstruction: z.object({
     format: z.literal('json_only'),
     schema: z.record(z.string(), z.string()),

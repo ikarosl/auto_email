@@ -366,6 +366,11 @@ export class ImapPollService implements OnApplicationBootstrap, OnApplicationShu
       result.inquiryCase.status,
       result.aiTransitionResult,
     );
+    if (result.replyDraftId) {
+      this.logger.log(`AI 回复草稿已生成: draft=${result.replyDraftId} inquiry=${inquiryId}`);
+    } else if (result.replyDraftError) {
+      this.logger.warn(`AI 回复草稿生成失败: inquiry=${inquiryId} reason=${result.replyDraftError}`);
+    }
   }
 
   // -----------------------------------------------------------------------

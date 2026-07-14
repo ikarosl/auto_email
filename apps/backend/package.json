@@ -36,6 +36,7 @@
     "html-to-text": "10.0.0",
     "imapflow": "^1.0.194",
     "mailparser": "^3.7.2",
+    "nodemailer": "^9.0.3",
     "openai": "^5.8.2",
     "pdf-parse": "^1.1.1",
     "pg": "^8.22.0",
@@ -47,6 +48,7 @@
   "devDependencies": {
     "@types/html-to-text": "^9.0.4",
     "@types/mailparser": "^3.4.6",
+    "@types/nodemailer": "^8.0.1",
     "@types/pg": "^8.20.0",
     "prisma": "^7.8.0",
     "rimraf": "^6.0.1",

@@ -102,6 +102,30 @@ describe('InquiryStateMachine', () => {
     );
   });
 
+  it('allows a sent quote event and requires a reasoned human correction', () => {
+    assert.equal(
+      stateMachine.canTransition(InquiryStatus.READY_FOR_QUOTE, InquiryStatus.QUOTED, {
+        operatorType: 'system',
+        reason: 'Approved quote email sent.',
+      }),
+      true,
+    );
+    assert.equal(
+      stateMachine.canTransition(InquiryStatus.QUOTED, InquiryStatus.READY_FOR_QUOTE, {
+        operatorType: 'system',
+        reason: 'Correction.',
+      }),
+      false,
+    );
+    assert.equal(
+      stateMachine.canTransition(InquiryStatus.QUOTED, InquiryStatus.READY_FOR_QUOTE, {
+        operatorType: 'human',
+        reason: 'Quotation needs correction.',
+      }),
+      true,
+    );
+  });
+
   it('returns allowed next statuses after applying guard rules', () => {
     assert.deepEqual(
       stateMachine.getAllowedNextStatuses(InquiryStatus.NEW, {

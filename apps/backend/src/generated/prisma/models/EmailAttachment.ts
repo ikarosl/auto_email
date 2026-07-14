@@ -434,6 +434,7 @@ export type EmailAttachmentWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"EmailAttachment"> | Date | string
   emailMessage?: Prisma.XOR<Prisma.EmailMessageScalarRelationFilter, Prisma.EmailMessageWhereInput>
   inquiryCase?: Prisma.XOR<Prisma.InquiryCaseNullableScalarRelationFilter, Prisma.InquiryCaseWhereInput> | null
+  replyDraftLinks?: Prisma.ReplyDraftAttachmentListRelationFilter
 }
 
 export type EmailAttachmentOrderByWithRelationInput = {
@@ -471,6 +472,7 @@ export type EmailAttachmentOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   emailMessage?: Prisma.EmailMessageOrderByWithRelationInput
   inquiryCase?: Prisma.InquiryCaseOrderByWithRelationInput
+  replyDraftLinks?: Prisma.ReplyDraftAttachmentOrderByRelationAggregateInput
 }
 
 export type EmailAttachmentWhereUniqueInput = Prisma.AtLeast<{
@@ -511,6 +513,7 @@ export type EmailAttachmentWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"EmailAttachment"> | Date | string
   emailMessage?: Prisma.XOR<Prisma.EmailMessageScalarRelationFilter, Prisma.EmailMessageWhereInput>
   inquiryCase?: Prisma.XOR<Prisma.InquiryCaseNullableScalarRelationFilter, Prisma.InquiryCaseWhereInput> | null
+  replyDraftLinks?: Prisma.ReplyDraftAttachmentListRelationFilter
 }, "id">
 
 export type EmailAttachmentOrderByWithAggregationInput = {
@@ -624,6 +627,7 @@ export type EmailAttachmentCreateInput = {
   updatedAt?: Date | string
   emailMessage: Prisma.EmailMessageCreateNestedOneWithoutAttachmentsInput
   inquiryCase?: Prisma.InquiryCaseCreateNestedOneWithoutAttachmentsInput
+  replyDraftLinks?: Prisma.ReplyDraftAttachmentCreateNestedManyWithoutEmailAttachmentInput
 }
 
 export type EmailAttachmentUncheckedCreateInput = {
@@ -659,6 +663,7 @@ export type EmailAttachmentUncheckedCreateInput = {
   isContextCandidate?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  replyDraftLinks?: Prisma.ReplyDraftAttachmentUncheckedCreateNestedManyWithoutEmailAttachmentInput
 }
 
 export type EmailAttachmentUpdateInput = {
@@ -694,6 +699,7 @@ export type EmailAttachmentUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   emailMessage?: Prisma.EmailMessageUpdateOneRequiredWithoutAttachmentsNestedInput
   inquiryCase?: Prisma.InquiryCaseUpdateOneWithoutAttachmentsNestedInput
+  replyDraftLinks?: Prisma.ReplyDraftAttachmentUpdateManyWithoutEmailAttachmentNestedInput
 }
 
 export type EmailAttachmentUncheckedUpdateInput = {
@@ -729,6 +735,7 @@ export type EmailAttachmentUncheckedUpdateInput = {
   isContextCandidate?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  replyDraftLinks?: Prisma.ReplyDraftAttachmentUncheckedUpdateManyWithoutEmailAttachmentNestedInput
 }
 
 export type EmailAttachmentCreateManyInput = {
@@ -957,6 +964,11 @@ export type EmailAttachmentSumOrderByAggregateInput = {
   parsedTextLength?: Prisma.SortOrder
 }
 
+export type EmailAttachmentScalarRelationFilter = {
+  is?: Prisma.EmailAttachmentWhereInput
+  isNot?: Prisma.EmailAttachmentWhereInput
+}
+
 export type EmailAttachmentCreateNestedManyWithoutEmailMessageInput = {
   create?: Prisma.XOR<Prisma.EmailAttachmentCreateWithoutEmailMessageInput, Prisma.EmailAttachmentUncheckedCreateWithoutEmailMessageInput> | Prisma.EmailAttachmentCreateWithoutEmailMessageInput[] | Prisma.EmailAttachmentUncheckedCreateWithoutEmailMessageInput[]
   connectOrCreate?: Prisma.EmailAttachmentCreateOrConnectWithoutEmailMessageInput | Prisma.EmailAttachmentCreateOrConnectWithoutEmailMessageInput[]
@@ -1049,6 +1061,20 @@ export type EmailAttachmentUncheckedUpdateManyWithoutInquiryCaseNestedInput = {
   deleteMany?: Prisma.EmailAttachmentScalarWhereInput | Prisma.EmailAttachmentScalarWhereInput[]
 }
 
+export type EmailAttachmentCreateNestedOneWithoutReplyDraftLinksInput = {
+  create?: Prisma.XOR<Prisma.EmailAttachmentCreateWithoutReplyDraftLinksInput, Prisma.EmailAttachmentUncheckedCreateWithoutReplyDraftLinksInput>
+  connectOrCreate?: Prisma.EmailAttachmentCreateOrConnectWithoutReplyDraftLinksInput
+  connect?: Prisma.EmailAttachmentWhereUniqueInput
+}
+
+export type EmailAttachmentUpdateOneRequiredWithoutReplyDraftLinksNestedInput = {
+  create?: Prisma.XOR<Prisma.EmailAttachmentCreateWithoutReplyDraftLinksInput, Prisma.EmailAttachmentUncheckedCreateWithoutReplyDraftLinksInput>
+  connectOrCreate?: Prisma.EmailAttachmentCreateOrConnectWithoutReplyDraftLinksInput
+  upsert?: Prisma.EmailAttachmentUpsertWithoutReplyDraftLinksInput
+  connect?: Prisma.EmailAttachmentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EmailAttachmentUpdateToOneWithWhereWithoutReplyDraftLinksInput, Prisma.EmailAttachmentUpdateWithoutReplyDraftLinksInput>, Prisma.EmailAttachmentUncheckedUpdateWithoutReplyDraftLinksInput>
+}
+
 export type EmailAttachmentCreateWithoutEmailMessageInput = {
   id?: string
   originalFileName?: string | null
@@ -1081,6 +1107,7 @@ export type EmailAttachmentCreateWithoutEmailMessageInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   inquiryCase?: Prisma.InquiryCaseCreateNestedOneWithoutAttachmentsInput
+  replyDraftLinks?: Prisma.ReplyDraftAttachmentCreateNestedManyWithoutEmailAttachmentInput
 }
 
 export type EmailAttachmentUncheckedCreateWithoutEmailMessageInput = {
@@ -1115,6 +1142,7 @@ export type EmailAttachmentUncheckedCreateWithoutEmailMessageInput = {
   isContextCandidate?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  replyDraftLinks?: Prisma.ReplyDraftAttachmentUncheckedCreateNestedManyWithoutEmailAttachmentInput
 }
 
 export type EmailAttachmentCreateOrConnectWithoutEmailMessageInput = {
@@ -1213,6 +1241,7 @@ export type EmailAttachmentCreateWithoutInquiryCaseInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   emailMessage: Prisma.EmailMessageCreateNestedOneWithoutAttachmentsInput
+  replyDraftLinks?: Prisma.ReplyDraftAttachmentCreateNestedManyWithoutEmailAttachmentInput
 }
 
 export type EmailAttachmentUncheckedCreateWithoutInquiryCaseInput = {
@@ -1247,6 +1276,7 @@ export type EmailAttachmentUncheckedCreateWithoutInquiryCaseInput = {
   isContextCandidate?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  replyDraftLinks?: Prisma.ReplyDraftAttachmentUncheckedCreateNestedManyWithoutEmailAttachmentInput
 }
 
 export type EmailAttachmentCreateOrConnectWithoutInquiryCaseInput = {
@@ -1273,6 +1303,162 @@ export type EmailAttachmentUpdateWithWhereUniqueWithoutInquiryCaseInput = {
 export type EmailAttachmentUpdateManyWithWhereWithoutInquiryCaseInput = {
   where: Prisma.EmailAttachmentScalarWhereInput
   data: Prisma.XOR<Prisma.EmailAttachmentUpdateManyMutationInput, Prisma.EmailAttachmentUncheckedUpdateManyWithoutInquiryCaseInput>
+}
+
+export type EmailAttachmentCreateWithoutReplyDraftLinksInput = {
+  id?: string
+  originalFileName?: string | null
+  safeFileName: string
+  contentId?: string | null
+  contentDisposition?: string | null
+  mimeType: string
+  fileExtension?: string | null
+  fileSize: bigint | number
+  contentHash?: string | null
+  storageProvider?: string
+  storagePath?: string | null
+  parseStatus?: string
+  parseStrategy?: string | null
+  parsedText?: string | null
+  parsedTextPreview?: string | null
+  parsedTextLength?: number
+  parseErrorCode?: string | null
+  parseErrorMessage?: string | null
+  parsedAt?: Date | string | null
+  ocrStatus?: string
+  ocrProvider?: string | null
+  ocrText?: string | null
+  ocrTextPreview?: string | null
+  ocrResultJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ocrErrorCode?: string | null
+  ocrAt?: Date | string | null
+  isInline?: boolean
+  isContextCandidate?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  emailMessage: Prisma.EmailMessageCreateNestedOneWithoutAttachmentsInput
+  inquiryCase?: Prisma.InquiryCaseCreateNestedOneWithoutAttachmentsInput
+}
+
+export type EmailAttachmentUncheckedCreateWithoutReplyDraftLinksInput = {
+  id?: string
+  emailMessageId: string
+  inquiryCaseId?: string | null
+  originalFileName?: string | null
+  safeFileName: string
+  contentId?: string | null
+  contentDisposition?: string | null
+  mimeType: string
+  fileExtension?: string | null
+  fileSize: bigint | number
+  contentHash?: string | null
+  storageProvider?: string
+  storagePath?: string | null
+  parseStatus?: string
+  parseStrategy?: string | null
+  parsedText?: string | null
+  parsedTextPreview?: string | null
+  parsedTextLength?: number
+  parseErrorCode?: string | null
+  parseErrorMessage?: string | null
+  parsedAt?: Date | string | null
+  ocrStatus?: string
+  ocrProvider?: string | null
+  ocrText?: string | null
+  ocrTextPreview?: string | null
+  ocrResultJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ocrErrorCode?: string | null
+  ocrAt?: Date | string | null
+  isInline?: boolean
+  isContextCandidate?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type EmailAttachmentCreateOrConnectWithoutReplyDraftLinksInput = {
+  where: Prisma.EmailAttachmentWhereUniqueInput
+  create: Prisma.XOR<Prisma.EmailAttachmentCreateWithoutReplyDraftLinksInput, Prisma.EmailAttachmentUncheckedCreateWithoutReplyDraftLinksInput>
+}
+
+export type EmailAttachmentUpsertWithoutReplyDraftLinksInput = {
+  update: Prisma.XOR<Prisma.EmailAttachmentUpdateWithoutReplyDraftLinksInput, Prisma.EmailAttachmentUncheckedUpdateWithoutReplyDraftLinksInput>
+  create: Prisma.XOR<Prisma.EmailAttachmentCreateWithoutReplyDraftLinksInput, Prisma.EmailAttachmentUncheckedCreateWithoutReplyDraftLinksInput>
+  where?: Prisma.EmailAttachmentWhereInput
+}
+
+export type EmailAttachmentUpdateToOneWithWhereWithoutReplyDraftLinksInput = {
+  where?: Prisma.EmailAttachmentWhereInput
+  data: Prisma.XOR<Prisma.EmailAttachmentUpdateWithoutReplyDraftLinksInput, Prisma.EmailAttachmentUncheckedUpdateWithoutReplyDraftLinksInput>
+}
+
+export type EmailAttachmentUpdateWithoutReplyDraftLinksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  originalFileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  safeFileName?: Prisma.StringFieldUpdateOperationsInput | string
+  contentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentDisposition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  fileExtension?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileSize?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  contentHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  storageProvider?: Prisma.StringFieldUpdateOperationsInput | string
+  storagePath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parseStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  parseStrategy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parsedText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parsedTextPreview?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parsedTextLength?: Prisma.IntFieldUpdateOperationsInput | number
+  parseErrorCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parseErrorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ocrStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  ocrProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ocrText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ocrTextPreview?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ocrResultJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ocrErrorCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ocrAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isInline?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isContextCandidate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  emailMessage?: Prisma.EmailMessageUpdateOneRequiredWithoutAttachmentsNestedInput
+  inquiryCase?: Prisma.InquiryCaseUpdateOneWithoutAttachmentsNestedInput
+}
+
+export type EmailAttachmentUncheckedUpdateWithoutReplyDraftLinksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  emailMessageId?: Prisma.StringFieldUpdateOperationsInput | string
+  inquiryCaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  originalFileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  safeFileName?: Prisma.StringFieldUpdateOperationsInput | string
+  contentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentDisposition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  fileExtension?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileSize?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  contentHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  storageProvider?: Prisma.StringFieldUpdateOperationsInput | string
+  storagePath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parseStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  parseStrategy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parsedText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parsedTextPreview?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parsedTextLength?: Prisma.IntFieldUpdateOperationsInput | number
+  parseErrorCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parseErrorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ocrStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  ocrProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ocrText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ocrTextPreview?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ocrResultJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ocrErrorCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ocrAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isInline?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isContextCandidate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type EmailAttachmentCreateManyEmailMessageInput = {
@@ -1341,6 +1527,7 @@ export type EmailAttachmentUpdateWithoutEmailMessageInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   inquiryCase?: Prisma.InquiryCaseUpdateOneWithoutAttachmentsNestedInput
+  replyDraftLinks?: Prisma.ReplyDraftAttachmentUpdateManyWithoutEmailAttachmentNestedInput
 }
 
 export type EmailAttachmentUncheckedUpdateWithoutEmailMessageInput = {
@@ -1375,6 +1562,7 @@ export type EmailAttachmentUncheckedUpdateWithoutEmailMessageInput = {
   isContextCandidate?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  replyDraftLinks?: Prisma.ReplyDraftAttachmentUncheckedUpdateManyWithoutEmailAttachmentNestedInput
 }
 
 export type EmailAttachmentUncheckedUpdateManyWithoutEmailMessageInput = {
@@ -1477,6 +1665,7 @@ export type EmailAttachmentUpdateWithoutInquiryCaseInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   emailMessage?: Prisma.EmailMessageUpdateOneRequiredWithoutAttachmentsNestedInput
+  replyDraftLinks?: Prisma.ReplyDraftAttachmentUpdateManyWithoutEmailAttachmentNestedInput
 }
 
 export type EmailAttachmentUncheckedUpdateWithoutInquiryCaseInput = {
@@ -1511,6 +1700,7 @@ export type EmailAttachmentUncheckedUpdateWithoutInquiryCaseInput = {
   isContextCandidate?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  replyDraftLinks?: Prisma.ReplyDraftAttachmentUncheckedUpdateManyWithoutEmailAttachmentNestedInput
 }
 
 export type EmailAttachmentUncheckedUpdateManyWithoutInquiryCaseInput = {
@@ -1548,6 +1738,35 @@ export type EmailAttachmentUncheckedUpdateManyWithoutInquiryCaseInput = {
 }
 
 
+/**
+ * Count Type EmailAttachmentCountOutputType
+ */
+
+export type EmailAttachmentCountOutputType = {
+  replyDraftLinks: number
+}
+
+export type EmailAttachmentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  replyDraftLinks?: boolean | EmailAttachmentCountOutputTypeCountReplyDraftLinksArgs
+}
+
+/**
+ * EmailAttachmentCountOutputType without action
+ */
+export type EmailAttachmentCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmailAttachmentCountOutputType
+   */
+  select?: Prisma.EmailAttachmentCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * EmailAttachmentCountOutputType without action
+ */
+export type EmailAttachmentCountOutputTypeCountReplyDraftLinksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReplyDraftAttachmentWhereInput
+}
+
 
 export type EmailAttachmentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1584,6 +1803,8 @@ export type EmailAttachmentSelect<ExtArgs extends runtime.Types.Extensions.Inter
   updatedAt?: boolean
   emailMessage?: boolean | Prisma.EmailMessageDefaultArgs<ExtArgs>
   inquiryCase?: boolean | Prisma.EmailAttachment$inquiryCaseArgs<ExtArgs>
+  replyDraftLinks?: boolean | Prisma.EmailAttachment$replyDraftLinksArgs<ExtArgs>
+  _count?: boolean | Prisma.EmailAttachmentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["emailAttachment"]>
 
 export type EmailAttachmentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1699,6 +1920,8 @@ export type EmailAttachmentOmit<ExtArgs extends runtime.Types.Extensions.Interna
 export type EmailAttachmentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   emailMessage?: boolean | Prisma.EmailMessageDefaultArgs<ExtArgs>
   inquiryCase?: boolean | Prisma.EmailAttachment$inquiryCaseArgs<ExtArgs>
+  replyDraftLinks?: boolean | Prisma.EmailAttachment$replyDraftLinksArgs<ExtArgs>
+  _count?: boolean | Prisma.EmailAttachmentCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type EmailAttachmentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   emailMessage?: boolean | Prisma.EmailMessageDefaultArgs<ExtArgs>
@@ -1714,6 +1937,7 @@ export type $EmailAttachmentPayload<ExtArgs extends runtime.Types.Extensions.Int
   objects: {
     emailMessage: Prisma.$EmailMessagePayload<ExtArgs>
     inquiryCase: Prisma.$InquiryCasePayload<ExtArgs> | null
+    replyDraftLinks: Prisma.$ReplyDraftAttachmentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2144,6 +2368,7 @@ export interface Prisma__EmailAttachmentClient<T, Null = never, ExtArgs extends 
   readonly [Symbol.toStringTag]: "PrismaPromise"
   emailMessage<T extends Prisma.EmailMessageDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmailMessageDefaultArgs<ExtArgs>>): Prisma.Prisma__EmailMessageClient<runtime.Types.Result.GetResult<Prisma.$EmailMessagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   inquiryCase<T extends Prisma.EmailAttachment$inquiryCaseArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmailAttachment$inquiryCaseArgs<ExtArgs>>): Prisma.Prisma__InquiryCaseClient<runtime.Types.Result.GetResult<Prisma.$InquiryCasePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  replyDraftLinks<T extends Prisma.EmailAttachment$replyDraftLinksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmailAttachment$replyDraftLinksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReplyDraftAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2622,6 +2847,30 @@ export type EmailAttachment$inquiryCaseArgs<ExtArgs extends runtime.Types.Extens
    */
   include?: Prisma.InquiryCaseInclude<ExtArgs> | null
   where?: Prisma.InquiryCaseWhereInput
+}
+
+/**
+ * EmailAttachment.replyDraftLinks
+ */
+export type EmailAttachment$replyDraftLinksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ReplyDraftAttachment
+   */
+  select?: Prisma.ReplyDraftAttachmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ReplyDraftAttachment
+   */
+  omit?: Prisma.ReplyDraftAttachmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReplyDraftAttachmentInclude<ExtArgs> | null
+  where?: Prisma.ReplyDraftAttachmentWhereInput
+  orderBy?: Prisma.ReplyDraftAttachmentOrderByWithRelationInput | Prisma.ReplyDraftAttachmentOrderByWithRelationInput[]
+  cursor?: Prisma.ReplyDraftAttachmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ReplyDraftAttachmentScalarFieldEnum | Prisma.ReplyDraftAttachmentScalarFieldEnum[]
 }
 
 /**

@@ -9,6 +9,8 @@ export interface BuildAiContextInput {
   purpose: ContextPurpose;
   systemPrompt: string;
   outputFormatInstruction: string;
+  outputSchema?: Record<string, string>;
+  humanInstructions?: string;
   recentEmailMessages?: EmailMessage[];
   recentOurReplies?: EmailMessage[];
   budget?: ContextBudget;

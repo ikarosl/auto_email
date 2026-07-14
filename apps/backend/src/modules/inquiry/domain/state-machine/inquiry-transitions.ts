@@ -25,7 +25,8 @@ export const INQUIRY_TRANSITIONS = {
     InquiryStatus.READY_FOR_QUOTE,
     InquiryStatus.CLOSED,
   ],
-  [InquiryStatus.READY_FOR_QUOTE]: [InquiryStatus.CLOSED],
+  [InquiryStatus.READY_FOR_QUOTE]: [InquiryStatus.QUOTED, InquiryStatus.CLOSED],
+  [InquiryStatus.QUOTED]: [InquiryStatus.READY_FOR_QUOTE, InquiryStatus.CLOSED],
   [InquiryStatus.CLOSED]: [InquiryStatus.NEW],
 } as const satisfies Record<InquiryStatus, readonly InquiryStatus[]>;
 

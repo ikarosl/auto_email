@@ -32,6 +32,17 @@ export { fetchEmailThreadMessages, fetchEmailThreads } from './thread';
 
 export { fetchContextSnapshot, fetchContextSnapshots } from './context';
 
-export { fetchAiDecisions, fetchReplyDrafts } from './ai-record';
+export {
+  approveReplyDraft,
+  createReplyDraft,
+  fetchAiDecisions,
+  fetchMailRuntime,
+  fetchReplyDraft,
+  fetchReplyDrafts,
+  regenerateReplyDraft,
+  rejectReplyDraft,
+  sendReplyDraft,
+  updateReplyDraft,
+} from './ai-record';
 
 export type { ListParams } from './shared';

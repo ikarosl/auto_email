@@ -289,6 +289,7 @@ export type InquiryCaseWhereInput = {
   contextSummary?: Prisma.XOR<Prisma.InquiryContextSummaryNullableScalarRelationFilter, Prisma.InquiryContextSummaryWhereInput> | null
   statusLogs?: Prisma.InquiryStatusLogListRelationFilter
   attachments?: Prisma.EmailAttachmentListRelationFilter
+  sendAttempts?: Prisma.EmailSendAttemptListRelationFilter
 }
 
 export type InquiryCaseOrderByWithRelationInput = {
@@ -320,6 +321,7 @@ export type InquiryCaseOrderByWithRelationInput = {
   contextSummary?: Prisma.InquiryContextSummaryOrderByWithRelationInput
   statusLogs?: Prisma.InquiryStatusLogOrderByRelationAggregateInput
   attachments?: Prisma.EmailAttachmentOrderByRelationAggregateInput
+  sendAttempts?: Prisma.EmailSendAttemptOrderByRelationAggregateInput
 }
 
 export type InquiryCaseWhereUniqueInput = Prisma.AtLeast<{
@@ -354,6 +356,7 @@ export type InquiryCaseWhereUniqueInput = Prisma.AtLeast<{
   contextSummary?: Prisma.XOR<Prisma.InquiryContextSummaryNullableScalarRelationFilter, Prisma.InquiryContextSummaryWhereInput> | null
   statusLogs?: Prisma.InquiryStatusLogListRelationFilter
   attachments?: Prisma.EmailAttachmentListRelationFilter
+  sendAttempts?: Prisma.EmailSendAttemptListRelationFilter
 }, "id">
 
 export type InquiryCaseOrderByWithAggregationInput = {
@@ -428,6 +431,7 @@ export type InquiryCaseCreateInput = {
   contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutInquiryCaseInput
+  sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutInquiryCaseInput
 }
 
 export type InquiryCaseUncheckedCreateInput = {
@@ -456,6 +460,7 @@ export type InquiryCaseUncheckedCreateInput = {
   contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutInquiryCaseInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutInquiryCaseInput
 }
 
 export type InquiryCaseUpdateInput = {
@@ -484,6 +489,7 @@ export type InquiryCaseUpdateInput = {
   contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutInquiryCaseNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseUncheckedUpdateInput = {
@@ -512,6 +518,7 @@ export type InquiryCaseUncheckedUpdateInput = {
   contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseCreateManyInput = {
@@ -851,6 +858,20 @@ export type InquiryCaseUpdateOneRequiredWithoutReplyDraftsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.InquiryCaseUpdateToOneWithWhereWithoutReplyDraftsInput, Prisma.InquiryCaseUpdateWithoutReplyDraftsInput>, Prisma.InquiryCaseUncheckedUpdateWithoutReplyDraftsInput>
 }
 
+export type InquiryCaseCreateNestedOneWithoutSendAttemptsInput = {
+  create?: Prisma.XOR<Prisma.InquiryCaseCreateWithoutSendAttemptsInput, Prisma.InquiryCaseUncheckedCreateWithoutSendAttemptsInput>
+  connectOrCreate?: Prisma.InquiryCaseCreateOrConnectWithoutSendAttemptsInput
+  connect?: Prisma.InquiryCaseWhereUniqueInput
+}
+
+export type InquiryCaseUpdateOneRequiredWithoutSendAttemptsNestedInput = {
+  create?: Prisma.XOR<Prisma.InquiryCaseCreateWithoutSendAttemptsInput, Prisma.InquiryCaseUncheckedCreateWithoutSendAttemptsInput>
+  connectOrCreate?: Prisma.InquiryCaseCreateOrConnectWithoutSendAttemptsInput
+  upsert?: Prisma.InquiryCaseUpsertWithoutSendAttemptsInput
+  connect?: Prisma.InquiryCaseWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.InquiryCaseUpdateToOneWithWhereWithoutSendAttemptsInput, Prisma.InquiryCaseUpdateWithoutSendAttemptsInput>, Prisma.InquiryCaseUncheckedUpdateWithoutSendAttemptsInput>
+}
+
 export type InquiryCaseCreateNestedOneWithoutContextSnapshotsInput = {
   create?: Prisma.XOR<Prisma.InquiryCaseCreateWithoutContextSnapshotsInput, Prisma.InquiryCaseUncheckedCreateWithoutContextSnapshotsInput>
   connectOrCreate?: Prisma.InquiryCaseCreateOrConnectWithoutContextSnapshotsInput
@@ -920,6 +941,7 @@ export type InquiryCaseCreateWithoutCustomerInput = {
   contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutInquiryCaseInput
+  sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutInquiryCaseInput
 }
 
 export type InquiryCaseUncheckedCreateWithoutCustomerInput = {
@@ -947,6 +969,7 @@ export type InquiryCaseUncheckedCreateWithoutCustomerInput = {
   contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutInquiryCaseInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutInquiryCaseInput
 }
 
 export type InquiryCaseCreateOrConnectWithoutCustomerInput = {
@@ -984,6 +1007,7 @@ export type InquiryCaseCreateWithoutPrimaryCustomerInput = {
   contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutInquiryCaseInput
+  sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutInquiryCaseInput
 }
 
 export type InquiryCaseUncheckedCreateWithoutPrimaryCustomerInput = {
@@ -1011,6 +1035,7 @@ export type InquiryCaseUncheckedCreateWithoutPrimaryCustomerInput = {
   contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutInquiryCaseInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutInquiryCaseInput
 }
 
 export type InquiryCaseCreateOrConnectWithoutPrimaryCustomerInput = {
@@ -1103,6 +1128,7 @@ export type InquiryCaseCreateWithoutOrganizationInput = {
   contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutInquiryCaseInput
+  sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutInquiryCaseInput
 }
 
 export type InquiryCaseUncheckedCreateWithoutOrganizationInput = {
@@ -1130,6 +1156,7 @@ export type InquiryCaseUncheckedCreateWithoutOrganizationInput = {
   contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutInquiryCaseInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutInquiryCaseInput
 }
 
 export type InquiryCaseCreateOrConnectWithoutOrganizationInput = {
@@ -1183,6 +1210,7 @@ export type InquiryCaseCreateWithoutAttachmentsInput = {
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutInquiryCaseInput
   contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogCreateNestedManyWithoutInquiryCaseInput
+  sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutInquiryCaseInput
 }
 
 export type InquiryCaseUncheckedCreateWithoutAttachmentsInput = {
@@ -1210,6 +1238,7 @@ export type InquiryCaseUncheckedCreateWithoutAttachmentsInput = {
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutInquiryCaseInput
   contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedCreateNestedManyWithoutInquiryCaseInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutInquiryCaseInput
 }
 
 export type InquiryCaseCreateOrConnectWithoutAttachmentsInput = {
@@ -1253,6 +1282,7 @@ export type InquiryCaseUpdateWithoutAttachmentsInput = {
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutInquiryCaseNestedInput
   contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUpdateManyWithoutInquiryCaseNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseUncheckedUpdateWithoutAttachmentsInput = {
@@ -1280,6 +1310,7 @@ export type InquiryCaseUncheckedUpdateWithoutAttachmentsInput = {
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutInquiryCaseNestedInput
   contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseCreateWithoutInquiryMessagesInput = {
@@ -1307,6 +1338,7 @@ export type InquiryCaseCreateWithoutInquiryMessagesInput = {
   contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutInquiryCaseInput
+  sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutInquiryCaseInput
 }
 
 export type InquiryCaseUncheckedCreateWithoutInquiryMessagesInput = {
@@ -1334,6 +1366,7 @@ export type InquiryCaseUncheckedCreateWithoutInquiryMessagesInput = {
   contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutInquiryCaseInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutInquiryCaseInput
 }
 
 export type InquiryCaseCreateOrConnectWithoutInquiryMessagesInput = {
@@ -1377,6 +1410,7 @@ export type InquiryCaseUpdateWithoutInquiryMessagesInput = {
   contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutInquiryCaseNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseUncheckedUpdateWithoutInquiryMessagesInput = {
@@ -1404,6 +1438,7 @@ export type InquiryCaseUncheckedUpdateWithoutInquiryMessagesInput = {
   contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseCreateWithoutAiDecisionsInput = {
@@ -1431,6 +1466,7 @@ export type InquiryCaseCreateWithoutAiDecisionsInput = {
   contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutInquiryCaseInput
+  sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutInquiryCaseInput
 }
 
 export type InquiryCaseUncheckedCreateWithoutAiDecisionsInput = {
@@ -1458,6 +1494,7 @@ export type InquiryCaseUncheckedCreateWithoutAiDecisionsInput = {
   contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutInquiryCaseInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutInquiryCaseInput
 }
 
 export type InquiryCaseCreateOrConnectWithoutAiDecisionsInput = {
@@ -1501,6 +1538,7 @@ export type InquiryCaseUpdateWithoutAiDecisionsInput = {
   contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutInquiryCaseNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseUncheckedUpdateWithoutAiDecisionsInput = {
@@ -1528,6 +1566,7 @@ export type InquiryCaseUncheckedUpdateWithoutAiDecisionsInput = {
   contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseCreateWithoutStructuredFactsInput = {
@@ -1555,6 +1594,7 @@ export type InquiryCaseCreateWithoutStructuredFactsInput = {
   contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutInquiryCaseInput
+  sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutInquiryCaseInput
 }
 
 export type InquiryCaseUncheckedCreateWithoutStructuredFactsInput = {
@@ -1582,6 +1622,7 @@ export type InquiryCaseUncheckedCreateWithoutStructuredFactsInput = {
   contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutInquiryCaseInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutInquiryCaseInput
 }
 
 export type InquiryCaseCreateOrConnectWithoutStructuredFactsInput = {
@@ -1625,6 +1666,7 @@ export type InquiryCaseUpdateWithoutStructuredFactsInput = {
   contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutInquiryCaseNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseUncheckedUpdateWithoutStructuredFactsInput = {
@@ -1652,6 +1694,7 @@ export type InquiryCaseUncheckedUpdateWithoutStructuredFactsInput = {
   contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseCreateWithoutReplyDraftsInput = {
@@ -1679,6 +1722,7 @@ export type InquiryCaseCreateWithoutReplyDraftsInput = {
   contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutInquiryCaseInput
+  sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutInquiryCaseInput
 }
 
 export type InquiryCaseUncheckedCreateWithoutReplyDraftsInput = {
@@ -1706,6 +1750,7 @@ export type InquiryCaseUncheckedCreateWithoutReplyDraftsInput = {
   contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutInquiryCaseInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutInquiryCaseInput
 }
 
 export type InquiryCaseCreateOrConnectWithoutReplyDraftsInput = {
@@ -1749,6 +1794,7 @@ export type InquiryCaseUpdateWithoutReplyDraftsInput = {
   contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutInquiryCaseNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseUncheckedUpdateWithoutReplyDraftsInput = {
@@ -1772,6 +1818,135 @@ export type InquiryCaseUncheckedUpdateWithoutReplyDraftsInput = {
   inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutInquiryCaseNestedInput
   aiDecisions?: Prisma.AiDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateOneWithoutInquiryCaseNestedInput
+  contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
+  statusLogs?: Prisma.InquiryStatusLogUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutInquiryCaseNestedInput
+}
+
+export type InquiryCaseCreateWithoutSendAttemptsInput = {
+  id?: string
+  status?: string
+  subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
+  productType?: string | null
+  latestMessageAt?: Date | string | null
+  closedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  customer: Prisma.CustomerCreateNestedOneWithoutInquiryCasesInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutInquiryCasesInput
+  primaryCustomer?: Prisma.CustomerCreateNestedOneWithoutPrimaryInquiryCasesInput
+  inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutInquiryCaseInput
+  aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutInquiryCaseInput
+  structuredFacts?: Prisma.InquiryStructuredFactCreateNestedOneWithoutInquiryCaseInput
+  replyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutInquiryCaseInput
+  contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutInquiryCaseInput
+  contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
+  statusLogs?: Prisma.InquiryStatusLogCreateNestedManyWithoutInquiryCaseInput
+  attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutInquiryCaseInput
+}
+
+export type InquiryCaseUncheckedCreateWithoutSendAttemptsInput = {
+  id?: string
+  customerId: string
+  organizationId?: string | null
+  primaryCustomerId?: string | null
+  status?: string
+  subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
+  productType?: string | null
+  latestMessageAt?: Date | string | null
+  closedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutInquiryCaseInput
+  aiDecisions?: Prisma.AiDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  structuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedOneWithoutInquiryCaseInput
+  replyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutInquiryCaseInput
+  contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutInquiryCaseInput
+  contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
+  statusLogs?: Prisma.InquiryStatusLogUncheckedCreateNestedManyWithoutInquiryCaseInput
+  attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutInquiryCaseInput
+}
+
+export type InquiryCaseCreateOrConnectWithoutSendAttemptsInput = {
+  where: Prisma.InquiryCaseWhereUniqueInput
+  create: Prisma.XOR<Prisma.InquiryCaseCreateWithoutSendAttemptsInput, Prisma.InquiryCaseUncheckedCreateWithoutSendAttemptsInput>
+}
+
+export type InquiryCaseUpsertWithoutSendAttemptsInput = {
+  update: Prisma.XOR<Prisma.InquiryCaseUpdateWithoutSendAttemptsInput, Prisma.InquiryCaseUncheckedUpdateWithoutSendAttemptsInput>
+  create: Prisma.XOR<Prisma.InquiryCaseCreateWithoutSendAttemptsInput, Prisma.InquiryCaseUncheckedCreateWithoutSendAttemptsInput>
+  where?: Prisma.InquiryCaseWhereInput
+}
+
+export type InquiryCaseUpdateToOneWithWhereWithoutSendAttemptsInput = {
+  where?: Prisma.InquiryCaseWhereInput
+  data: Prisma.XOR<Prisma.InquiryCaseUpdateWithoutSendAttemptsInput, Prisma.InquiryCaseUncheckedUpdateWithoutSendAttemptsInput>
+}
+
+export type InquiryCaseUpdateWithoutSendAttemptsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutInquiryCasesNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutInquiryCasesNestedInput
+  primaryCustomer?: Prisma.CustomerUpdateOneWithoutPrimaryInquiryCasesNestedInput
+  inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutInquiryCaseNestedInput
+  aiDecisions?: Prisma.AiDecisionUpdateManyWithoutInquiryCaseNestedInput
+  structuredFacts?: Prisma.InquiryStructuredFactUpdateOneWithoutInquiryCaseNestedInput
+  replyDrafts?: Prisma.ReplyDraftUpdateManyWithoutInquiryCaseNestedInput
+  contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutInquiryCaseNestedInput
+  contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
+  statusLogs?: Prisma.InquiryStatusLogUpdateManyWithoutInquiryCaseNestedInput
+  attachments?: Prisma.EmailAttachmentUpdateManyWithoutInquiryCaseNestedInput
+}
+
+export type InquiryCaseUncheckedUpdateWithoutSendAttemptsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  aiDecisions?: Prisma.AiDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  structuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateOneWithoutInquiryCaseNestedInput
+  replyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutInquiryCaseNestedInput
   contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedUpdateManyWithoutInquiryCaseNestedInput
@@ -1803,6 +1978,7 @@ export type InquiryCaseCreateWithoutContextSnapshotsInput = {
   contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutInquiryCaseInput
+  sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutInquiryCaseInput
 }
 
 export type InquiryCaseUncheckedCreateWithoutContextSnapshotsInput = {
@@ -1830,6 +2006,7 @@ export type InquiryCaseUncheckedCreateWithoutContextSnapshotsInput = {
   contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutInquiryCaseInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutInquiryCaseInput
 }
 
 export type InquiryCaseCreateOrConnectWithoutContextSnapshotsInput = {
@@ -1873,6 +2050,7 @@ export type InquiryCaseUpdateWithoutContextSnapshotsInput = {
   contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutInquiryCaseNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseUncheckedUpdateWithoutContextSnapshotsInput = {
@@ -1900,6 +2078,7 @@ export type InquiryCaseUncheckedUpdateWithoutContextSnapshotsInput = {
   contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseCreateWithoutContextSummaryInput = {
@@ -1927,6 +2106,7 @@ export type InquiryCaseCreateWithoutContextSummaryInput = {
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutInquiryCaseInput
+  sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutInquiryCaseInput
 }
 
 export type InquiryCaseUncheckedCreateWithoutContextSummaryInput = {
@@ -1954,6 +2134,7 @@ export type InquiryCaseUncheckedCreateWithoutContextSummaryInput = {
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutInquiryCaseInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutInquiryCaseInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutInquiryCaseInput
 }
 
 export type InquiryCaseCreateOrConnectWithoutContextSummaryInput = {
@@ -1997,6 +2178,7 @@ export type InquiryCaseUpdateWithoutContextSummaryInput = {
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutInquiryCaseNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseUncheckedUpdateWithoutContextSummaryInput = {
@@ -2024,6 +2206,7 @@ export type InquiryCaseUncheckedUpdateWithoutContextSummaryInput = {
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseCreateWithoutStatusLogsInput = {
@@ -2051,6 +2234,7 @@ export type InquiryCaseCreateWithoutStatusLogsInput = {
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutInquiryCaseInput
   contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutInquiryCaseInput
+  sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutInquiryCaseInput
 }
 
 export type InquiryCaseUncheckedCreateWithoutStatusLogsInput = {
@@ -2078,6 +2262,7 @@ export type InquiryCaseUncheckedCreateWithoutStatusLogsInput = {
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutInquiryCaseInput
   contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutInquiryCaseInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutInquiryCaseInput
 }
 
 export type InquiryCaseCreateOrConnectWithoutStatusLogsInput = {
@@ -2121,6 +2306,7 @@ export type InquiryCaseUpdateWithoutStatusLogsInput = {
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutInquiryCaseNestedInput
   contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutInquiryCaseNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseUncheckedUpdateWithoutStatusLogsInput = {
@@ -2148,6 +2334,7 @@ export type InquiryCaseUncheckedUpdateWithoutStatusLogsInput = {
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutInquiryCaseNestedInput
   contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseCreateManyCustomerInput = {
@@ -2213,6 +2400,7 @@ export type InquiryCaseUpdateWithoutCustomerInput = {
   contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutInquiryCaseNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseUncheckedUpdateWithoutCustomerInput = {
@@ -2240,6 +2428,7 @@ export type InquiryCaseUncheckedUpdateWithoutCustomerInput = {
   contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseUncheckedUpdateManyWithoutCustomerInput = {
@@ -2286,6 +2475,7 @@ export type InquiryCaseUpdateWithoutPrimaryCustomerInput = {
   contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutInquiryCaseNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseUncheckedUpdateWithoutPrimaryCustomerInput = {
@@ -2313,6 +2503,7 @@ export type InquiryCaseUncheckedUpdateWithoutPrimaryCustomerInput = {
   contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseUncheckedUpdateManyWithoutPrimaryCustomerInput = {
@@ -2378,6 +2569,7 @@ export type InquiryCaseUpdateWithoutOrganizationInput = {
   contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutInquiryCaseNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseUncheckedUpdateWithoutOrganizationInput = {
@@ -2405,6 +2597,7 @@ export type InquiryCaseUncheckedUpdateWithoutOrganizationInput = {
   contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
   statusLogs?: Prisma.InquiryStatusLogUncheckedUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseUncheckedUpdateManyWithoutOrganizationInput = {
@@ -2438,6 +2631,7 @@ export type InquiryCaseCountOutputType = {
   contextSnapshots: number
   statusLogs: number
   attachments: number
+  sendAttempts: number
 }
 
 export type InquiryCaseCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2447,6 +2641,7 @@ export type InquiryCaseCountOutputTypeSelect<ExtArgs extends runtime.Types.Exten
   contextSnapshots?: boolean | InquiryCaseCountOutputTypeCountContextSnapshotsArgs
   statusLogs?: boolean | InquiryCaseCountOutputTypeCountStatusLogsArgs
   attachments?: boolean | InquiryCaseCountOutputTypeCountAttachmentsArgs
+  sendAttempts?: boolean | InquiryCaseCountOutputTypeCountSendAttemptsArgs
 }
 
 /**
@@ -2501,6 +2696,13 @@ export type InquiryCaseCountOutputTypeCountAttachmentsArgs<ExtArgs extends runti
   where?: Prisma.EmailAttachmentWhereInput
 }
 
+/**
+ * InquiryCaseCountOutputType without action
+ */
+export type InquiryCaseCountOutputTypeCountSendAttemptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmailSendAttemptWhereInput
+}
+
 
 export type InquiryCaseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2531,6 +2733,7 @@ export type InquiryCaseSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   contextSummary?: boolean | Prisma.InquiryCase$contextSummaryArgs<ExtArgs>
   statusLogs?: boolean | Prisma.InquiryCase$statusLogsArgs<ExtArgs>
   attachments?: boolean | Prisma.InquiryCase$attachmentsArgs<ExtArgs>
+  sendAttempts?: boolean | Prisma.InquiryCase$sendAttemptsArgs<ExtArgs>
   _count?: boolean | Prisma.InquiryCaseCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["inquiryCase"]>
 
@@ -2613,6 +2816,7 @@ export type InquiryCaseInclude<ExtArgs extends runtime.Types.Extensions.Internal
   contextSummary?: boolean | Prisma.InquiryCase$contextSummaryArgs<ExtArgs>
   statusLogs?: boolean | Prisma.InquiryCase$statusLogsArgs<ExtArgs>
   attachments?: boolean | Prisma.InquiryCase$attachmentsArgs<ExtArgs>
+  sendAttempts?: boolean | Prisma.InquiryCase$sendAttemptsArgs<ExtArgs>
   _count?: boolean | Prisma.InquiryCaseCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type InquiryCaseIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2640,6 +2844,7 @@ export type $InquiryCasePayload<ExtArgs extends runtime.Types.Extensions.Interna
     contextSummary: Prisma.$InquiryContextSummaryPayload<ExtArgs> | null
     statusLogs: Prisma.$InquiryStatusLogPayload<ExtArgs>[]
     attachments: Prisma.$EmailAttachmentPayload<ExtArgs>[]
+    sendAttempts: Prisma.$EmailSendAttemptPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3064,6 +3269,7 @@ export interface Prisma__InquiryCaseClient<T, Null = never, ExtArgs extends runt
   contextSummary<T extends Prisma.InquiryCase$contextSummaryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InquiryCase$contextSummaryArgs<ExtArgs>>): Prisma.Prisma__InquiryContextSummaryClient<runtime.Types.Result.GetResult<Prisma.$InquiryContextSummaryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   statusLogs<T extends Prisma.InquiryCase$statusLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InquiryCase$statusLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InquiryStatusLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   attachments<T extends Prisma.InquiryCase$attachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InquiryCase$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmailAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  sendAttempts<T extends Prisma.InquiryCase$sendAttemptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InquiryCase$sendAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmailSendAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3728,6 +3934,30 @@ export type InquiryCase$attachmentsArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   distinct?: Prisma.EmailAttachmentScalarFieldEnum | Prisma.EmailAttachmentScalarFieldEnum[]
+}
+
+/**
+ * InquiryCase.sendAttempts
+ */
+export type InquiryCase$sendAttemptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmailSendAttempt
+   */
+  select?: Prisma.EmailSendAttemptSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmailSendAttempt
+   */
+  omit?: Prisma.EmailSendAttemptOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmailSendAttemptInclude<ExtArgs> | null
+  where?: Prisma.EmailSendAttemptWhereInput
+  orderBy?: Prisma.EmailSendAttemptOrderByWithRelationInput | Prisma.EmailSendAttemptOrderByWithRelationInput[]
+  cursor?: Prisma.EmailSendAttemptWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EmailSendAttemptScalarFieldEnum | Prisma.EmailSendAttemptScalarFieldEnum[]
 }
 
 /**

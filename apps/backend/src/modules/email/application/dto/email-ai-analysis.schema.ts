@@ -22,11 +22,18 @@ export const emailAiAnalysisSchema = z
     missingFields: z.array(z.string()),
     extractedRequirements: z.object({
       productType: extractedRequirementValueSchema,
+      structureType: extractedRequirementValueSchema,
       frequencyRange: extractedRequirementValueSchema,
       power: extractedRequirementValueSchema,
+      insertionLoss: extractedRequirementValueSchema,
+      isolation: extractedRequirementValueSchema,
+      vswr: extractedRequirementValueSchema,
+      connector: extractedRequirementValueSchema,
       quantity: extractedRequirementValueSchema,
       sizeRequirement: extractedRequirementValueSchema,
       application: extractedRequirementValueSchema,
+      deliveryRequirement: extractedRequirementValueSchema,
+      specialRequirements: extractedRequirementValueSchema,
     }),
     quoteBoundaryDetected: z.boolean(),
     humanReviewRequired: z.boolean(),
@@ -43,12 +50,13 @@ export const emailAiAnalysisSchema = z
 
     if (
       (value.suggestedStatus === InquiryStatus.READY_FOR_QUOTE ||
+        value.suggestedStatus === InquiryStatus.QUOTED ||
         value.suggestedStatus === InquiryStatus.CLOSED) &&
       !value.humanReviewRequired
     ) {
       context.addIssue({
         code: z.ZodIssueCode.custom,
-        message: 'ready_for_quote or closed suggestions require humanReviewRequired=true.',
+        message: 'ready_for_quote, quoted, or closed suggestions require humanReviewRequired=true.',
         path: ['humanReviewRequired'],
       });
     }

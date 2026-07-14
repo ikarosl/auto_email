@@ -171,6 +171,7 @@ function selectRecentThreadMessages(
 
   return messages
     .filter((message) => !excludedIds.has(message.id))
+    .filter((message) => process.env.MAIL_OPERATION_MODE !== 'production' || message.source !== 'simulated_send')
     .sort((a, b) => a.receivedAt.getTime() - b.receivedAt.getTime());
 }
 
@@ -201,9 +202,12 @@ function buildContextPayload(
       to: formatRecipients(input.currentEmailMessage.toEmails),
       subject: formatSubject(input.currentEmailMessage.subject),
     },
+    ...(input.humanInstructions?.trim()
+      ? { humanInstructions: input.humanInstructions.trim() }
+      : {}),
     outputInstruction: {
       format: 'json_only',
-      schema: {
+      schema: input.outputSchema ?? {
         isInquiry: 'boolean',
         classification: 'valid_inquiry | invalid | unrelated_product | commercial | unknown',
         suggestedStatus: 'new | need_clarification | need_engineer_review | ready_for_quote | quoted | closed | invalid',

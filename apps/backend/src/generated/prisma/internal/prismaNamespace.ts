@@ -397,6 +397,8 @@ export const ModelName = {
   AiDecision: 'AiDecision',
   InquiryStructuredFact: 'InquiryStructuredFact',
   ReplyDraft: 'ReplyDraft',
+  ReplyDraftAttachment: 'ReplyDraftAttachment',
+  EmailSendAttempt: 'EmailSendAttempt',
   AiContextSnapshot: 'AiContextSnapshot',
   InquiryContextSummary: 'InquiryContextSummary',
   InquiryStatusLog: 'InquiryStatusLog'
@@ -415,7 +417,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "mailboxAccount" | "mailboxSyncState" | "customer" | "organization" | "emailThread" | "emailMessage" | "emailAttachment" | "inquiryCase" | "inquiryMessage" | "processedEmail" | "aiDecision" | "inquiryStructuredFact" | "replyDraft" | "aiContextSnapshot" | "inquiryContextSummary" | "inquiryStatusLog"
+    modelProps: "mailboxAccount" | "mailboxSyncState" | "customer" | "organization" | "emailThread" | "emailMessage" | "emailAttachment" | "inquiryCase" | "inquiryMessage" | "processedEmail" | "aiDecision" | "inquiryStructuredFact" | "replyDraft" | "replyDraftAttachment" | "emailSendAttempt" | "aiContextSnapshot" | "inquiryContextSummary" | "inquiryStatusLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1381,6 +1383,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ReplyDraftAttachment: {
+      payload: Prisma.$ReplyDraftAttachmentPayload<ExtArgs>
+      fields: Prisma.ReplyDraftAttachmentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ReplyDraftAttachmentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReplyDraftAttachmentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ReplyDraftAttachmentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReplyDraftAttachmentPayload>
+        }
+        findFirst: {
+          args: Prisma.ReplyDraftAttachmentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReplyDraftAttachmentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ReplyDraftAttachmentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReplyDraftAttachmentPayload>
+        }
+        findMany: {
+          args: Prisma.ReplyDraftAttachmentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReplyDraftAttachmentPayload>[]
+        }
+        create: {
+          args: Prisma.ReplyDraftAttachmentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReplyDraftAttachmentPayload>
+        }
+        createMany: {
+          args: Prisma.ReplyDraftAttachmentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ReplyDraftAttachmentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReplyDraftAttachmentPayload>[]
+        }
+        delete: {
+          args: Prisma.ReplyDraftAttachmentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReplyDraftAttachmentPayload>
+        }
+        update: {
+          args: Prisma.ReplyDraftAttachmentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReplyDraftAttachmentPayload>
+        }
+        deleteMany: {
+          args: Prisma.ReplyDraftAttachmentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ReplyDraftAttachmentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ReplyDraftAttachmentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReplyDraftAttachmentPayload>[]
+        }
+        upsert: {
+          args: Prisma.ReplyDraftAttachmentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReplyDraftAttachmentPayload>
+        }
+        aggregate: {
+          args: Prisma.ReplyDraftAttachmentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateReplyDraftAttachment>
+        }
+        groupBy: {
+          args: Prisma.ReplyDraftAttachmentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReplyDraftAttachmentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ReplyDraftAttachmentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReplyDraftAttachmentCountAggregateOutputType> | number
+        }
+      }
+    }
+    EmailSendAttempt: {
+      payload: Prisma.$EmailSendAttemptPayload<ExtArgs>
+      fields: Prisma.EmailSendAttemptFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EmailSendAttemptFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailSendAttemptPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EmailSendAttemptFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailSendAttemptPayload>
+        }
+        findFirst: {
+          args: Prisma.EmailSendAttemptFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailSendAttemptPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EmailSendAttemptFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailSendAttemptPayload>
+        }
+        findMany: {
+          args: Prisma.EmailSendAttemptFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailSendAttemptPayload>[]
+        }
+        create: {
+          args: Prisma.EmailSendAttemptCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailSendAttemptPayload>
+        }
+        createMany: {
+          args: Prisma.EmailSendAttemptCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EmailSendAttemptCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailSendAttemptPayload>[]
+        }
+        delete: {
+          args: Prisma.EmailSendAttemptDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailSendAttemptPayload>
+        }
+        update: {
+          args: Prisma.EmailSendAttemptUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailSendAttemptPayload>
+        }
+        deleteMany: {
+          args: Prisma.EmailSendAttemptDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EmailSendAttemptUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EmailSendAttemptUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailSendAttemptPayload>[]
+        }
+        upsert: {
+          args: Prisma.EmailSendAttemptUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailSendAttemptPayload>
+        }
+        aggregate: {
+          args: Prisma.EmailSendAttemptAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEmailSendAttempt>
+        }
+        groupBy: {
+          args: Prisma.EmailSendAttemptGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmailSendAttemptGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EmailSendAttemptCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmailSendAttemptCountAggregateOutputType> | number
+        }
+      }
+    }
     AiContextSnapshot: {
       payload: Prisma.$AiContextSnapshotPayload<ExtArgs>
       fields: Prisma.AiContextSnapshotFieldRefs
@@ -1912,17 +2062,69 @@ export const ReplyDraftScalarFieldEnum = {
   inquiryCaseId: 'inquiryCaseId',
   sourceEmailMessageId: 'sourceEmailMessageId',
   sentEmailMessageId: 'sentEmailMessageId',
+  contextSnapshotId: 'contextSnapshotId',
+  aiDecisionId: 'aiDecisionId',
+  idempotencyKey: 'idempotencyKey',
   draftType: 'draftType',
   status: 'status',
   subject: 'subject',
   bodyText: 'bodyText',
+  originalSubject: 'originalSubject',
+  originalBodyText: 'originalBodyText',
+  language: 'language',
+  usedFactsJson: 'usedFactsJson',
+  unresolvedQuestionsJson: 'unresolvedQuestionsJson',
+  warningsJson: 'warningsJson',
+  requiresCommercialReview: 'requiresCommercialReview',
+  promptVersion: 'promptVersion',
   modelName: 'modelName',
+  version: 'version',
   createdByType: 'createdByType',
+  approvedBy: 'approvedBy',
+  approvedAt: 'approvedAt',
+  rejectedBy: 'rejectedBy',
+  rejectedAt: 'rejectedAt',
+  rejectionReason: 'rejectionReason',
+  sentAt: 'sentAt',
+  lastSendError: 'lastSendError',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type ReplyDraftScalarFieldEnum = (typeof ReplyDraftScalarFieldEnum)[keyof typeof ReplyDraftScalarFieldEnum]
+
+
+export const ReplyDraftAttachmentScalarFieldEnum = {
+  replyDraftId: 'replyDraftId',
+  emailAttachmentId: 'emailAttachmentId',
+  createdAt: 'createdAt'
+} as const
+
+export type ReplyDraftAttachmentScalarFieldEnum = (typeof ReplyDraftAttachmentScalarFieldEnum)[keyof typeof ReplyDraftAttachmentScalarFieldEnum]
+
+
+export const EmailSendAttemptScalarFieldEnum = {
+  id: 'id',
+  replyDraftId: 'replyDraftId',
+  inquiryCaseId: 'inquiryCaseId',
+  outboundEmailMessageId: 'outboundEmailMessageId',
+  operationMode: 'operationMode',
+  provider: 'provider',
+  status: 'status',
+  idempotencyKey: 'idempotencyKey',
+  messageId: 'messageId',
+  recipient: 'recipient',
+  subject: 'subject',
+  initiatedBy: 'initiatedBy',
+  providerResponseJson: 'providerResponseJson',
+  errorCode: 'errorCode',
+  errorMessage: 'errorMessage',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type EmailSendAttemptScalarFieldEnum = (typeof EmailSendAttemptScalarFieldEnum)[keyof typeof EmailSendAttemptScalarFieldEnum]
 
 
 export const AiContextSnapshotScalarFieldEnum = {
@@ -2247,6 +2449,8 @@ export type GlobalOmitConfig = {
   aiDecision?: Prisma.AiDecisionOmit
   inquiryStructuredFact?: Prisma.InquiryStructuredFactOmit
   replyDraft?: Prisma.ReplyDraftOmit
+  replyDraftAttachment?: Prisma.ReplyDraftAttachmentOmit
+  emailSendAttempt?: Prisma.EmailSendAttemptOmit
   aiContextSnapshot?: Prisma.AiContextSnapshotOmit
   inquiryContextSummary?: Prisma.InquiryContextSummaryOmit
   inquiryStatusLog?: Prisma.InquiryStatusLogOmit

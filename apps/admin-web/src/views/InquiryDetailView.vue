@@ -7,6 +7,7 @@ import {
   ExternalLink,
   Lock,
   Move,
+  MessageSquarePlus,
   RefreshCcw,
   ShieldAlert,
   Unlock,
@@ -16,6 +17,7 @@ import { RouterLink, useRoute } from 'vue-router';
 import { getInquiryStatusLabel, WEB_ROUTES, INQUIRY_STATUS_LABELS } from '@email-inquiry/shared';
 
 import {
+  createReplyDraft,
   fetchContextSnapshot,
   fetchInquiry,
   fetchInquiryMessages,
@@ -64,6 +66,8 @@ const moveTargetId = ref('');
 // Link email state
 const showLinkDialog = ref(false);
 const linkEmailId = ref('');
+const showDraftDialog = ref(false);
+const draftCommercialTerms = ref('');
 
 const email_source={
   system_detected: '系统检测历史补录',
@@ -232,6 +236,26 @@ async function doLinkEmail() {
   }
 }
 
+async function doGenerateDraft() {
+  if (!item.value) return;
+  if (item.value.status === 'ready_for_quote' && !draftCommercialTerms.value.trim()) return;
+  saving.value = true;
+  try {
+    await createReplyDraft(item.value.id, {
+      targetStatus: item.value.status,
+      commercialTerms: draftCommercialTerms.value.trim() || undefined,
+    });
+    showDraftDialog.value = false;
+    draftCommercialTerms.value = '';
+    showSuccess('回复草稿已生成，请前往 AI 记录审核');
+    await load();
+  } catch (err) {
+    error.value = (err as any)?.response?.data?.message || (err instanceof Error ? err.message : String(err));
+  } finally {
+    saving.value = false;
+  }
+}
+
 function showSuccess(msg: string) {
   successMsg.value = msg;
   setTimeout(() => { successMsg.value = ''; }, 3000);
@@ -347,6 +371,13 @@ onMounted(load);
           </div>
 
           <div class="flex flex-col gap-2">
+            <Button
+              v-if="['need_clarification', 'need_engineer_review', 'ready_for_quote'].includes(item.status)"
+              size="sm"
+              @click="showDraftDialog = true"
+            >
+              <MessageSquarePlus class="h-4 w-4" /> 生成回复草稿
+            </Button>
             <Button size="sm" variant="outline" @click="showLinkDialog = true">
               <ExternalLink class="h-4 w-4" /> 关联邮件
             </Button>
@@ -603,6 +634,36 @@ onMounted(load);
                 {{ saving ? '处理中...' : '确认关联' }}
               </Button>
             </div>
+          </div>
+        </Card>
+      </div>
+    </Teleport>
+
+    <!-- Generate Draft Dialog -->
+    <Teleport to="body">
+      <div v-if="showDraftDialog" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+        @click.self="showDraftDialog = false">
+        <Card class="w-full max-w-lg p-4">
+          <h2 class="font-semibold">生成回复草稿</h2>
+          <p class="mt-1 text-sm text-muted-foreground">
+            草稿只会进入人工审核，不会自动发送。
+          </p>
+          <div class="mt-3">
+            <label class="text-sm text-muted-foreground">
+              {{ item?.status === 'ready_for_quote' ? '确认后的商业条件（必填）' : '人工补充说明（可选）' }}
+            </label>
+            <textarea v-model="draftCommercialTerms" rows="5"
+              class="mt-1 w-full rounded border px-3 py-2 text-sm"
+              placeholder="价格、数量阶梯、交期、付款或合同条件必须由人工确认后填写" />
+          </div>
+          <div class="mt-4 flex justify-end gap-2">
+            <Button variant="ghost" @click="showDraftDialog = false">取消</Button>
+            <Button
+              :disabled="saving || (item?.status === 'ready_for_quote' && !draftCommercialTerms.trim())"
+              @click="doGenerateDraft"
+            >
+              {{ saving ? '生成中...' : '生成草稿' }}
+            </Button>
           </div>
         </Card>
       </div>
