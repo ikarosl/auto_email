@@ -161,7 +161,10 @@ function mapInquiryMessage(record: any) {
     } : null,
     inquiryCase: record.inquiryCase ? {
       id: record.inquiryCase.id,
-      status: record.inquiryCase.status,
+      businessStage: record.inquiryCase.businessStage,
+      actionOwner: record.inquiryCase.actionOwner,
+      lifecycleStatus: record.inquiryCase.lifecycleStatus,
+      stateVersion: record.inquiryCase.stateVersion,
       subject: record.inquiryCase.subject,
       businessSubject: record.inquiryCase.businessSubject,
     } : null,

@@ -107,13 +107,15 @@ export class EmailThreadController {
               inquiryCase: {
                 select: {
                   id: true,
-                  status: true,
+                  businessStage: true,
+                  actionOwner: true,
+                  lifecycleStatus: true,
                   subject: true,
                 },
               },
             },
           },
-          aiDecisions: {
+          analysisDecisions: {
             orderBy: { createdAt: 'desc' },
             take: 1,
           },
@@ -180,14 +182,18 @@ function mapEmailMessage(record: any) {
       direction: link.direction,
       inquiryCase: link.inquiryCase,
     })),
-    latestAiDecision: record.aiDecisions?.[0]
+    latestAnalysisDecision: record.analysisDecisions?.[0]
       ? {
-          id: record.aiDecisions[0].id,
-          classification: record.aiDecisions[0].classification,
-          suggestedStatus: record.aiDecisions[0].suggestedStatus,
-          confidence: toNumber(record.aiDecisions[0].confidence),
-          success: record.aiDecisions[0].success,
-          createdAt: toDateIso(record.aiDecisions[0].createdAt),
+          id: record.analysisDecisions[0].id,
+          messageClassification: record.analysisDecisions[0].messageClassification,
+          suggestedState: record.analysisDecisions[0].suggestedBusinessStage ? {
+            businessStage: record.analysisDecisions[0].suggestedBusinessStage,
+            actionOwner: record.analysisDecisions[0].suggestedActionOwner,
+            lifecycleStatus: record.analysisDecisions[0].suggestedLifecycleStatus,
+          } : null,
+          confidence: toNumber(record.analysisDecisions[0].confidence),
+          success: record.analysisDecisions[0].success,
+          createdAt: toDateIso(record.analysisDecisions[0].createdAt),
         }
       : null,
   };

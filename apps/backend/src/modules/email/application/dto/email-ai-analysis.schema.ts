@@ -1,65 +1,82 @@
 import { z } from 'zod';
 
-import { InquiryStatus } from '../../../inquiry/domain/enums/inquiry-status.enum.js';
+import {
+  AI_BUSINESS_EVENT_TYPES,
+  InquiryBusinessEventActor,
+} from '../../../inquiry/domain/enums/inquiry-business-event.enum.js';
+import {
+  InquiryActionOwner,
+  InquiryBusinessStage,
+  InquiryLifecycleStatus,
+} from '../../../inquiry/domain/enums/inquiry-state.enum.js';
 
 const extractedRequirementValueSchema = z
   .union([z.string(), z.number()])
   .transform((value) => String(value).trim())
   .optional();
 
-export const emailAiAnalysisSchema = z
-  .object({
-    isInquiry: z.boolean(),
-    classification: z.enum([
-      'valid_inquiry',
-      'invalid',
-      'unknown',
+export const emailWorkflowAnalysisSchema = z.object({
+  messageClassification: z.enum([
+    'customer_inquiry',
+    'customer_follow_up',
+    'our_response',
+    'internal',
+    'invalid',
+    'unrelated_product',
+    'commercial_solicitation',
+    'unknown',
+  ]),
+  events: z.array(z.object({
+    eventType: z.enum(AI_BUSINESS_EVENT_TYPES),
+    actor: z.enum([
+      InquiryBusinessEventActor.CUSTOMER,
+      InquiryBusinessEventActor.US,
+      InquiryBusinessEventActor.SYSTEM,
     ]),
-    suggestedStatus: z.nativeEnum(InquiryStatus),
     confidence: z.number().min(0).max(1),
-    riskLevel: z.enum(['low', 'medium', 'high']),
-    reason: z.string().trim().min(1),
-    missingFields: z.array(z.string()),
-    extractedRequirements: z.object({
-      productType: extractedRequirementValueSchema,
-      structureType: extractedRequirementValueSchema,
-      frequencyRange: extractedRequirementValueSchema,
-      power: extractedRequirementValueSchema,
-      insertionLoss: extractedRequirementValueSchema,
-      isolation: extractedRequirementValueSchema,
-      vswr: extractedRequirementValueSchema,
-      connector: extractedRequirementValueSchema,
-      quantity: extractedRequirementValueSchema,
-      sizeRequirement: extractedRequirementValueSchema,
-      application: extractedRequirementValueSchema,
-      deliveryRequirement: extractedRequirementValueSchema,
-      specialRequirements: extractedRequirementValueSchema,
-    }),
-    quoteBoundaryDetected: z.boolean(),
-    humanReviewRequired: z.boolean(),
-    nextAction: z.string().trim().min(1),
-  })
-  .superRefine((value, context) => {
-    if (value.quoteBoundaryDetected && !value.humanReviewRequired) {
-      context.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'quoteBoundaryDetected=true requires humanReviewRequired=true.',
-        path: ['humanReviewRequired'],
-      });
-    }
+    evidence: z.string().trim().min(1),
+    payload: z.record(z.string(), z.unknown()).default({}),
+  })).min(1),
+  suggestedState: z.object({
+    businessStage: z.nativeEnum(InquiryBusinessStage),
+    actionOwner: z.nativeEnum(InquiryActionOwner),
+    lifecycleStatus: z.nativeEnum(InquiryLifecycleStatus),
+  }),
+  confidence: z.number().min(0).max(1),
+  riskLevel: z.enum(['low', 'medium', 'high']),
+  reason: z.string().trim().min(1),
+  missingFields: z.array(z.string()),
+  extractedRequirements: z.object({
+    productType: extractedRequirementValueSchema,
+    structureType: extractedRequirementValueSchema,
+    frequencyRange: extractedRequirementValueSchema,
+    power: extractedRequirementValueSchema,
+    insertionLoss: extractedRequirementValueSchema,
+    isolation: extractedRequirementValueSchema,
+    vswr: extractedRequirementValueSchema,
+    connector: extractedRequirementValueSchema,
+    quantity: extractedRequirementValueSchema,
+    sizeRequirement: extractedRequirementValueSchema,
+    application: extractedRequirementValueSchema,
+    deliveryRequirement: extractedRequirementValueSchema,
+    specialRequirements: extractedRequirementValueSchema,
+  }),
+  quoteBoundaryDetected: z.boolean(),
+  humanReviewRequired: z.boolean(),
+  nextAction: z.string().trim().min(1),
+}).superRefine((value, context) => {
+  if (
+    value.suggestedState.lifecycleStatus !== InquiryLifecycleStatus.ACTIVE &&
+    value.suggestedState.actionOwner !== InquiryActionOwner.NONE
+  ) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['suggestedState', 'actionOwner'],
+      message: 'Terminal lifecycle states require actionOwner=none.',
+    });
+  }
+});
 
-    if (
-      (value.suggestedStatus === InquiryStatus.READY_FOR_QUOTE ||
-        value.suggestedStatus === InquiryStatus.QUOTED ||
-        value.suggestedStatus === InquiryStatus.CLOSED) &&
-      !value.humanReviewRequired
-    ) {
-      context.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'ready_for_quote, quoted, or closed suggestions require humanReviewRequired=true.',
-        path: ['humanReviewRequired'],
-      });
-    }
-  });
-
-export type EmailAiAnalysisSchemaOutput = z.infer<typeof emailAiAnalysisSchema>;
+export const emailAiAnalysisSchema = emailWorkflowAnalysisSchema;
+export type EmailWorkflowAnalysisSchemaOutput = z.infer<typeof emailWorkflowAnalysisSchema>;
+export type EmailAiAnalysisSchemaOutput = EmailWorkflowAnalysisSchemaOutput;

@@ -9,8 +9,8 @@ import Button from '@/components/ui/Button.vue';
 import Card from '@/components/ui/Card.vue';
 import Progress from '@/components/ui/Progress.vue';
 import EmptyState from '@/components/workbench/EmptyState.vue';
-import StatusPill from '@/components/workbench/StatusPill.vue';
 import { formatDateTime } from '@/lib/format';
+import { lifecycleTone, getLifecycleLabel } from '@/types/inquiry-state';
 import { useWorkbenchStore } from '@/stores/workbench.store';
 
 const store = useWorkbenchStore();
@@ -129,7 +129,7 @@ onMounted(() => {
                 </RouterLink>
               </td>
               <td class="px-4 py-3">
-                <StatusPill :status="String(item.status)" />
+                <Badge :tone="lifecycleTone((item as any).lifecycleStatus)">{{ getLifecycleLabel((item as any).lifecycleStatus) }}</Badge>
               </td>
               <td class="px-4 py-3 text-muted-foreground">{{ item.counts?.inquiryMessages ?? 0 }}</td>
               <td class="px-4 py-3 text-muted-foreground">{{ formatDateTime(item.latestMessageAt) }}</td>

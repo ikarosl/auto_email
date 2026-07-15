@@ -61,15 +61,17 @@ export const ModelName = {
   InquiryCase: 'InquiryCase',
   InquiryMessage: 'InquiryMessage',
   ProcessedEmail: 'ProcessedEmail',
-  AiDecision: 'AiDecision',
+  EmailAnalysisDecision: 'EmailAnalysisDecision',
+  InquiryBusinessEvent: 'InquiryBusinessEvent',
+  InquiryStateDecision: 'InquiryStateDecision',
+  InquiryStateTransition: 'InquiryStateTransition',
+  EmailRecoveryRecord: 'EmailRecoveryRecord',
   InquiryStructuredFact: 'InquiryStructuredFact',
   ReplyDraft: 'ReplyDraft',
   ReplyDraftAttachment: 'ReplyDraftAttachment',
   EmailSendAttempt: 'EmailSendAttempt',
-  EmailWorkflowDecision: 'EmailWorkflowDecision',
   AiContextSnapshot: 'AiContextSnapshot',
-  InquiryContextSummary: 'InquiryContextSummary',
-  InquiryStatusLog: 'InquiryStatusLog'
+  InquiryContextSummary: 'InquiryContextSummary'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -243,7 +245,10 @@ export const InquiryCaseScalarFieldEnum = {
   customerId: 'customerId',
   organizationId: 'organizationId',
   primaryCustomerId: 'primaryCustomerId',
-  status: 'status',
+  businessStage: 'businessStage',
+  actionOwner: 'actionOwner',
+  lifecycleStatus: 'lifecycleStatus',
+  stateVersion: 'stateVersion',
   subject: 'subject',
   rawSubject: 'rawSubject',
   businessSubject: 'businessSubject',
@@ -292,12 +297,16 @@ export const ProcessedEmailScalarFieldEnum = {
 export type ProcessedEmailScalarFieldEnum = (typeof ProcessedEmailScalarFieldEnum)[keyof typeof ProcessedEmailScalarFieldEnum]
 
 
-export const AiDecisionScalarFieldEnum = {
+export const EmailAnalysisDecisionScalarFieldEnum = {
   id: 'id',
   emailMessageId: 'emailMessageId',
   inquiryCaseId: 'inquiryCaseId',
-  classification: 'classification',
-  suggestedStatus: 'suggestedStatus',
+  contextSnapshotId: 'contextSnapshotId',
+  direction: 'direction',
+  messageClassification: 'messageClassification',
+  suggestedBusinessStage: 'suggestedBusinessStage',
+  suggestedActionOwner: 'suggestedActionOwner',
+  suggestedLifecycleStatus: 'suggestedLifecycleStatus',
   confidence: 'confidence',
   riskLevel: 'riskLevel',
   reason: 'reason',
@@ -307,20 +316,111 @@ export const AiDecisionScalarFieldEnum = {
   humanReviewRequired: 'humanReviewRequired',
   nextAction: 'nextAction',
   rawResult: 'rawResult',
+  rawOutput: 'rawOutput',
   modelName: 'modelName',
+  promptVersion: 'promptVersion',
   success: 'success',
   errorCode: 'errorCode',
   errorMessage: 'errorMessage',
-  executionStatus: 'executionStatus',
-  executionFromStatus: 'executionFromStatus',
-  executionToStatus: 'executionToStatus',
-  executionReason: 'executionReason',
-  executionPolicyVersion: 'executionPolicyVersion',
-  executedAt: 'executedAt',
+  idempotencyKey: 'idempotencyKey',
   createdAt: 'createdAt'
 } as const
 
-export type AiDecisionScalarFieldEnum = (typeof AiDecisionScalarFieldEnum)[keyof typeof AiDecisionScalarFieldEnum]
+export type EmailAnalysisDecisionScalarFieldEnum = (typeof EmailAnalysisDecisionScalarFieldEnum)[keyof typeof EmailAnalysisDecisionScalarFieldEnum]
+
+
+export const InquiryBusinessEventScalarFieldEnum = {
+  id: 'id',
+  inquiryCaseId: 'inquiryCaseId',
+  emailMessageId: 'emailMessageId',
+  analysisDecisionId: 'analysisDecisionId',
+  correctedEventId: 'correctedEventId',
+  eventType: 'eventType',
+  actor: 'actor',
+  sequenceInEmail: 'sequenceInEmail',
+  confidence: 'confidence',
+  evidence: 'evidence',
+  payloadJson: 'payloadJson',
+  sourceType: 'sourceType',
+  occurredAt: 'occurredAt',
+  createdAt: 'createdAt'
+} as const
+
+export type InquiryBusinessEventScalarFieldEnum = (typeof InquiryBusinessEventScalarFieldEnum)[keyof typeof InquiryBusinessEventScalarFieldEnum]
+
+
+export const InquiryStateDecisionScalarFieldEnum = {
+  id: 'id',
+  inquiryCaseId: 'inquiryCaseId',
+  emailMessageId: 'emailMessageId',
+  analysisDecisionId: 'analysisDecisionId',
+  replayRunId: 'replayRunId',
+  beforeBusinessStage: 'beforeBusinessStage',
+  beforeActionOwner: 'beforeActionOwner',
+  beforeLifecycleStatus: 'beforeLifecycleStatus',
+  beforeStateVersion: 'beforeStateVersion',
+  suggestedBusinessStage: 'suggestedBusinessStage',
+  suggestedActionOwner: 'suggestedActionOwner',
+  suggestedLifecycleStatus: 'suggestedLifecycleStatus',
+  appliedBusinessStage: 'appliedBusinessStage',
+  appliedActionOwner: 'appliedActionOwner',
+  appliedLifecycleStatus: 'appliedLifecycleStatus',
+  confidence: 'confidence',
+  riskLevel: 'riskLevel',
+  eventValidationPassed: 'eventValidationPassed',
+  humanReviewAdvisory: 'humanReviewAdvisory',
+  baselineIncomplete: 'baselineIncomplete',
+  executionStatus: 'executionStatus',
+  executionReason: 'executionReason',
+  policyVersion: 'policyVersion',
+  decisionSource: 'decisionSource',
+  eventOccurredAt: 'eventOccurredAt',
+  executedAt: 'executedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type InquiryStateDecisionScalarFieldEnum = (typeof InquiryStateDecisionScalarFieldEnum)[keyof typeof InquiryStateDecisionScalarFieldEnum]
+
+
+export const InquiryStateTransitionScalarFieldEnum = {
+  id: 'id',
+  inquiryCaseId: 'inquiryCaseId',
+  stateDecisionId: 'stateDecisionId',
+  fromBusinessStage: 'fromBusinessStage',
+  fromActionOwner: 'fromActionOwner',
+  fromLifecycleStatus: 'fromLifecycleStatus',
+  toBusinessStage: 'toBusinessStage',
+  toActionOwner: 'toActionOwner',
+  toLifecycleStatus: 'toLifecycleStatus',
+  changedDimensionsJson: 'changedDimensionsJson',
+  reason: 'reason',
+  changedBy: 'changedBy',
+  changedByType: 'changedByType',
+  eventOccurredAt: 'eventOccurredAt',
+  processedAt: 'processedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type InquiryStateTransitionScalarFieldEnum = (typeof InquiryStateTransitionScalarFieldEnum)[keyof typeof InquiryStateTransitionScalarFieldEnum]
+
+
+export const EmailRecoveryRecordScalarFieldEnum = {
+  id: 'id',
+  inquiryCaseId: 'inquiryCaseId',
+  triggerEmailId: 'triggerEmailId',
+  recoveredEmailId: 'recoveredEmailId',
+  expectedMessageId: 'expectedMessageId',
+  confidence: 'confidence',
+  evidenceJson: 'evidenceJson',
+  recoveryStatus: 'recoveryStatus',
+  replayRunId: 'replayRunId',
+  baselineIncomplete: 'baselineIncomplete',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmailRecoveryRecordScalarFieldEnum = (typeof EmailRecoveryRecordScalarFieldEnum)[keyof typeof EmailRecoveryRecordScalarFieldEnum]
 
 
 export const InquiryStructuredFactScalarFieldEnum = {
@@ -359,7 +459,7 @@ export const ReplyDraftScalarFieldEnum = {
   sourceEmailMessageId: 'sourceEmailMessageId',
   sentEmailMessageId: 'sentEmailMessageId',
   contextSnapshotId: 'contextSnapshotId',
-  aiDecisionId: 'aiDecisionId',
+  emailAnalysisDecisionId: 'emailAnalysisDecisionId',
   idempotencyKey: 'idempotencyKey',
   draftType: 'draftType',
   status: 'status',
@@ -423,38 +523,6 @@ export const EmailSendAttemptScalarFieldEnum = {
 export type EmailSendAttemptScalarFieldEnum = (typeof EmailSendAttemptScalarFieldEnum)[keyof typeof EmailSendAttemptScalarFieldEnum]
 
 
-export const EmailWorkflowDecisionScalarFieldEnum = {
-  id: 'id',
-  emailMessageId: 'emailMessageId',
-  inquiryCaseId: 'inquiryCaseId',
-  aiDecisionId: 'aiDecisionId',
-  direction: 'direction',
-  source: 'source',
-  eventType: 'eventType',
-  responseExpected: 'responseExpected',
-  suggestedStatus: 'suggestedStatus',
-  confidence: 'confidence',
-  riskLevel: 'riskLevel',
-  reason: 'reason',
-  commercialBoundaryDetected: 'commercialBoundaryDetected',
-  humanReviewRequired: 'humanReviewRequired',
-  decisionSource: 'decisionSource',
-  modelName: 'modelName',
-  promptVersion: 'promptVersion',
-  rawResult: 'rawResult',
-  executionStatus: 'executionStatus',
-  executionFromStatus: 'executionFromStatus',
-  executionToStatus: 'executionToStatus',
-  executionReason: 'executionReason',
-  executedAt: 'executedAt',
-  idempotencyKey: 'idempotencyKey',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type EmailWorkflowDecisionScalarFieldEnum = (typeof EmailWorkflowDecisionScalarFieldEnum)[keyof typeof EmailWorkflowDecisionScalarFieldEnum]
-
-
 export const AiContextSnapshotScalarFieldEnum = {
   id: 'id',
   inquiryCaseId: 'inquiryCaseId',
@@ -488,20 +556,6 @@ export const InquiryContextSummaryScalarFieldEnum = {
 } as const
 
 export type InquiryContextSummaryScalarFieldEnum = (typeof InquiryContextSummaryScalarFieldEnum)[keyof typeof InquiryContextSummaryScalarFieldEnum]
-
-
-export const InquiryStatusLogScalarFieldEnum = {
-  id: 'id',
-  inquiryCaseId: 'inquiryCaseId',
-  fromStatus: 'fromStatus',
-  toStatus: 'toStatus',
-  reason: 'reason',
-  changedBy: 'changedBy',
-  changedByType: 'changedByType',
-  createdAt: 'createdAt'
-} as const
-
-export type InquiryStatusLogScalarFieldEnum = (typeof InquiryStatusLogScalarFieldEnum)[keyof typeof InquiryStatusLogScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -1,7 +1,7 @@
 import { API_ROUTE_SEGMENTS } from '@email-inquiry/shared';
 import type {
   ApiPageResult,
-  AiDecisionListItem,
+  EmailAnalysisDecisionListItem,
   MailRuntimeInfo,
   ReplyDraftListItem,
 } from '@email-inquiry/shared';
@@ -10,8 +10,8 @@ import type { ListParams } from './shared';
 import { fetchItem, fetchPage } from './shared';
 import { http } from './http';
 
-export async function fetchAiDecisions(params: ListParams = {}) {
-  return fetchPage<AiDecisionListItem>(`/${API_ROUTE_SEGMENTS.aiDecisions}`, params);
+export async function fetchEmailAnalysisDecisions(params: ListParams = {}) {
+  return fetchPage<EmailAnalysisDecisionListItem>(`/${API_ROUTE_SEGMENTS.emailAnalysisDecisions}`, params);
 }
 
 export async function fetchReplyDrafts(params: ListParams = {}) {
@@ -28,7 +28,7 @@ export async function fetchMailRuntime() {
 
 export async function createReplyDraft(
   inquiryCaseId: string,
-  data: { targetStatus?: string; commercialTerms?: string; operator?: string } = {},
+  data: { emailAnalysisDecisionId?: string; commercialTerms?: string; operator?: string } = {},
 ) {
   const response = await http.post<ApiPageResult<ReplyDraftListItem>>(
     `/${API_ROUTE_SEGMENTS.inquiries}/${inquiryCaseId}/reply-drafts`,

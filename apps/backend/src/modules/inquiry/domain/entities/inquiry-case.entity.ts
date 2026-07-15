@@ -1,4 +1,8 @@
-import { InquiryStatus } from '../enums/inquiry-status.enum.js';
+import {
+  InquiryActionOwner,
+  InquiryBusinessStage,
+  InquiryLifecycleStatus,
+} from '../enums/inquiry-state.enum.js';
 
 export interface InquiryCase {
   id: string;
@@ -14,7 +18,10 @@ export interface InquiryCase {
   businessSubjectSource?: 'raw_email' | 'ai_generated' | 'human';
   businessSubjectLocked?: boolean;
   businessSubjectUpdatedAt?: Date;
-  status: InquiryStatus;
+  businessStage: InquiryBusinessStage;
+  actionOwner: InquiryActionOwner;
+  lifecycleStatus: InquiryLifecycleStatus;
+  stateVersion: number;
   latestMessageAt: Date;
   createdAt: Date;
   updatedAt: Date;

@@ -54,7 +54,9 @@ export class ReplyDraftController {
           inquiryCase: {
             select: {
               id: true,
-              status: true,
+              businessStage: true,
+              actionOwner: true,
+              lifecycleStatus: true,
               subject: true,
               customer: {
                 select: {
@@ -103,7 +105,9 @@ export class ReplyDraftController {
         inquiryCase: {
           select: {
             id: true,
-            status: true,
+            businessStage: true,
+            actionOwner: true,
+            lifecycleStatus: true,
             subject: true,
             customer: {
               select: {
@@ -153,7 +157,7 @@ export class ReplyDraftController {
     return itemResponse(await this.generateReplyDraftUseCase.execute({
       inquiryCaseId: draft.inquiryCaseId,
       sourceEmailMessageId: draft.sourceEmailMessageId ?? undefined,
-      aiDecisionId: draft.aiDecisionId ?? undefined,
+      emailAnalysisDecisionId: draft.emailAnalysisDecisionId ?? undefined,
       commercialTerms: body.commercialTerms,
       initiatedBy: body.operator,
       regenerate: true,
@@ -194,7 +198,7 @@ function mapReplyDraft(record: any) {
     bodyText: record.bodyText,
     modelName: record.modelName,
     contextSnapshotId: record.contextSnapshotId,
-    aiDecisionId: record.aiDecisionId,
+    emailAnalysisDecisionId: record.emailAnalysisDecisionId,
     language: record.language,
     usedFacts: record.usedFactsJson,
     unresolvedQuestions: record.unresolvedQuestionsJson,

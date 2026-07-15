@@ -16,12 +16,8 @@ import { ImapFlow } from 'imapflow';
 import { simpleParser } from 'mailparser';
 
 import { PrismaService } from '../../../../common/database/prisma.service.js';
-import { InquiryStatus } from '../../../inquiry/domain/enums/inquiry-status.enum.js';
-import { ApplyAiSuggestedStatusResult } from '../../../inquiry/application/use-cases/apply-ai-suggested-status.use-case.js';
-import {
-  AnalyzeEmailWithAiResult,
-  AnalyzeEmailWithAiUseCase,
-} from '../../application/use-cases/analyze-email-with-ai.use-case.js';
+import { InquiryCase } from '../../../inquiry/domain/entities/inquiry-case.entity.js';
+import { AnalyzeEmailWithAiResult } from '../../application/use-cases/analyze-email-with-ai.use-case.js';
 import {
   PollEmailCandidate,
   PollEmailInboxUseCase,
@@ -62,7 +58,6 @@ export class ImapPollService implements OnApplicationBootstrap, OnApplicationShu
     private readonly prisma: PrismaService,
     private readonly pollUseCase: PollEmailInboxUseCase,
     private readonly syncService: MailboxSyncService,
-    private readonly analyzeEmailWithAiUseCase: AnalyzeEmailWithAiUseCase,
   ) {}
 
   // -----------------------------------------------------------------------
@@ -334,10 +329,12 @@ export class ImapPollService implements OnApplicationBootstrap, OnApplicationShu
 
     const inquiryId = result.inquiryCase?.id ?? 'none';
     const emailId = result.emailMessage?.id ?? 'unknown';
-    const status = result.inquiryCase?.status ?? 'none';
+    const state = result.inquiryCase
+      ? `${result.inquiryCase.businessStage}/${result.inquiryCase.actionOwner}/${result.inquiryCase.lifecycleStatus}`
+      : 'none';
 
     this.logger.log(
-      `邮件入库: email=${emailId} inquiry=${inquiryId} status=${status} from=${inboundEmail.fromEmail}`,
+      `邮件入库: email=${emailId} inquiry=${inquiryId} state=${state} from=${inboundEmail.fromEmail}`,
     );
 
     // 4. 输出 AI 分析结果
@@ -361,28 +358,11 @@ export class ImapPollService implements OnApplicationBootstrap, OnApplicationShu
       return;
     }
 
-    if (result.workflowDecisionId) {
-      if (result.outboundAnalysisResult?.success) {
-        const analysis = result.outboundAnalysisResult.analysis;
-        this.logger.log(
-          `出站邮件事件: event=${analysis.eventType} suggested_status=${analysis.suggestedStatus ?? 'none'} ` +
-          `confidence=${Math.round(analysis.confidence * 100)}% execution=${result.workflowExecutionStatus ?? 'pending'} ` +
-          `decision=${result.workflowDecisionId}`,
-        );
-        this.logger.log(`出站事件原因: ${analysis.reason}`);
-      } else {
-        this.logger.warn(
-          `出站邮件事件识别失败: decision=${result.workflowDecisionId} ` +
-          `reason=${result.outboundAnalysisResult?.message ?? 'unknown'}`,
-        );
-      }
-      return;
-    }
-
     this.logAiResultV2(
       result.aiAnalysisResult,
-      result.inquiryCase.status,
-      result.aiTransitionResult,
+      result.inquiryCase,
+      result.stateDecisionId,
+      result.stateExecutionStatus,
     );
     if (result.replyDraftId) {
       this.logger.log(`AI 回复草稿已生成: draft=${result.replyDraftId} inquiry=${inquiryId}`);
@@ -521,44 +501,38 @@ export class ImapPollService implements OnApplicationBootstrap, OnApplicationShu
 
   private logAiResultV2(
     result?: AnalyzeEmailWithAiResult,
-    currentInquiryStatus?: string,
-    transitionResult?: ApplyAiSuggestedStatusResult,
+    currentInquiry?: InquiryCase,
+    stateDecisionId?: string,
+    stateExecutionStatus?: string,
   ): void {
     if (!result) return;
     if (result.success) {
-      const {
-        classification,
-        suggestedStatus,
-        confidence,
-        reason,
-        missingFields,
-        humanReviewRequired,
-        quoteBoundaryDetected,
-      } = result.analysis;
-      const suspiciousAiSuggestion = suggestedStatus === InquiryStatus.READY_FOR_QUOTE &&
-        missingFields.length > 0;
+      const analysis = result.analysis;
+      const suspiciousAiSuggestion = analysis.suggestedState.businessStage === 'commercial'
+        && analysis.suggestedState.actionOwner === 'us'
+        && analysis.missingFields.length > 0;
 
       this.logger.log(
         [
           'AI suggestion only:',
-          `currentStatus=${transitionResult?.fromStatus ?? currentInquiryStatus ?? 'unknown'}`,
-          `classification=${classification}`,
-          `suggestedStatus=${suggestedStatus}`,
-          `confidence=${Math.round(confidence * 100)}%`,
-          `humanReviewRequired=${humanReviewRequired}`,
-          `quoteBoundaryDetected=${quoteBoundaryDetected}`,
+          `currentState=${currentInquiry ? `${currentInquiry.businessStage}/${currentInquiry.actionOwner}/${currentInquiry.lifecycleStatus}` : 'unknown'}`,
+          `classification=${analysis.messageClassification}`,
+          `suggestedState=${analysis.suggestedState.businessStage}/${analysis.suggestedState.actionOwner}/${analysis.suggestedState.lifecycleStatus}`,
+          `confidence=${Math.round(analysis.confidence * 100)}%`,
+          `humanReviewRequired=${analysis.humanReviewRequired}`,
+          `quoteBoundaryDetected=${analysis.quoteBoundaryDetected}`,
           `contextSnapshotId=${result.contextSnapshotId ?? 'none'}`,
-          `transitionExecution=${transitionResult?.status ?? 'not_evaluated'}`,
-          `statusTransitionApplied=${transitionResult?.status === 'applied'}`,
+          `stateDecisionId=${stateDecisionId ?? 'none'}`,
+          `stateExecution=${stateExecutionStatus ?? 'not_evaluated'}`,
         ].join(' '),
       );
-      this.logger.log(`AI reason: ${reason}`);
-      if (missingFields.length > 0) {
-        this.logger.log(`AI missingFields: ${missingFields.join(', ')}`);
+      this.logger.log(`AI reason: ${analysis.reason}`);
+      if (analysis.missingFields.length > 0) {
+        this.logger.log(`AI missingFields: ${analysis.missingFields.join(', ')}`);
       }
       if (suspiciousAiSuggestion) {
         this.logger.warn(
-          `Suspicious AI suggestion: suggestedStatus=ready_for_quote but missingFields=${missingFields.join(', ')}`,
+          `Suspicious AI suggestion: suggestedState=commercial/us but missingFields=${analysis.missingFields.join(', ')}`,
         );
       }
     } else {
@@ -571,22 +545,6 @@ export class ImapPollService implements OnApplicationBootstrap, OnApplicationShu
           'humanReviewRequired=true',
         ].join(' '),
       );
-    }
-  }
-
-  private logAiResult(result?: AnalyzeEmailWithAiResult): void {
-    if (!result) return;
-    if (result.success) {
-      const { classification, suggestedStatus, confidence, reason, missingFields } = result.analysis;
-      this.logger.log(
-        `AI 分析: ${classification} → ${suggestedStatus} (置信度 ${Math.round(confidence * 100)}%)`,
-      );
-      this.logger.log(`AI 原因: ${reason}`);
-      if (missingFields.length > 0) {
-        this.logger.log(`缺失字段: ${missingFields.join(', ')}`);
-      }
-    } else {
-      this.logger.warn(`AI 分析失败: [${result.errorCode}] ${result.message}`);
     }
   }
 

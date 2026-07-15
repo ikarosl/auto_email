@@ -3,7 +3,7 @@ import { describe, it } from 'node:test';
 
 import { CreateInquiryFromEmailUseCase } from '../../../inquiry/application/use-cases/create-inquiry-from-email.use-case.js';
 import { FindInquiryForInboundEmailUseCase } from '../../../inquiry/application/use-cases/find-inquiry-for-inbound-email.use-case.js';
-import { InquiryStatus } from '../../../inquiry/domain/enums/inquiry-status.enum.js';
+import { INITIAL_INQUIRY_STATE } from '../../../inquiry/domain/enums/inquiry-state.enum.js';
 import { InMemoryInquiryMessageRepository } from '../../../inquiry/infrastructure/repositories/in-memory-inquiry-message.repository.js';
 import { InMemoryInquiryRepository } from '../../../inquiry/infrastructure/repositories/in-memory-inquiry.repository.js';
 import { EmailSource } from '../../domain/enums/email-source.enum.js';
@@ -40,7 +40,7 @@ describe('ReceiveInboundEmailUseCase', () => {
     const inquiryCase = expectInquiryCase(result);
     assert.equal(inquiryCase.sourceEmailMessageId, result.emailMessage.id);
     assert.equal(inquiryCase.customerEmail, 'buyer@example.com');
-    assert.equal(inquiryCase.status, InquiryStatus.NEW);
+    assert.equal(inquiryCase.businessStage, INITIAL_INQUIRY_STATE.businessStage);
     assert.equal((await emailRepository.list()).length, 1);
     assert.equal((await inquiryRepository.list()).length, 1);
   });
@@ -216,7 +216,7 @@ describe('ReceiveInboundEmailUseCase', () => {
       id: 'inquiry_001',
       customerEmail: 'buyer@example.com',
       subject: 'First open inquiry',
-      status: InquiryStatus.NEW,
+      ...INITIAL_INQUIRY_STATE,
       latestMessageAt: now,
       createdAt: now,
       updatedAt: now,
@@ -225,7 +225,7 @@ describe('ReceiveInboundEmailUseCase', () => {
       id: 'inquiry_002',
       customerEmail: 'buyer@example.com',
       subject: 'Second open inquiry',
-      status: InquiryStatus.NEED_CLARIFICATION,
+      ...INITIAL_INQUIRY_STATE,
       latestMessageAt: now,
       createdAt: now,
       updatedAt: now,

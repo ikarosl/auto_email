@@ -267,10 +267,10 @@ async function run(): Promise<void> {
   const demoProcessor = analyzeEmailWithAiUseCase
     ? {
       execute: async ({ emailMessage, inquiryCase }: any) => ({
-        kind: 'inbound_analysis',
-        aiAnalysisResult: await analyzeEmailWithAiUseCase.execute(emailMessage, { inquiryCase }),
+        kind: 'email_analysis',
+        analysisResult: await analyzeEmailWithAiUseCase.execute(emailMessage, { inquiryCase }),
       }),
-    } as ProcessInquiryEmailEventUseCase
+    } as unknown as ProcessInquiryEmailEventUseCase
     : undefined;
   const pollEmailInboxUseCase = new PollEmailInboxUseCase(
     tracker,
@@ -334,7 +334,7 @@ async function run(): Promise<void> {
         console.log('--- New email processed ---');
         console.log(`EmailMessage ID: ${result.emailMessage?.id}`);
         console.log(`InquiryCase ID: ${result.inquiryCase?.id}`);
-        console.log(`Inquiry status: ${result.inquiryCase?.status}`);
+        console.log(`Inquiry state: ${formatInquiryState(result.inquiryCase)}`);
         console.log(`Subject: ${result.emailMessage?.subject}`);
 
         if (result.aiAnalysisResult?.contextMessages) {
@@ -376,6 +376,11 @@ async function run(): Promise<void> {
   }
 
   await client.logout();
+}
+
+function formatInquiryState(inquiryCase: any): string {
+  if (!inquiryCase) return '(none)';
+  return `${inquiryCase.businessStage}/${inquiryCase.actionOwner}/${inquiryCase.lifecycleStatus}`;
 }
 
 function createMockEmailThreadRepository() {

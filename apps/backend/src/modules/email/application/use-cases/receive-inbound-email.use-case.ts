@@ -25,6 +25,7 @@ import { SaveEmailAttachmentsUseCase } from './save-email-attachments.use-case.j
 export interface ReceiveInboundEmailResult {
   emailMessage: EmailMessage;
   inquiryCase?: InquiryCase;
+  recoveredEmails: RecoveredEmail[];
   skippedReason?: 'own_email_without_matching_inquiry';
 }
 
@@ -46,6 +47,7 @@ export class ReceiveInboundEmailUseCase {
       return {
         emailMessage: existingEmail,
         inquiryCase: inquiryCase ?? undefined,
+        recoveredEmails: [],
         skippedReason: inquiryCase ? undefined : 'own_email_without_matching_inquiry',
       };
     }
@@ -174,6 +176,7 @@ export class ReceiveInboundEmailUseCase {
     return {
       emailMessage: savedEmailMessage,
       inquiryCase: inquiryCase ?? undefined,
+      recoveredEmails,
       skippedReason: inquiryCase ? undefined : 'own_email_without_matching_inquiry',
     };
   }

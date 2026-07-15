@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
-import { InquiryStatus } from '../../domain/enums/inquiry-status.enum.js';
+import { INITIAL_INQUIRY_STATE } from '../../domain/enums/inquiry-state.enum.js';
 import { CustomerStatus } from '../../domain/enums/customer-status.enum.js';
 import { InMemoryCustomerRepository } from '../../infrastructure/repositories/in-memory-customer.repository.js';
 import { UpdateCustomerStatusFromAiAnalysisUseCase } from './update-customer-status-from-ai-analysis.use-case.js';
@@ -14,7 +14,7 @@ describe('UpdateCustomerStatusFromAiAnalysisUseCase', () => {
     const result = await useCase.execute({
       customerEmail: 'buyer@example.com',
       analysis: createAnalysis({
-        classification: 'valid_inquiry',
+        classification: 'customer_inquiry',
         confidence: 0.72,
         reason: 'Customer asks for RF circulator quote.',
       }),
@@ -67,14 +67,24 @@ describe('UpdateCustomerStatusFromAiAnalysisUseCase', () => {
 });
 
 function createAnalysis(overrides: {
-  classification: 'valid_inquiry' | 'invalid' | 'unknown';
+  classification: 'customer_inquiry' | 'invalid' | 'unknown';
   confidence: number;
   reason: string;
 }) {
   return {
-    isInquiry: overrides.classification === 'valid_inquiry',
-    classification: overrides.classification,
-    suggestedStatus: InquiryStatus.NEED_ENGINEER_REVIEW,
+    messageClassification: overrides.classification,
+    events: [{
+      eventType: 'inquiry_received' as const,
+      actor: 'customer' as const,
+      confidence: overrides.confidence,
+      evidence: overrides.reason,
+      payload: {},
+    }],
+    suggestedState: {
+      businessStage: INITIAL_INQUIRY_STATE.businessStage,
+      actionOwner: INITIAL_INQUIRY_STATE.actionOwner,
+      lifecycleStatus: INITIAL_INQUIRY_STATE.lifecycleStatus,
+    },
     confidence: overrides.confidence,
     riskLevel: 'low' as const,
     reason: overrides.reason,

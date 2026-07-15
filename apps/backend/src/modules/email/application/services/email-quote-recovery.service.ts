@@ -7,6 +7,14 @@ import { isOwnEmail } from '../../../../common/email/own-email-address.js';
 
 export interface RecoveredEmail {
   emailMessage: EmailMessage;
+  confidence: number;
+  evidence: {
+    attributionFormat: 'chinese' | 'english' | 'unknown';
+    receivedAtReliable: boolean;
+    bodyCharacterCount: number;
+    directParentMessageId: string;
+  };
+  bodyComplete: boolean;
 }
 
 const QUOTE_BODY_MIN_CHARS = 10;
@@ -63,6 +71,14 @@ export function recoverParentEmailFromQuote(
       receivedAt: attribution.receivedAt,
       createdAt: new Date(),
     },
+    confidence: attribution.receivedAtReliable && bodyText.length >= 30 ? 0.95 : 0.65,
+    evidence: {
+      attributionFormat: attribution.format,
+      receivedAtReliable: attribution.receivedAtReliable,
+      bodyCharacterCount: bodyText.length,
+      directParentMessageId: inReplyTo,
+    },
+    bodyComplete: bodyText.length >= 30,
   };
 }
 
@@ -74,6 +90,8 @@ interface Attribution {
   email: string;
   name?: string;
   receivedAt: Date;
+  receivedAtReliable: boolean;
+  format: 'chinese' | 'english' | 'unknown';
 }
 
 /**
@@ -109,7 +127,7 @@ function parseAttribution(line: string): Attribution | undefined {
     const receivedAt = new Date(year, month, day, hour, minute, second);
 
     if (!Number.isNaN(receivedAt.getTime())) {
-      return { email, name, receivedAt };
+      return { email, name, receivedAt, receivedAtReliable: true, format: 'chinese' };
     }
   }
 
@@ -118,11 +136,17 @@ function parseAttribution(line: string): Attribution | undefined {
   if (englishDateMatch) {
     const receivedAt = new Date(englishDateMatch[1]);
     if (!Number.isNaN(receivedAt.getTime())) {
-      return { email, name, receivedAt };
+      return { email, name, receivedAt, receivedAtReliable: true, format: 'english' };
     }
   }
 
-  return { email, name, receivedAt: new Date() };
+  return {
+    email,
+    name,
+    receivedAt: new Date(),
+    receivedAtReliable: false,
+    format: 'unknown',
+  };
 }
 
 /**

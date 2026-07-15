@@ -68,10 +68,30 @@ export type InquiryMessage = Prisma.InquiryMessageModel
  */
 export type ProcessedEmail = Prisma.ProcessedEmailModel
 /**
- * Model AiDecision
+ * Model EmailAnalysisDecision
  * 
  */
-export type AiDecision = Prisma.AiDecisionModel
+export type EmailAnalysisDecision = Prisma.EmailAnalysisDecisionModel
+/**
+ * Model InquiryBusinessEvent
+ * 
+ */
+export type InquiryBusinessEvent = Prisma.InquiryBusinessEventModel
+/**
+ * Model InquiryStateDecision
+ * 
+ */
+export type InquiryStateDecision = Prisma.InquiryStateDecisionModel
+/**
+ * Model InquiryStateTransition
+ * 
+ */
+export type InquiryStateTransition = Prisma.InquiryStateTransitionModel
+/**
+ * Model EmailRecoveryRecord
+ * 
+ */
+export type EmailRecoveryRecord = Prisma.EmailRecoveryRecordModel
 /**
  * Model InquiryStructuredFact
  * 
@@ -93,11 +113,6 @@ export type ReplyDraftAttachment = Prisma.ReplyDraftAttachmentModel
  */
 export type EmailSendAttempt = Prisma.EmailSendAttemptModel
 /**
- * Model EmailWorkflowDecision
- *
- */
-export type EmailWorkflowDecision = Prisma.EmailWorkflowDecisionModel
-/**
  * Model AiContextSnapshot
  * 
  */
@@ -107,8 +122,3 @@ export type AiContextSnapshot = Prisma.AiContextSnapshotModel
  * 
  */
 export type InquiryContextSummary = Prisma.InquiryContextSummaryModel
-/**
- * Model InquiryStatusLog
- * 
- */
-export type InquiryStatusLog = Prisma.InquiryStatusLogModel

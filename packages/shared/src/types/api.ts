@@ -6,26 +6,21 @@ export interface ApiPageResult<T> {
   limit: number;
 }
 
-export type InquiryStatus =
-  | 'new'
-  | 'invalid'
-  | 'need_clarification'
-  | 'need_engineer_review'
-  | 'waiting_customer'
-  | 'ready_for_quote'
-  | 'quoted'
-  | 'closed';
+export type InquiryBusinessStage = 'intake' | 'technical_review' | 'commercial' | 'contract';
+export type InquiryActionOwner = 'us' | 'customer' | 'none';
+export type InquiryLifecycleStatus = 'active' | 'won' | 'lost' | 'invalid';
+
+export interface InquiryStateValue {
+  businessStage: InquiryBusinessStage;
+  actionOwner: InquiryActionOwner;
+  lifecycleStatus: InquiryLifecycleStatus;
+}
 
 export type CustomerStatus = 'unknown' | 'active' | 'invalid';
 
 export type BusinessSubjectSource = 'raw_email' | 'ai_generated' | 'human';
 
 export type EmailDirection = 'inbound' | 'outbound' | 'internal';
-
-export type AiClassification =
-  | 'valid_inquiry'
-  | 'invalid'
-  | 'unknown';
 
 export interface CustomerListItem {
   id: string;
@@ -68,7 +63,10 @@ export interface InquiryListItem {
   customerId: string;
   organizationId?: string | null;
   primaryCustomerId?: string | null;
-  status: InquiryStatus | string;
+  businessStage: InquiryBusinessStage;
+  actionOwner: InquiryActionOwner;
+  lifecycleStatus: InquiryLifecycleStatus;
+  stateVersion: number;
   subject?: string | null;
   rawSubject?: string | null;
   businessSubject?: string | null;
@@ -85,13 +83,12 @@ export interface InquiryListItem {
   primaryCustomer?: CustomerListItem | null;
   structuredFacts?: unknown;
   contextSummary?: unknown;
-  statusLogs?: unknown;
   counts?: {
     inquiryMessages?: number;
-    aiDecisions?: number;
+    analysisDecisions?: number;
     replyDrafts?: number;
     contextSnapshots?: number;
-    statusLogs?: number;
+    stateTransitions?: number;
   };
 }
 
@@ -163,11 +160,13 @@ export interface EmailMessageListItem {
     direction: string;
     inquiryCase?: {
       id: string;
-      status: string;
+      businessStage: InquiryBusinessStage;
+      actionOwner: InquiryActionOwner;
+      lifecycleStatus: InquiryLifecycleStatus;
       subject?: string | null;
     } | null;
   }>;
-  latestAiDecision?: AiDecisionListItem | null;
+  latestAnalysisDecision?: EmailAnalysisDecisionListItem | null;
 }
 
 export interface ContextSnapshotListItem {
@@ -183,7 +182,9 @@ export interface ContextSnapshotListItem {
   createdAt: string | null;
   inquiryCase?: {
     id: string;
-    status: string;
+    businessStage: InquiryBusinessStage;
+    actionOwner: InquiryActionOwner;
+    lifecycleStatus: InquiryLifecycleStatus;
     subject?: string | null;
   } | null;
   emailMessage?: {
@@ -194,12 +195,13 @@ export interface ContextSnapshotListItem {
   } | null;
 }
 
-export interface AiDecisionListItem {
+export interface EmailAnalysisDecisionListItem {
   id: string;
   emailMessageId?: string | null;
   inquiryCaseId?: string | null;
-  classification?: AiClassification | string | null;
-  suggestedStatus?: InquiryStatus | string | null;
+  direction: 'inbound' | 'outbound';
+  messageClassification?: EmailMessageClassification | null;
+  suggestedState?: InquiryStateValue | null;
   confidence?: number | null;
   riskLevel?: string | null;
   reason?: string | null;
@@ -213,12 +215,7 @@ export interface AiDecisionListItem {
   success: boolean;
   errorCode?: string | null;
   errorMessage?: string | null;
-  executionStatus?: 'not_evaluated' | 'disabled' | 'rejected' | 'dry_run' | 'applied' | 'conflict';
-  executionFromStatus?: InquiryStatus | string | null;
-  executionToStatus?: InquiryStatus | string | null;
-  executionReason?: string | null;
-  executionPolicyVersion?: string | null;
-  executedAt?: string | null;
+  promptVersion?: string | null;
   createdAt: string | null;
   emailMessage?: {
     id: string;
@@ -228,9 +225,76 @@ export interface AiDecisionListItem {
   } | null;
   inquiryCase?: {
     id: string;
-    status: string;
-    subject?: string | null;
+    businessStage: InquiryBusinessStage;
+    actionOwner: InquiryActionOwner;
+    lifecycleStatus: InquiryLifecycleStatus;
+    businessSubject?: string | null;
   } | null;
+  stateDecision?: {
+    id: string;
+    executionStatus: string;
+    executionReason?: string | null;
+  } | null;
+}
+
+export type EmailMessageClassification =
+  | 'customer_inquiry'
+  | 'customer_follow_up'
+  | 'our_response'
+  | 'internal'
+  | 'invalid'
+  | 'unrelated_product'
+  | 'commercial_solicitation'
+  | 'unknown';
+
+export interface InquiryBusinessEventListItem {
+  id: string;
+  inquiryCaseId: string;
+  emailMessageId?: string | null;
+  eventType: string;
+  actor: 'customer' | 'us' | 'system' | 'human';
+  sequenceInEmail: number;
+  confidence?: number | null;
+  evidence?: string | null;
+  payload?: unknown;
+  sourceType: string;
+  occurredAt: string | null;
+  createdAt: string | null;
+}
+
+export interface InquiryStateDecisionListItem {
+  id: string;
+  inquiryCaseId: string;
+  emailMessageId?: string | null;
+  beforeState: InquiryStateValue & { stateVersion: number };
+  suggestedState: InquiryStateValue;
+  appliedState?: InquiryStateValue | null;
+  confidence?: number | null;
+  riskLevel?: 'low' | 'medium' | 'high' | null;
+  eventValidationPassed: boolean;
+  humanReviewAdvisory: boolean;
+  baselineIncomplete: boolean;
+  executionStatus: string;
+  executionReason?: string | null;
+  policyVersion: string;
+  decisionSource: string;
+  eventOccurredAt: string | null;
+  executedAt?: string | null;
+  createdAt: string | null;
+}
+
+export interface InquiryStateTransitionListItem {
+  id: string;
+  inquiryCaseId: string;
+  stateDecisionId: string;
+  fromState: InquiryStateValue;
+  toState: InquiryStateValue;
+  changedDimensions: string[];
+  reason?: string | null;
+  changedBy?: string | null;
+  changedByType: string;
+  eventOccurredAt: string | null;
+  processedAt: string | null;
 }
 
 export interface ReplyDraftListItem {
@@ -244,7 +308,7 @@ export interface ReplyDraftListItem {
   bodyText: string;
   modelName?: string | null;
   contextSnapshotId?: string | null;
-  aiDecisionId?: string | null;
+  emailAnalysisDecisionId?: string | null;
   language?: string | null;
   usedFacts?: string[];
   unresolvedQuestions?: string[];
@@ -264,7 +328,9 @@ export interface ReplyDraftListItem {
   updatedAt: string | null;
   inquiryCase?: {
     id: string;
-    status: string;
+    businessStage: InquiryBusinessStage;
+    actionOwner: InquiryActionOwner;
+    lifecycleStatus: InquiryLifecycleStatus;
     subject?: string | null;
     customer?: {
       email: string;
@@ -293,45 +359,4 @@ export interface EmailSendAttemptListItem {
 export interface MailRuntimeInfo {
   mailOperationMode: 'debug' | 'production';
   imapPollEnabled: boolean;
-}
-
-export type EmailWorkflowExecutionStatus =
-  | 'pending'
-  | 'dry_run'
-  | 'applied'
-  | 'rejected'
-  | 'conflict'
-  | 'no_change'
-  | 'historical_backfill'
-  | 'failed';
-
-export interface EmailWorkflowDecisionListItem {
-  id: string;
-  emailMessageId: string;
-  inquiryCaseId: string;
-  aiDecisionId?: string | null;
-  direction: 'inbound' | 'outbound';
-  source: string;
-  eventType: string;
-  responseExpected: boolean;
-  suggestedStatus?: InquiryStatus | string | null;
-  confidence?: number | null;
-  riskLevel?: 'low' | 'medium' | 'high' | null;
-  reason?: string | null;
-  commercialBoundaryDetected: boolean;
-  humanReviewRequired: boolean;
-  decisionSource: 'ai' | 'system_rule';
-  modelName?: string | null;
-  promptVersion?: string | null;
-  executionStatus: EmailWorkflowExecutionStatus;
-  executionFromStatus?: InquiryStatus | string | null;
-  executionToStatus?: InquiryStatus | string | null;
-  executionReason?: string | null;
-  executedAt?: string | null;
-  createdAt: string | null;
-  emailMessage?: {
-    subject?: string | null;
-    fromEmail: string;
-    receivedAt?: string | null;
-  };
 }

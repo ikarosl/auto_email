@@ -280,6 +280,78 @@ export type BigIntWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedBigIntFilter<$PrismaModel>
 }
 
+export type EnumInquiryBusinessStageFilter<$PrismaModel = never> = {
+  equals?: $Enums.InquiryBusinessStage | Prisma.EnumInquiryBusinessStageFieldRefInput<$PrismaModel>
+  in?: $Enums.InquiryBusinessStage[] | Prisma.ListEnumInquiryBusinessStageFieldRefInput<$PrismaModel>
+  notIn?: $Enums.InquiryBusinessStage[] | Prisma.ListEnumInquiryBusinessStageFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumInquiryBusinessStageFilter<$PrismaModel> | $Enums.InquiryBusinessStage
+}
+
+export type EnumInquiryActionOwnerFilter<$PrismaModel = never> = {
+  equals?: $Enums.InquiryActionOwner | Prisma.EnumInquiryActionOwnerFieldRefInput<$PrismaModel>
+  in?: $Enums.InquiryActionOwner[] | Prisma.ListEnumInquiryActionOwnerFieldRefInput<$PrismaModel>
+  notIn?: $Enums.InquiryActionOwner[] | Prisma.ListEnumInquiryActionOwnerFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumInquiryActionOwnerFilter<$PrismaModel> | $Enums.InquiryActionOwner
+}
+
+export type EnumInquiryLifecycleStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.InquiryLifecycleStatus | Prisma.EnumInquiryLifecycleStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.InquiryLifecycleStatus[] | Prisma.ListEnumInquiryLifecycleStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.InquiryLifecycleStatus[] | Prisma.ListEnumInquiryLifecycleStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumInquiryLifecycleStatusFilter<$PrismaModel> | $Enums.InquiryLifecycleStatus
+}
+
+export type EnumInquiryBusinessStageWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.InquiryBusinessStage | Prisma.EnumInquiryBusinessStageFieldRefInput<$PrismaModel>
+  in?: $Enums.InquiryBusinessStage[] | Prisma.ListEnumInquiryBusinessStageFieldRefInput<$PrismaModel>
+  notIn?: $Enums.InquiryBusinessStage[] | Prisma.ListEnumInquiryBusinessStageFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumInquiryBusinessStageWithAggregatesFilter<$PrismaModel> | $Enums.InquiryBusinessStage
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumInquiryBusinessStageFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumInquiryBusinessStageFilter<$PrismaModel>
+}
+
+export type EnumInquiryActionOwnerWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.InquiryActionOwner | Prisma.EnumInquiryActionOwnerFieldRefInput<$PrismaModel>
+  in?: $Enums.InquiryActionOwner[] | Prisma.ListEnumInquiryActionOwnerFieldRefInput<$PrismaModel>
+  notIn?: $Enums.InquiryActionOwner[] | Prisma.ListEnumInquiryActionOwnerFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumInquiryActionOwnerWithAggregatesFilter<$PrismaModel> | $Enums.InquiryActionOwner
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumInquiryActionOwnerFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumInquiryActionOwnerFilter<$PrismaModel>
+}
+
+export type EnumInquiryLifecycleStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.InquiryLifecycleStatus | Prisma.EnumInquiryLifecycleStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.InquiryLifecycleStatus[] | Prisma.ListEnumInquiryLifecycleStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.InquiryLifecycleStatus[] | Prisma.ListEnumInquiryLifecycleStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumInquiryLifecycleStatusWithAggregatesFilter<$PrismaModel> | $Enums.InquiryLifecycleStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumInquiryLifecycleStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumInquiryLifecycleStatusFilter<$PrismaModel>
+}
+
+export type EnumInquiryBusinessStageNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.InquiryBusinessStage | Prisma.EnumInquiryBusinessStageFieldRefInput<$PrismaModel> | null
+  in?: $Enums.InquiryBusinessStage[] | Prisma.ListEnumInquiryBusinessStageFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.InquiryBusinessStage[] | Prisma.ListEnumInquiryBusinessStageFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumInquiryBusinessStageNullableFilter<$PrismaModel> | $Enums.InquiryBusinessStage | null
+}
+
+export type EnumInquiryActionOwnerNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.InquiryActionOwner | Prisma.EnumInquiryActionOwnerFieldRefInput<$PrismaModel> | null
+  in?: $Enums.InquiryActionOwner[] | Prisma.ListEnumInquiryActionOwnerFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.InquiryActionOwner[] | Prisma.ListEnumInquiryActionOwnerFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumInquiryActionOwnerNullableFilter<$PrismaModel> | $Enums.InquiryActionOwner | null
+}
+
+export type EnumInquiryLifecycleStatusNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.InquiryLifecycleStatus | Prisma.EnumInquiryLifecycleStatusFieldRefInput<$PrismaModel> | null
+  in?: $Enums.InquiryLifecycleStatus[] | Prisma.ListEnumInquiryLifecycleStatusFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.InquiryLifecycleStatus[] | Prisma.ListEnumInquiryLifecycleStatusFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumInquiryLifecycleStatusNullableFilter<$PrismaModel> | $Enums.InquiryLifecycleStatus | null
+}
+
 export type DecimalNullableFilter<$PrismaModel = never> = {
   equals?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel> | null
   in?: runtime.Decimal[] | runtime.DecimalJsLike[] | number[] | string[] | Prisma.ListDecimalFieldRefInput<$PrismaModel> | null
@@ -289,6 +361,36 @@ export type DecimalNullableFilter<$PrismaModel = never> = {
   gt?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
   gte?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
   not?: Prisma.NestedDecimalNullableFilter<$PrismaModel> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+}
+
+export type EnumInquiryBusinessStageNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.InquiryBusinessStage | Prisma.EnumInquiryBusinessStageFieldRefInput<$PrismaModel> | null
+  in?: $Enums.InquiryBusinessStage[] | Prisma.ListEnumInquiryBusinessStageFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.InquiryBusinessStage[] | Prisma.ListEnumInquiryBusinessStageFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumInquiryBusinessStageNullableWithAggregatesFilter<$PrismaModel> | $Enums.InquiryBusinessStage | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumInquiryBusinessStageNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumInquiryBusinessStageNullableFilter<$PrismaModel>
+}
+
+export type EnumInquiryActionOwnerNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.InquiryActionOwner | Prisma.EnumInquiryActionOwnerFieldRefInput<$PrismaModel> | null
+  in?: $Enums.InquiryActionOwner[] | Prisma.ListEnumInquiryActionOwnerFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.InquiryActionOwner[] | Prisma.ListEnumInquiryActionOwnerFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumInquiryActionOwnerNullableWithAggregatesFilter<$PrismaModel> | $Enums.InquiryActionOwner | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumInquiryActionOwnerNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumInquiryActionOwnerNullableFilter<$PrismaModel>
+}
+
+export type EnumInquiryLifecycleStatusNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.InquiryLifecycleStatus | Prisma.EnumInquiryLifecycleStatusFieldRefInput<$PrismaModel> | null
+  in?: $Enums.InquiryLifecycleStatus[] | Prisma.ListEnumInquiryLifecycleStatusFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.InquiryLifecycleStatus[] | Prisma.ListEnumInquiryLifecycleStatusFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumInquiryLifecycleStatusNullableWithAggregatesFilter<$PrismaModel> | $Enums.InquiryLifecycleStatus | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumInquiryLifecycleStatusNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumInquiryLifecycleStatusNullableFilter<$PrismaModel>
 }
 
 export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -305,6 +407,33 @@ export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
   _sum?: Prisma.NestedDecimalNullableFilter<$PrismaModel>
   _min?: Prisma.NestedDecimalNullableFilter<$PrismaModel>
   _max?: Prisma.NestedDecimalNullableFilter<$PrismaModel>
+}
+
+export type DecimalFilter<$PrismaModel = never> = {
+  equals?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  in?: runtime.Decimal[] | runtime.DecimalJsLike[] | number[] | string[] | Prisma.ListDecimalFieldRefInput<$PrismaModel>
+  notIn?: runtime.Decimal[] | runtime.DecimalJsLike[] | number[] | string[] | Prisma.ListDecimalFieldRefInput<$PrismaModel>
+  lt?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  lte?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  gt?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  gte?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedDecimalFilter<$PrismaModel> | runtime.Decimal | runtime.DecimalJsLike | number | string
+}
+
+export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  in?: runtime.Decimal[] | runtime.DecimalJsLike[] | number[] | string[] | Prisma.ListDecimalFieldRefInput<$PrismaModel>
+  notIn?: runtime.Decimal[] | runtime.DecimalJsLike[] | number[] | string[] | Prisma.ListDecimalFieldRefInput<$PrismaModel>
+  lt?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  lte?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  gt?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  gte?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedDecimalWithAggregatesFilter<$PrismaModel> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _avg?: Prisma.NestedDecimalFilter<$PrismaModel>
+  _sum?: Prisma.NestedDecimalFilter<$PrismaModel>
+  _min?: Prisma.NestedDecimalFilter<$PrismaModel>
+  _max?: Prisma.NestedDecimalFilter<$PrismaModel>
 }
 
 export type IntNullableFilter<$PrismaModel = never> = {
@@ -597,6 +726,78 @@ export type NestedBigIntWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedBigIntFilter<$PrismaModel>
 }
 
+export type NestedEnumInquiryBusinessStageFilter<$PrismaModel = never> = {
+  equals?: $Enums.InquiryBusinessStage | Prisma.EnumInquiryBusinessStageFieldRefInput<$PrismaModel>
+  in?: $Enums.InquiryBusinessStage[] | Prisma.ListEnumInquiryBusinessStageFieldRefInput<$PrismaModel>
+  notIn?: $Enums.InquiryBusinessStage[] | Prisma.ListEnumInquiryBusinessStageFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumInquiryBusinessStageFilter<$PrismaModel> | $Enums.InquiryBusinessStage
+}
+
+export type NestedEnumInquiryActionOwnerFilter<$PrismaModel = never> = {
+  equals?: $Enums.InquiryActionOwner | Prisma.EnumInquiryActionOwnerFieldRefInput<$PrismaModel>
+  in?: $Enums.InquiryActionOwner[] | Prisma.ListEnumInquiryActionOwnerFieldRefInput<$PrismaModel>
+  notIn?: $Enums.InquiryActionOwner[] | Prisma.ListEnumInquiryActionOwnerFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumInquiryActionOwnerFilter<$PrismaModel> | $Enums.InquiryActionOwner
+}
+
+export type NestedEnumInquiryLifecycleStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.InquiryLifecycleStatus | Prisma.EnumInquiryLifecycleStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.InquiryLifecycleStatus[] | Prisma.ListEnumInquiryLifecycleStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.InquiryLifecycleStatus[] | Prisma.ListEnumInquiryLifecycleStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumInquiryLifecycleStatusFilter<$PrismaModel> | $Enums.InquiryLifecycleStatus
+}
+
+export type NestedEnumInquiryBusinessStageWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.InquiryBusinessStage | Prisma.EnumInquiryBusinessStageFieldRefInput<$PrismaModel>
+  in?: $Enums.InquiryBusinessStage[] | Prisma.ListEnumInquiryBusinessStageFieldRefInput<$PrismaModel>
+  notIn?: $Enums.InquiryBusinessStage[] | Prisma.ListEnumInquiryBusinessStageFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumInquiryBusinessStageWithAggregatesFilter<$PrismaModel> | $Enums.InquiryBusinessStage
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumInquiryBusinessStageFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumInquiryBusinessStageFilter<$PrismaModel>
+}
+
+export type NestedEnumInquiryActionOwnerWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.InquiryActionOwner | Prisma.EnumInquiryActionOwnerFieldRefInput<$PrismaModel>
+  in?: $Enums.InquiryActionOwner[] | Prisma.ListEnumInquiryActionOwnerFieldRefInput<$PrismaModel>
+  notIn?: $Enums.InquiryActionOwner[] | Prisma.ListEnumInquiryActionOwnerFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumInquiryActionOwnerWithAggregatesFilter<$PrismaModel> | $Enums.InquiryActionOwner
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumInquiryActionOwnerFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumInquiryActionOwnerFilter<$PrismaModel>
+}
+
+export type NestedEnumInquiryLifecycleStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.InquiryLifecycleStatus | Prisma.EnumInquiryLifecycleStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.InquiryLifecycleStatus[] | Prisma.ListEnumInquiryLifecycleStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.InquiryLifecycleStatus[] | Prisma.ListEnumInquiryLifecycleStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumInquiryLifecycleStatusWithAggregatesFilter<$PrismaModel> | $Enums.InquiryLifecycleStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumInquiryLifecycleStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumInquiryLifecycleStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumInquiryBusinessStageNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.InquiryBusinessStage | Prisma.EnumInquiryBusinessStageFieldRefInput<$PrismaModel> | null
+  in?: $Enums.InquiryBusinessStage[] | Prisma.ListEnumInquiryBusinessStageFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.InquiryBusinessStage[] | Prisma.ListEnumInquiryBusinessStageFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumInquiryBusinessStageNullableFilter<$PrismaModel> | $Enums.InquiryBusinessStage | null
+}
+
+export type NestedEnumInquiryActionOwnerNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.InquiryActionOwner | Prisma.EnumInquiryActionOwnerFieldRefInput<$PrismaModel> | null
+  in?: $Enums.InquiryActionOwner[] | Prisma.ListEnumInquiryActionOwnerFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.InquiryActionOwner[] | Prisma.ListEnumInquiryActionOwnerFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumInquiryActionOwnerNullableFilter<$PrismaModel> | $Enums.InquiryActionOwner | null
+}
+
+export type NestedEnumInquiryLifecycleStatusNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.InquiryLifecycleStatus | Prisma.EnumInquiryLifecycleStatusFieldRefInput<$PrismaModel> | null
+  in?: $Enums.InquiryLifecycleStatus[] | Prisma.ListEnumInquiryLifecycleStatusFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.InquiryLifecycleStatus[] | Prisma.ListEnumInquiryLifecycleStatusFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumInquiryLifecycleStatusNullableFilter<$PrismaModel> | $Enums.InquiryLifecycleStatus | null
+}
+
 export type NestedDecimalNullableFilter<$PrismaModel = never> = {
   equals?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel> | null
   in?: runtime.Decimal[] | runtime.DecimalJsLike[] | number[] | string[] | Prisma.ListDecimalFieldRefInput<$PrismaModel> | null
@@ -606,6 +807,36 @@ export type NestedDecimalNullableFilter<$PrismaModel = never> = {
   gt?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
   gte?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
   not?: Prisma.NestedDecimalNullableFilter<$PrismaModel> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+}
+
+export type NestedEnumInquiryBusinessStageNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.InquiryBusinessStage | Prisma.EnumInquiryBusinessStageFieldRefInput<$PrismaModel> | null
+  in?: $Enums.InquiryBusinessStage[] | Prisma.ListEnumInquiryBusinessStageFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.InquiryBusinessStage[] | Prisma.ListEnumInquiryBusinessStageFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumInquiryBusinessStageNullableWithAggregatesFilter<$PrismaModel> | $Enums.InquiryBusinessStage | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumInquiryBusinessStageNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumInquiryBusinessStageNullableFilter<$PrismaModel>
+}
+
+export type NestedEnumInquiryActionOwnerNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.InquiryActionOwner | Prisma.EnumInquiryActionOwnerFieldRefInput<$PrismaModel> | null
+  in?: $Enums.InquiryActionOwner[] | Prisma.ListEnumInquiryActionOwnerFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.InquiryActionOwner[] | Prisma.ListEnumInquiryActionOwnerFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumInquiryActionOwnerNullableWithAggregatesFilter<$PrismaModel> | $Enums.InquiryActionOwner | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumInquiryActionOwnerNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumInquiryActionOwnerNullableFilter<$PrismaModel>
+}
+
+export type NestedEnumInquiryLifecycleStatusNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.InquiryLifecycleStatus | Prisma.EnumInquiryLifecycleStatusFieldRefInput<$PrismaModel> | null
+  in?: $Enums.InquiryLifecycleStatus[] | Prisma.ListEnumInquiryLifecycleStatusFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.InquiryLifecycleStatus[] | Prisma.ListEnumInquiryLifecycleStatusFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumInquiryLifecycleStatusNullableWithAggregatesFilter<$PrismaModel> | $Enums.InquiryLifecycleStatus | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumInquiryLifecycleStatusNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumInquiryLifecycleStatusNullableFilter<$PrismaModel>
 }
 
 export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -622,6 +853,33 @@ export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
   _sum?: Prisma.NestedDecimalNullableFilter<$PrismaModel>
   _min?: Prisma.NestedDecimalNullableFilter<$PrismaModel>
   _max?: Prisma.NestedDecimalNullableFilter<$PrismaModel>
+}
+
+export type NestedDecimalFilter<$PrismaModel = never> = {
+  equals?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  in?: runtime.Decimal[] | runtime.DecimalJsLike[] | number[] | string[] | Prisma.ListDecimalFieldRefInput<$PrismaModel>
+  notIn?: runtime.Decimal[] | runtime.DecimalJsLike[] | number[] | string[] | Prisma.ListDecimalFieldRefInput<$PrismaModel>
+  lt?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  lte?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  gt?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  gte?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedDecimalFilter<$PrismaModel> | runtime.Decimal | runtime.DecimalJsLike | number | string
+}
+
+export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  in?: runtime.Decimal[] | runtime.DecimalJsLike[] | number[] | string[] | Prisma.ListDecimalFieldRefInput<$PrismaModel>
+  notIn?: runtime.Decimal[] | runtime.DecimalJsLike[] | number[] | string[] | Prisma.ListDecimalFieldRefInput<$PrismaModel>
+  lt?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  lte?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  gt?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  gte?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedDecimalWithAggregatesFilter<$PrismaModel> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _avg?: Prisma.NestedDecimalFilter<$PrismaModel>
+  _sum?: Prisma.NestedDecimalFilter<$PrismaModel>
+  _min?: Prisma.NestedDecimalFilter<$PrismaModel>
+  _max?: Prisma.NestedDecimalFilter<$PrismaModel>
 }
 
 export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {

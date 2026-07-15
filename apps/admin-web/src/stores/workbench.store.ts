@@ -17,13 +17,12 @@ export const useWorkbenchStore = defineStore('workbench', {
   getters: {
     totalInquiries: (state) => state.inquiryTotal || state.inquiries.length,
     invalidInquiries: (state) =>
-      state.inquiries.filter((item) => item.status === 'invalid').length,
+      state.inquiries.filter((item) => (item as any).lifecycleStatus === 'invalid').length,
     activeInquiries: (state) =>
-      state.inquiries.filter((item) => item.status !== 'invalid' && item.status !== 'closed')
-        .length,
+      state.inquiries.filter((item) => (item as any).lifecycleStatus !== 'invalid').length,
     pendingInquiries: (state) =>
       state.inquiries.filter((item) =>
-        ['new', 'need_clarification', 'need_engineer_review'].includes(String(item.status)),
+        ['intake', 'technical_review'].includes(String((item as any).businessStage)),
       ).length,
   },
   actions: {

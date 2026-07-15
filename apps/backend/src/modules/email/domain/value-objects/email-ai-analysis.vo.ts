@@ -1,38 +1,7 @@
-import { InquiryStatus } from '../../../inquiry/domain/enums/inquiry-status.enum.js';
+import type { EmailWorkflowAnalysisSchemaOutput } from '../../application/dto/email-ai-analysis.schema.js';
 
-export type EmailInquiryClassification =
-  | 'valid_inquiry'
-  | 'invalid'
-  | 'unknown';
-
-export type EmailAiRiskLevel = 'low' | 'medium' | 'high';
-
-export interface EmailExtractedRequirements {
-  productType?: string;
-  structureType?: string;
-  frequencyRange?: string;
-  power?: string;
-  insertionLoss?: string;
-  isolation?: string;
-  vswr?: string;
-  connector?: string;
-  quantity?: string;
-  sizeRequirement?: string;
-  application?: string;
-  deliveryRequirement?: string;
-  specialRequirements?: string;
-}
-
-export interface EmailAiAnalysis {
-  isInquiry: boolean;
-  classification: EmailInquiryClassification;
-  suggestedStatus: InquiryStatus;
-  confidence: number;
-  riskLevel: EmailAiRiskLevel;
-  reason: string;
-  missingFields: string[];
-  extractedRequirements: EmailExtractedRequirements;
-  quoteBoundaryDetected: boolean;
-  humanReviewRequired: boolean;
-  nextAction: string;
-}
+export type EmailMessageClassification = EmailWorkflowAnalysisSchemaOutput['messageClassification'];
+export type EmailAiRiskLevel = EmailWorkflowAnalysisSchemaOutput['riskLevel'];
+export type EmailExtractedRequirements = EmailWorkflowAnalysisSchemaOutput['extractedRequirements'];
+export type EmailWorkflowAnalysis = EmailWorkflowAnalysisSchemaOutput;
+export type EmailAiAnalysis = EmailWorkflowAnalysis;

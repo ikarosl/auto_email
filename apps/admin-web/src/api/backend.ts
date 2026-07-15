@@ -22,7 +22,6 @@ export {
   fetchMessage,
   linkMessageToInquiry,
   moveInquiryMessage,
-  transitionInquiryStatus,
   updateInquiry,
 } from './inquiry';
 
@@ -35,7 +34,7 @@ export { fetchContextSnapshot, fetchContextSnapshots } from './context';
 export {
   approveReplyDraft,
   createReplyDraft,
-  fetchAiDecisions,
+  fetchEmailAnalysisDecisions,
   fetchMailRuntime,
   fetchReplyDraft,
   fetchReplyDrafts,
@@ -48,7 +47,16 @@ export {
 export type { ListParams } from './shared';
 
 export {
-  applyWorkflowDecision,
-  fetchInquiryWorkflowDecisions,
-  rejectWorkflowDecision,
-} from './workflow-decision';
+  applyStateDecision,
+  fetchBusinessEvents,
+  fetchStateDecisions,
+  fetchStateTransitions,
+  rejectStateDecision,
+  submitStateCorrection,
+} from './inquiry-state';
+
+export type {
+  InquiryBusinessEventListItem,
+  InquiryStateDecisionListItem,
+  InquiryStateTransitionListItem,
+} from '@/types/inquiry-state';

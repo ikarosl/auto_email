@@ -7,10 +7,9 @@ export const API_ROUTE_SEGMENTS = {
   emailThreads: 'email-threads',
   messages: 'messages',
   contextSnapshots: 'context-snapshots',
-  aiDecisions: 'ai-decisions',
+  emailAnalysisDecisions: 'email-analysis-decisions',
   replyDrafts: 'reply-drafts',
   runtimeConfig: 'runtime-config',
-  emailWorkflowDecisions: 'email-workflow-decisions',
 } as const;
 
 export const WEB_ROUTES = {

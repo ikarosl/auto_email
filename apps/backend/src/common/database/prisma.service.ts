@@ -41,7 +41,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnAppli
         FILTER (WHERE actual.column_name IS NULL) AS missing
       FROM (VALUES
         ('context_snapshot_id'),
-        ('ai_decision_id'),
+        ('email_analysis_decision_id'),
         ('idempotency_key'),
         ('version'),
         ('sent_at')
@@ -56,6 +56,28 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnAppli
       throw new Error(
         `Database schema is outdated. Missing reply_drafts columns: ${missing.join(', ')}. ` +
         'Run pnpm --filter @email-inquiry/backend db:migrate before starting the backend.',
+      );
+    }
+
+    const inquiryRows = await this.$queryRaw<Array<{ missing: string[] | null }>>`
+      SELECT ARRAY_AGG(required.column_name ORDER BY required.column_name)
+        FILTER (WHERE actual.column_name IS NULL) AS missing
+      FROM (VALUES
+        ('business_stage'),
+        ('action_owner'),
+        ('lifecycle_status'),
+        ('state_version')
+      ) AS required(column_name)
+      LEFT JOIN information_schema.columns AS actual
+        ON actual.table_schema = current_schema()
+       AND actual.table_name = 'inquiry_cases'
+       AND actual.column_name = required.column_name
+    `;
+    const missingInquiryColumns = inquiryRows[0]?.missing ?? [];
+    if (missingInquiryColumns.length > 0) {
+      throw new Error(
+        `Database schema is outdated. Missing inquiry_cases columns: ${missingInquiryColumns.join(', ')}. ` +
+        'Reset the development database with docs/initial-empty-postgres-schema.sql.',
       );
     }
   }

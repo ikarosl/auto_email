@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
 import { EmailDirection } from '../../../email/domain/enums/email-direction.enum.js';
-import { InquiryStatus } from '../../../inquiry/domain/enums/inquiry-status.enum.js';
+import { INITIAL_INQUIRY_STATE } from '../../../inquiry/domain/enums/inquiry-state.enum.js';
 import { aiEmailAnalysisContextPayloadSchema } from './ai-email-analysis-context.schema.js';
 
 describe('aiEmailAnalysisContextPayloadSchema', () => {
@@ -136,7 +136,7 @@ describe('aiEmailAnalysisContextPayloadSchema', () => {
 function createPayload() {
   return {
     inquiryState: {
-      status: InquiryStatus.NEW,
+      ...INITIAL_INQUIRY_STATE,
       customerEmail: 'buyer@example.com',
       subject: 'RF isolator inquiry',
       latestMessageAt: '2026-07-03T02:29:42.000Z',

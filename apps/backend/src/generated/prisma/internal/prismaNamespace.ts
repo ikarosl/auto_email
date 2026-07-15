@@ -394,15 +394,17 @@ export const ModelName = {
   InquiryCase: 'InquiryCase',
   InquiryMessage: 'InquiryMessage',
   ProcessedEmail: 'ProcessedEmail',
-  AiDecision: 'AiDecision',
+  EmailAnalysisDecision: 'EmailAnalysisDecision',
+  InquiryBusinessEvent: 'InquiryBusinessEvent',
+  InquiryStateDecision: 'InquiryStateDecision',
+  InquiryStateTransition: 'InquiryStateTransition',
+  EmailRecoveryRecord: 'EmailRecoveryRecord',
   InquiryStructuredFact: 'InquiryStructuredFact',
   ReplyDraft: 'ReplyDraft',
   ReplyDraftAttachment: 'ReplyDraftAttachment',
   EmailSendAttempt: 'EmailSendAttempt',
-  EmailWorkflowDecision: 'EmailWorkflowDecision',
   AiContextSnapshot: 'AiContextSnapshot',
-  InquiryContextSummary: 'InquiryContextSummary',
-  InquiryStatusLog: 'InquiryStatusLog'
+  InquiryContextSummary: 'InquiryContextSummary'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -418,7 +420,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "mailboxAccount" | "mailboxSyncState" | "customer" | "organization" | "emailThread" | "emailMessage" | "emailAttachment" | "inquiryCase" | "inquiryMessage" | "processedEmail" | "aiDecision" | "inquiryStructuredFact" | "replyDraft" | "replyDraftAttachment" | "emailSendAttempt" | "emailWorkflowDecision" | "aiContextSnapshot" | "inquiryContextSummary" | "inquiryStatusLog"
+    modelProps: "mailboxAccount" | "mailboxSyncState" | "customer" | "organization" | "emailThread" | "emailMessage" | "emailAttachment" | "inquiryCase" | "inquiryMessage" | "processedEmail" | "emailAnalysisDecision" | "inquiryBusinessEvent" | "inquiryStateDecision" | "inquiryStateTransition" | "emailRecoveryRecord" | "inquiryStructuredFact" | "replyDraft" | "replyDraftAttachment" | "emailSendAttempt" | "aiContextSnapshot" | "inquiryContextSummary"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1162,77 +1164,373 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    AiDecision: {
-      payload: Prisma.$AiDecisionPayload<ExtArgs>
-      fields: Prisma.AiDecisionFieldRefs
+    EmailAnalysisDecision: {
+      payload: Prisma.$EmailAnalysisDecisionPayload<ExtArgs>
+      fields: Prisma.EmailAnalysisDecisionFieldRefs
       operations: {
         findUnique: {
-          args: Prisma.AiDecisionFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiDecisionPayload> | null
+          args: Prisma.EmailAnalysisDecisionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailAnalysisDecisionPayload> | null
         }
         findUniqueOrThrow: {
-          args: Prisma.AiDecisionFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiDecisionPayload>
+          args: Prisma.EmailAnalysisDecisionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailAnalysisDecisionPayload>
         }
         findFirst: {
-          args: Prisma.AiDecisionFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiDecisionPayload> | null
+          args: Prisma.EmailAnalysisDecisionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailAnalysisDecisionPayload> | null
         }
         findFirstOrThrow: {
-          args: Prisma.AiDecisionFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiDecisionPayload>
+          args: Prisma.EmailAnalysisDecisionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailAnalysisDecisionPayload>
         }
         findMany: {
-          args: Prisma.AiDecisionFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiDecisionPayload>[]
+          args: Prisma.EmailAnalysisDecisionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailAnalysisDecisionPayload>[]
         }
         create: {
-          args: Prisma.AiDecisionCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiDecisionPayload>
+          args: Prisma.EmailAnalysisDecisionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailAnalysisDecisionPayload>
         }
         createMany: {
-          args: Prisma.AiDecisionCreateManyArgs<ExtArgs>
+          args: Prisma.EmailAnalysisDecisionCreateManyArgs<ExtArgs>
           result: BatchPayload
         }
         createManyAndReturn: {
-          args: Prisma.AiDecisionCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiDecisionPayload>[]
+          args: Prisma.EmailAnalysisDecisionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailAnalysisDecisionPayload>[]
         }
         delete: {
-          args: Prisma.AiDecisionDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiDecisionPayload>
+          args: Prisma.EmailAnalysisDecisionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailAnalysisDecisionPayload>
         }
         update: {
-          args: Prisma.AiDecisionUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiDecisionPayload>
+          args: Prisma.EmailAnalysisDecisionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailAnalysisDecisionPayload>
         }
         deleteMany: {
-          args: Prisma.AiDecisionDeleteManyArgs<ExtArgs>
+          args: Prisma.EmailAnalysisDecisionDeleteManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateMany: {
-          args: Prisma.AiDecisionUpdateManyArgs<ExtArgs>
+          args: Prisma.EmailAnalysisDecisionUpdateManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateManyAndReturn: {
-          args: Prisma.AiDecisionUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiDecisionPayload>[]
+          args: Prisma.EmailAnalysisDecisionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailAnalysisDecisionPayload>[]
         }
         upsert: {
-          args: Prisma.AiDecisionUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiDecisionPayload>
+          args: Prisma.EmailAnalysisDecisionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailAnalysisDecisionPayload>
         }
         aggregate: {
-          args: Prisma.AiDecisionAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateAiDecision>
+          args: Prisma.EmailAnalysisDecisionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEmailAnalysisDecision>
         }
         groupBy: {
-          args: Prisma.AiDecisionGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AiDecisionGroupByOutputType>[]
+          args: Prisma.EmailAnalysisDecisionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmailAnalysisDecisionGroupByOutputType>[]
         }
         count: {
-          args: Prisma.AiDecisionCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AiDecisionCountAggregateOutputType> | number
+          args: Prisma.EmailAnalysisDecisionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmailAnalysisDecisionCountAggregateOutputType> | number
+        }
+      }
+    }
+    InquiryBusinessEvent: {
+      payload: Prisma.$InquiryBusinessEventPayload<ExtArgs>
+      fields: Prisma.InquiryBusinessEventFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.InquiryBusinessEventFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryBusinessEventPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.InquiryBusinessEventFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryBusinessEventPayload>
+        }
+        findFirst: {
+          args: Prisma.InquiryBusinessEventFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryBusinessEventPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.InquiryBusinessEventFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryBusinessEventPayload>
+        }
+        findMany: {
+          args: Prisma.InquiryBusinessEventFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryBusinessEventPayload>[]
+        }
+        create: {
+          args: Prisma.InquiryBusinessEventCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryBusinessEventPayload>
+        }
+        createMany: {
+          args: Prisma.InquiryBusinessEventCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.InquiryBusinessEventCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryBusinessEventPayload>[]
+        }
+        delete: {
+          args: Prisma.InquiryBusinessEventDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryBusinessEventPayload>
+        }
+        update: {
+          args: Prisma.InquiryBusinessEventUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryBusinessEventPayload>
+        }
+        deleteMany: {
+          args: Prisma.InquiryBusinessEventDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.InquiryBusinessEventUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.InquiryBusinessEventUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryBusinessEventPayload>[]
+        }
+        upsert: {
+          args: Prisma.InquiryBusinessEventUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryBusinessEventPayload>
+        }
+        aggregate: {
+          args: Prisma.InquiryBusinessEventAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateInquiryBusinessEvent>
+        }
+        groupBy: {
+          args: Prisma.InquiryBusinessEventGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InquiryBusinessEventGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.InquiryBusinessEventCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InquiryBusinessEventCountAggregateOutputType> | number
+        }
+      }
+    }
+    InquiryStateDecision: {
+      payload: Prisma.$InquiryStateDecisionPayload<ExtArgs>
+      fields: Prisma.InquiryStateDecisionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.InquiryStateDecisionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryStateDecisionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.InquiryStateDecisionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryStateDecisionPayload>
+        }
+        findFirst: {
+          args: Prisma.InquiryStateDecisionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryStateDecisionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.InquiryStateDecisionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryStateDecisionPayload>
+        }
+        findMany: {
+          args: Prisma.InquiryStateDecisionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryStateDecisionPayload>[]
+        }
+        create: {
+          args: Prisma.InquiryStateDecisionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryStateDecisionPayload>
+        }
+        createMany: {
+          args: Prisma.InquiryStateDecisionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.InquiryStateDecisionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryStateDecisionPayload>[]
+        }
+        delete: {
+          args: Prisma.InquiryStateDecisionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryStateDecisionPayload>
+        }
+        update: {
+          args: Prisma.InquiryStateDecisionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryStateDecisionPayload>
+        }
+        deleteMany: {
+          args: Prisma.InquiryStateDecisionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.InquiryStateDecisionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.InquiryStateDecisionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryStateDecisionPayload>[]
+        }
+        upsert: {
+          args: Prisma.InquiryStateDecisionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryStateDecisionPayload>
+        }
+        aggregate: {
+          args: Prisma.InquiryStateDecisionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateInquiryStateDecision>
+        }
+        groupBy: {
+          args: Prisma.InquiryStateDecisionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InquiryStateDecisionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.InquiryStateDecisionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InquiryStateDecisionCountAggregateOutputType> | number
+        }
+      }
+    }
+    InquiryStateTransition: {
+      payload: Prisma.$InquiryStateTransitionPayload<ExtArgs>
+      fields: Prisma.InquiryStateTransitionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.InquiryStateTransitionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryStateTransitionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.InquiryStateTransitionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryStateTransitionPayload>
+        }
+        findFirst: {
+          args: Prisma.InquiryStateTransitionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryStateTransitionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.InquiryStateTransitionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryStateTransitionPayload>
+        }
+        findMany: {
+          args: Prisma.InquiryStateTransitionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryStateTransitionPayload>[]
+        }
+        create: {
+          args: Prisma.InquiryStateTransitionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryStateTransitionPayload>
+        }
+        createMany: {
+          args: Prisma.InquiryStateTransitionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.InquiryStateTransitionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryStateTransitionPayload>[]
+        }
+        delete: {
+          args: Prisma.InquiryStateTransitionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryStateTransitionPayload>
+        }
+        update: {
+          args: Prisma.InquiryStateTransitionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryStateTransitionPayload>
+        }
+        deleteMany: {
+          args: Prisma.InquiryStateTransitionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.InquiryStateTransitionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.InquiryStateTransitionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryStateTransitionPayload>[]
+        }
+        upsert: {
+          args: Prisma.InquiryStateTransitionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryStateTransitionPayload>
+        }
+        aggregate: {
+          args: Prisma.InquiryStateTransitionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateInquiryStateTransition>
+        }
+        groupBy: {
+          args: Prisma.InquiryStateTransitionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InquiryStateTransitionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.InquiryStateTransitionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InquiryStateTransitionCountAggregateOutputType> | number
+        }
+      }
+    }
+    EmailRecoveryRecord: {
+      payload: Prisma.$EmailRecoveryRecordPayload<ExtArgs>
+      fields: Prisma.EmailRecoveryRecordFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EmailRecoveryRecordFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailRecoveryRecordPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EmailRecoveryRecordFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailRecoveryRecordPayload>
+        }
+        findFirst: {
+          args: Prisma.EmailRecoveryRecordFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailRecoveryRecordPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EmailRecoveryRecordFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailRecoveryRecordPayload>
+        }
+        findMany: {
+          args: Prisma.EmailRecoveryRecordFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailRecoveryRecordPayload>[]
+        }
+        create: {
+          args: Prisma.EmailRecoveryRecordCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailRecoveryRecordPayload>
+        }
+        createMany: {
+          args: Prisma.EmailRecoveryRecordCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EmailRecoveryRecordCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailRecoveryRecordPayload>[]
+        }
+        delete: {
+          args: Prisma.EmailRecoveryRecordDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailRecoveryRecordPayload>
+        }
+        update: {
+          args: Prisma.EmailRecoveryRecordUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailRecoveryRecordPayload>
+        }
+        deleteMany: {
+          args: Prisma.EmailRecoveryRecordDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EmailRecoveryRecordUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EmailRecoveryRecordUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailRecoveryRecordPayload>[]
+        }
+        upsert: {
+          args: Prisma.EmailRecoveryRecordUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailRecoveryRecordPayload>
+        }
+        aggregate: {
+          args: Prisma.EmailRecoveryRecordAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEmailRecoveryRecord>
+        }
+        groupBy: {
+          args: Prisma.EmailRecoveryRecordGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmailRecoveryRecordGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EmailRecoveryRecordCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmailRecoveryRecordCountAggregateOutputType> | number
         }
       }
     }
@@ -1532,80 +1830,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    EmailWorkflowDecision: {
-      payload: Prisma.$EmailWorkflowDecisionPayload<ExtArgs>
-      fields: Prisma.EmailWorkflowDecisionFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.EmailWorkflowDecisionFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailWorkflowDecisionPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.EmailWorkflowDecisionFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailWorkflowDecisionPayload>
-        }
-        findFirst: {
-          args: Prisma.EmailWorkflowDecisionFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailWorkflowDecisionPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.EmailWorkflowDecisionFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailWorkflowDecisionPayload>
-        }
-        findMany: {
-          args: Prisma.EmailWorkflowDecisionFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailWorkflowDecisionPayload>[]
-        }
-        create: {
-          args: Prisma.EmailWorkflowDecisionCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailWorkflowDecisionPayload>
-        }
-        createMany: {
-          args: Prisma.EmailWorkflowDecisionCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.EmailWorkflowDecisionCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailWorkflowDecisionPayload>[]
-        }
-        delete: {
-          args: Prisma.EmailWorkflowDecisionDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailWorkflowDecisionPayload>
-        }
-        update: {
-          args: Prisma.EmailWorkflowDecisionUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailWorkflowDecisionPayload>
-        }
-        deleteMany: {
-          args: Prisma.EmailWorkflowDecisionDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.EmailWorkflowDecisionUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.EmailWorkflowDecisionUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailWorkflowDecisionPayload>[]
-        }
-        upsert: {
-          args: Prisma.EmailWorkflowDecisionUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailWorkflowDecisionPayload>
-        }
-        aggregate: {
-          args: Prisma.EmailWorkflowDecisionAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateEmailWorkflowDecision>
-        }
-        groupBy: {
-          args: Prisma.EmailWorkflowDecisionGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.EmailWorkflowDecisionGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.EmailWorkflowDecisionCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.EmailWorkflowDecisionCountAggregateOutputType> | number
-        }
-      }
-    }
     AiContextSnapshot: {
       payload: Prisma.$AiContextSnapshotPayload<ExtArgs>
       fields: Prisma.AiContextSnapshotFieldRefs
@@ -1751,80 +1975,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.InquiryContextSummaryCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.InquiryContextSummaryCountAggregateOutputType> | number
-        }
-      }
-    }
-    InquiryStatusLog: {
-      payload: Prisma.$InquiryStatusLogPayload<ExtArgs>
-      fields: Prisma.InquiryStatusLogFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.InquiryStatusLogFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryStatusLogPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.InquiryStatusLogFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryStatusLogPayload>
-        }
-        findFirst: {
-          args: Prisma.InquiryStatusLogFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryStatusLogPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.InquiryStatusLogFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryStatusLogPayload>
-        }
-        findMany: {
-          args: Prisma.InquiryStatusLogFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryStatusLogPayload>[]
-        }
-        create: {
-          args: Prisma.InquiryStatusLogCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryStatusLogPayload>
-        }
-        createMany: {
-          args: Prisma.InquiryStatusLogCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.InquiryStatusLogCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryStatusLogPayload>[]
-        }
-        delete: {
-          args: Prisma.InquiryStatusLogDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryStatusLogPayload>
-        }
-        update: {
-          args: Prisma.InquiryStatusLogUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryStatusLogPayload>
-        }
-        deleteMany: {
-          args: Prisma.InquiryStatusLogDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.InquiryStatusLogUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.InquiryStatusLogUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryStatusLogPayload>[]
-        }
-        upsert: {
-          args: Prisma.InquiryStatusLogUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryStatusLogPayload>
-        }
-        aggregate: {
-          args: Prisma.InquiryStatusLogAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateInquiryStatusLog>
-        }
-        groupBy: {
-          args: Prisma.InquiryStatusLogGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.InquiryStatusLogGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.InquiryStatusLogCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.InquiryStatusLogCountAggregateOutputType> | number
         }
       }
     }
@@ -2022,7 +2172,10 @@ export const InquiryCaseScalarFieldEnum = {
   customerId: 'customerId',
   organizationId: 'organizationId',
   primaryCustomerId: 'primaryCustomerId',
-  status: 'status',
+  businessStage: 'businessStage',
+  actionOwner: 'actionOwner',
+  lifecycleStatus: 'lifecycleStatus',
+  stateVersion: 'stateVersion',
   subject: 'subject',
   rawSubject: 'rawSubject',
   businessSubject: 'businessSubject',
@@ -2071,12 +2224,16 @@ export const ProcessedEmailScalarFieldEnum = {
 export type ProcessedEmailScalarFieldEnum = (typeof ProcessedEmailScalarFieldEnum)[keyof typeof ProcessedEmailScalarFieldEnum]
 
 
-export const AiDecisionScalarFieldEnum = {
+export const EmailAnalysisDecisionScalarFieldEnum = {
   id: 'id',
   emailMessageId: 'emailMessageId',
   inquiryCaseId: 'inquiryCaseId',
-  classification: 'classification',
-  suggestedStatus: 'suggestedStatus',
+  contextSnapshotId: 'contextSnapshotId',
+  direction: 'direction',
+  messageClassification: 'messageClassification',
+  suggestedBusinessStage: 'suggestedBusinessStage',
+  suggestedActionOwner: 'suggestedActionOwner',
+  suggestedLifecycleStatus: 'suggestedLifecycleStatus',
   confidence: 'confidence',
   riskLevel: 'riskLevel',
   reason: 'reason',
@@ -2086,20 +2243,111 @@ export const AiDecisionScalarFieldEnum = {
   humanReviewRequired: 'humanReviewRequired',
   nextAction: 'nextAction',
   rawResult: 'rawResult',
+  rawOutput: 'rawOutput',
   modelName: 'modelName',
+  promptVersion: 'promptVersion',
   success: 'success',
   errorCode: 'errorCode',
   errorMessage: 'errorMessage',
-  executionStatus: 'executionStatus',
-  executionFromStatus: 'executionFromStatus',
-  executionToStatus: 'executionToStatus',
-  executionReason: 'executionReason',
-  executionPolicyVersion: 'executionPolicyVersion',
-  executedAt: 'executedAt',
+  idempotencyKey: 'idempotencyKey',
   createdAt: 'createdAt'
 } as const
 
-export type AiDecisionScalarFieldEnum = (typeof AiDecisionScalarFieldEnum)[keyof typeof AiDecisionScalarFieldEnum]
+export type EmailAnalysisDecisionScalarFieldEnum = (typeof EmailAnalysisDecisionScalarFieldEnum)[keyof typeof EmailAnalysisDecisionScalarFieldEnum]
+
+
+export const InquiryBusinessEventScalarFieldEnum = {
+  id: 'id',
+  inquiryCaseId: 'inquiryCaseId',
+  emailMessageId: 'emailMessageId',
+  analysisDecisionId: 'analysisDecisionId',
+  correctedEventId: 'correctedEventId',
+  eventType: 'eventType',
+  actor: 'actor',
+  sequenceInEmail: 'sequenceInEmail',
+  confidence: 'confidence',
+  evidence: 'evidence',
+  payloadJson: 'payloadJson',
+  sourceType: 'sourceType',
+  occurredAt: 'occurredAt',
+  createdAt: 'createdAt'
+} as const
+
+export type InquiryBusinessEventScalarFieldEnum = (typeof InquiryBusinessEventScalarFieldEnum)[keyof typeof InquiryBusinessEventScalarFieldEnum]
+
+
+export const InquiryStateDecisionScalarFieldEnum = {
+  id: 'id',
+  inquiryCaseId: 'inquiryCaseId',
+  emailMessageId: 'emailMessageId',
+  analysisDecisionId: 'analysisDecisionId',
+  replayRunId: 'replayRunId',
+  beforeBusinessStage: 'beforeBusinessStage',
+  beforeActionOwner: 'beforeActionOwner',
+  beforeLifecycleStatus: 'beforeLifecycleStatus',
+  beforeStateVersion: 'beforeStateVersion',
+  suggestedBusinessStage: 'suggestedBusinessStage',
+  suggestedActionOwner: 'suggestedActionOwner',
+  suggestedLifecycleStatus: 'suggestedLifecycleStatus',
+  appliedBusinessStage: 'appliedBusinessStage',
+  appliedActionOwner: 'appliedActionOwner',
+  appliedLifecycleStatus: 'appliedLifecycleStatus',
+  confidence: 'confidence',
+  riskLevel: 'riskLevel',
+  eventValidationPassed: 'eventValidationPassed',
+  humanReviewAdvisory: 'humanReviewAdvisory',
+  baselineIncomplete: 'baselineIncomplete',
+  executionStatus: 'executionStatus',
+  executionReason: 'executionReason',
+  policyVersion: 'policyVersion',
+  decisionSource: 'decisionSource',
+  eventOccurredAt: 'eventOccurredAt',
+  executedAt: 'executedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type InquiryStateDecisionScalarFieldEnum = (typeof InquiryStateDecisionScalarFieldEnum)[keyof typeof InquiryStateDecisionScalarFieldEnum]
+
+
+export const InquiryStateTransitionScalarFieldEnum = {
+  id: 'id',
+  inquiryCaseId: 'inquiryCaseId',
+  stateDecisionId: 'stateDecisionId',
+  fromBusinessStage: 'fromBusinessStage',
+  fromActionOwner: 'fromActionOwner',
+  fromLifecycleStatus: 'fromLifecycleStatus',
+  toBusinessStage: 'toBusinessStage',
+  toActionOwner: 'toActionOwner',
+  toLifecycleStatus: 'toLifecycleStatus',
+  changedDimensionsJson: 'changedDimensionsJson',
+  reason: 'reason',
+  changedBy: 'changedBy',
+  changedByType: 'changedByType',
+  eventOccurredAt: 'eventOccurredAt',
+  processedAt: 'processedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type InquiryStateTransitionScalarFieldEnum = (typeof InquiryStateTransitionScalarFieldEnum)[keyof typeof InquiryStateTransitionScalarFieldEnum]
+
+
+export const EmailRecoveryRecordScalarFieldEnum = {
+  id: 'id',
+  inquiryCaseId: 'inquiryCaseId',
+  triggerEmailId: 'triggerEmailId',
+  recoveredEmailId: 'recoveredEmailId',
+  expectedMessageId: 'expectedMessageId',
+  confidence: 'confidence',
+  evidenceJson: 'evidenceJson',
+  recoveryStatus: 'recoveryStatus',
+  replayRunId: 'replayRunId',
+  baselineIncomplete: 'baselineIncomplete',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmailRecoveryRecordScalarFieldEnum = (typeof EmailRecoveryRecordScalarFieldEnum)[keyof typeof EmailRecoveryRecordScalarFieldEnum]
 
 
 export const InquiryStructuredFactScalarFieldEnum = {
@@ -2138,7 +2386,7 @@ export const ReplyDraftScalarFieldEnum = {
   sourceEmailMessageId: 'sourceEmailMessageId',
   sentEmailMessageId: 'sentEmailMessageId',
   contextSnapshotId: 'contextSnapshotId',
-  aiDecisionId: 'aiDecisionId',
+  emailAnalysisDecisionId: 'emailAnalysisDecisionId',
   idempotencyKey: 'idempotencyKey',
   draftType: 'draftType',
   status: 'status',
@@ -2202,38 +2450,6 @@ export const EmailSendAttemptScalarFieldEnum = {
 export type EmailSendAttemptScalarFieldEnum = (typeof EmailSendAttemptScalarFieldEnum)[keyof typeof EmailSendAttemptScalarFieldEnum]
 
 
-export const EmailWorkflowDecisionScalarFieldEnum = {
-  id: 'id',
-  emailMessageId: 'emailMessageId',
-  inquiryCaseId: 'inquiryCaseId',
-  aiDecisionId: 'aiDecisionId',
-  direction: 'direction',
-  source: 'source',
-  eventType: 'eventType',
-  responseExpected: 'responseExpected',
-  suggestedStatus: 'suggestedStatus',
-  confidence: 'confidence',
-  riskLevel: 'riskLevel',
-  reason: 'reason',
-  commercialBoundaryDetected: 'commercialBoundaryDetected',
-  humanReviewRequired: 'humanReviewRequired',
-  decisionSource: 'decisionSource',
-  modelName: 'modelName',
-  promptVersion: 'promptVersion',
-  rawResult: 'rawResult',
-  executionStatus: 'executionStatus',
-  executionFromStatus: 'executionFromStatus',
-  executionToStatus: 'executionToStatus',
-  executionReason: 'executionReason',
-  executedAt: 'executedAt',
-  idempotencyKey: 'idempotencyKey',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type EmailWorkflowDecisionScalarFieldEnum = (typeof EmailWorkflowDecisionScalarFieldEnum)[keyof typeof EmailWorkflowDecisionScalarFieldEnum]
-
-
 export const AiContextSnapshotScalarFieldEnum = {
   id: 'id',
   inquiryCaseId: 'inquiryCaseId',
@@ -2267,20 +2483,6 @@ export const InquiryContextSummaryScalarFieldEnum = {
 } as const
 
 export type InquiryContextSummaryScalarFieldEnum = (typeof InquiryContextSummaryScalarFieldEnum)[keyof typeof InquiryContextSummaryScalarFieldEnum]
-
-
-export const InquiryStatusLogScalarFieldEnum = {
-  id: 'id',
-  inquiryCaseId: 'inquiryCaseId',
-  fromStatus: 'fromStatus',
-  toStatus: 'toStatus',
-  reason: 'reason',
-  changedBy: 'changedBy',
-  changedByType: 'changedByType',
-  createdAt: 'createdAt'
-} as const
-
-export type InquiryStatusLogScalarFieldEnum = (typeof InquiryStatusLogScalarFieldEnum)[keyof typeof InquiryStatusLogScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -2403,6 +2605,48 @@ export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'J
  * Reference to a field of type 'QueryMode'
  */
 export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+/**
+ * Reference to a field of type 'InquiryBusinessStage'
+ */
+export type EnumInquiryBusinessStageFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InquiryBusinessStage'>
+    
+
+
+/**
+ * Reference to a field of type 'InquiryBusinessStage[]'
+ */
+export type ListEnumInquiryBusinessStageFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InquiryBusinessStage[]'>
+    
+
+
+/**
+ * Reference to a field of type 'InquiryActionOwner'
+ */
+export type EnumInquiryActionOwnerFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InquiryActionOwner'>
+    
+
+
+/**
+ * Reference to a field of type 'InquiryActionOwner[]'
+ */
+export type ListEnumInquiryActionOwnerFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InquiryActionOwner[]'>
+    
+
+
+/**
+ * Reference to a field of type 'InquiryLifecycleStatus'
+ */
+export type EnumInquiryLifecycleStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InquiryLifecycleStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'InquiryLifecycleStatus[]'
+ */
+export type ListEnumInquiryLifecycleStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InquiryLifecycleStatus[]'>
     
 
 
@@ -2553,15 +2797,17 @@ export type GlobalOmitConfig = {
   inquiryCase?: Prisma.InquiryCaseOmit
   inquiryMessage?: Prisma.InquiryMessageOmit
   processedEmail?: Prisma.ProcessedEmailOmit
-  aiDecision?: Prisma.AiDecisionOmit
+  emailAnalysisDecision?: Prisma.EmailAnalysisDecisionOmit
+  inquiryBusinessEvent?: Prisma.InquiryBusinessEventOmit
+  inquiryStateDecision?: Prisma.InquiryStateDecisionOmit
+  inquiryStateTransition?: Prisma.InquiryStateTransitionOmit
+  emailRecoveryRecord?: Prisma.EmailRecoveryRecordOmit
   inquiryStructuredFact?: Prisma.InquiryStructuredFactOmit
   replyDraft?: Prisma.ReplyDraftOmit
   replyDraftAttachment?: Prisma.ReplyDraftAttachmentOmit
   emailSendAttempt?: Prisma.EmailSendAttemptOmit
-  emailWorkflowDecision?: Prisma.EmailWorkflowDecisionOmit
   aiContextSnapshot?: Prisma.AiContextSnapshotOmit
   inquiryContextSummary?: Prisma.InquiryContextSummaryOmit
-  inquiryStatusLog?: Prisma.InquiryStatusLogOmit
 }
 
 /* Types for Logging */

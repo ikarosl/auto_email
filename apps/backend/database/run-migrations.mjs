@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { config as loadEnv } from 'dotenv';
@@ -45,9 +46,57 @@ async function runMigrations() {
     .filter((file) => file.endsWith('.sql'))
     .sort();
 
+  await ensureMigrationTable(client);
+
+  const appliedRows = await client.query('SELECT name, checksum FROM app_schema_migrations');
+  const applied = new Map(appliedRows.rows.map((row) => [row.name, row.checksum]));
+  const hasApplicationSchema = await tableExists(client, 'inquiry_cases');
+
+  // A schema restored from docs/initial-empty-postgres-schema.sql has no ledger.
+  // Validate it before adopting the current migration baseline.
+  if (hasApplicationSchema && applied.size === 0) {
+    try {
+      await verifyCriticalSchema(client);
+    } catch (error) {
+      throw new Error(
+        `Existing database schema is not compatible with the current baseline. `
+        + `Reset it with docs/initial-empty-postgres-schema.sql before starting the backend. Cause: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
+
+    for (const file of files) {
+      const sql = await fs.readFile(path.join(migrationsDir, file), 'utf8');
+      await recordMigration(client, file, checksum(sql));
+      console.log(`adopted existing schema as ${file}`);
+    }
+    await client.end();
+    return;
+  }
+
   for (const file of files) {
     const sql = await fs.readFile(path.join(migrationsDir, file), 'utf8');
-    await client.query(sql);
+    const sqlChecksum = checksum(sql);
+    const appliedChecksum = applied.get(file);
+    if (appliedChecksum) {
+      if (appliedChecksum !== sqlChecksum) {
+        throw new Error(
+          `Applied migration ${file} was modified. Reset the development database with `
+          + `docs/initial-empty-postgres-schema.sql or restore the original migration file.`,
+        );
+      }
+      console.log(`skipped ${file} (already applied)`);
+      continue;
+    }
+
+    await client.query('BEGIN');
+    try {
+      await client.query(sql);
+      await recordMigration(client, file, sqlChecksum);
+      await client.query('COMMIT');
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    }
     console.log(`applied ${file}`);
   }
 
@@ -56,10 +105,45 @@ async function runMigrations() {
   await client.end();
 }
 
+async function ensureMigrationTable(client) {
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS app_schema_migrations (
+      name TEXT PRIMARY KEY,
+      checksum TEXT NOT NULL,
+      applied_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+}
+
+async function tableExists(client, tableName) {
+  const result = await client.query(`
+    SELECT EXISTS (
+      SELECT 1
+      FROM information_schema.tables
+      WHERE table_schema = current_schema()
+        AND table_name = $1
+    ) AS exists
+  `, [tableName]);
+  return Boolean(result.rows[0]?.exists);
+}
+
+async function recordMigration(client, name, sqlChecksum) {
+  await client.query(
+    `INSERT INTO app_schema_migrations (name, checksum)
+     VALUES ($1, $2)
+     ON CONFLICT (name) DO NOTHING`,
+    [name, sqlChecksum],
+  );
+}
+
+function checksum(value) {
+  return createHash('sha256').update(value, 'utf8').digest('hex');
+}
+
 async function verifyCriticalSchema(client) {
   const requiredReplyDraftColumns = [
     'context_snapshot_id',
-    'ai_decision_id',
+    'email_analysis_decision_id',
     'idempotency_key',
     'original_subject',
     'original_body_text',
@@ -96,13 +180,59 @@ async function verifyCriticalSchema(client) {
       SELECT 1
       FROM information_schema.tables
       WHERE table_schema = current_schema()
-        AND table_name = 'email_workflow_decisions'
-    ) AS email_workflow_decisions_ready
+        AND table_name = 'email_analysis_decisions'
+    ) AS email_analysis_decisions_ready,
+    EXISTS (
+      SELECT 1
+      FROM information_schema.tables
+      WHERE table_schema = current_schema()
+        AND table_name = 'inquiry_business_events'
+    ) AS inquiry_business_events_ready,
+    EXISTS (
+      SELECT 1
+      FROM information_schema.tables
+      WHERE table_schema = current_schema()
+        AND table_name = 'inquiry_state_decisions'
+    ) AS inquiry_state_decisions_ready,
+    EXISTS (
+      SELECT 1
+      FROM information_schema.tables
+      WHERE table_schema = current_schema()
+        AND table_name = 'inquiry_state_transitions'
+    ) AS inquiry_state_transitions_ready,
+    EXISTS (
+      SELECT 1
+      FROM information_schema.tables
+      WHERE table_schema = current_schema()
+        AND table_name = 'email_recovery_records'
+    ) AS email_recovery_records_ready
   `);
-  if (!result.rows[0]?.email_workflow_decisions_ready) {
-    throw new Error('Migration verification failed: email_workflow_decisions is missing.');
+  const requiredTables = [
+    'email_analysis_decisions',
+    'inquiry_business_events',
+    'inquiry_state_decisions',
+    'inquiry_state_transitions',
+    'email_recovery_records',
+  ];
+  const missingTables = requiredTables.filter((table) => !result.rows[0]?.[`${table}_ready`]);
+  if (missingTables.length > 0) {
+    throw new Error(`Migration verification failed: missing tables: ${missingTables.join(', ')}.`);
   }
-  console.log('verified critical schema columns and tables');
+
+  const inquiryColumns = await client.query(`
+    SELECT column_name
+    FROM information_schema.columns
+    WHERE table_schema = current_schema()
+      AND table_name = 'inquiry_cases'
+  `);
+  const actualInquiryColumns = new Set(inquiryColumns.rows.map((row) => row.column_name));
+  const requiredInquiryColumns = ['business_stage', 'action_owner', 'lifecycle_status', 'state_version'];
+  const missingInquiryColumns = requiredInquiryColumns.filter((column) => !actualInquiryColumns.has(column));
+  if (missingInquiryColumns.length > 0) {
+    throw new Error(`Migration verification failed: missing inquiry_cases columns: ${missingInquiryColumns.join(', ')}.`);
+  }
+
+  console.log('verified three-dimensional inquiry schema');
 }
 
 function quoteIdentifier(value) {

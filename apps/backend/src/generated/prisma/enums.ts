@@ -9,7 +9,30 @@
 * 🟢 You can import this file directly.
 */
 
+export const InquiryBusinessStage = {
+  intake: 'intake',
+  technical_review: 'technical_review',
+  commercial: 'commercial',
+  contract: 'contract'
+} as const
+
+export type InquiryBusinessStage = (typeof InquiryBusinessStage)[keyof typeof InquiryBusinessStage]
 
 
-// This file is empty because there are no enums in the schema.
-export {}
+export const InquiryActionOwner = {
+  us: 'us',
+  customer: 'customer',
+  none: 'none'
+} as const
+
+export type InquiryActionOwner = (typeof InquiryActionOwner)[keyof typeof InquiryActionOwner]
+
+
+export const InquiryLifecycleStatus = {
+  active: 'active',
+  won: 'won',
+  lost: 'lost',
+  invalid: 'invalid'
+} as const
+
+export type InquiryLifecycleStatus = (typeof InquiryLifecycleStatus)[keyof typeof InquiryLifecycleStatus]

@@ -29,7 +29,12 @@ export class EmailWebhookController {
       success: true,
       emailMessageId: result.emailMessage.id,
       inquiryCaseId: result.inquiryCase?.id,
-      inquiryStatus: result.inquiryCase?.status,
+      inquiryState: result.inquiryCase ? {
+        businessStage: result.inquiryCase.businessStage,
+        actionOwner: result.inquiryCase.actionOwner,
+        lifecycleStatus: result.inquiryCase.lifecycleStatus,
+        stateVersion: result.inquiryCase.stateVersion,
+      } : null,
       skippedReason: result.skippedReason,
     };
   }

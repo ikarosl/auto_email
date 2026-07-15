@@ -40,7 +40,7 @@ export type ReplyDraftMinAggregateOutputType = {
   sourceEmailMessageId: string | null
   sentEmailMessageId: string | null
   contextSnapshotId: string | null
-  aiDecisionId: string | null
+  emailAnalysisDecisionId: string | null
   idempotencyKey: string | null
   draftType: string | null
   status: string | null
@@ -71,7 +71,7 @@ export type ReplyDraftMaxAggregateOutputType = {
   sourceEmailMessageId: string | null
   sentEmailMessageId: string | null
   contextSnapshotId: string | null
-  aiDecisionId: string | null
+  emailAnalysisDecisionId: string | null
   idempotencyKey: string | null
   draftType: string | null
   status: string | null
@@ -102,7 +102,7 @@ export type ReplyDraftCountAggregateOutputType = {
   sourceEmailMessageId: number
   sentEmailMessageId: number
   contextSnapshotId: number
-  aiDecisionId: number
+  emailAnalysisDecisionId: number
   idempotencyKey: number
   draftType: number
   status: number
@@ -146,7 +146,7 @@ export type ReplyDraftMinAggregateInputType = {
   sourceEmailMessageId?: true
   sentEmailMessageId?: true
   contextSnapshotId?: true
-  aiDecisionId?: true
+  emailAnalysisDecisionId?: true
   idempotencyKey?: true
   draftType?: true
   status?: true
@@ -177,7 +177,7 @@ export type ReplyDraftMaxAggregateInputType = {
   sourceEmailMessageId?: true
   sentEmailMessageId?: true
   contextSnapshotId?: true
-  aiDecisionId?: true
+  emailAnalysisDecisionId?: true
   idempotencyKey?: true
   draftType?: true
   status?: true
@@ -208,7 +208,7 @@ export type ReplyDraftCountAggregateInputType = {
   sourceEmailMessageId?: true
   sentEmailMessageId?: true
   contextSnapshotId?: true
-  aiDecisionId?: true
+  emailAnalysisDecisionId?: true
   idempotencyKey?: true
   draftType?: true
   status?: true
@@ -329,7 +329,7 @@ export type ReplyDraftGroupByOutputType = {
   sourceEmailMessageId: string | null
   sentEmailMessageId: string | null
   contextSnapshotId: string | null
-  aiDecisionId: string | null
+  emailAnalysisDecisionId: string | null
   idempotencyKey: string | null
   draftType: string
   status: string
@@ -386,7 +386,7 @@ export type ReplyDraftWhereInput = {
   sourceEmailMessageId?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
   sentEmailMessageId?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
   contextSnapshotId?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
-  aiDecisionId?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
+  emailAnalysisDecisionId?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
   idempotencyKey?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
   draftType?: Prisma.StringFilter<"ReplyDraft"> | string
   status?: Prisma.StringFilter<"ReplyDraft"> | string
@@ -415,7 +415,7 @@ export type ReplyDraftWhereInput = {
   inquiryCase?: Prisma.XOR<Prisma.InquiryCaseScalarRelationFilter, Prisma.InquiryCaseWhereInput>
   sourceEmailMessage?: Prisma.XOR<Prisma.EmailMessageNullableScalarRelationFilter, Prisma.EmailMessageWhereInput> | null
   sentEmailMessage?: Prisma.XOR<Prisma.EmailMessageNullableScalarRelationFilter, Prisma.EmailMessageWhereInput> | null
-  aiDecision?: Prisma.XOR<Prisma.AiDecisionNullableScalarRelationFilter, Prisma.AiDecisionWhereInput> | null
+  emailAnalysisDecision?: Prisma.XOR<Prisma.EmailAnalysisDecisionNullableScalarRelationFilter, Prisma.EmailAnalysisDecisionWhereInput> | null
   attachments?: Prisma.ReplyDraftAttachmentListRelationFilter
   sendAttempts?: Prisma.EmailSendAttemptListRelationFilter
 }
@@ -426,7 +426,7 @@ export type ReplyDraftOrderByWithRelationInput = {
   sourceEmailMessageId?: Prisma.SortOrderInput | Prisma.SortOrder
   sentEmailMessageId?: Prisma.SortOrderInput | Prisma.SortOrder
   contextSnapshotId?: Prisma.SortOrderInput | Prisma.SortOrder
-  aiDecisionId?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailAnalysisDecisionId?: Prisma.SortOrderInput | Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrderInput | Prisma.SortOrder
   draftType?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -455,7 +455,7 @@ export type ReplyDraftOrderByWithRelationInput = {
   inquiryCase?: Prisma.InquiryCaseOrderByWithRelationInput
   sourceEmailMessage?: Prisma.EmailMessageOrderByWithRelationInput
   sentEmailMessage?: Prisma.EmailMessageOrderByWithRelationInput
-  aiDecision?: Prisma.AiDecisionOrderByWithRelationInput
+  emailAnalysisDecision?: Prisma.EmailAnalysisDecisionOrderByWithRelationInput
   attachments?: Prisma.ReplyDraftAttachmentOrderByRelationAggregateInput
   sendAttempts?: Prisma.EmailSendAttemptOrderByRelationAggregateInput
 }
@@ -470,7 +470,7 @@ export type ReplyDraftWhereUniqueInput = Prisma.AtLeast<{
   sourceEmailMessageId?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
   sentEmailMessageId?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
   contextSnapshotId?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
-  aiDecisionId?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
+  emailAnalysisDecisionId?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
   draftType?: Prisma.StringFilter<"ReplyDraft"> | string
   status?: Prisma.StringFilter<"ReplyDraft"> | string
   subject?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
@@ -498,7 +498,7 @@ export type ReplyDraftWhereUniqueInput = Prisma.AtLeast<{
   inquiryCase?: Prisma.XOR<Prisma.InquiryCaseScalarRelationFilter, Prisma.InquiryCaseWhereInput>
   sourceEmailMessage?: Prisma.XOR<Prisma.EmailMessageNullableScalarRelationFilter, Prisma.EmailMessageWhereInput> | null
   sentEmailMessage?: Prisma.XOR<Prisma.EmailMessageNullableScalarRelationFilter, Prisma.EmailMessageWhereInput> | null
-  aiDecision?: Prisma.XOR<Prisma.AiDecisionNullableScalarRelationFilter, Prisma.AiDecisionWhereInput> | null
+  emailAnalysisDecision?: Prisma.XOR<Prisma.EmailAnalysisDecisionNullableScalarRelationFilter, Prisma.EmailAnalysisDecisionWhereInput> | null
   attachments?: Prisma.ReplyDraftAttachmentListRelationFilter
   sendAttempts?: Prisma.EmailSendAttemptListRelationFilter
 }, "id" | "idempotencyKey">
@@ -509,7 +509,7 @@ export type ReplyDraftOrderByWithAggregationInput = {
   sourceEmailMessageId?: Prisma.SortOrderInput | Prisma.SortOrder
   sentEmailMessageId?: Prisma.SortOrderInput | Prisma.SortOrder
   contextSnapshotId?: Prisma.SortOrderInput | Prisma.SortOrder
-  aiDecisionId?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailAnalysisDecisionId?: Prisma.SortOrderInput | Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrderInput | Prisma.SortOrder
   draftType?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -551,7 +551,7 @@ export type ReplyDraftScalarWhereWithAggregatesInput = {
   sourceEmailMessageId?: Prisma.StringNullableWithAggregatesFilter<"ReplyDraft"> | string | null
   sentEmailMessageId?: Prisma.StringNullableWithAggregatesFilter<"ReplyDraft"> | string | null
   contextSnapshotId?: Prisma.StringNullableWithAggregatesFilter<"ReplyDraft"> | string | null
-  aiDecisionId?: Prisma.StringNullableWithAggregatesFilter<"ReplyDraft"> | string | null
+  emailAnalysisDecisionId?: Prisma.StringNullableWithAggregatesFilter<"ReplyDraft"> | string | null
   idempotencyKey?: Prisma.StringNullableWithAggregatesFilter<"ReplyDraft"> | string | null
   draftType?: Prisma.StringWithAggregatesFilter<"ReplyDraft"> | string
   status?: Prisma.StringWithAggregatesFilter<"ReplyDraft"> | string
@@ -610,7 +610,7 @@ export type ReplyDraftCreateInput = {
   inquiryCase: Prisma.InquiryCaseCreateNestedOneWithoutReplyDraftsInput
   sourceEmailMessage?: Prisma.EmailMessageCreateNestedOneWithoutSourceReplyDraftsInput
   sentEmailMessage?: Prisma.EmailMessageCreateNestedOneWithoutSentReplyDraftsInput
-  aiDecision?: Prisma.AiDecisionCreateNestedOneWithoutReplyDraftsInput
+  emailAnalysisDecision?: Prisma.EmailAnalysisDecisionCreateNestedOneWithoutReplyDraftsInput
   attachments?: Prisma.ReplyDraftAttachmentCreateNestedManyWithoutReplyDraftInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutReplyDraftInput
 }
@@ -621,7 +621,7 @@ export type ReplyDraftUncheckedCreateInput = {
   sourceEmailMessageId?: string | null
   sentEmailMessageId?: string | null
   contextSnapshotId?: string | null
-  aiDecisionId?: string | null
+  emailAnalysisDecisionId?: string | null
   idempotencyKey?: string | null
   draftType: string
   status?: string
@@ -682,7 +682,7 @@ export type ReplyDraftUpdateInput = {
   inquiryCase?: Prisma.InquiryCaseUpdateOneRequiredWithoutReplyDraftsNestedInput
   sourceEmailMessage?: Prisma.EmailMessageUpdateOneWithoutSourceReplyDraftsNestedInput
   sentEmailMessage?: Prisma.EmailMessageUpdateOneWithoutSentReplyDraftsNestedInput
-  aiDecision?: Prisma.AiDecisionUpdateOneWithoutReplyDraftsNestedInput
+  emailAnalysisDecision?: Prisma.EmailAnalysisDecisionUpdateOneWithoutReplyDraftsNestedInput
   attachments?: Prisma.ReplyDraftAttachmentUpdateManyWithoutReplyDraftNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutReplyDraftNestedInput
 }
@@ -693,7 +693,7 @@ export type ReplyDraftUncheckedUpdateInput = {
   sourceEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sentEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aiDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailAnalysisDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   draftType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -729,7 +729,7 @@ export type ReplyDraftCreateManyInput = {
   sourceEmailMessageId?: string | null
   sentEmailMessageId?: string | null
   contextSnapshotId?: string | null
-  aiDecisionId?: string | null
+  emailAnalysisDecisionId?: string | null
   idempotencyKey?: string | null
   draftType: string
   status?: string
@@ -793,7 +793,7 @@ export type ReplyDraftUncheckedUpdateManyInput = {
   sourceEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sentEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aiDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailAnalysisDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   draftType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -837,7 +837,7 @@ export type ReplyDraftCountOrderByAggregateInput = {
   sourceEmailMessageId?: Prisma.SortOrder
   sentEmailMessageId?: Prisma.SortOrder
   contextSnapshotId?: Prisma.SortOrder
-  aiDecisionId?: Prisma.SortOrder
+  emailAnalysisDecisionId?: Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
   draftType?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -875,7 +875,7 @@ export type ReplyDraftMaxOrderByAggregateInput = {
   sourceEmailMessageId?: Prisma.SortOrder
   sentEmailMessageId?: Prisma.SortOrder
   contextSnapshotId?: Prisma.SortOrder
-  aiDecisionId?: Prisma.SortOrder
+  emailAnalysisDecisionId?: Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
   draftType?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -906,7 +906,7 @@ export type ReplyDraftMinOrderByAggregateInput = {
   sourceEmailMessageId?: Prisma.SortOrder
   sentEmailMessageId?: Prisma.SortOrder
   contextSnapshotId?: Prisma.SortOrder
-  aiDecisionId?: Prisma.SortOrder
+  emailAnalysisDecisionId?: Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
   draftType?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -1066,45 +1066,45 @@ export type ReplyDraftUncheckedUpdateManyWithoutInquiryCaseNestedInput = {
   deleteMany?: Prisma.ReplyDraftScalarWhereInput | Prisma.ReplyDraftScalarWhereInput[]
 }
 
-export type ReplyDraftCreateNestedManyWithoutAiDecisionInput = {
-  create?: Prisma.XOR<Prisma.ReplyDraftCreateWithoutAiDecisionInput, Prisma.ReplyDraftUncheckedCreateWithoutAiDecisionInput> | Prisma.ReplyDraftCreateWithoutAiDecisionInput[] | Prisma.ReplyDraftUncheckedCreateWithoutAiDecisionInput[]
-  connectOrCreate?: Prisma.ReplyDraftCreateOrConnectWithoutAiDecisionInput | Prisma.ReplyDraftCreateOrConnectWithoutAiDecisionInput[]
-  createMany?: Prisma.ReplyDraftCreateManyAiDecisionInputEnvelope
+export type ReplyDraftCreateNestedManyWithoutEmailAnalysisDecisionInput = {
+  create?: Prisma.XOR<Prisma.ReplyDraftCreateWithoutEmailAnalysisDecisionInput, Prisma.ReplyDraftUncheckedCreateWithoutEmailAnalysisDecisionInput> | Prisma.ReplyDraftCreateWithoutEmailAnalysisDecisionInput[] | Prisma.ReplyDraftUncheckedCreateWithoutEmailAnalysisDecisionInput[]
+  connectOrCreate?: Prisma.ReplyDraftCreateOrConnectWithoutEmailAnalysisDecisionInput | Prisma.ReplyDraftCreateOrConnectWithoutEmailAnalysisDecisionInput[]
+  createMany?: Prisma.ReplyDraftCreateManyEmailAnalysisDecisionInputEnvelope
   connect?: Prisma.ReplyDraftWhereUniqueInput | Prisma.ReplyDraftWhereUniqueInput[]
 }
 
-export type ReplyDraftUncheckedCreateNestedManyWithoutAiDecisionInput = {
-  create?: Prisma.XOR<Prisma.ReplyDraftCreateWithoutAiDecisionInput, Prisma.ReplyDraftUncheckedCreateWithoutAiDecisionInput> | Prisma.ReplyDraftCreateWithoutAiDecisionInput[] | Prisma.ReplyDraftUncheckedCreateWithoutAiDecisionInput[]
-  connectOrCreate?: Prisma.ReplyDraftCreateOrConnectWithoutAiDecisionInput | Prisma.ReplyDraftCreateOrConnectWithoutAiDecisionInput[]
-  createMany?: Prisma.ReplyDraftCreateManyAiDecisionInputEnvelope
+export type ReplyDraftUncheckedCreateNestedManyWithoutEmailAnalysisDecisionInput = {
+  create?: Prisma.XOR<Prisma.ReplyDraftCreateWithoutEmailAnalysisDecisionInput, Prisma.ReplyDraftUncheckedCreateWithoutEmailAnalysisDecisionInput> | Prisma.ReplyDraftCreateWithoutEmailAnalysisDecisionInput[] | Prisma.ReplyDraftUncheckedCreateWithoutEmailAnalysisDecisionInput[]
+  connectOrCreate?: Prisma.ReplyDraftCreateOrConnectWithoutEmailAnalysisDecisionInput | Prisma.ReplyDraftCreateOrConnectWithoutEmailAnalysisDecisionInput[]
+  createMany?: Prisma.ReplyDraftCreateManyEmailAnalysisDecisionInputEnvelope
   connect?: Prisma.ReplyDraftWhereUniqueInput | Prisma.ReplyDraftWhereUniqueInput[]
 }
 
-export type ReplyDraftUpdateManyWithoutAiDecisionNestedInput = {
-  create?: Prisma.XOR<Prisma.ReplyDraftCreateWithoutAiDecisionInput, Prisma.ReplyDraftUncheckedCreateWithoutAiDecisionInput> | Prisma.ReplyDraftCreateWithoutAiDecisionInput[] | Prisma.ReplyDraftUncheckedCreateWithoutAiDecisionInput[]
-  connectOrCreate?: Prisma.ReplyDraftCreateOrConnectWithoutAiDecisionInput | Prisma.ReplyDraftCreateOrConnectWithoutAiDecisionInput[]
-  upsert?: Prisma.ReplyDraftUpsertWithWhereUniqueWithoutAiDecisionInput | Prisma.ReplyDraftUpsertWithWhereUniqueWithoutAiDecisionInput[]
-  createMany?: Prisma.ReplyDraftCreateManyAiDecisionInputEnvelope
+export type ReplyDraftUpdateManyWithoutEmailAnalysisDecisionNestedInput = {
+  create?: Prisma.XOR<Prisma.ReplyDraftCreateWithoutEmailAnalysisDecisionInput, Prisma.ReplyDraftUncheckedCreateWithoutEmailAnalysisDecisionInput> | Prisma.ReplyDraftCreateWithoutEmailAnalysisDecisionInput[] | Prisma.ReplyDraftUncheckedCreateWithoutEmailAnalysisDecisionInput[]
+  connectOrCreate?: Prisma.ReplyDraftCreateOrConnectWithoutEmailAnalysisDecisionInput | Prisma.ReplyDraftCreateOrConnectWithoutEmailAnalysisDecisionInput[]
+  upsert?: Prisma.ReplyDraftUpsertWithWhereUniqueWithoutEmailAnalysisDecisionInput | Prisma.ReplyDraftUpsertWithWhereUniqueWithoutEmailAnalysisDecisionInput[]
+  createMany?: Prisma.ReplyDraftCreateManyEmailAnalysisDecisionInputEnvelope
   set?: Prisma.ReplyDraftWhereUniqueInput | Prisma.ReplyDraftWhereUniqueInput[]
   disconnect?: Prisma.ReplyDraftWhereUniqueInput | Prisma.ReplyDraftWhereUniqueInput[]
   delete?: Prisma.ReplyDraftWhereUniqueInput | Prisma.ReplyDraftWhereUniqueInput[]
   connect?: Prisma.ReplyDraftWhereUniqueInput | Prisma.ReplyDraftWhereUniqueInput[]
-  update?: Prisma.ReplyDraftUpdateWithWhereUniqueWithoutAiDecisionInput | Prisma.ReplyDraftUpdateWithWhereUniqueWithoutAiDecisionInput[]
-  updateMany?: Prisma.ReplyDraftUpdateManyWithWhereWithoutAiDecisionInput | Prisma.ReplyDraftUpdateManyWithWhereWithoutAiDecisionInput[]
+  update?: Prisma.ReplyDraftUpdateWithWhereUniqueWithoutEmailAnalysisDecisionInput | Prisma.ReplyDraftUpdateWithWhereUniqueWithoutEmailAnalysisDecisionInput[]
+  updateMany?: Prisma.ReplyDraftUpdateManyWithWhereWithoutEmailAnalysisDecisionInput | Prisma.ReplyDraftUpdateManyWithWhereWithoutEmailAnalysisDecisionInput[]
   deleteMany?: Prisma.ReplyDraftScalarWhereInput | Prisma.ReplyDraftScalarWhereInput[]
 }
 
-export type ReplyDraftUncheckedUpdateManyWithoutAiDecisionNestedInput = {
-  create?: Prisma.XOR<Prisma.ReplyDraftCreateWithoutAiDecisionInput, Prisma.ReplyDraftUncheckedCreateWithoutAiDecisionInput> | Prisma.ReplyDraftCreateWithoutAiDecisionInput[] | Prisma.ReplyDraftUncheckedCreateWithoutAiDecisionInput[]
-  connectOrCreate?: Prisma.ReplyDraftCreateOrConnectWithoutAiDecisionInput | Prisma.ReplyDraftCreateOrConnectWithoutAiDecisionInput[]
-  upsert?: Prisma.ReplyDraftUpsertWithWhereUniqueWithoutAiDecisionInput | Prisma.ReplyDraftUpsertWithWhereUniqueWithoutAiDecisionInput[]
-  createMany?: Prisma.ReplyDraftCreateManyAiDecisionInputEnvelope
+export type ReplyDraftUncheckedUpdateManyWithoutEmailAnalysisDecisionNestedInput = {
+  create?: Prisma.XOR<Prisma.ReplyDraftCreateWithoutEmailAnalysisDecisionInput, Prisma.ReplyDraftUncheckedCreateWithoutEmailAnalysisDecisionInput> | Prisma.ReplyDraftCreateWithoutEmailAnalysisDecisionInput[] | Prisma.ReplyDraftUncheckedCreateWithoutEmailAnalysisDecisionInput[]
+  connectOrCreate?: Prisma.ReplyDraftCreateOrConnectWithoutEmailAnalysisDecisionInput | Prisma.ReplyDraftCreateOrConnectWithoutEmailAnalysisDecisionInput[]
+  upsert?: Prisma.ReplyDraftUpsertWithWhereUniqueWithoutEmailAnalysisDecisionInput | Prisma.ReplyDraftUpsertWithWhereUniqueWithoutEmailAnalysisDecisionInput[]
+  createMany?: Prisma.ReplyDraftCreateManyEmailAnalysisDecisionInputEnvelope
   set?: Prisma.ReplyDraftWhereUniqueInput | Prisma.ReplyDraftWhereUniqueInput[]
   disconnect?: Prisma.ReplyDraftWhereUniqueInput | Prisma.ReplyDraftWhereUniqueInput[]
   delete?: Prisma.ReplyDraftWhereUniqueInput | Prisma.ReplyDraftWhereUniqueInput[]
   connect?: Prisma.ReplyDraftWhereUniqueInput | Prisma.ReplyDraftWhereUniqueInput[]
-  update?: Prisma.ReplyDraftUpdateWithWhereUniqueWithoutAiDecisionInput | Prisma.ReplyDraftUpdateWithWhereUniqueWithoutAiDecisionInput[]
-  updateMany?: Prisma.ReplyDraftUpdateManyWithWhereWithoutAiDecisionInput | Prisma.ReplyDraftUpdateManyWithWhereWithoutAiDecisionInput[]
+  update?: Prisma.ReplyDraftUpdateWithWhereUniqueWithoutEmailAnalysisDecisionInput | Prisma.ReplyDraftUpdateWithWhereUniqueWithoutEmailAnalysisDecisionInput[]
+  updateMany?: Prisma.ReplyDraftUpdateManyWithWhereWithoutEmailAnalysisDecisionInput | Prisma.ReplyDraftUpdateManyWithWhereWithoutEmailAnalysisDecisionInput[]
   deleteMany?: Prisma.ReplyDraftScalarWhereInput | Prisma.ReplyDraftScalarWhereInput[]
 }
 
@@ -1166,7 +1166,7 @@ export type ReplyDraftCreateWithoutSourceEmailMessageInput = {
   updatedAt?: Date | string
   inquiryCase: Prisma.InquiryCaseCreateNestedOneWithoutReplyDraftsInput
   sentEmailMessage?: Prisma.EmailMessageCreateNestedOneWithoutSentReplyDraftsInput
-  aiDecision?: Prisma.AiDecisionCreateNestedOneWithoutReplyDraftsInput
+  emailAnalysisDecision?: Prisma.EmailAnalysisDecisionCreateNestedOneWithoutReplyDraftsInput
   attachments?: Prisma.ReplyDraftAttachmentCreateNestedManyWithoutReplyDraftInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutReplyDraftInput
 }
@@ -1176,7 +1176,7 @@ export type ReplyDraftUncheckedCreateWithoutSourceEmailMessageInput = {
   inquiryCaseId: string
   sentEmailMessageId?: string | null
   contextSnapshotId?: string | null
-  aiDecisionId?: string | null
+  emailAnalysisDecisionId?: string | null
   idempotencyKey?: string | null
   draftType: string
   status?: string
@@ -1246,7 +1246,7 @@ export type ReplyDraftCreateWithoutSentEmailMessageInput = {
   updatedAt?: Date | string
   inquiryCase: Prisma.InquiryCaseCreateNestedOneWithoutReplyDraftsInput
   sourceEmailMessage?: Prisma.EmailMessageCreateNestedOneWithoutSourceReplyDraftsInput
-  aiDecision?: Prisma.AiDecisionCreateNestedOneWithoutReplyDraftsInput
+  emailAnalysisDecision?: Prisma.EmailAnalysisDecisionCreateNestedOneWithoutReplyDraftsInput
   attachments?: Prisma.ReplyDraftAttachmentCreateNestedManyWithoutReplyDraftInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutReplyDraftInput
 }
@@ -1256,7 +1256,7 @@ export type ReplyDraftUncheckedCreateWithoutSentEmailMessageInput = {
   inquiryCaseId: string
   sourceEmailMessageId?: string | null
   contextSnapshotId?: string | null
-  aiDecisionId?: string | null
+  emailAnalysisDecisionId?: string | null
   idempotencyKey?: string | null
   draftType: string
   status?: string
@@ -1321,7 +1321,7 @@ export type ReplyDraftScalarWhereInput = {
   sourceEmailMessageId?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
   sentEmailMessageId?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
   contextSnapshotId?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
-  aiDecisionId?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
+  emailAnalysisDecisionId?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
   idempotencyKey?: Prisma.StringNullableFilter<"ReplyDraft"> | string | null
   draftType?: Prisma.StringFilter<"ReplyDraft"> | string
   status?: Prisma.StringFilter<"ReplyDraft"> | string
@@ -1395,7 +1395,7 @@ export type ReplyDraftCreateWithoutInquiryCaseInput = {
   updatedAt?: Date | string
   sourceEmailMessage?: Prisma.EmailMessageCreateNestedOneWithoutSourceReplyDraftsInput
   sentEmailMessage?: Prisma.EmailMessageCreateNestedOneWithoutSentReplyDraftsInput
-  aiDecision?: Prisma.AiDecisionCreateNestedOneWithoutReplyDraftsInput
+  emailAnalysisDecision?: Prisma.EmailAnalysisDecisionCreateNestedOneWithoutReplyDraftsInput
   attachments?: Prisma.ReplyDraftAttachmentCreateNestedManyWithoutReplyDraftInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutReplyDraftInput
 }
@@ -1405,7 +1405,7 @@ export type ReplyDraftUncheckedCreateWithoutInquiryCaseInput = {
   sourceEmailMessageId?: string | null
   sentEmailMessageId?: string | null
   contextSnapshotId?: string | null
-  aiDecisionId?: string | null
+  emailAnalysisDecisionId?: string | null
   idempotencyKey?: string | null
   draftType: string
   status?: string
@@ -1461,7 +1461,7 @@ export type ReplyDraftUpdateManyWithWhereWithoutInquiryCaseInput = {
   data: Prisma.XOR<Prisma.ReplyDraftUpdateManyMutationInput, Prisma.ReplyDraftUncheckedUpdateManyWithoutInquiryCaseInput>
 }
 
-export type ReplyDraftCreateWithoutAiDecisionInput = {
+export type ReplyDraftCreateWithoutEmailAnalysisDecisionInput = {
   id?: string
   contextSnapshotId?: string | null
   idempotencyKey?: string | null
@@ -1496,7 +1496,7 @@ export type ReplyDraftCreateWithoutAiDecisionInput = {
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutReplyDraftInput
 }
 
-export type ReplyDraftUncheckedCreateWithoutAiDecisionInput = {
+export type ReplyDraftUncheckedCreateWithoutEmailAnalysisDecisionInput = {
   id?: string
   inquiryCaseId: string
   sourceEmailMessageId?: string | null
@@ -1531,30 +1531,30 @@ export type ReplyDraftUncheckedCreateWithoutAiDecisionInput = {
   sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutReplyDraftInput
 }
 
-export type ReplyDraftCreateOrConnectWithoutAiDecisionInput = {
+export type ReplyDraftCreateOrConnectWithoutEmailAnalysisDecisionInput = {
   where: Prisma.ReplyDraftWhereUniqueInput
-  create: Prisma.XOR<Prisma.ReplyDraftCreateWithoutAiDecisionInput, Prisma.ReplyDraftUncheckedCreateWithoutAiDecisionInput>
+  create: Prisma.XOR<Prisma.ReplyDraftCreateWithoutEmailAnalysisDecisionInput, Prisma.ReplyDraftUncheckedCreateWithoutEmailAnalysisDecisionInput>
 }
 
-export type ReplyDraftCreateManyAiDecisionInputEnvelope = {
-  data: Prisma.ReplyDraftCreateManyAiDecisionInput | Prisma.ReplyDraftCreateManyAiDecisionInput[]
+export type ReplyDraftCreateManyEmailAnalysisDecisionInputEnvelope = {
+  data: Prisma.ReplyDraftCreateManyEmailAnalysisDecisionInput | Prisma.ReplyDraftCreateManyEmailAnalysisDecisionInput[]
   skipDuplicates?: boolean
 }
 
-export type ReplyDraftUpsertWithWhereUniqueWithoutAiDecisionInput = {
+export type ReplyDraftUpsertWithWhereUniqueWithoutEmailAnalysisDecisionInput = {
   where: Prisma.ReplyDraftWhereUniqueInput
-  update: Prisma.XOR<Prisma.ReplyDraftUpdateWithoutAiDecisionInput, Prisma.ReplyDraftUncheckedUpdateWithoutAiDecisionInput>
-  create: Prisma.XOR<Prisma.ReplyDraftCreateWithoutAiDecisionInput, Prisma.ReplyDraftUncheckedCreateWithoutAiDecisionInput>
+  update: Prisma.XOR<Prisma.ReplyDraftUpdateWithoutEmailAnalysisDecisionInput, Prisma.ReplyDraftUncheckedUpdateWithoutEmailAnalysisDecisionInput>
+  create: Prisma.XOR<Prisma.ReplyDraftCreateWithoutEmailAnalysisDecisionInput, Prisma.ReplyDraftUncheckedCreateWithoutEmailAnalysisDecisionInput>
 }
 
-export type ReplyDraftUpdateWithWhereUniqueWithoutAiDecisionInput = {
+export type ReplyDraftUpdateWithWhereUniqueWithoutEmailAnalysisDecisionInput = {
   where: Prisma.ReplyDraftWhereUniqueInput
-  data: Prisma.XOR<Prisma.ReplyDraftUpdateWithoutAiDecisionInput, Prisma.ReplyDraftUncheckedUpdateWithoutAiDecisionInput>
+  data: Prisma.XOR<Prisma.ReplyDraftUpdateWithoutEmailAnalysisDecisionInput, Prisma.ReplyDraftUncheckedUpdateWithoutEmailAnalysisDecisionInput>
 }
 
-export type ReplyDraftUpdateManyWithWhereWithoutAiDecisionInput = {
+export type ReplyDraftUpdateManyWithWhereWithoutEmailAnalysisDecisionInput = {
   where: Prisma.ReplyDraftScalarWhereInput
-  data: Prisma.XOR<Prisma.ReplyDraftUpdateManyMutationInput, Prisma.ReplyDraftUncheckedUpdateManyWithoutAiDecisionInput>
+  data: Prisma.XOR<Prisma.ReplyDraftUpdateManyMutationInput, Prisma.ReplyDraftUncheckedUpdateManyWithoutEmailAnalysisDecisionInput>
 }
 
 export type ReplyDraftCreateWithoutAttachmentsInput = {
@@ -1588,7 +1588,7 @@ export type ReplyDraftCreateWithoutAttachmentsInput = {
   inquiryCase: Prisma.InquiryCaseCreateNestedOneWithoutReplyDraftsInput
   sourceEmailMessage?: Prisma.EmailMessageCreateNestedOneWithoutSourceReplyDraftsInput
   sentEmailMessage?: Prisma.EmailMessageCreateNestedOneWithoutSentReplyDraftsInput
-  aiDecision?: Prisma.AiDecisionCreateNestedOneWithoutReplyDraftsInput
+  emailAnalysisDecision?: Prisma.EmailAnalysisDecisionCreateNestedOneWithoutReplyDraftsInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutReplyDraftInput
 }
 
@@ -1598,7 +1598,7 @@ export type ReplyDraftUncheckedCreateWithoutAttachmentsInput = {
   sourceEmailMessageId?: string | null
   sentEmailMessageId?: string | null
   contextSnapshotId?: string | null
-  aiDecisionId?: string | null
+  emailAnalysisDecisionId?: string | null
   idempotencyKey?: string | null
   draftType: string
   status?: string
@@ -1674,7 +1674,7 @@ export type ReplyDraftUpdateWithoutAttachmentsInput = {
   inquiryCase?: Prisma.InquiryCaseUpdateOneRequiredWithoutReplyDraftsNestedInput
   sourceEmailMessage?: Prisma.EmailMessageUpdateOneWithoutSourceReplyDraftsNestedInput
   sentEmailMessage?: Prisma.EmailMessageUpdateOneWithoutSentReplyDraftsNestedInput
-  aiDecision?: Prisma.AiDecisionUpdateOneWithoutReplyDraftsNestedInput
+  emailAnalysisDecision?: Prisma.EmailAnalysisDecisionUpdateOneWithoutReplyDraftsNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutReplyDraftNestedInput
 }
 
@@ -1684,7 +1684,7 @@ export type ReplyDraftUncheckedUpdateWithoutAttachmentsInput = {
   sourceEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sentEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aiDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailAnalysisDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   draftType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1744,7 +1744,7 @@ export type ReplyDraftCreateWithoutSendAttemptsInput = {
   inquiryCase: Prisma.InquiryCaseCreateNestedOneWithoutReplyDraftsInput
   sourceEmailMessage?: Prisma.EmailMessageCreateNestedOneWithoutSourceReplyDraftsInput
   sentEmailMessage?: Prisma.EmailMessageCreateNestedOneWithoutSentReplyDraftsInput
-  aiDecision?: Prisma.AiDecisionCreateNestedOneWithoutReplyDraftsInput
+  emailAnalysisDecision?: Prisma.EmailAnalysisDecisionCreateNestedOneWithoutReplyDraftsInput
   attachments?: Prisma.ReplyDraftAttachmentCreateNestedManyWithoutReplyDraftInput
 }
 
@@ -1754,7 +1754,7 @@ export type ReplyDraftUncheckedCreateWithoutSendAttemptsInput = {
   sourceEmailMessageId?: string | null
   sentEmailMessageId?: string | null
   contextSnapshotId?: string | null
-  aiDecisionId?: string | null
+  emailAnalysisDecisionId?: string | null
   idempotencyKey?: string | null
   draftType: string
   status?: string
@@ -1830,7 +1830,7 @@ export type ReplyDraftUpdateWithoutSendAttemptsInput = {
   inquiryCase?: Prisma.InquiryCaseUpdateOneRequiredWithoutReplyDraftsNestedInput
   sourceEmailMessage?: Prisma.EmailMessageUpdateOneWithoutSourceReplyDraftsNestedInput
   sentEmailMessage?: Prisma.EmailMessageUpdateOneWithoutSentReplyDraftsNestedInput
-  aiDecision?: Prisma.AiDecisionUpdateOneWithoutReplyDraftsNestedInput
+  emailAnalysisDecision?: Prisma.EmailAnalysisDecisionUpdateOneWithoutReplyDraftsNestedInput
   attachments?: Prisma.ReplyDraftAttachmentUpdateManyWithoutReplyDraftNestedInput
 }
 
@@ -1840,7 +1840,7 @@ export type ReplyDraftUncheckedUpdateWithoutSendAttemptsInput = {
   sourceEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sentEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aiDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailAnalysisDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   draftType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1874,7 +1874,7 @@ export type ReplyDraftCreateManySourceEmailMessageInput = {
   inquiryCaseId: string
   sentEmailMessageId?: string | null
   contextSnapshotId?: string | null
-  aiDecisionId?: string | null
+  emailAnalysisDecisionId?: string | null
   idempotencyKey?: string | null
   draftType: string
   status?: string
@@ -1907,7 +1907,7 @@ export type ReplyDraftCreateManySentEmailMessageInput = {
   inquiryCaseId: string
   sourceEmailMessageId?: string | null
   contextSnapshotId?: string | null
-  aiDecisionId?: string | null
+  emailAnalysisDecisionId?: string | null
   idempotencyKey?: string | null
   draftType: string
   status?: string
@@ -1965,7 +1965,7 @@ export type ReplyDraftUpdateWithoutSourceEmailMessageInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   inquiryCase?: Prisma.InquiryCaseUpdateOneRequiredWithoutReplyDraftsNestedInput
   sentEmailMessage?: Prisma.EmailMessageUpdateOneWithoutSentReplyDraftsNestedInput
-  aiDecision?: Prisma.AiDecisionUpdateOneWithoutReplyDraftsNestedInput
+  emailAnalysisDecision?: Prisma.EmailAnalysisDecisionUpdateOneWithoutReplyDraftsNestedInput
   attachments?: Prisma.ReplyDraftAttachmentUpdateManyWithoutReplyDraftNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutReplyDraftNestedInput
 }
@@ -1975,7 +1975,7 @@ export type ReplyDraftUncheckedUpdateWithoutSourceEmailMessageInput = {
   inquiryCaseId?: Prisma.StringFieldUpdateOperationsInput | string
   sentEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aiDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailAnalysisDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   draftType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2010,7 +2010,7 @@ export type ReplyDraftUncheckedUpdateManyWithoutSourceEmailMessageInput = {
   inquiryCaseId?: Prisma.StringFieldUpdateOperationsInput | string
   sentEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aiDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailAnalysisDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   draftType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2068,7 +2068,7 @@ export type ReplyDraftUpdateWithoutSentEmailMessageInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   inquiryCase?: Prisma.InquiryCaseUpdateOneRequiredWithoutReplyDraftsNestedInput
   sourceEmailMessage?: Prisma.EmailMessageUpdateOneWithoutSourceReplyDraftsNestedInput
-  aiDecision?: Prisma.AiDecisionUpdateOneWithoutReplyDraftsNestedInput
+  emailAnalysisDecision?: Prisma.EmailAnalysisDecisionUpdateOneWithoutReplyDraftsNestedInput
   attachments?: Prisma.ReplyDraftAttachmentUpdateManyWithoutReplyDraftNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutReplyDraftNestedInput
 }
@@ -2078,7 +2078,7 @@ export type ReplyDraftUncheckedUpdateWithoutSentEmailMessageInput = {
   inquiryCaseId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aiDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailAnalysisDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   draftType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2113,7 +2113,7 @@ export type ReplyDraftUncheckedUpdateManyWithoutSentEmailMessageInput = {
   inquiryCaseId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aiDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailAnalysisDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   draftType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2146,7 +2146,7 @@ export type ReplyDraftCreateManyInquiryCaseInput = {
   sourceEmailMessageId?: string | null
   sentEmailMessageId?: string | null
   contextSnapshotId?: string | null
-  aiDecisionId?: string | null
+  emailAnalysisDecisionId?: string | null
   idempotencyKey?: string | null
   draftType: string
   status?: string
@@ -2204,7 +2204,7 @@ export type ReplyDraftUpdateWithoutInquiryCaseInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sourceEmailMessage?: Prisma.EmailMessageUpdateOneWithoutSourceReplyDraftsNestedInput
   sentEmailMessage?: Prisma.EmailMessageUpdateOneWithoutSentReplyDraftsNestedInput
-  aiDecision?: Prisma.AiDecisionUpdateOneWithoutReplyDraftsNestedInput
+  emailAnalysisDecision?: Prisma.EmailAnalysisDecisionUpdateOneWithoutReplyDraftsNestedInput
   attachments?: Prisma.ReplyDraftAttachmentUpdateManyWithoutReplyDraftNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutReplyDraftNestedInput
 }
@@ -2214,7 +2214,7 @@ export type ReplyDraftUncheckedUpdateWithoutInquiryCaseInput = {
   sourceEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sentEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aiDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailAnalysisDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   draftType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2249,7 +2249,7 @@ export type ReplyDraftUncheckedUpdateManyWithoutInquiryCaseInput = {
   sourceEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sentEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aiDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailAnalysisDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   draftType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2277,7 +2277,7 @@ export type ReplyDraftUncheckedUpdateManyWithoutInquiryCaseInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type ReplyDraftCreateManyAiDecisionInput = {
+export type ReplyDraftCreateManyEmailAnalysisDecisionInput = {
   id?: string
   inquiryCaseId: string
   sourceEmailMessageId?: string | null
@@ -2310,7 +2310,7 @@ export type ReplyDraftCreateManyAiDecisionInput = {
   updatedAt?: Date | string
 }
 
-export type ReplyDraftUpdateWithoutAiDecisionInput = {
+export type ReplyDraftUpdateWithoutEmailAnalysisDecisionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2345,7 +2345,7 @@ export type ReplyDraftUpdateWithoutAiDecisionInput = {
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutReplyDraftNestedInput
 }
 
-export type ReplyDraftUncheckedUpdateWithoutAiDecisionInput = {
+export type ReplyDraftUncheckedUpdateWithoutEmailAnalysisDecisionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   inquiryCaseId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2380,7 +2380,7 @@ export type ReplyDraftUncheckedUpdateWithoutAiDecisionInput = {
   sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutReplyDraftNestedInput
 }
 
-export type ReplyDraftUncheckedUpdateManyWithoutAiDecisionInput = {
+export type ReplyDraftUncheckedUpdateManyWithoutEmailAnalysisDecisionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   inquiryCaseId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceEmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2459,7 +2459,7 @@ export type ReplyDraftSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   sourceEmailMessageId?: boolean
   sentEmailMessageId?: boolean
   contextSnapshotId?: boolean
-  aiDecisionId?: boolean
+  emailAnalysisDecisionId?: boolean
   idempotencyKey?: boolean
   draftType?: boolean
   status?: boolean
@@ -2488,7 +2488,7 @@ export type ReplyDraftSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   inquiryCase?: boolean | Prisma.InquiryCaseDefaultArgs<ExtArgs>
   sourceEmailMessage?: boolean | Prisma.ReplyDraft$sourceEmailMessageArgs<ExtArgs>
   sentEmailMessage?: boolean | Prisma.ReplyDraft$sentEmailMessageArgs<ExtArgs>
-  aiDecision?: boolean | Prisma.ReplyDraft$aiDecisionArgs<ExtArgs>
+  emailAnalysisDecision?: boolean | Prisma.ReplyDraft$emailAnalysisDecisionArgs<ExtArgs>
   attachments?: boolean | Prisma.ReplyDraft$attachmentsArgs<ExtArgs>
   sendAttempts?: boolean | Prisma.ReplyDraft$sendAttemptsArgs<ExtArgs>
   _count?: boolean | Prisma.ReplyDraftCountOutputTypeDefaultArgs<ExtArgs>
@@ -2500,7 +2500,7 @@ export type ReplyDraftSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   sourceEmailMessageId?: boolean
   sentEmailMessageId?: boolean
   contextSnapshotId?: boolean
-  aiDecisionId?: boolean
+  emailAnalysisDecisionId?: boolean
   idempotencyKey?: boolean
   draftType?: boolean
   status?: boolean
@@ -2529,7 +2529,7 @@ export type ReplyDraftSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   inquiryCase?: boolean | Prisma.InquiryCaseDefaultArgs<ExtArgs>
   sourceEmailMessage?: boolean | Prisma.ReplyDraft$sourceEmailMessageArgs<ExtArgs>
   sentEmailMessage?: boolean | Prisma.ReplyDraft$sentEmailMessageArgs<ExtArgs>
-  aiDecision?: boolean | Prisma.ReplyDraft$aiDecisionArgs<ExtArgs>
+  emailAnalysisDecision?: boolean | Prisma.ReplyDraft$emailAnalysisDecisionArgs<ExtArgs>
 }, ExtArgs["result"]["replyDraft"]>
 
 export type ReplyDraftSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -2538,7 +2538,7 @@ export type ReplyDraftSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   sourceEmailMessageId?: boolean
   sentEmailMessageId?: boolean
   contextSnapshotId?: boolean
-  aiDecisionId?: boolean
+  emailAnalysisDecisionId?: boolean
   idempotencyKey?: boolean
   draftType?: boolean
   status?: boolean
@@ -2567,7 +2567,7 @@ export type ReplyDraftSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   inquiryCase?: boolean | Prisma.InquiryCaseDefaultArgs<ExtArgs>
   sourceEmailMessage?: boolean | Prisma.ReplyDraft$sourceEmailMessageArgs<ExtArgs>
   sentEmailMessage?: boolean | Prisma.ReplyDraft$sentEmailMessageArgs<ExtArgs>
-  aiDecision?: boolean | Prisma.ReplyDraft$aiDecisionArgs<ExtArgs>
+  emailAnalysisDecision?: boolean | Prisma.ReplyDraft$emailAnalysisDecisionArgs<ExtArgs>
 }, ExtArgs["result"]["replyDraft"]>
 
 export type ReplyDraftSelectScalar = {
@@ -2576,7 +2576,7 @@ export type ReplyDraftSelectScalar = {
   sourceEmailMessageId?: boolean
   sentEmailMessageId?: boolean
   contextSnapshotId?: boolean
-  aiDecisionId?: boolean
+  emailAnalysisDecisionId?: boolean
   idempotencyKey?: boolean
   draftType?: boolean
   status?: boolean
@@ -2604,12 +2604,12 @@ export type ReplyDraftSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ReplyDraftOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "inquiryCaseId" | "sourceEmailMessageId" | "sentEmailMessageId" | "contextSnapshotId" | "aiDecisionId" | "idempotencyKey" | "draftType" | "status" | "subject" | "bodyText" | "originalSubject" | "originalBodyText" | "language" | "usedFactsJson" | "unresolvedQuestionsJson" | "warningsJson" | "requiresCommercialReview" | "promptVersion" | "modelName" | "version" | "createdByType" | "approvedBy" | "approvedAt" | "rejectedBy" | "rejectedAt" | "rejectionReason" | "sentAt" | "lastSendError" | "createdAt" | "updatedAt", ExtArgs["result"]["replyDraft"]>
+export type ReplyDraftOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "inquiryCaseId" | "sourceEmailMessageId" | "sentEmailMessageId" | "contextSnapshotId" | "emailAnalysisDecisionId" | "idempotencyKey" | "draftType" | "status" | "subject" | "bodyText" | "originalSubject" | "originalBodyText" | "language" | "usedFactsJson" | "unresolvedQuestionsJson" | "warningsJson" | "requiresCommercialReview" | "promptVersion" | "modelName" | "version" | "createdByType" | "approvedBy" | "approvedAt" | "rejectedBy" | "rejectedAt" | "rejectionReason" | "sentAt" | "lastSendError" | "createdAt" | "updatedAt", ExtArgs["result"]["replyDraft"]>
 export type ReplyDraftInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   inquiryCase?: boolean | Prisma.InquiryCaseDefaultArgs<ExtArgs>
   sourceEmailMessage?: boolean | Prisma.ReplyDraft$sourceEmailMessageArgs<ExtArgs>
   sentEmailMessage?: boolean | Prisma.ReplyDraft$sentEmailMessageArgs<ExtArgs>
-  aiDecision?: boolean | Prisma.ReplyDraft$aiDecisionArgs<ExtArgs>
+  emailAnalysisDecision?: boolean | Prisma.ReplyDraft$emailAnalysisDecisionArgs<ExtArgs>
   attachments?: boolean | Prisma.ReplyDraft$attachmentsArgs<ExtArgs>
   sendAttempts?: boolean | Prisma.ReplyDraft$sendAttemptsArgs<ExtArgs>
   _count?: boolean | Prisma.ReplyDraftCountOutputTypeDefaultArgs<ExtArgs>
@@ -2618,13 +2618,13 @@ export type ReplyDraftIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.E
   inquiryCase?: boolean | Prisma.InquiryCaseDefaultArgs<ExtArgs>
   sourceEmailMessage?: boolean | Prisma.ReplyDraft$sourceEmailMessageArgs<ExtArgs>
   sentEmailMessage?: boolean | Prisma.ReplyDraft$sentEmailMessageArgs<ExtArgs>
-  aiDecision?: boolean | Prisma.ReplyDraft$aiDecisionArgs<ExtArgs>
+  emailAnalysisDecision?: boolean | Prisma.ReplyDraft$emailAnalysisDecisionArgs<ExtArgs>
 }
 export type ReplyDraftIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   inquiryCase?: boolean | Prisma.InquiryCaseDefaultArgs<ExtArgs>
   sourceEmailMessage?: boolean | Prisma.ReplyDraft$sourceEmailMessageArgs<ExtArgs>
   sentEmailMessage?: boolean | Prisma.ReplyDraft$sentEmailMessageArgs<ExtArgs>
-  aiDecision?: boolean | Prisma.ReplyDraft$aiDecisionArgs<ExtArgs>
+  emailAnalysisDecision?: boolean | Prisma.ReplyDraft$emailAnalysisDecisionArgs<ExtArgs>
 }
 
 export type $ReplyDraftPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2633,7 +2633,7 @@ export type $ReplyDraftPayload<ExtArgs extends runtime.Types.Extensions.Internal
     inquiryCase: Prisma.$InquiryCasePayload<ExtArgs>
     sourceEmailMessage: Prisma.$EmailMessagePayload<ExtArgs> | null
     sentEmailMessage: Prisma.$EmailMessagePayload<ExtArgs> | null
-    aiDecision: Prisma.$AiDecisionPayload<ExtArgs> | null
+    emailAnalysisDecision: Prisma.$EmailAnalysisDecisionPayload<ExtArgs> | null
     attachments: Prisma.$ReplyDraftAttachmentPayload<ExtArgs>[]
     sendAttempts: Prisma.$EmailSendAttemptPayload<ExtArgs>[]
   }
@@ -2643,7 +2643,7 @@ export type $ReplyDraftPayload<ExtArgs extends runtime.Types.Extensions.Internal
     sourceEmailMessageId: string | null
     sentEmailMessageId: string | null
     contextSnapshotId: string | null
-    aiDecisionId: string | null
+    emailAnalysisDecisionId: string | null
     idempotencyKey: string | null
     draftType: string
     status: string
@@ -3066,7 +3066,7 @@ export interface Prisma__ReplyDraftClient<T, Null = never, ExtArgs extends runti
   inquiryCase<T extends Prisma.InquiryCaseDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InquiryCaseDefaultArgs<ExtArgs>>): Prisma.Prisma__InquiryCaseClient<runtime.Types.Result.GetResult<Prisma.$InquiryCasePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   sourceEmailMessage<T extends Prisma.ReplyDraft$sourceEmailMessageArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ReplyDraft$sourceEmailMessageArgs<ExtArgs>>): Prisma.Prisma__EmailMessageClient<runtime.Types.Result.GetResult<Prisma.$EmailMessagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   sentEmailMessage<T extends Prisma.ReplyDraft$sentEmailMessageArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ReplyDraft$sentEmailMessageArgs<ExtArgs>>): Prisma.Prisma__EmailMessageClient<runtime.Types.Result.GetResult<Prisma.$EmailMessagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  aiDecision<T extends Prisma.ReplyDraft$aiDecisionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ReplyDraft$aiDecisionArgs<ExtArgs>>): Prisma.Prisma__AiDecisionClient<runtime.Types.Result.GetResult<Prisma.$AiDecisionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  emailAnalysisDecision<T extends Prisma.ReplyDraft$emailAnalysisDecisionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ReplyDraft$emailAnalysisDecisionArgs<ExtArgs>>): Prisma.Prisma__EmailAnalysisDecisionClient<runtime.Types.Result.GetResult<Prisma.$EmailAnalysisDecisionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   attachments<T extends Prisma.ReplyDraft$attachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ReplyDraft$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReplyDraftAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   sendAttempts<T extends Prisma.ReplyDraft$sendAttemptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ReplyDraft$sendAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmailSendAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -3103,7 +3103,7 @@ export interface ReplyDraftFieldRefs {
   readonly sourceEmailMessageId: Prisma.FieldRef<"ReplyDraft", 'String'>
   readonly sentEmailMessageId: Prisma.FieldRef<"ReplyDraft", 'String'>
   readonly contextSnapshotId: Prisma.FieldRef<"ReplyDraft", 'String'>
-  readonly aiDecisionId: Prisma.FieldRef<"ReplyDraft", 'String'>
+  readonly emailAnalysisDecisionId: Prisma.FieldRef<"ReplyDraft", 'String'>
   readonly idempotencyKey: Prisma.FieldRef<"ReplyDraft", 'String'>
   readonly draftType: Prisma.FieldRef<"ReplyDraft", 'String'>
   readonly status: Prisma.FieldRef<"ReplyDraft", 'String'>
@@ -3568,22 +3568,22 @@ export type ReplyDraft$sentEmailMessageArgs<ExtArgs extends runtime.Types.Extens
 }
 
 /**
- * ReplyDraft.aiDecision
+ * ReplyDraft.emailAnalysisDecision
  */
-export type ReplyDraft$aiDecisionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type ReplyDraft$emailAnalysisDecisionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the AiDecision
+   * Select specific fields to fetch from the EmailAnalysisDecision
    */
-  select?: Prisma.AiDecisionSelect<ExtArgs> | null
+  select?: Prisma.EmailAnalysisDecisionSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the AiDecision
+   * Omit specific fields from the EmailAnalysisDecision
    */
-  omit?: Prisma.AiDecisionOmit<ExtArgs> | null
+  omit?: Prisma.EmailAnalysisDecisionOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.AiDecisionInclude<ExtArgs> | null
-  where?: Prisma.AiDecisionWhereInput
+  include?: Prisma.EmailAnalysisDecisionInclude<ExtArgs> | null
+  where?: Prisma.EmailAnalysisDecisionWhereInput
 }
 
 /**

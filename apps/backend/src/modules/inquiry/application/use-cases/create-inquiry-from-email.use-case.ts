@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 
 import { EmailMessage } from '../../../email/domain/entities/email-message.entity.js';
 import { InquiryCase } from '../../domain/entities/inquiry-case.entity.js';
-import { InquiryStatus } from '../../domain/enums/inquiry-status.enum.js';
+import { INITIAL_INQUIRY_STATE } from '../../domain/enums/inquiry-state.enum.js';
 import { extractEmailDomain } from '../../domain/matching/email-domain-policy.js';
 import { InquiryRepository } from '../ports/inquiry.repository.js';
 
@@ -27,7 +27,7 @@ export class CreateInquiryFromEmailUseCase {
       businessSubjectSource: 'raw_email',
       businessSubjectLocked: false,
       businessSubjectUpdatedAt: now,
-      status: InquiryStatus.NEW,
+      ...INITIAL_INQUIRY_STATE,
       latestMessageAt: emailMessage.receivedAt,
       createdAt: now,
       updatedAt: now,

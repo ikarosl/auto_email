@@ -5,7 +5,7 @@ import { EmailDirection } from '../../../email/domain/enums/email-direction.enum
 import { EmailSource } from '../../../email/domain/enums/email-source.enum.js';
 import { EmailMessageAttachment } from '../../../email/domain/entities/email-message.entity.js';
 import { ContextSourceType } from '../../domain/enums/context-source-type.enum.js';
-import { InquiryStatus } from '../../../inquiry/domain/enums/inquiry-status.enum.js';
+import { INITIAL_INQUIRY_STATE } from '../../../inquiry/domain/enums/inquiry-state.enum.js';
 import { ContextPurpose } from '../../domain/enums/context-purpose.enum.js';
 import { aiEmailAnalysisContextPayloadSchema } from '../dto/ai-email-analysis-context.schema.js';
 import { InMemoryContextSnapshotRepository } from '../../infrastructure/repositories/in-memory-context-snapshot.repository.js';
@@ -32,7 +32,7 @@ describe('BuildAiContextUseCase', () => {
         id: 'inquiry_001',
         customerEmail: 'buyer@example.com',
         subject: 'RF circulator inquiry',
-        status: InquiryStatus.NEW,
+        ...INITIAL_INQUIRY_STATE,
         latestMessageAt: new Date('2026-06-23T00:00:00.000Z'),
         createdAt: new Date('2026-06-23T00:00:00.000Z'),
         updatedAt: new Date('2026-06-23T00:00:00.000Z'),
@@ -101,7 +101,7 @@ describe('BuildAiContextUseCase', () => {
     assert.equal(result.messages[0]?.role, 'system');
     assert.equal(result.messages[0]?.content, 'system rules');
     assert.equal(result.messages[1]?.role, 'user');
-    assert.equal(payload.inquiryState.status, InquiryStatus.NEW);
+    assert.equal(payload.inquiryState.businessStage, INITIAL_INQUIRY_STATE.businessStage);
     assert.equal(payload.currentEmail.cleanBody, 'We need a 12-15GHz circulator, 10 pcs.');
     assert.equal(payload.currentEmail.attachments?.[0]?.parsedText, 'Current datasheet full parsed text.');
     assert.equal(
@@ -154,7 +154,7 @@ describe('BuildAiContextUseCase', () => {
         id: 'inquiry_budget',
         customerEmail: 'buyer@example.com',
         subject: 'RF isolator inquiry',
-        status: InquiryStatus.NEW,
+        ...INITIAL_INQUIRY_STATE,
         latestMessageAt: new Date('2026-06-23T00:05:00.000Z'),
         createdAt: new Date('2026-06-23T00:00:00.000Z'),
         updatedAt: new Date('2026-06-23T00:05:00.000Z'),

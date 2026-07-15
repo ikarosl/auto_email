@@ -1,0 +1,66 @@
+export const InquiryBusinessEventType = {
+  INQUIRY_RECEIVED: 'inquiry_received',
+  REQUIREMENTS_PROVIDED: 'requirements_provided',
+  REQUIREMENTS_UPDATED: 'requirements_updated',
+  CLARIFICATION_REQUESTED: 'clarification_requested',
+  CLARIFICATION_PROVIDED: 'clarification_provided',
+  TECHNICAL_SOLUTION_SENT: 'technical_solution_sent',
+  TECHNICAL_SOLUTION_ACCEPTED: 'technical_solution_accepted',
+  TECHNICAL_SOLUTION_REJECTED: 'technical_solution_rejected',
+  ALTERNATIVE_SOLUTION_SENT: 'alternative_solution_sent',
+  UNABLE_TO_FULFILL: 'unable_to_fulfill',
+  DELIVERY_TERMS_SENT: 'delivery_terms_sent',
+  DELIVERY_TERMS_ACCEPTED: 'delivery_terms_accepted',
+  DELIVERY_TERMS_REJECTED: 'delivery_terms_rejected',
+  COMMERCIAL_TERMS_SENT: 'commercial_terms_sent',
+  COMMERCIAL_TERMS_ACCEPTED: 'commercial_terms_accepted',
+  COMMERCIAL_TERMS_REJECTED: 'commercial_terms_rejected',
+  FORMAL_QUOTE_SENT: 'formal_quote_sent',
+  CONTRACT_SENT: 'contract_sent',
+  CONTRACT_SIGNED: 'contract_signed',
+  CONTRACT_CHANGE_REQUESTED: 'contract_change_requested',
+  INQUIRY_CANCELLED: 'inquiry_cancelled',
+  CUSTOMER_RESPONSE_REQUESTED: 'customer_response_requested',
+  GENERAL_CORRESPONDENCE: 'general_correspondence',
+  UNRELATED_INTERNAL: 'unrelated_internal',
+  BUSINESS_EVENT_CORRECTED: 'business_event_corrected',
+  MANUAL_STATE_CORRECTED: 'manual_state_corrected',
+} as const;
+
+export type InquiryBusinessEventType = typeof InquiryBusinessEventType[keyof typeof InquiryBusinessEventType];
+
+export const InquiryBusinessEventActor = {
+  CUSTOMER: 'customer',
+  US: 'us',
+  SYSTEM: 'system',
+  HUMAN: 'human',
+} as const;
+
+export type InquiryBusinessEventActor = typeof InquiryBusinessEventActor[keyof typeof InquiryBusinessEventActor];
+
+export const AI_BUSINESS_EVENT_TYPES = [
+  InquiryBusinessEventType.INQUIRY_RECEIVED,
+  InquiryBusinessEventType.REQUIREMENTS_PROVIDED,
+  InquiryBusinessEventType.REQUIREMENTS_UPDATED,
+  InquiryBusinessEventType.CLARIFICATION_REQUESTED,
+  InquiryBusinessEventType.CLARIFICATION_PROVIDED,
+  InquiryBusinessEventType.TECHNICAL_SOLUTION_SENT,
+  InquiryBusinessEventType.TECHNICAL_SOLUTION_ACCEPTED,
+  InquiryBusinessEventType.TECHNICAL_SOLUTION_REJECTED,
+  InquiryBusinessEventType.ALTERNATIVE_SOLUTION_SENT,
+  InquiryBusinessEventType.UNABLE_TO_FULFILL,
+  InquiryBusinessEventType.DELIVERY_TERMS_SENT,
+  InquiryBusinessEventType.DELIVERY_TERMS_ACCEPTED,
+  InquiryBusinessEventType.DELIVERY_TERMS_REJECTED,
+  InquiryBusinessEventType.COMMERCIAL_TERMS_SENT,
+  InquiryBusinessEventType.COMMERCIAL_TERMS_ACCEPTED,
+  InquiryBusinessEventType.COMMERCIAL_TERMS_REJECTED,
+  InquiryBusinessEventType.FORMAL_QUOTE_SENT,
+  InquiryBusinessEventType.CONTRACT_SENT,
+  InquiryBusinessEventType.CONTRACT_SIGNED,
+  InquiryBusinessEventType.CONTRACT_CHANGE_REQUESTED,
+  InquiryBusinessEventType.INQUIRY_CANCELLED,
+  InquiryBusinessEventType.CUSTOMER_RESPONSE_REQUESTED,
+  InquiryBusinessEventType.GENERAL_CORRESPONDENCE,
+  InquiryBusinessEventType.UNRELATED_INTERNAL,
+] as const;

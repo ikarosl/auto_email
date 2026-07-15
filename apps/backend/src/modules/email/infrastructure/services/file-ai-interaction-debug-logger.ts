@@ -17,7 +17,12 @@ export class FileAiInteractionDebugLogger implements AiInteractionDebugLogger {
       occurredAt: entry.occurredAt.toISOString(),
       emailMessageId: entry.emailMessage.id,
       inquiryCaseId: entry.inquiryCase?.id,
-      currentInquiryStatus: entry.inquiryCase?.status,
+      currentInquiryState: entry.inquiryCase ? {
+        businessStage: entry.inquiryCase.businessStage,
+        actionOwner: entry.inquiryCase.actionOwner,
+        lifecycleStatus: entry.inquiryCase.lifecycleStatus,
+        stateVersion: entry.inquiryCase.stateVersion,
+      } : null,
       contextSnapshotId: entry.contextSnapshotId,
       estimatedContextTokens: entry.estimatedContextTokens,
       contextPayload: entry.contextPayload,

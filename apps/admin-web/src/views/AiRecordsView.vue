@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type {
-  AiDecisionListItem,
+  EmailAnalysisDecisionListItem,
   EmailAttachmentListItem,
   MailRuntimeInfo,
   ReplyDraftListItem,
@@ -10,7 +10,7 @@ import { computed, onMounted, ref } from 'vue';
 
 import {
   approveReplyDraft,
-  fetchAiDecisions,
+  fetchEmailAnalysisDecisions,
   fetchInquiryThread,
   fetchMailRuntime,
   fetchReplyDraft,
@@ -31,7 +31,7 @@ const loading = ref(false);
 const actionLoading = ref(false);
 const error = ref('');
 const notice = ref('');
-const decisions = ref<AiDecisionListItem[]>([]);
+const decisions = ref<EmailAnalysisDecisionListItem[]>([]);
 const drafts = ref<ReplyDraftListItem[]>([]);
 const selected = ref<ReplyDraftListItem | null>(null);
 const runtime = ref<MailRuntimeInfo | null>(null);
@@ -59,7 +59,7 @@ async function load() {
   error.value = '';
   try {
     const [decisionResult, draftResult, runtimeResult] = await Promise.all([
-      fetchAiDecisions({ page: 1, limit: pageLimit }),
+      fetchEmailAnalysisDecisions({ page: 1, limit: pageLimit }),
       fetchReplyDrafts({ page: 1, limit: pageLimit }),
       fetchMailRuntime(),
     ]);
@@ -169,7 +169,7 @@ async function loadNextDecisions() {
   if (loading.value || decisionsLoadingMore.value || !hasMoreDecisions.value) return;
   decisionsLoadingMore.value = true;
   try {
-    const result = await fetchAiDecisions({ page: ++decisionPage.value, limit: pageLimit });
+    const result = await fetchEmailAnalysisDecisions({ page: ++decisionPage.value, limit: pageLimit });
     decisions.value = mergeById(decisions.value, result.data);
     decisionTotal.value = result.total;
   } catch (err) {
@@ -240,8 +240,8 @@ onMounted(load);
         <div class="border-b border-border px-4 py-3"><h2 class="font-semibold">AI 决策记录</h2><p class="text-sm text-muted-foreground">共 {{ decisionTotal }} 条</p></div>
         <div class="max-h-[560px] divide-y divide-border overflow-y-auto" @scroll.passive="handleScroll($event, loadNextDecisions)">
           <article v-for="item in decisions" :key="item.id" class="p-4">
-            <div class="flex items-center justify-between gap-2"><div class="flex gap-2"><Badge :tone="item.success ? 'success' : 'danger'">{{ item.classification || 'failed' }}</Badge><Badge tone="warning">{{ item.suggestedStatus || '-' }}</Badge></div><span class="text-xs text-muted-foreground">{{ confidenceText(item.confidence) }}</span></div>
-            <div class="mt-2 text-sm">{{ item.emailMessage?.subject || item.inquiryCase?.subject || '(no subject)' }}</div>
+            <div class="flex items-center justify-between gap-2"><div class="flex gap-2"><Badge :tone="item.success ? 'success' : 'danger'">{{ item.messageClassification || 'failed' }}</Badge><Badge tone="warning">{{ item.suggestedState ? `${item.suggestedState.businessStage}/${item.suggestedState.actionOwner}/${item.suggestedState.lifecycleStatus}` : '-' }}</Badge></div><span class="text-xs text-muted-foreground">{{ confidenceText(item.confidence) }}</span></div>
+            <div class="mt-2 text-sm">{{ item.emailMessage?.subject || item.inquiryCase?.businessSubject || '(no subject)' }}</div>
             <p class="mt-2 text-sm leading-6 text-muted-foreground">{{ item.reason || item.errorMessage || '-' }}</p>
           </article>
           <EmptyState v-if="!loading && decisions.length === 0">暂无 AI 决策</EmptyState>

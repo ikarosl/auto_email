@@ -16,11 +16,17 @@ export class MessageController {
         inquiryMessages: {
           include: {
             inquiryCase: {
-              select: { id: true, status: true, businessSubject: true },
+              select: {
+                id: true,
+                businessStage: true,
+                actionOwner: true,
+                lifecycleStatus: true,
+                businessSubject: true,
+              },
             },
           },
         },
-        aiDecisions: {
+        analysisDecisions: {
           orderBy: { createdAt: 'desc' },
           take: 5,
         },
@@ -54,10 +60,14 @@ export class MessageController {
         relationType: link.relationType,
         inquiryCase: link.inquiryCase,
       })),
-      aiDecisions: record.aiDecisions?.map((d) => ({
+      analysisDecisions: record.analysisDecisions?.map((d) => ({
         id: d.id,
-        classification: d.classification,
-        suggestedStatus: d.suggestedStatus,
+        messageClassification: d.messageClassification,
+        suggestedState: d.suggestedBusinessStage ? {
+          businessStage: d.suggestedBusinessStage,
+          actionOwner: d.suggestedActionOwner,
+          lifecycleStatus: d.suggestedLifecycleStatus,
+        } : null,
         confidence: toNumber(d.confidence),
         reason: d.reason,
         success: d.success,

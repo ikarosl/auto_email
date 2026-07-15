@@ -96,7 +96,10 @@ export class CustomerController {
       ...mapCustomer(record),
       inquiryCases: record.inquiryCases.map((inquiry) => ({
         id: inquiry.id,
-        status: inquiry.status,
+        businessStage: inquiry.businessStage,
+        actionOwner: inquiry.actionOwner,
+        lifecycleStatus: inquiry.lifecycleStatus,
+        stateVersion: inquiry.stateVersion,
         subject: inquiry.subject,
         productType: inquiry.productType,
         latestMessageAt: toDateIso(inquiry.latestMessageAt),

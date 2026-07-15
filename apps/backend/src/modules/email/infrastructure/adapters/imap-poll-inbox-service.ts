@@ -316,7 +316,9 @@ async function run(): Promise<void> {
         console.log('--- New email processed ---');
         console.log(`EmailMessage ID: ${result.emailMessage?.id}`);
         console.log(`InquiryCase ID: ${result.inquiryCase?.id}`);
-        console.log(`Inquiry status: ${result.inquiryCase?.status}`);
+        console.log(`Inquiry state: ${result.inquiryCase
+          ? `${result.inquiryCase.businessStage}/${result.inquiryCase.actionOwner}/${result.inquiryCase.lifecycleStatus}`
+          : '(none)'}`);
         console.log(`Subject: ${result.emailMessage?.subject}`);
 
         if (result.aiAnalysisResult?.success) {

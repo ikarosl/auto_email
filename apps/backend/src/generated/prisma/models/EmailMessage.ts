@@ -375,14 +375,17 @@ export type EmailMessageWhereInput = {
   mailboxAccount?: Prisma.XOR<Prisma.MailboxAccountNullableScalarRelationFilter, Prisma.MailboxAccountWhereInput> | null
   emailThread?: Prisma.XOR<Prisma.EmailThreadNullableScalarRelationFilter, Prisma.EmailThreadWhereInput> | null
   inquiryMessages?: Prisma.InquiryMessageListRelationFilter
-  aiDecisions?: Prisma.AiDecisionListRelationFilter
+  analysisDecisions?: Prisma.EmailAnalysisDecisionListRelationFilter
+  businessEvents?: Prisma.InquiryBusinessEventListRelationFilter
+  stateDecisions?: Prisma.InquiryStateDecisionListRelationFilter
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordListRelationFilter
+  recoveredByRecords?: Prisma.EmailRecoveryRecordListRelationFilter
   sourceReplyDrafts?: Prisma.ReplyDraftListRelationFilter
   sentReplyDrafts?: Prisma.ReplyDraftListRelationFilter
   contextSnapshots?: Prisma.AiContextSnapshotListRelationFilter
   updatedStructuredFacts?: Prisma.InquiryStructuredFactListRelationFilter
   attachments?: Prisma.EmailAttachmentListRelationFilter
   sendAttempts?: Prisma.EmailSendAttemptListRelationFilter
-  workflowDecisions?: Prisma.EmailWorkflowDecisionListRelationFilter
 }
 
 export type EmailMessageOrderByWithRelationInput = {
@@ -414,14 +417,17 @@ export type EmailMessageOrderByWithRelationInput = {
   mailboxAccount?: Prisma.MailboxAccountOrderByWithRelationInput
   emailThread?: Prisma.EmailThreadOrderByWithRelationInput
   inquiryMessages?: Prisma.InquiryMessageOrderByRelationAggregateInput
-  aiDecisions?: Prisma.AiDecisionOrderByRelationAggregateInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionOrderByRelationAggregateInput
+  businessEvents?: Prisma.InquiryBusinessEventOrderByRelationAggregateInput
+  stateDecisions?: Prisma.InquiryStateDecisionOrderByRelationAggregateInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordOrderByRelationAggregateInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordOrderByRelationAggregateInput
   sourceReplyDrafts?: Prisma.ReplyDraftOrderByRelationAggregateInput
   sentReplyDrafts?: Prisma.ReplyDraftOrderByRelationAggregateInput
   contextSnapshots?: Prisma.AiContextSnapshotOrderByRelationAggregateInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactOrderByRelationAggregateInput
   attachments?: Prisma.EmailAttachmentOrderByRelationAggregateInput
   sendAttempts?: Prisma.EmailSendAttemptOrderByRelationAggregateInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionOrderByRelationAggregateInput
 }
 
 export type EmailMessageWhereUniqueInput = Prisma.AtLeast<{
@@ -456,14 +462,17 @@ export type EmailMessageWhereUniqueInput = Prisma.AtLeast<{
   mailboxAccount?: Prisma.XOR<Prisma.MailboxAccountNullableScalarRelationFilter, Prisma.MailboxAccountWhereInput> | null
   emailThread?: Prisma.XOR<Prisma.EmailThreadNullableScalarRelationFilter, Prisma.EmailThreadWhereInput> | null
   inquiryMessages?: Prisma.InquiryMessageListRelationFilter
-  aiDecisions?: Prisma.AiDecisionListRelationFilter
+  analysisDecisions?: Prisma.EmailAnalysisDecisionListRelationFilter
+  businessEvents?: Prisma.InquiryBusinessEventListRelationFilter
+  stateDecisions?: Prisma.InquiryStateDecisionListRelationFilter
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordListRelationFilter
+  recoveredByRecords?: Prisma.EmailRecoveryRecordListRelationFilter
   sourceReplyDrafts?: Prisma.ReplyDraftListRelationFilter
   sentReplyDrafts?: Prisma.ReplyDraftListRelationFilter
   contextSnapshots?: Prisma.AiContextSnapshotListRelationFilter
   updatedStructuredFacts?: Prisma.InquiryStructuredFactListRelationFilter
   attachments?: Prisma.EmailAttachmentListRelationFilter
   sendAttempts?: Prisma.EmailSendAttemptListRelationFilter
-  workflowDecisions?: Prisma.EmailWorkflowDecisionListRelationFilter
 }, "id">
 
 export type EmailMessageOrderByWithAggregationInput = {
@@ -557,14 +566,17 @@ export type EmailMessageCreateInput = {
   mailboxAccount?: Prisma.MailboxAccountCreateNestedOneWithoutEmailMessagesInput
   emailThread?: Prisma.EmailThreadCreateNestedOneWithoutEmailMessagesInput
   inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutEmailMessageInput
-  aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutEmailMessageInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionCreateNestedManyWithoutEmailMessageInput
+  businessEvents?: Prisma.InquiryBusinessEventCreateNestedManyWithoutEmailMessageInput
+  stateDecisions?: Prisma.InquiryStateDecisionCreateNestedManyWithoutEmailMessageInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutTriggerEmailInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutRecoveredEmailInput
   sourceReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSourceEmailMessageInput
   sentReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSentEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutOutboundEmailMessageInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageUncheckedCreateInput = {
@@ -594,14 +606,17 @@ export type EmailMessageUncheckedCreateInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutEmailMessageInput
-  aiDecisions?: Prisma.AiDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedCreateNestedManyWithoutEmailMessageInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutTriggerEmailInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutRecoveredEmailInput
   sourceReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSourceEmailMessageInput
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSentEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutOutboundEmailMessageInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageUpdateInput = {
@@ -631,14 +646,17 @@ export type EmailMessageUpdateInput = {
   mailboxAccount?: Prisma.MailboxAccountUpdateOneWithoutEmailMessagesNestedInput
   emailThread?: Prisma.EmailThreadUpdateOneWithoutEmailMessagesNestedInput
   inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutEmailMessageNestedInput
-  aiDecisions?: Prisma.AiDecisionUpdateManyWithoutEmailMessageNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUpdateManyWithoutEmailMessageNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUpdateManyWithoutEmailMessageNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUpdateManyWithoutEmailMessageNestedInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUpdateManyWithoutTriggerEmailNestedInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUpdateManyWithoutRecoveredEmailNestedInput
   sourceReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSourceEmailMessageNestedInput
   sentReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSentEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutOutboundEmailMessageNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateInput = {
@@ -668,14 +686,17 @@ export type EmailMessageUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutEmailMessageNestedInput
-  aiDecisions?: Prisma.AiDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedUpdateManyWithoutEmailMessageNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutTriggerEmailNestedInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutRecoveredEmailNestedInput
   sourceReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSourceEmailMessageNestedInput
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSentEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutOutboundEmailMessageNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageCreateManyInput = {
@@ -982,20 +1003,78 @@ export type EmailMessageUpdateOneRequiredWithoutInquiryMessagesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.EmailMessageUpdateToOneWithWhereWithoutInquiryMessagesInput, Prisma.EmailMessageUpdateWithoutInquiryMessagesInput>, Prisma.EmailMessageUncheckedUpdateWithoutInquiryMessagesInput>
 }
 
-export type EmailMessageCreateNestedOneWithoutAiDecisionsInput = {
-  create?: Prisma.XOR<Prisma.EmailMessageCreateWithoutAiDecisionsInput, Prisma.EmailMessageUncheckedCreateWithoutAiDecisionsInput>
-  connectOrCreate?: Prisma.EmailMessageCreateOrConnectWithoutAiDecisionsInput
+export type EmailMessageCreateNestedOneWithoutAnalysisDecisionsInput = {
+  create?: Prisma.XOR<Prisma.EmailMessageCreateWithoutAnalysisDecisionsInput, Prisma.EmailMessageUncheckedCreateWithoutAnalysisDecisionsInput>
+  connectOrCreate?: Prisma.EmailMessageCreateOrConnectWithoutAnalysisDecisionsInput
   connect?: Prisma.EmailMessageWhereUniqueInput
 }
 
-export type EmailMessageUpdateOneWithoutAiDecisionsNestedInput = {
-  create?: Prisma.XOR<Prisma.EmailMessageCreateWithoutAiDecisionsInput, Prisma.EmailMessageUncheckedCreateWithoutAiDecisionsInput>
-  connectOrCreate?: Prisma.EmailMessageCreateOrConnectWithoutAiDecisionsInput
-  upsert?: Prisma.EmailMessageUpsertWithoutAiDecisionsInput
+export type EmailMessageUpdateOneRequiredWithoutAnalysisDecisionsNestedInput = {
+  create?: Prisma.XOR<Prisma.EmailMessageCreateWithoutAnalysisDecisionsInput, Prisma.EmailMessageUncheckedCreateWithoutAnalysisDecisionsInput>
+  connectOrCreate?: Prisma.EmailMessageCreateOrConnectWithoutAnalysisDecisionsInput
+  upsert?: Prisma.EmailMessageUpsertWithoutAnalysisDecisionsInput
+  connect?: Prisma.EmailMessageWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EmailMessageUpdateToOneWithWhereWithoutAnalysisDecisionsInput, Prisma.EmailMessageUpdateWithoutAnalysisDecisionsInput>, Prisma.EmailMessageUncheckedUpdateWithoutAnalysisDecisionsInput>
+}
+
+export type EmailMessageCreateNestedOneWithoutBusinessEventsInput = {
+  create?: Prisma.XOR<Prisma.EmailMessageCreateWithoutBusinessEventsInput, Prisma.EmailMessageUncheckedCreateWithoutBusinessEventsInput>
+  connectOrCreate?: Prisma.EmailMessageCreateOrConnectWithoutBusinessEventsInput
+  connect?: Prisma.EmailMessageWhereUniqueInput
+}
+
+export type EmailMessageUpdateOneWithoutBusinessEventsNestedInput = {
+  create?: Prisma.XOR<Prisma.EmailMessageCreateWithoutBusinessEventsInput, Prisma.EmailMessageUncheckedCreateWithoutBusinessEventsInput>
+  connectOrCreate?: Prisma.EmailMessageCreateOrConnectWithoutBusinessEventsInput
+  upsert?: Prisma.EmailMessageUpsertWithoutBusinessEventsInput
   disconnect?: Prisma.EmailMessageWhereInput | boolean
   delete?: Prisma.EmailMessageWhereInput | boolean
   connect?: Prisma.EmailMessageWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.EmailMessageUpdateToOneWithWhereWithoutAiDecisionsInput, Prisma.EmailMessageUpdateWithoutAiDecisionsInput>, Prisma.EmailMessageUncheckedUpdateWithoutAiDecisionsInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EmailMessageUpdateToOneWithWhereWithoutBusinessEventsInput, Prisma.EmailMessageUpdateWithoutBusinessEventsInput>, Prisma.EmailMessageUncheckedUpdateWithoutBusinessEventsInput>
+}
+
+export type EmailMessageCreateNestedOneWithoutStateDecisionsInput = {
+  create?: Prisma.XOR<Prisma.EmailMessageCreateWithoutStateDecisionsInput, Prisma.EmailMessageUncheckedCreateWithoutStateDecisionsInput>
+  connectOrCreate?: Prisma.EmailMessageCreateOrConnectWithoutStateDecisionsInput
+  connect?: Prisma.EmailMessageWhereUniqueInput
+}
+
+export type EmailMessageUpdateOneWithoutStateDecisionsNestedInput = {
+  create?: Prisma.XOR<Prisma.EmailMessageCreateWithoutStateDecisionsInput, Prisma.EmailMessageUncheckedCreateWithoutStateDecisionsInput>
+  connectOrCreate?: Prisma.EmailMessageCreateOrConnectWithoutStateDecisionsInput
+  upsert?: Prisma.EmailMessageUpsertWithoutStateDecisionsInput
+  disconnect?: Prisma.EmailMessageWhereInput | boolean
+  delete?: Prisma.EmailMessageWhereInput | boolean
+  connect?: Prisma.EmailMessageWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EmailMessageUpdateToOneWithWhereWithoutStateDecisionsInput, Prisma.EmailMessageUpdateWithoutStateDecisionsInput>, Prisma.EmailMessageUncheckedUpdateWithoutStateDecisionsInput>
+}
+
+export type EmailMessageCreateNestedOneWithoutTriggeredRecoveriesInput = {
+  create?: Prisma.XOR<Prisma.EmailMessageCreateWithoutTriggeredRecoveriesInput, Prisma.EmailMessageUncheckedCreateWithoutTriggeredRecoveriesInput>
+  connectOrCreate?: Prisma.EmailMessageCreateOrConnectWithoutTriggeredRecoveriesInput
+  connect?: Prisma.EmailMessageWhereUniqueInput
+}
+
+export type EmailMessageCreateNestedOneWithoutRecoveredByRecordsInput = {
+  create?: Prisma.XOR<Prisma.EmailMessageCreateWithoutRecoveredByRecordsInput, Prisma.EmailMessageUncheckedCreateWithoutRecoveredByRecordsInput>
+  connectOrCreate?: Prisma.EmailMessageCreateOrConnectWithoutRecoveredByRecordsInput
+  connect?: Prisma.EmailMessageWhereUniqueInput
+}
+
+export type EmailMessageUpdateOneRequiredWithoutTriggeredRecoveriesNestedInput = {
+  create?: Prisma.XOR<Prisma.EmailMessageCreateWithoutTriggeredRecoveriesInput, Prisma.EmailMessageUncheckedCreateWithoutTriggeredRecoveriesInput>
+  connectOrCreate?: Prisma.EmailMessageCreateOrConnectWithoutTriggeredRecoveriesInput
+  upsert?: Prisma.EmailMessageUpsertWithoutTriggeredRecoveriesInput
+  connect?: Prisma.EmailMessageWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EmailMessageUpdateToOneWithWhereWithoutTriggeredRecoveriesInput, Prisma.EmailMessageUpdateWithoutTriggeredRecoveriesInput>, Prisma.EmailMessageUncheckedUpdateWithoutTriggeredRecoveriesInput>
+}
+
+export type EmailMessageUpdateOneRequiredWithoutRecoveredByRecordsNestedInput = {
+  create?: Prisma.XOR<Prisma.EmailMessageCreateWithoutRecoveredByRecordsInput, Prisma.EmailMessageUncheckedCreateWithoutRecoveredByRecordsInput>
+  connectOrCreate?: Prisma.EmailMessageCreateOrConnectWithoutRecoveredByRecordsInput
+  upsert?: Prisma.EmailMessageUpsertWithoutRecoveredByRecordsInput
+  connect?: Prisma.EmailMessageWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EmailMessageUpdateToOneWithWhereWithoutRecoveredByRecordsInput, Prisma.EmailMessageUpdateWithoutRecoveredByRecordsInput>, Prisma.EmailMessageUncheckedUpdateWithoutRecoveredByRecordsInput>
 }
 
 export type EmailMessageCreateNestedOneWithoutUpdatedStructuredFactsInput = {
@@ -1062,20 +1141,6 @@ export type EmailMessageUpdateOneWithoutSendAttemptsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.EmailMessageUpdateToOneWithWhereWithoutSendAttemptsInput, Prisma.EmailMessageUpdateWithoutSendAttemptsInput>, Prisma.EmailMessageUncheckedUpdateWithoutSendAttemptsInput>
 }
 
-export type EmailMessageCreateNestedOneWithoutWorkflowDecisionsInput = {
-  create?: Prisma.XOR<Prisma.EmailMessageCreateWithoutWorkflowDecisionsInput, Prisma.EmailMessageUncheckedCreateWithoutWorkflowDecisionsInput>
-  connectOrCreate?: Prisma.EmailMessageCreateOrConnectWithoutWorkflowDecisionsInput
-  connect?: Prisma.EmailMessageWhereUniqueInput
-}
-
-export type EmailMessageUpdateOneRequiredWithoutWorkflowDecisionsNestedInput = {
-  create?: Prisma.XOR<Prisma.EmailMessageCreateWithoutWorkflowDecisionsInput, Prisma.EmailMessageUncheckedCreateWithoutWorkflowDecisionsInput>
-  connectOrCreate?: Prisma.EmailMessageCreateOrConnectWithoutWorkflowDecisionsInput
-  upsert?: Prisma.EmailMessageUpsertWithoutWorkflowDecisionsInput
-  connect?: Prisma.EmailMessageWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.EmailMessageUpdateToOneWithWhereWithoutWorkflowDecisionsInput, Prisma.EmailMessageUpdateWithoutWorkflowDecisionsInput>, Prisma.EmailMessageUncheckedUpdateWithoutWorkflowDecisionsInput>
-}
-
 export type EmailMessageCreateNestedOneWithoutContextSnapshotsInput = {
   create?: Prisma.XOR<Prisma.EmailMessageCreateWithoutContextSnapshotsInput, Prisma.EmailMessageUncheckedCreateWithoutContextSnapshotsInput>
   connectOrCreate?: Prisma.EmailMessageCreateOrConnectWithoutContextSnapshotsInput
@@ -1118,14 +1183,17 @@ export type EmailMessageCreateWithoutMailboxAccountInput = {
   deletedAt?: Date | string | null
   emailThread?: Prisma.EmailThreadCreateNestedOneWithoutEmailMessagesInput
   inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutEmailMessageInput
-  aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutEmailMessageInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionCreateNestedManyWithoutEmailMessageInput
+  businessEvents?: Prisma.InquiryBusinessEventCreateNestedManyWithoutEmailMessageInput
+  stateDecisions?: Prisma.InquiryStateDecisionCreateNestedManyWithoutEmailMessageInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutTriggerEmailInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutRecoveredEmailInput
   sourceReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSourceEmailMessageInput
   sentReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSentEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutOutboundEmailMessageInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageUncheckedCreateWithoutMailboxAccountInput = {
@@ -1154,14 +1222,17 @@ export type EmailMessageUncheckedCreateWithoutMailboxAccountInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutEmailMessageInput
-  aiDecisions?: Prisma.AiDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedCreateNestedManyWithoutEmailMessageInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutTriggerEmailInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutRecoveredEmailInput
   sourceReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSourceEmailMessageInput
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSentEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutOutboundEmailMessageInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageCreateOrConnectWithoutMailboxAccountInput = {
@@ -1247,14 +1318,17 @@ export type EmailMessageCreateWithoutEmailThreadInput = {
   deletedAt?: Date | string | null
   mailboxAccount?: Prisma.MailboxAccountCreateNestedOneWithoutEmailMessagesInput
   inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutEmailMessageInput
-  aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutEmailMessageInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionCreateNestedManyWithoutEmailMessageInput
+  businessEvents?: Prisma.InquiryBusinessEventCreateNestedManyWithoutEmailMessageInput
+  stateDecisions?: Prisma.InquiryStateDecisionCreateNestedManyWithoutEmailMessageInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutTriggerEmailInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutRecoveredEmailInput
   sourceReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSourceEmailMessageInput
   sentReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSentEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutOutboundEmailMessageInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageUncheckedCreateWithoutEmailThreadInput = {
@@ -1283,14 +1357,17 @@ export type EmailMessageUncheckedCreateWithoutEmailThreadInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutEmailMessageInput
-  aiDecisions?: Prisma.AiDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedCreateNestedManyWithoutEmailMessageInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutTriggerEmailInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutRecoveredEmailInput
   sourceReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSourceEmailMessageInput
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSentEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutOutboundEmailMessageInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageCreateOrConnectWithoutEmailThreadInput = {
@@ -1346,13 +1423,16 @@ export type EmailMessageCreateWithoutAttachmentsInput = {
   mailboxAccount?: Prisma.MailboxAccountCreateNestedOneWithoutEmailMessagesInput
   emailThread?: Prisma.EmailThreadCreateNestedOneWithoutEmailMessagesInput
   inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutEmailMessageInput
-  aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutEmailMessageInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionCreateNestedManyWithoutEmailMessageInput
+  businessEvents?: Prisma.InquiryBusinessEventCreateNestedManyWithoutEmailMessageInput
+  stateDecisions?: Prisma.InquiryStateDecisionCreateNestedManyWithoutEmailMessageInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutTriggerEmailInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutRecoveredEmailInput
   sourceReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSourceEmailMessageInput
   sentReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSentEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactCreateNestedManyWithoutUpdatedFromEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutOutboundEmailMessageInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageUncheckedCreateWithoutAttachmentsInput = {
@@ -1382,13 +1462,16 @@ export type EmailMessageUncheckedCreateWithoutAttachmentsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutEmailMessageInput
-  aiDecisions?: Prisma.AiDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedCreateNestedManyWithoutEmailMessageInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutTriggerEmailInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutRecoveredEmailInput
   sourceReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSourceEmailMessageInput
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSentEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedManyWithoutUpdatedFromEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutOutboundEmailMessageInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageCreateOrConnectWithoutAttachmentsInput = {
@@ -1434,13 +1517,16 @@ export type EmailMessageUpdateWithoutAttachmentsInput = {
   mailboxAccount?: Prisma.MailboxAccountUpdateOneWithoutEmailMessagesNestedInput
   emailThread?: Prisma.EmailThreadUpdateOneWithoutEmailMessagesNestedInput
   inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutEmailMessageNestedInput
-  aiDecisions?: Prisma.AiDecisionUpdateManyWithoutEmailMessageNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUpdateManyWithoutEmailMessageNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUpdateManyWithoutEmailMessageNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUpdateManyWithoutEmailMessageNestedInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUpdateManyWithoutTriggerEmailNestedInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUpdateManyWithoutRecoveredEmailNestedInput
   sourceReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSourceEmailMessageNestedInput
   sentReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSentEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutOutboundEmailMessageNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateWithoutAttachmentsInput = {
@@ -1470,13 +1556,16 @@ export type EmailMessageUncheckedUpdateWithoutAttachmentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutEmailMessageNestedInput
-  aiDecisions?: Prisma.AiDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedUpdateManyWithoutEmailMessageNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutTriggerEmailNestedInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutRecoveredEmailNestedInput
   sourceReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSourceEmailMessageNestedInput
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSentEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutOutboundEmailMessageNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageCreateWithoutInquiryMessagesInput = {
@@ -1505,14 +1594,17 @@ export type EmailMessageCreateWithoutInquiryMessagesInput = {
   deletedAt?: Date | string | null
   mailboxAccount?: Prisma.MailboxAccountCreateNestedOneWithoutEmailMessagesInput
   emailThread?: Prisma.EmailThreadCreateNestedOneWithoutEmailMessagesInput
-  aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutEmailMessageInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionCreateNestedManyWithoutEmailMessageInput
+  businessEvents?: Prisma.InquiryBusinessEventCreateNestedManyWithoutEmailMessageInput
+  stateDecisions?: Prisma.InquiryStateDecisionCreateNestedManyWithoutEmailMessageInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutTriggerEmailInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutRecoveredEmailInput
   sourceReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSourceEmailMessageInput
   sentReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSentEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutOutboundEmailMessageInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageUncheckedCreateWithoutInquiryMessagesInput = {
@@ -1541,14 +1633,17 @@ export type EmailMessageUncheckedCreateWithoutInquiryMessagesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  aiDecisions?: Prisma.AiDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedCreateNestedManyWithoutEmailMessageInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutTriggerEmailInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutRecoveredEmailInput
   sourceReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSourceEmailMessageInput
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSentEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutOutboundEmailMessageInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageCreateOrConnectWithoutInquiryMessagesInput = {
@@ -1593,14 +1688,17 @@ export type EmailMessageUpdateWithoutInquiryMessagesInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   mailboxAccount?: Prisma.MailboxAccountUpdateOneWithoutEmailMessagesNestedInput
   emailThread?: Prisma.EmailThreadUpdateOneWithoutEmailMessagesNestedInput
-  aiDecisions?: Prisma.AiDecisionUpdateManyWithoutEmailMessageNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUpdateManyWithoutEmailMessageNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUpdateManyWithoutEmailMessageNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUpdateManyWithoutEmailMessageNestedInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUpdateManyWithoutTriggerEmailNestedInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUpdateManyWithoutRecoveredEmailNestedInput
   sourceReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSourceEmailMessageNestedInput
   sentReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSentEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutOutboundEmailMessageNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateWithoutInquiryMessagesInput = {
@@ -1629,17 +1727,20 @@ export type EmailMessageUncheckedUpdateWithoutInquiryMessagesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  aiDecisions?: Prisma.AiDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedUpdateManyWithoutEmailMessageNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutTriggerEmailNestedInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutRecoveredEmailNestedInput
   sourceReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSourceEmailMessageNestedInput
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSentEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutOutboundEmailMessageNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
 }
 
-export type EmailMessageCreateWithoutAiDecisionsInput = {
+export type EmailMessageCreateWithoutAnalysisDecisionsInput = {
   id?: string
   direction: string
   mailboxName?: string
@@ -1666,16 +1767,19 @@ export type EmailMessageCreateWithoutAiDecisionsInput = {
   mailboxAccount?: Prisma.MailboxAccountCreateNestedOneWithoutEmailMessagesInput
   emailThread?: Prisma.EmailThreadCreateNestedOneWithoutEmailMessagesInput
   inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutEmailMessageInput
+  businessEvents?: Prisma.InquiryBusinessEventCreateNestedManyWithoutEmailMessageInput
+  stateDecisions?: Prisma.InquiryStateDecisionCreateNestedManyWithoutEmailMessageInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutTriggerEmailInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutRecoveredEmailInput
   sourceReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSourceEmailMessageInput
   sentReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSentEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutOutboundEmailMessageInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutEmailMessageInput
 }
 
-export type EmailMessageUncheckedCreateWithoutAiDecisionsInput = {
+export type EmailMessageUncheckedCreateWithoutAnalysisDecisionsInput = {
   id?: string
   mailboxAccountId?: string | null
   emailThreadId?: string | null
@@ -1702,32 +1806,35 @@ export type EmailMessageUncheckedCreateWithoutAiDecisionsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutEmailMessageInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedCreateNestedManyWithoutEmailMessageInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutTriggerEmailInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutRecoveredEmailInput
   sourceReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSourceEmailMessageInput
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSentEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutOutboundEmailMessageInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
 }
 
-export type EmailMessageCreateOrConnectWithoutAiDecisionsInput = {
+export type EmailMessageCreateOrConnectWithoutAnalysisDecisionsInput = {
   where: Prisma.EmailMessageWhereUniqueInput
-  create: Prisma.XOR<Prisma.EmailMessageCreateWithoutAiDecisionsInput, Prisma.EmailMessageUncheckedCreateWithoutAiDecisionsInput>
+  create: Prisma.XOR<Prisma.EmailMessageCreateWithoutAnalysisDecisionsInput, Prisma.EmailMessageUncheckedCreateWithoutAnalysisDecisionsInput>
 }
 
-export type EmailMessageUpsertWithoutAiDecisionsInput = {
-  update: Prisma.XOR<Prisma.EmailMessageUpdateWithoutAiDecisionsInput, Prisma.EmailMessageUncheckedUpdateWithoutAiDecisionsInput>
-  create: Prisma.XOR<Prisma.EmailMessageCreateWithoutAiDecisionsInput, Prisma.EmailMessageUncheckedCreateWithoutAiDecisionsInput>
+export type EmailMessageUpsertWithoutAnalysisDecisionsInput = {
+  update: Prisma.XOR<Prisma.EmailMessageUpdateWithoutAnalysisDecisionsInput, Prisma.EmailMessageUncheckedUpdateWithoutAnalysisDecisionsInput>
+  create: Prisma.XOR<Prisma.EmailMessageCreateWithoutAnalysisDecisionsInput, Prisma.EmailMessageUncheckedCreateWithoutAnalysisDecisionsInput>
   where?: Prisma.EmailMessageWhereInput
 }
 
-export type EmailMessageUpdateToOneWithWhereWithoutAiDecisionsInput = {
+export type EmailMessageUpdateToOneWithWhereWithoutAnalysisDecisionsInput = {
   where?: Prisma.EmailMessageWhereInput
-  data: Prisma.XOR<Prisma.EmailMessageUpdateWithoutAiDecisionsInput, Prisma.EmailMessageUncheckedUpdateWithoutAiDecisionsInput>
+  data: Prisma.XOR<Prisma.EmailMessageUpdateWithoutAnalysisDecisionsInput, Prisma.EmailMessageUncheckedUpdateWithoutAnalysisDecisionsInput>
 }
 
-export type EmailMessageUpdateWithoutAiDecisionsInput = {
+export type EmailMessageUpdateWithoutAnalysisDecisionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   direction?: Prisma.StringFieldUpdateOperationsInput | string
   mailboxName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1754,16 +1861,19 @@ export type EmailMessageUpdateWithoutAiDecisionsInput = {
   mailboxAccount?: Prisma.MailboxAccountUpdateOneWithoutEmailMessagesNestedInput
   emailThread?: Prisma.EmailThreadUpdateOneWithoutEmailMessagesNestedInput
   inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutEmailMessageNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUpdateManyWithoutEmailMessageNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUpdateManyWithoutEmailMessageNestedInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUpdateManyWithoutTriggerEmailNestedInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUpdateManyWithoutRecoveredEmailNestedInput
   sourceReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSourceEmailMessageNestedInput
   sentReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSentEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutOutboundEmailMessageNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutEmailMessageNestedInput
 }
 
-export type EmailMessageUncheckedUpdateWithoutAiDecisionsInput = {
+export type EmailMessageUncheckedUpdateWithoutAnalysisDecisionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   mailboxAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailThreadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1790,13 +1900,704 @@ export type EmailMessageUncheckedUpdateWithoutAiDecisionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutEmailMessageNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedUpdateManyWithoutEmailMessageNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutTriggerEmailNestedInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutRecoveredEmailNestedInput
   sourceReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSourceEmailMessageNestedInput
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSentEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutOutboundEmailMessageNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+}
+
+export type EmailMessageCreateWithoutBusinessEventsInput = {
+  id?: string
+  direction: string
+  mailboxName?: string
+  uidValidity?: bigint | number | null
+  uid?: bigint | number | null
+  messageId?: string | null
+  inReplyTo?: string | null
+  referencesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  fromEmail: string
+  fromName?: string | null
+  toEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ccEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  subject?: string | null
+  bodyText?: string | null
+  bodyHtml?: string | null
+  hasAttachments?: boolean
+  attachmentCount?: number
+  rawSource?: string | null
+  receivedAt: Date | string
+  source?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  mailboxAccount?: Prisma.MailboxAccountCreateNestedOneWithoutEmailMessagesInput
+  emailThread?: Prisma.EmailThreadCreateNestedOneWithoutEmailMessagesInput
+  inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutEmailMessageInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionCreateNestedManyWithoutEmailMessageInput
+  stateDecisions?: Prisma.InquiryStateDecisionCreateNestedManyWithoutEmailMessageInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutTriggerEmailInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutRecoveredEmailInput
+  sourceReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSourceEmailMessageInput
+  sentReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSentEmailMessageInput
+  contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutEmailMessageInput
+  updatedStructuredFacts?: Prisma.InquiryStructuredFactCreateNestedManyWithoutUpdatedFromEmailMessageInput
+  attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutEmailMessageInput
+  sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutOutboundEmailMessageInput
+}
+
+export type EmailMessageUncheckedCreateWithoutBusinessEventsInput = {
+  id?: string
+  mailboxAccountId?: string | null
+  emailThreadId?: string | null
+  direction: string
+  mailboxName?: string
+  uidValidity?: bigint | number | null
+  uid?: bigint | number | null
+  messageId?: string | null
+  inReplyTo?: string | null
+  referencesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  fromEmail: string
+  fromName?: string | null
+  toEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ccEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  subject?: string | null
+  bodyText?: string | null
+  bodyHtml?: string | null
+  hasAttachments?: boolean
+  attachmentCount?: number
+  rawSource?: string | null
+  receivedAt: Date | string
+  source?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutEmailMessageInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutTriggerEmailInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutRecoveredEmailInput
+  sourceReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSourceEmailMessageInput
+  sentReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSentEmailMessageInput
+  contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutEmailMessageInput
+  updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedManyWithoutUpdatedFromEmailMessageInput
+  attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutEmailMessageInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutOutboundEmailMessageInput
+}
+
+export type EmailMessageCreateOrConnectWithoutBusinessEventsInput = {
+  where: Prisma.EmailMessageWhereUniqueInput
+  create: Prisma.XOR<Prisma.EmailMessageCreateWithoutBusinessEventsInput, Prisma.EmailMessageUncheckedCreateWithoutBusinessEventsInput>
+}
+
+export type EmailMessageUpsertWithoutBusinessEventsInput = {
+  update: Prisma.XOR<Prisma.EmailMessageUpdateWithoutBusinessEventsInput, Prisma.EmailMessageUncheckedUpdateWithoutBusinessEventsInput>
+  create: Prisma.XOR<Prisma.EmailMessageCreateWithoutBusinessEventsInput, Prisma.EmailMessageUncheckedCreateWithoutBusinessEventsInput>
+  where?: Prisma.EmailMessageWhereInput
+}
+
+export type EmailMessageUpdateToOneWithWhereWithoutBusinessEventsInput = {
+  where?: Prisma.EmailMessageWhereInput
+  data: Prisma.XOR<Prisma.EmailMessageUpdateWithoutBusinessEventsInput, Prisma.EmailMessageUncheckedUpdateWithoutBusinessEventsInput>
+}
+
+export type EmailMessageUpdateWithoutBusinessEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  direction?: Prisma.StringFieldUpdateOperationsInput | string
+  mailboxName?: Prisma.StringFieldUpdateOperationsInput | string
+  uidValidity?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  uid?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  messageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inReplyTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referencesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  fromEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  fromName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  toEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ccEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  source?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mailboxAccount?: Prisma.MailboxAccountUpdateOneWithoutEmailMessagesNestedInput
+  emailThread?: Prisma.EmailThreadUpdateOneWithoutEmailMessagesNestedInput
+  inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutEmailMessageNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUpdateManyWithoutEmailMessageNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUpdateManyWithoutEmailMessageNestedInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUpdateManyWithoutTriggerEmailNestedInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUpdateManyWithoutRecoveredEmailNestedInput
+  sourceReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSourceEmailMessageNestedInput
+  sentReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSentEmailMessageNestedInput
+  contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutEmailMessageNestedInput
+  updatedStructuredFacts?: Prisma.InquiryStructuredFactUpdateManyWithoutUpdatedFromEmailMessageNestedInput
+  attachments?: Prisma.EmailAttachmentUpdateManyWithoutEmailMessageNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutOutboundEmailMessageNestedInput
+}
+
+export type EmailMessageUncheckedUpdateWithoutBusinessEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mailboxAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailThreadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  direction?: Prisma.StringFieldUpdateOperationsInput | string
+  mailboxName?: Prisma.StringFieldUpdateOperationsInput | string
+  uidValidity?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  uid?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  messageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inReplyTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referencesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  fromEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  fromName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  toEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ccEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  source?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutEmailMessageNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutTriggerEmailNestedInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutRecoveredEmailNestedInput
+  sourceReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSourceEmailMessageNestedInput
+  sentReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSentEmailMessageNestedInput
+  contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutEmailMessageNestedInput
+  updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateManyWithoutUpdatedFromEmailMessageNestedInput
+  attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutEmailMessageNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutOutboundEmailMessageNestedInput
+}
+
+export type EmailMessageCreateWithoutStateDecisionsInput = {
+  id?: string
+  direction: string
+  mailboxName?: string
+  uidValidity?: bigint | number | null
+  uid?: bigint | number | null
+  messageId?: string | null
+  inReplyTo?: string | null
+  referencesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  fromEmail: string
+  fromName?: string | null
+  toEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ccEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  subject?: string | null
+  bodyText?: string | null
+  bodyHtml?: string | null
+  hasAttachments?: boolean
+  attachmentCount?: number
+  rawSource?: string | null
+  receivedAt: Date | string
+  source?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  mailboxAccount?: Prisma.MailboxAccountCreateNestedOneWithoutEmailMessagesInput
+  emailThread?: Prisma.EmailThreadCreateNestedOneWithoutEmailMessagesInput
+  inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutEmailMessageInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionCreateNestedManyWithoutEmailMessageInput
+  businessEvents?: Prisma.InquiryBusinessEventCreateNestedManyWithoutEmailMessageInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutTriggerEmailInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutRecoveredEmailInput
+  sourceReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSourceEmailMessageInput
+  sentReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSentEmailMessageInput
+  contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutEmailMessageInput
+  updatedStructuredFacts?: Prisma.InquiryStructuredFactCreateNestedManyWithoutUpdatedFromEmailMessageInput
+  attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutEmailMessageInput
+  sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutOutboundEmailMessageInput
+}
+
+export type EmailMessageUncheckedCreateWithoutStateDecisionsInput = {
+  id?: string
+  mailboxAccountId?: string | null
+  emailThreadId?: string | null
+  direction: string
+  mailboxName?: string
+  uidValidity?: bigint | number | null
+  uid?: bigint | number | null
+  messageId?: string | null
+  inReplyTo?: string | null
+  referencesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  fromEmail: string
+  fromName?: string | null
+  toEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ccEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  subject?: string | null
+  bodyText?: string | null
+  bodyHtml?: string | null
+  hasAttachments?: boolean
+  attachmentCount?: number
+  rawSource?: string | null
+  receivedAt: Date | string
+  source?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutEmailMessageInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedCreateNestedManyWithoutEmailMessageInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutTriggerEmailInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutRecoveredEmailInput
+  sourceReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSourceEmailMessageInput
+  sentReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSentEmailMessageInput
+  contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutEmailMessageInput
+  updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedManyWithoutUpdatedFromEmailMessageInput
+  attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutEmailMessageInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutOutboundEmailMessageInput
+}
+
+export type EmailMessageCreateOrConnectWithoutStateDecisionsInput = {
+  where: Prisma.EmailMessageWhereUniqueInput
+  create: Prisma.XOR<Prisma.EmailMessageCreateWithoutStateDecisionsInput, Prisma.EmailMessageUncheckedCreateWithoutStateDecisionsInput>
+}
+
+export type EmailMessageUpsertWithoutStateDecisionsInput = {
+  update: Prisma.XOR<Prisma.EmailMessageUpdateWithoutStateDecisionsInput, Prisma.EmailMessageUncheckedUpdateWithoutStateDecisionsInput>
+  create: Prisma.XOR<Prisma.EmailMessageCreateWithoutStateDecisionsInput, Prisma.EmailMessageUncheckedCreateWithoutStateDecisionsInput>
+  where?: Prisma.EmailMessageWhereInput
+}
+
+export type EmailMessageUpdateToOneWithWhereWithoutStateDecisionsInput = {
+  where?: Prisma.EmailMessageWhereInput
+  data: Prisma.XOR<Prisma.EmailMessageUpdateWithoutStateDecisionsInput, Prisma.EmailMessageUncheckedUpdateWithoutStateDecisionsInput>
+}
+
+export type EmailMessageUpdateWithoutStateDecisionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  direction?: Prisma.StringFieldUpdateOperationsInput | string
+  mailboxName?: Prisma.StringFieldUpdateOperationsInput | string
+  uidValidity?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  uid?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  messageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inReplyTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referencesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  fromEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  fromName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  toEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ccEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  source?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mailboxAccount?: Prisma.MailboxAccountUpdateOneWithoutEmailMessagesNestedInput
+  emailThread?: Prisma.EmailThreadUpdateOneWithoutEmailMessagesNestedInput
+  inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutEmailMessageNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUpdateManyWithoutEmailMessageNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUpdateManyWithoutEmailMessageNestedInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUpdateManyWithoutTriggerEmailNestedInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUpdateManyWithoutRecoveredEmailNestedInput
+  sourceReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSourceEmailMessageNestedInput
+  sentReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSentEmailMessageNestedInput
+  contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutEmailMessageNestedInput
+  updatedStructuredFacts?: Prisma.InquiryStructuredFactUpdateManyWithoutUpdatedFromEmailMessageNestedInput
+  attachments?: Prisma.EmailAttachmentUpdateManyWithoutEmailMessageNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutOutboundEmailMessageNestedInput
+}
+
+export type EmailMessageUncheckedUpdateWithoutStateDecisionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mailboxAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailThreadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  direction?: Prisma.StringFieldUpdateOperationsInput | string
+  mailboxName?: Prisma.StringFieldUpdateOperationsInput | string
+  uidValidity?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  uid?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  messageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inReplyTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referencesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  fromEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  fromName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  toEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ccEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  source?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutEmailMessageNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedUpdateManyWithoutEmailMessageNestedInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutTriggerEmailNestedInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutRecoveredEmailNestedInput
+  sourceReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSourceEmailMessageNestedInput
+  sentReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSentEmailMessageNestedInput
+  contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutEmailMessageNestedInput
+  updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateManyWithoutUpdatedFromEmailMessageNestedInput
+  attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutEmailMessageNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutOutboundEmailMessageNestedInput
+}
+
+export type EmailMessageCreateWithoutTriggeredRecoveriesInput = {
+  id?: string
+  direction: string
+  mailboxName?: string
+  uidValidity?: bigint | number | null
+  uid?: bigint | number | null
+  messageId?: string | null
+  inReplyTo?: string | null
+  referencesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  fromEmail: string
+  fromName?: string | null
+  toEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ccEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  subject?: string | null
+  bodyText?: string | null
+  bodyHtml?: string | null
+  hasAttachments?: boolean
+  attachmentCount?: number
+  rawSource?: string | null
+  receivedAt: Date | string
+  source?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  mailboxAccount?: Prisma.MailboxAccountCreateNestedOneWithoutEmailMessagesInput
+  emailThread?: Prisma.EmailThreadCreateNestedOneWithoutEmailMessagesInput
+  inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutEmailMessageInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionCreateNestedManyWithoutEmailMessageInput
+  businessEvents?: Prisma.InquiryBusinessEventCreateNestedManyWithoutEmailMessageInput
+  stateDecisions?: Prisma.InquiryStateDecisionCreateNestedManyWithoutEmailMessageInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutRecoveredEmailInput
+  sourceReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSourceEmailMessageInput
+  sentReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSentEmailMessageInput
+  contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutEmailMessageInput
+  updatedStructuredFacts?: Prisma.InquiryStructuredFactCreateNestedManyWithoutUpdatedFromEmailMessageInput
+  attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutEmailMessageInput
+  sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutOutboundEmailMessageInput
+}
+
+export type EmailMessageUncheckedCreateWithoutTriggeredRecoveriesInput = {
+  id?: string
+  mailboxAccountId?: string | null
+  emailThreadId?: string | null
+  direction: string
+  mailboxName?: string
+  uidValidity?: bigint | number | null
+  uid?: bigint | number | null
+  messageId?: string | null
+  inReplyTo?: string | null
+  referencesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  fromEmail: string
+  fromName?: string | null
+  toEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ccEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  subject?: string | null
+  bodyText?: string | null
+  bodyHtml?: string | null
+  hasAttachments?: boolean
+  attachmentCount?: number
+  rawSource?: string | null
+  receivedAt: Date | string
+  source?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutEmailMessageInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedCreateNestedManyWithoutEmailMessageInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutRecoveredEmailInput
+  sourceReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSourceEmailMessageInput
+  sentReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSentEmailMessageInput
+  contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutEmailMessageInput
+  updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedManyWithoutUpdatedFromEmailMessageInput
+  attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutEmailMessageInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutOutboundEmailMessageInput
+}
+
+export type EmailMessageCreateOrConnectWithoutTriggeredRecoveriesInput = {
+  where: Prisma.EmailMessageWhereUniqueInput
+  create: Prisma.XOR<Prisma.EmailMessageCreateWithoutTriggeredRecoveriesInput, Prisma.EmailMessageUncheckedCreateWithoutTriggeredRecoveriesInput>
+}
+
+export type EmailMessageCreateWithoutRecoveredByRecordsInput = {
+  id?: string
+  direction: string
+  mailboxName?: string
+  uidValidity?: bigint | number | null
+  uid?: bigint | number | null
+  messageId?: string | null
+  inReplyTo?: string | null
+  referencesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  fromEmail: string
+  fromName?: string | null
+  toEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ccEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  subject?: string | null
+  bodyText?: string | null
+  bodyHtml?: string | null
+  hasAttachments?: boolean
+  attachmentCount?: number
+  rawSource?: string | null
+  receivedAt: Date | string
+  source?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  mailboxAccount?: Prisma.MailboxAccountCreateNestedOneWithoutEmailMessagesInput
+  emailThread?: Prisma.EmailThreadCreateNestedOneWithoutEmailMessagesInput
+  inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutEmailMessageInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionCreateNestedManyWithoutEmailMessageInput
+  businessEvents?: Prisma.InquiryBusinessEventCreateNestedManyWithoutEmailMessageInput
+  stateDecisions?: Prisma.InquiryStateDecisionCreateNestedManyWithoutEmailMessageInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutTriggerEmailInput
+  sourceReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSourceEmailMessageInput
+  sentReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSentEmailMessageInput
+  contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutEmailMessageInput
+  updatedStructuredFacts?: Prisma.InquiryStructuredFactCreateNestedManyWithoutUpdatedFromEmailMessageInput
+  attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutEmailMessageInput
+  sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutOutboundEmailMessageInput
+}
+
+export type EmailMessageUncheckedCreateWithoutRecoveredByRecordsInput = {
+  id?: string
+  mailboxAccountId?: string | null
+  emailThreadId?: string | null
+  direction: string
+  mailboxName?: string
+  uidValidity?: bigint | number | null
+  uid?: bigint | number | null
+  messageId?: string | null
+  inReplyTo?: string | null
+  referencesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  fromEmail: string
+  fromName?: string | null
+  toEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ccEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  subject?: string | null
+  bodyText?: string | null
+  bodyHtml?: string | null
+  hasAttachments?: boolean
+  attachmentCount?: number
+  rawSource?: string | null
+  receivedAt: Date | string
+  source?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutEmailMessageInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedCreateNestedManyWithoutEmailMessageInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutTriggerEmailInput
+  sourceReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSourceEmailMessageInput
+  sentReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSentEmailMessageInput
+  contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutEmailMessageInput
+  updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedManyWithoutUpdatedFromEmailMessageInput
+  attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutEmailMessageInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutOutboundEmailMessageInput
+}
+
+export type EmailMessageCreateOrConnectWithoutRecoveredByRecordsInput = {
+  where: Prisma.EmailMessageWhereUniqueInput
+  create: Prisma.XOR<Prisma.EmailMessageCreateWithoutRecoveredByRecordsInput, Prisma.EmailMessageUncheckedCreateWithoutRecoveredByRecordsInput>
+}
+
+export type EmailMessageUpsertWithoutTriggeredRecoveriesInput = {
+  update: Prisma.XOR<Prisma.EmailMessageUpdateWithoutTriggeredRecoveriesInput, Prisma.EmailMessageUncheckedUpdateWithoutTriggeredRecoveriesInput>
+  create: Prisma.XOR<Prisma.EmailMessageCreateWithoutTriggeredRecoveriesInput, Prisma.EmailMessageUncheckedCreateWithoutTriggeredRecoveriesInput>
+  where?: Prisma.EmailMessageWhereInput
+}
+
+export type EmailMessageUpdateToOneWithWhereWithoutTriggeredRecoveriesInput = {
+  where?: Prisma.EmailMessageWhereInput
+  data: Prisma.XOR<Prisma.EmailMessageUpdateWithoutTriggeredRecoveriesInput, Prisma.EmailMessageUncheckedUpdateWithoutTriggeredRecoveriesInput>
+}
+
+export type EmailMessageUpdateWithoutTriggeredRecoveriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  direction?: Prisma.StringFieldUpdateOperationsInput | string
+  mailboxName?: Prisma.StringFieldUpdateOperationsInput | string
+  uidValidity?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  uid?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  messageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inReplyTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referencesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  fromEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  fromName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  toEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ccEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  source?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mailboxAccount?: Prisma.MailboxAccountUpdateOneWithoutEmailMessagesNestedInput
+  emailThread?: Prisma.EmailThreadUpdateOneWithoutEmailMessagesNestedInput
+  inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutEmailMessageNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUpdateManyWithoutEmailMessageNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUpdateManyWithoutEmailMessageNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUpdateManyWithoutEmailMessageNestedInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUpdateManyWithoutRecoveredEmailNestedInput
+  sourceReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSourceEmailMessageNestedInput
+  sentReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSentEmailMessageNestedInput
+  contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutEmailMessageNestedInput
+  updatedStructuredFacts?: Prisma.InquiryStructuredFactUpdateManyWithoutUpdatedFromEmailMessageNestedInput
+  attachments?: Prisma.EmailAttachmentUpdateManyWithoutEmailMessageNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutOutboundEmailMessageNestedInput
+}
+
+export type EmailMessageUncheckedUpdateWithoutTriggeredRecoveriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mailboxAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailThreadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  direction?: Prisma.StringFieldUpdateOperationsInput | string
+  mailboxName?: Prisma.StringFieldUpdateOperationsInput | string
+  uidValidity?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  uid?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  messageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inReplyTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referencesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  fromEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  fromName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  toEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ccEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  source?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutEmailMessageNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedUpdateManyWithoutEmailMessageNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutRecoveredEmailNestedInput
+  sourceReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSourceEmailMessageNestedInput
+  sentReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSentEmailMessageNestedInput
+  contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutEmailMessageNestedInput
+  updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateManyWithoutUpdatedFromEmailMessageNestedInput
+  attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutEmailMessageNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutOutboundEmailMessageNestedInput
+}
+
+export type EmailMessageUpsertWithoutRecoveredByRecordsInput = {
+  update: Prisma.XOR<Prisma.EmailMessageUpdateWithoutRecoveredByRecordsInput, Prisma.EmailMessageUncheckedUpdateWithoutRecoveredByRecordsInput>
+  create: Prisma.XOR<Prisma.EmailMessageCreateWithoutRecoveredByRecordsInput, Prisma.EmailMessageUncheckedCreateWithoutRecoveredByRecordsInput>
+  where?: Prisma.EmailMessageWhereInput
+}
+
+export type EmailMessageUpdateToOneWithWhereWithoutRecoveredByRecordsInput = {
+  where?: Prisma.EmailMessageWhereInput
+  data: Prisma.XOR<Prisma.EmailMessageUpdateWithoutRecoveredByRecordsInput, Prisma.EmailMessageUncheckedUpdateWithoutRecoveredByRecordsInput>
+}
+
+export type EmailMessageUpdateWithoutRecoveredByRecordsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  direction?: Prisma.StringFieldUpdateOperationsInput | string
+  mailboxName?: Prisma.StringFieldUpdateOperationsInput | string
+  uidValidity?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  uid?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  messageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inReplyTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referencesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  fromEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  fromName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  toEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ccEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  source?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mailboxAccount?: Prisma.MailboxAccountUpdateOneWithoutEmailMessagesNestedInput
+  emailThread?: Prisma.EmailThreadUpdateOneWithoutEmailMessagesNestedInput
+  inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutEmailMessageNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUpdateManyWithoutEmailMessageNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUpdateManyWithoutEmailMessageNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUpdateManyWithoutEmailMessageNestedInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUpdateManyWithoutTriggerEmailNestedInput
+  sourceReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSourceEmailMessageNestedInput
+  sentReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSentEmailMessageNestedInput
+  contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutEmailMessageNestedInput
+  updatedStructuredFacts?: Prisma.InquiryStructuredFactUpdateManyWithoutUpdatedFromEmailMessageNestedInput
+  attachments?: Prisma.EmailAttachmentUpdateManyWithoutEmailMessageNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutOutboundEmailMessageNestedInput
+}
+
+export type EmailMessageUncheckedUpdateWithoutRecoveredByRecordsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mailboxAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailThreadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  direction?: Prisma.StringFieldUpdateOperationsInput | string
+  mailboxName?: Prisma.StringFieldUpdateOperationsInput | string
+  uidValidity?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  uid?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  messageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inReplyTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referencesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  fromEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  fromName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  toEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ccEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  source?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutEmailMessageNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedUpdateManyWithoutEmailMessageNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutTriggerEmailNestedInput
+  sourceReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSourceEmailMessageNestedInput
+  sentReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSentEmailMessageNestedInput
+  contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutEmailMessageNestedInput
+  updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateManyWithoutUpdatedFromEmailMessageNestedInput
+  attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutEmailMessageNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutOutboundEmailMessageNestedInput
 }
 
 export type EmailMessageCreateWithoutUpdatedStructuredFactsInput = {
@@ -1826,13 +2627,16 @@ export type EmailMessageCreateWithoutUpdatedStructuredFactsInput = {
   mailboxAccount?: Prisma.MailboxAccountCreateNestedOneWithoutEmailMessagesInput
   emailThread?: Prisma.EmailThreadCreateNestedOneWithoutEmailMessagesInput
   inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutEmailMessageInput
-  aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutEmailMessageInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionCreateNestedManyWithoutEmailMessageInput
+  businessEvents?: Prisma.InquiryBusinessEventCreateNestedManyWithoutEmailMessageInput
+  stateDecisions?: Prisma.InquiryStateDecisionCreateNestedManyWithoutEmailMessageInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutTriggerEmailInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutRecoveredEmailInput
   sourceReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSourceEmailMessageInput
   sentReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSentEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutEmailMessageInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutOutboundEmailMessageInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageUncheckedCreateWithoutUpdatedStructuredFactsInput = {
@@ -1862,13 +2666,16 @@ export type EmailMessageUncheckedCreateWithoutUpdatedStructuredFactsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutEmailMessageInput
-  aiDecisions?: Prisma.AiDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedCreateNestedManyWithoutEmailMessageInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutTriggerEmailInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutRecoveredEmailInput
   sourceReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSourceEmailMessageInput
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSentEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutEmailMessageInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutOutboundEmailMessageInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageCreateOrConnectWithoutUpdatedStructuredFactsInput = {
@@ -1914,13 +2721,16 @@ export type EmailMessageUpdateWithoutUpdatedStructuredFactsInput = {
   mailboxAccount?: Prisma.MailboxAccountUpdateOneWithoutEmailMessagesNestedInput
   emailThread?: Prisma.EmailThreadUpdateOneWithoutEmailMessagesNestedInput
   inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutEmailMessageNestedInput
-  aiDecisions?: Prisma.AiDecisionUpdateManyWithoutEmailMessageNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUpdateManyWithoutEmailMessageNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUpdateManyWithoutEmailMessageNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUpdateManyWithoutEmailMessageNestedInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUpdateManyWithoutTriggerEmailNestedInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUpdateManyWithoutRecoveredEmailNestedInput
   sourceReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSourceEmailMessageNestedInput
   sentReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSentEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutOutboundEmailMessageNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateWithoutUpdatedStructuredFactsInput = {
@@ -1950,13 +2760,16 @@ export type EmailMessageUncheckedUpdateWithoutUpdatedStructuredFactsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutEmailMessageNestedInput
-  aiDecisions?: Prisma.AiDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedUpdateManyWithoutEmailMessageNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutTriggerEmailNestedInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutRecoveredEmailNestedInput
   sourceReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSourceEmailMessageNestedInput
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSentEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutOutboundEmailMessageNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageCreateWithoutSourceReplyDraftsInput = {
@@ -1986,13 +2799,16 @@ export type EmailMessageCreateWithoutSourceReplyDraftsInput = {
   mailboxAccount?: Prisma.MailboxAccountCreateNestedOneWithoutEmailMessagesInput
   emailThread?: Prisma.EmailThreadCreateNestedOneWithoutEmailMessagesInput
   inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutEmailMessageInput
-  aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutEmailMessageInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionCreateNestedManyWithoutEmailMessageInput
+  businessEvents?: Prisma.InquiryBusinessEventCreateNestedManyWithoutEmailMessageInput
+  stateDecisions?: Prisma.InquiryStateDecisionCreateNestedManyWithoutEmailMessageInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutTriggerEmailInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutRecoveredEmailInput
   sentReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSentEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutOutboundEmailMessageInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageUncheckedCreateWithoutSourceReplyDraftsInput = {
@@ -2022,13 +2838,16 @@ export type EmailMessageUncheckedCreateWithoutSourceReplyDraftsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutEmailMessageInput
-  aiDecisions?: Prisma.AiDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedCreateNestedManyWithoutEmailMessageInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutTriggerEmailInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutRecoveredEmailInput
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSentEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutOutboundEmailMessageInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageCreateOrConnectWithoutSourceReplyDraftsInput = {
@@ -2063,13 +2882,16 @@ export type EmailMessageCreateWithoutSentReplyDraftsInput = {
   mailboxAccount?: Prisma.MailboxAccountCreateNestedOneWithoutEmailMessagesInput
   emailThread?: Prisma.EmailThreadCreateNestedOneWithoutEmailMessagesInput
   inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutEmailMessageInput
-  aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutEmailMessageInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionCreateNestedManyWithoutEmailMessageInput
+  businessEvents?: Prisma.InquiryBusinessEventCreateNestedManyWithoutEmailMessageInput
+  stateDecisions?: Prisma.InquiryStateDecisionCreateNestedManyWithoutEmailMessageInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutTriggerEmailInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutRecoveredEmailInput
   sourceReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSourceEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutOutboundEmailMessageInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageUncheckedCreateWithoutSentReplyDraftsInput = {
@@ -2099,13 +2921,16 @@ export type EmailMessageUncheckedCreateWithoutSentReplyDraftsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutEmailMessageInput
-  aiDecisions?: Prisma.AiDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedCreateNestedManyWithoutEmailMessageInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutTriggerEmailInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutRecoveredEmailInput
   sourceReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSourceEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutOutboundEmailMessageInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageCreateOrConnectWithoutSentReplyDraftsInput = {
@@ -2151,13 +2976,16 @@ export type EmailMessageUpdateWithoutSourceReplyDraftsInput = {
   mailboxAccount?: Prisma.MailboxAccountUpdateOneWithoutEmailMessagesNestedInput
   emailThread?: Prisma.EmailThreadUpdateOneWithoutEmailMessagesNestedInput
   inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutEmailMessageNestedInput
-  aiDecisions?: Prisma.AiDecisionUpdateManyWithoutEmailMessageNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUpdateManyWithoutEmailMessageNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUpdateManyWithoutEmailMessageNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUpdateManyWithoutEmailMessageNestedInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUpdateManyWithoutTriggerEmailNestedInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUpdateManyWithoutRecoveredEmailNestedInput
   sentReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSentEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutOutboundEmailMessageNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateWithoutSourceReplyDraftsInput = {
@@ -2187,13 +3015,16 @@ export type EmailMessageUncheckedUpdateWithoutSourceReplyDraftsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutEmailMessageNestedInput
-  aiDecisions?: Prisma.AiDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedUpdateManyWithoutEmailMessageNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutTriggerEmailNestedInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutRecoveredEmailNestedInput
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSentEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutOutboundEmailMessageNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUpsertWithoutSentReplyDraftsInput = {
@@ -2234,13 +3065,16 @@ export type EmailMessageUpdateWithoutSentReplyDraftsInput = {
   mailboxAccount?: Prisma.MailboxAccountUpdateOneWithoutEmailMessagesNestedInput
   emailThread?: Prisma.EmailThreadUpdateOneWithoutEmailMessagesNestedInput
   inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutEmailMessageNestedInput
-  aiDecisions?: Prisma.AiDecisionUpdateManyWithoutEmailMessageNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUpdateManyWithoutEmailMessageNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUpdateManyWithoutEmailMessageNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUpdateManyWithoutEmailMessageNestedInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUpdateManyWithoutTriggerEmailNestedInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUpdateManyWithoutRecoveredEmailNestedInput
   sourceReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSourceEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutOutboundEmailMessageNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateWithoutSentReplyDraftsInput = {
@@ -2270,13 +3104,16 @@ export type EmailMessageUncheckedUpdateWithoutSentReplyDraftsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutEmailMessageNestedInput
-  aiDecisions?: Prisma.AiDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedUpdateManyWithoutEmailMessageNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutTriggerEmailNestedInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutRecoveredEmailNestedInput
   sourceReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSourceEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutOutboundEmailMessageNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageCreateWithoutSendAttemptsInput = {
@@ -2306,13 +3143,16 @@ export type EmailMessageCreateWithoutSendAttemptsInput = {
   mailboxAccount?: Prisma.MailboxAccountCreateNestedOneWithoutEmailMessagesInput
   emailThread?: Prisma.EmailThreadCreateNestedOneWithoutEmailMessagesInput
   inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutEmailMessageInput
-  aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutEmailMessageInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionCreateNestedManyWithoutEmailMessageInput
+  businessEvents?: Prisma.InquiryBusinessEventCreateNestedManyWithoutEmailMessageInput
+  stateDecisions?: Prisma.InquiryStateDecisionCreateNestedManyWithoutEmailMessageInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutTriggerEmailInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutRecoveredEmailInput
   sourceReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSourceEmailMessageInput
   sentReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSentEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutEmailMessageInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageUncheckedCreateWithoutSendAttemptsInput = {
@@ -2342,13 +3182,16 @@ export type EmailMessageUncheckedCreateWithoutSendAttemptsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutEmailMessageInput
-  aiDecisions?: Prisma.AiDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedCreateNestedManyWithoutEmailMessageInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutTriggerEmailInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutRecoveredEmailInput
   sourceReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSourceEmailMessageInput
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSentEmailMessageInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutEmailMessageInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageCreateOrConnectWithoutSendAttemptsInput = {
@@ -2394,13 +3237,16 @@ export type EmailMessageUpdateWithoutSendAttemptsInput = {
   mailboxAccount?: Prisma.MailboxAccountUpdateOneWithoutEmailMessagesNestedInput
   emailThread?: Prisma.EmailThreadUpdateOneWithoutEmailMessagesNestedInput
   inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutEmailMessageNestedInput
-  aiDecisions?: Prisma.AiDecisionUpdateManyWithoutEmailMessageNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUpdateManyWithoutEmailMessageNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUpdateManyWithoutEmailMessageNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUpdateManyWithoutEmailMessageNestedInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUpdateManyWithoutTriggerEmailNestedInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUpdateManyWithoutRecoveredEmailNestedInput
   sourceReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSourceEmailMessageNestedInput
   sentReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSentEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutEmailMessageNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateWithoutSendAttemptsInput = {
@@ -2430,173 +3276,16 @@ export type EmailMessageUncheckedUpdateWithoutSendAttemptsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutEmailMessageNestedInput
-  aiDecisions?: Prisma.AiDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedUpdateManyWithoutEmailMessageNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutTriggerEmailNestedInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutRecoveredEmailNestedInput
   sourceReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSourceEmailMessageNestedInput
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSentEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutEmailMessageNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
-}
-
-export type EmailMessageCreateWithoutWorkflowDecisionsInput = {
-  id?: string
-  direction: string
-  mailboxName?: string
-  uidValidity?: bigint | number | null
-  uid?: bigint | number | null
-  messageId?: string | null
-  inReplyTo?: string | null
-  referencesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  fromEmail: string
-  fromName?: string | null
-  toEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  ccEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  subject?: string | null
-  bodyText?: string | null
-  bodyHtml?: string | null
-  hasAttachments?: boolean
-  attachmentCount?: number
-  rawSource?: string | null
-  receivedAt: Date | string
-  source?: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  mailboxAccount?: Prisma.MailboxAccountCreateNestedOneWithoutEmailMessagesInput
-  emailThread?: Prisma.EmailThreadCreateNestedOneWithoutEmailMessagesInput
-  inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutEmailMessageInput
-  aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutEmailMessageInput
-  sourceReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSourceEmailMessageInput
-  sentReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSentEmailMessageInput
-  contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutEmailMessageInput
-  updatedStructuredFacts?: Prisma.InquiryStructuredFactCreateNestedManyWithoutUpdatedFromEmailMessageInput
-  attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutEmailMessageInput
-  sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutOutboundEmailMessageInput
-}
-
-export type EmailMessageUncheckedCreateWithoutWorkflowDecisionsInput = {
-  id?: string
-  mailboxAccountId?: string | null
-  emailThreadId?: string | null
-  direction: string
-  mailboxName?: string
-  uidValidity?: bigint | number | null
-  uid?: bigint | number | null
-  messageId?: string | null
-  inReplyTo?: string | null
-  referencesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  fromEmail: string
-  fromName?: string | null
-  toEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  ccEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  subject?: string | null
-  bodyText?: string | null
-  bodyHtml?: string | null
-  hasAttachments?: boolean
-  attachmentCount?: number
-  rawSource?: string | null
-  receivedAt: Date | string
-  source?: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutEmailMessageInput
-  aiDecisions?: Prisma.AiDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
-  sourceReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSourceEmailMessageInput
-  sentReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSentEmailMessageInput
-  contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutEmailMessageInput
-  updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedManyWithoutUpdatedFromEmailMessageInput
-  attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutEmailMessageInput
-  sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutOutboundEmailMessageInput
-}
-
-export type EmailMessageCreateOrConnectWithoutWorkflowDecisionsInput = {
-  where: Prisma.EmailMessageWhereUniqueInput
-  create: Prisma.XOR<Prisma.EmailMessageCreateWithoutWorkflowDecisionsInput, Prisma.EmailMessageUncheckedCreateWithoutWorkflowDecisionsInput>
-}
-
-export type EmailMessageUpsertWithoutWorkflowDecisionsInput = {
-  update: Prisma.XOR<Prisma.EmailMessageUpdateWithoutWorkflowDecisionsInput, Prisma.EmailMessageUncheckedUpdateWithoutWorkflowDecisionsInput>
-  create: Prisma.XOR<Prisma.EmailMessageCreateWithoutWorkflowDecisionsInput, Prisma.EmailMessageUncheckedCreateWithoutWorkflowDecisionsInput>
-  where?: Prisma.EmailMessageWhereInput
-}
-
-export type EmailMessageUpdateToOneWithWhereWithoutWorkflowDecisionsInput = {
-  where?: Prisma.EmailMessageWhereInput
-  data: Prisma.XOR<Prisma.EmailMessageUpdateWithoutWorkflowDecisionsInput, Prisma.EmailMessageUncheckedUpdateWithoutWorkflowDecisionsInput>
-}
-
-export type EmailMessageUpdateWithoutWorkflowDecisionsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  direction?: Prisma.StringFieldUpdateOperationsInput | string
-  mailboxName?: Prisma.StringFieldUpdateOperationsInput | string
-  uidValidity?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  uid?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  messageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  inReplyTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  referencesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  fromEmail?: Prisma.StringFieldUpdateOperationsInput | string
-  fromName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  toEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  ccEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
-  rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  source?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  mailboxAccount?: Prisma.MailboxAccountUpdateOneWithoutEmailMessagesNestedInput
-  emailThread?: Prisma.EmailThreadUpdateOneWithoutEmailMessagesNestedInput
-  inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutEmailMessageNestedInput
-  aiDecisions?: Prisma.AiDecisionUpdateManyWithoutEmailMessageNestedInput
-  sourceReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSourceEmailMessageNestedInput
-  sentReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSentEmailMessageNestedInput
-  contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutEmailMessageNestedInput
-  updatedStructuredFacts?: Prisma.InquiryStructuredFactUpdateManyWithoutUpdatedFromEmailMessageNestedInput
-  attachments?: Prisma.EmailAttachmentUpdateManyWithoutEmailMessageNestedInput
-  sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutOutboundEmailMessageNestedInput
-}
-
-export type EmailMessageUncheckedUpdateWithoutWorkflowDecisionsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  mailboxAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emailThreadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  direction?: Prisma.StringFieldUpdateOperationsInput | string
-  mailboxName?: Prisma.StringFieldUpdateOperationsInput | string
-  uidValidity?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  uid?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  messageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  inReplyTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  referencesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  fromEmail?: Prisma.StringFieldUpdateOperationsInput | string
-  fromName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  toEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  ccEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
-  rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  source?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutEmailMessageNestedInput
-  aiDecisions?: Prisma.AiDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
-  sourceReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSourceEmailMessageNestedInput
-  sentReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSentEmailMessageNestedInput
-  contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutEmailMessageNestedInput
-  updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateManyWithoutUpdatedFromEmailMessageNestedInput
-  attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutEmailMessageNestedInput
-  sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutOutboundEmailMessageNestedInput
 }
 
 export type EmailMessageCreateWithoutContextSnapshotsInput = {
@@ -2626,13 +3315,16 @@ export type EmailMessageCreateWithoutContextSnapshotsInput = {
   mailboxAccount?: Prisma.MailboxAccountCreateNestedOneWithoutEmailMessagesInput
   emailThread?: Prisma.EmailThreadCreateNestedOneWithoutEmailMessagesInput
   inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutEmailMessageInput
-  aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutEmailMessageInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionCreateNestedManyWithoutEmailMessageInput
+  businessEvents?: Prisma.InquiryBusinessEventCreateNestedManyWithoutEmailMessageInput
+  stateDecisions?: Prisma.InquiryStateDecisionCreateNestedManyWithoutEmailMessageInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutTriggerEmailInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutRecoveredEmailInput
   sourceReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSourceEmailMessageInput
   sentReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSentEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutOutboundEmailMessageInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageUncheckedCreateWithoutContextSnapshotsInput = {
@@ -2662,13 +3354,16 @@ export type EmailMessageUncheckedCreateWithoutContextSnapshotsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutEmailMessageInput
-  aiDecisions?: Prisma.AiDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedCreateNestedManyWithoutEmailMessageInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutTriggerEmailInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutRecoveredEmailInput
   sourceReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSourceEmailMessageInput
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSentEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutOutboundEmailMessageInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageCreateOrConnectWithoutContextSnapshotsInput = {
@@ -2714,13 +3409,16 @@ export type EmailMessageUpdateWithoutContextSnapshotsInput = {
   mailboxAccount?: Prisma.MailboxAccountUpdateOneWithoutEmailMessagesNestedInput
   emailThread?: Prisma.EmailThreadUpdateOneWithoutEmailMessagesNestedInput
   inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutEmailMessageNestedInput
-  aiDecisions?: Prisma.AiDecisionUpdateManyWithoutEmailMessageNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUpdateManyWithoutEmailMessageNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUpdateManyWithoutEmailMessageNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUpdateManyWithoutEmailMessageNestedInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUpdateManyWithoutTriggerEmailNestedInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUpdateManyWithoutRecoveredEmailNestedInput
   sourceReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSourceEmailMessageNestedInput
   sentReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSentEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutOutboundEmailMessageNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateWithoutContextSnapshotsInput = {
@@ -2750,13 +3448,16 @@ export type EmailMessageUncheckedUpdateWithoutContextSnapshotsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutEmailMessageNestedInput
-  aiDecisions?: Prisma.AiDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedUpdateManyWithoutEmailMessageNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutTriggerEmailNestedInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutRecoveredEmailNestedInput
   sourceReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSourceEmailMessageNestedInput
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSentEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutOutboundEmailMessageNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageCreateManyMailboxAccountInput = {
@@ -2812,14 +3513,17 @@ export type EmailMessageUpdateWithoutMailboxAccountInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   emailThread?: Prisma.EmailThreadUpdateOneWithoutEmailMessagesNestedInput
   inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutEmailMessageNestedInput
-  aiDecisions?: Prisma.AiDecisionUpdateManyWithoutEmailMessageNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUpdateManyWithoutEmailMessageNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUpdateManyWithoutEmailMessageNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUpdateManyWithoutEmailMessageNestedInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUpdateManyWithoutTriggerEmailNestedInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUpdateManyWithoutRecoveredEmailNestedInput
   sourceReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSourceEmailMessageNestedInput
   sentReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSentEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutOutboundEmailMessageNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateWithoutMailboxAccountInput = {
@@ -2848,14 +3552,17 @@ export type EmailMessageUncheckedUpdateWithoutMailboxAccountInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutEmailMessageNestedInput
-  aiDecisions?: Prisma.AiDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedUpdateManyWithoutEmailMessageNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutTriggerEmailNestedInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutRecoveredEmailNestedInput
   sourceReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSourceEmailMessageNestedInput
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSentEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutOutboundEmailMessageNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateManyWithoutMailboxAccountInput = {
@@ -2938,14 +3645,17 @@ export type EmailMessageUpdateWithoutEmailThreadInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   mailboxAccount?: Prisma.MailboxAccountUpdateOneWithoutEmailMessagesNestedInput
   inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutEmailMessageNestedInput
-  aiDecisions?: Prisma.AiDecisionUpdateManyWithoutEmailMessageNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUpdateManyWithoutEmailMessageNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUpdateManyWithoutEmailMessageNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUpdateManyWithoutEmailMessageNestedInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUpdateManyWithoutTriggerEmailNestedInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUpdateManyWithoutRecoveredEmailNestedInput
   sourceReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSourceEmailMessageNestedInput
   sentReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSentEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutOutboundEmailMessageNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateWithoutEmailThreadInput = {
@@ -2974,14 +3684,17 @@ export type EmailMessageUncheckedUpdateWithoutEmailThreadInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutEmailMessageNestedInput
-  aiDecisions?: Prisma.AiDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedUpdateManyWithoutEmailMessageNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  triggeredRecoveries?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutTriggerEmailNestedInput
+  recoveredByRecords?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutRecoveredEmailNestedInput
   sourceReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSourceEmailMessageNestedInput
   sentReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSentEmailMessageNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutOutboundEmailMessageNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateManyWithoutEmailThreadInput = {
@@ -3018,26 +3731,32 @@ export type EmailMessageUncheckedUpdateManyWithoutEmailThreadInput = {
 
 export type EmailMessageCountOutputType = {
   inquiryMessages: number
-  aiDecisions: number
+  analysisDecisions: number
+  businessEvents: number
+  stateDecisions: number
+  triggeredRecoveries: number
+  recoveredByRecords: number
   sourceReplyDrafts: number
   sentReplyDrafts: number
   contextSnapshots: number
   updatedStructuredFacts: number
   attachments: number
   sendAttempts: number
-  workflowDecisions: number
 }
 
 export type EmailMessageCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   inquiryMessages?: boolean | EmailMessageCountOutputTypeCountInquiryMessagesArgs
-  aiDecisions?: boolean | EmailMessageCountOutputTypeCountAiDecisionsArgs
+  analysisDecisions?: boolean | EmailMessageCountOutputTypeCountAnalysisDecisionsArgs
+  businessEvents?: boolean | EmailMessageCountOutputTypeCountBusinessEventsArgs
+  stateDecisions?: boolean | EmailMessageCountOutputTypeCountStateDecisionsArgs
+  triggeredRecoveries?: boolean | EmailMessageCountOutputTypeCountTriggeredRecoveriesArgs
+  recoveredByRecords?: boolean | EmailMessageCountOutputTypeCountRecoveredByRecordsArgs
   sourceReplyDrafts?: boolean | EmailMessageCountOutputTypeCountSourceReplyDraftsArgs
   sentReplyDrafts?: boolean | EmailMessageCountOutputTypeCountSentReplyDraftsArgs
   contextSnapshots?: boolean | EmailMessageCountOutputTypeCountContextSnapshotsArgs
   updatedStructuredFacts?: boolean | EmailMessageCountOutputTypeCountUpdatedStructuredFactsArgs
   attachments?: boolean | EmailMessageCountOutputTypeCountAttachmentsArgs
   sendAttempts?: boolean | EmailMessageCountOutputTypeCountSendAttemptsArgs
-  workflowDecisions?: boolean | EmailMessageCountOutputTypeCountWorkflowDecisionsArgs
 }
 
 /**
@@ -3060,8 +3779,36 @@ export type EmailMessageCountOutputTypeCountInquiryMessagesArgs<ExtArgs extends 
 /**
  * EmailMessageCountOutputType without action
  */
-export type EmailMessageCountOutputTypeCountAiDecisionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.AiDecisionWhereInput
+export type EmailMessageCountOutputTypeCountAnalysisDecisionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmailAnalysisDecisionWhereInput
+}
+
+/**
+ * EmailMessageCountOutputType without action
+ */
+export type EmailMessageCountOutputTypeCountBusinessEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.InquiryBusinessEventWhereInput
+}
+
+/**
+ * EmailMessageCountOutputType without action
+ */
+export type EmailMessageCountOutputTypeCountStateDecisionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.InquiryStateDecisionWhereInput
+}
+
+/**
+ * EmailMessageCountOutputType without action
+ */
+export type EmailMessageCountOutputTypeCountTriggeredRecoveriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmailRecoveryRecordWhereInput
+}
+
+/**
+ * EmailMessageCountOutputType without action
+ */
+export type EmailMessageCountOutputTypeCountRecoveredByRecordsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmailRecoveryRecordWhereInput
 }
 
 /**
@@ -3106,13 +3853,6 @@ export type EmailMessageCountOutputTypeCountSendAttemptsArgs<ExtArgs extends run
   where?: Prisma.EmailSendAttemptWhereInput
 }
 
-/**
- * EmailMessageCountOutputType without action
- */
-export type EmailMessageCountOutputTypeCountWorkflowDecisionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.EmailWorkflowDecisionWhereInput
-}
-
 
 export type EmailMessageSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -3143,14 +3883,17 @@ export type EmailMessageSelect<ExtArgs extends runtime.Types.Extensions.Internal
   mailboxAccount?: boolean | Prisma.EmailMessage$mailboxAccountArgs<ExtArgs>
   emailThread?: boolean | Prisma.EmailMessage$emailThreadArgs<ExtArgs>
   inquiryMessages?: boolean | Prisma.EmailMessage$inquiryMessagesArgs<ExtArgs>
-  aiDecisions?: boolean | Prisma.EmailMessage$aiDecisionsArgs<ExtArgs>
+  analysisDecisions?: boolean | Prisma.EmailMessage$analysisDecisionsArgs<ExtArgs>
+  businessEvents?: boolean | Prisma.EmailMessage$businessEventsArgs<ExtArgs>
+  stateDecisions?: boolean | Prisma.EmailMessage$stateDecisionsArgs<ExtArgs>
+  triggeredRecoveries?: boolean | Prisma.EmailMessage$triggeredRecoveriesArgs<ExtArgs>
+  recoveredByRecords?: boolean | Prisma.EmailMessage$recoveredByRecordsArgs<ExtArgs>
   sourceReplyDrafts?: boolean | Prisma.EmailMessage$sourceReplyDraftsArgs<ExtArgs>
   sentReplyDrafts?: boolean | Prisma.EmailMessage$sentReplyDraftsArgs<ExtArgs>
   contextSnapshots?: boolean | Prisma.EmailMessage$contextSnapshotsArgs<ExtArgs>
   updatedStructuredFacts?: boolean | Prisma.EmailMessage$updatedStructuredFactsArgs<ExtArgs>
   attachments?: boolean | Prisma.EmailMessage$attachmentsArgs<ExtArgs>
   sendAttempts?: boolean | Prisma.EmailMessage$sendAttemptsArgs<ExtArgs>
-  workflowDecisions?: boolean | Prisma.EmailMessage$workflowDecisionsArgs<ExtArgs>
   _count?: boolean | Prisma.EmailMessageCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["emailMessage"]>
 
@@ -3247,14 +3990,17 @@ export type EmailMessageInclude<ExtArgs extends runtime.Types.Extensions.Interna
   mailboxAccount?: boolean | Prisma.EmailMessage$mailboxAccountArgs<ExtArgs>
   emailThread?: boolean | Prisma.EmailMessage$emailThreadArgs<ExtArgs>
   inquiryMessages?: boolean | Prisma.EmailMessage$inquiryMessagesArgs<ExtArgs>
-  aiDecisions?: boolean | Prisma.EmailMessage$aiDecisionsArgs<ExtArgs>
+  analysisDecisions?: boolean | Prisma.EmailMessage$analysisDecisionsArgs<ExtArgs>
+  businessEvents?: boolean | Prisma.EmailMessage$businessEventsArgs<ExtArgs>
+  stateDecisions?: boolean | Prisma.EmailMessage$stateDecisionsArgs<ExtArgs>
+  triggeredRecoveries?: boolean | Prisma.EmailMessage$triggeredRecoveriesArgs<ExtArgs>
+  recoveredByRecords?: boolean | Prisma.EmailMessage$recoveredByRecordsArgs<ExtArgs>
   sourceReplyDrafts?: boolean | Prisma.EmailMessage$sourceReplyDraftsArgs<ExtArgs>
   sentReplyDrafts?: boolean | Prisma.EmailMessage$sentReplyDraftsArgs<ExtArgs>
   contextSnapshots?: boolean | Prisma.EmailMessage$contextSnapshotsArgs<ExtArgs>
   updatedStructuredFacts?: boolean | Prisma.EmailMessage$updatedStructuredFactsArgs<ExtArgs>
   attachments?: boolean | Prisma.EmailMessage$attachmentsArgs<ExtArgs>
   sendAttempts?: boolean | Prisma.EmailMessage$sendAttemptsArgs<ExtArgs>
-  workflowDecisions?: boolean | Prisma.EmailMessage$workflowDecisionsArgs<ExtArgs>
   _count?: boolean | Prisma.EmailMessageCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type EmailMessageIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3272,14 +4018,17 @@ export type $EmailMessagePayload<ExtArgs extends runtime.Types.Extensions.Intern
     mailboxAccount: Prisma.$MailboxAccountPayload<ExtArgs> | null
     emailThread: Prisma.$EmailThreadPayload<ExtArgs> | null
     inquiryMessages: Prisma.$InquiryMessagePayload<ExtArgs>[]
-    aiDecisions: Prisma.$AiDecisionPayload<ExtArgs>[]
+    analysisDecisions: Prisma.$EmailAnalysisDecisionPayload<ExtArgs>[]
+    businessEvents: Prisma.$InquiryBusinessEventPayload<ExtArgs>[]
+    stateDecisions: Prisma.$InquiryStateDecisionPayload<ExtArgs>[]
+    triggeredRecoveries: Prisma.$EmailRecoveryRecordPayload<ExtArgs>[]
+    recoveredByRecords: Prisma.$EmailRecoveryRecordPayload<ExtArgs>[]
     sourceReplyDrafts: Prisma.$ReplyDraftPayload<ExtArgs>[]
     sentReplyDrafts: Prisma.$ReplyDraftPayload<ExtArgs>[]
     contextSnapshots: Prisma.$AiContextSnapshotPayload<ExtArgs>[]
     updatedStructuredFacts: Prisma.$InquiryStructuredFactPayload<ExtArgs>[]
     attachments: Prisma.$EmailAttachmentPayload<ExtArgs>[]
     sendAttempts: Prisma.$EmailSendAttemptPayload<ExtArgs>[]
-    workflowDecisions: Prisma.$EmailWorkflowDecisionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3704,14 +4453,17 @@ export interface Prisma__EmailMessageClient<T, Null = never, ExtArgs extends run
   mailboxAccount<T extends Prisma.EmailMessage$mailboxAccountArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmailMessage$mailboxAccountArgs<ExtArgs>>): Prisma.Prisma__MailboxAccountClient<runtime.Types.Result.GetResult<Prisma.$MailboxAccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   emailThread<T extends Prisma.EmailMessage$emailThreadArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmailMessage$emailThreadArgs<ExtArgs>>): Prisma.Prisma__EmailThreadClient<runtime.Types.Result.GetResult<Prisma.$EmailThreadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   inquiryMessages<T extends Prisma.EmailMessage$inquiryMessagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmailMessage$inquiryMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InquiryMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  aiDecisions<T extends Prisma.EmailMessage$aiDecisionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmailMessage$aiDecisionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiDecisionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  analysisDecisions<T extends Prisma.EmailMessage$analysisDecisionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmailMessage$analysisDecisionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmailAnalysisDecisionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  businessEvents<T extends Prisma.EmailMessage$businessEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmailMessage$businessEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InquiryBusinessEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  stateDecisions<T extends Prisma.EmailMessage$stateDecisionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmailMessage$stateDecisionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InquiryStateDecisionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  triggeredRecoveries<T extends Prisma.EmailMessage$triggeredRecoveriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmailMessage$triggeredRecoveriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmailRecoveryRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  recoveredByRecords<T extends Prisma.EmailMessage$recoveredByRecordsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmailMessage$recoveredByRecordsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmailRecoveryRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   sourceReplyDrafts<T extends Prisma.EmailMessage$sourceReplyDraftsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmailMessage$sourceReplyDraftsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReplyDraftPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   sentReplyDrafts<T extends Prisma.EmailMessage$sentReplyDraftsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmailMessage$sentReplyDraftsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReplyDraftPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   contextSnapshots<T extends Prisma.EmailMessage$contextSnapshotsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmailMessage$contextSnapshotsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiContextSnapshotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   updatedStructuredFacts<T extends Prisma.EmailMessage$updatedStructuredFactsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmailMessage$updatedStructuredFactsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InquiryStructuredFactPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   attachments<T extends Prisma.EmailMessage$attachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmailMessage$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmailAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   sendAttempts<T extends Prisma.EmailMessage$sendAttemptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmailMessage$sendAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmailSendAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  workflowDecisions<T extends Prisma.EmailMessage$workflowDecisionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmailMessage$workflowDecisionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmailWorkflowDecisionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4229,27 +4981,123 @@ export type EmailMessage$inquiryMessagesArgs<ExtArgs extends runtime.Types.Exten
 }
 
 /**
- * EmailMessage.aiDecisions
+ * EmailMessage.analysisDecisions
  */
-export type EmailMessage$aiDecisionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type EmailMessage$analysisDecisionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the AiDecision
+   * Select specific fields to fetch from the EmailAnalysisDecision
    */
-  select?: Prisma.AiDecisionSelect<ExtArgs> | null
+  select?: Prisma.EmailAnalysisDecisionSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the AiDecision
+   * Omit specific fields from the EmailAnalysisDecision
    */
-  omit?: Prisma.AiDecisionOmit<ExtArgs> | null
+  omit?: Prisma.EmailAnalysisDecisionOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.AiDecisionInclude<ExtArgs> | null
-  where?: Prisma.AiDecisionWhereInput
-  orderBy?: Prisma.AiDecisionOrderByWithRelationInput | Prisma.AiDecisionOrderByWithRelationInput[]
-  cursor?: Prisma.AiDecisionWhereUniqueInput
+  include?: Prisma.EmailAnalysisDecisionInclude<ExtArgs> | null
+  where?: Prisma.EmailAnalysisDecisionWhereInput
+  orderBy?: Prisma.EmailAnalysisDecisionOrderByWithRelationInput | Prisma.EmailAnalysisDecisionOrderByWithRelationInput[]
+  cursor?: Prisma.EmailAnalysisDecisionWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.AiDecisionScalarFieldEnum | Prisma.AiDecisionScalarFieldEnum[]
+  distinct?: Prisma.EmailAnalysisDecisionScalarFieldEnum | Prisma.EmailAnalysisDecisionScalarFieldEnum[]
+}
+
+/**
+ * EmailMessage.businessEvents
+ */
+export type EmailMessage$businessEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InquiryBusinessEvent
+   */
+  select?: Prisma.InquiryBusinessEventSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the InquiryBusinessEvent
+   */
+  omit?: Prisma.InquiryBusinessEventOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InquiryBusinessEventInclude<ExtArgs> | null
+  where?: Prisma.InquiryBusinessEventWhereInput
+  orderBy?: Prisma.InquiryBusinessEventOrderByWithRelationInput | Prisma.InquiryBusinessEventOrderByWithRelationInput[]
+  cursor?: Prisma.InquiryBusinessEventWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.InquiryBusinessEventScalarFieldEnum | Prisma.InquiryBusinessEventScalarFieldEnum[]
+}
+
+/**
+ * EmailMessage.stateDecisions
+ */
+export type EmailMessage$stateDecisionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InquiryStateDecision
+   */
+  select?: Prisma.InquiryStateDecisionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the InquiryStateDecision
+   */
+  omit?: Prisma.InquiryStateDecisionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InquiryStateDecisionInclude<ExtArgs> | null
+  where?: Prisma.InquiryStateDecisionWhereInput
+  orderBy?: Prisma.InquiryStateDecisionOrderByWithRelationInput | Prisma.InquiryStateDecisionOrderByWithRelationInput[]
+  cursor?: Prisma.InquiryStateDecisionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.InquiryStateDecisionScalarFieldEnum | Prisma.InquiryStateDecisionScalarFieldEnum[]
+}
+
+/**
+ * EmailMessage.triggeredRecoveries
+ */
+export type EmailMessage$triggeredRecoveriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmailRecoveryRecord
+   */
+  select?: Prisma.EmailRecoveryRecordSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmailRecoveryRecord
+   */
+  omit?: Prisma.EmailRecoveryRecordOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmailRecoveryRecordInclude<ExtArgs> | null
+  where?: Prisma.EmailRecoveryRecordWhereInput
+  orderBy?: Prisma.EmailRecoveryRecordOrderByWithRelationInput | Prisma.EmailRecoveryRecordOrderByWithRelationInput[]
+  cursor?: Prisma.EmailRecoveryRecordWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EmailRecoveryRecordScalarFieldEnum | Prisma.EmailRecoveryRecordScalarFieldEnum[]
+}
+
+/**
+ * EmailMessage.recoveredByRecords
+ */
+export type EmailMessage$recoveredByRecordsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmailRecoveryRecord
+   */
+  select?: Prisma.EmailRecoveryRecordSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmailRecoveryRecord
+   */
+  omit?: Prisma.EmailRecoveryRecordOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmailRecoveryRecordInclude<ExtArgs> | null
+  where?: Prisma.EmailRecoveryRecordWhereInput
+  orderBy?: Prisma.EmailRecoveryRecordOrderByWithRelationInput | Prisma.EmailRecoveryRecordOrderByWithRelationInput[]
+  cursor?: Prisma.EmailRecoveryRecordWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EmailRecoveryRecordScalarFieldEnum | Prisma.EmailRecoveryRecordScalarFieldEnum[]
 }
 
 /**
@@ -4394,30 +5242,6 @@ export type EmailMessage$sendAttemptsArgs<ExtArgs extends runtime.Types.Extensio
   take?: number
   skip?: number
   distinct?: Prisma.EmailSendAttemptScalarFieldEnum | Prisma.EmailSendAttemptScalarFieldEnum[]
-}
-
-/**
- * EmailMessage.workflowDecisions
- */
-export type EmailMessage$workflowDecisionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the EmailWorkflowDecision
-   */
-  select?: Prisma.EmailWorkflowDecisionSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the EmailWorkflowDecision
-   */
-  omit?: Prisma.EmailWorkflowDecisionOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.EmailWorkflowDecisionInclude<ExtArgs> | null
-  where?: Prisma.EmailWorkflowDecisionWhereInput
-  orderBy?: Prisma.EmailWorkflowDecisionOrderByWithRelationInput | Prisma.EmailWorkflowDecisionOrderByWithRelationInput[]
-  cursor?: Prisma.EmailWorkflowDecisionWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.EmailWorkflowDecisionScalarFieldEnum | Prisma.EmailWorkflowDecisionScalarFieldEnum[]
 }
 
 /**

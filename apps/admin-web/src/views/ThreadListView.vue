@@ -205,8 +205,11 @@ onMounted(loadThreads);
             <p class="mt-2 whitespace-pre-wrap text-sm leading-6 text-muted-foreground">
               {{ truncate(message.bodyText, 600) }}
             </p>
-            <div v-if="message.latestAiDecision" class="mt-3 text-xs text-muted-foreground">
-              AI: {{ message.latestAiDecision.classification }} → {{ message.latestAiDecision.suggestedStatus }}
+            <div v-if="message.latestAnalysisDecision" class="mt-3 text-xs text-muted-foreground">
+              AI: {{ message.latestAnalysisDecision.messageClassification }} →
+              {{ message.latestAnalysisDecision.suggestedState
+                ? `${message.latestAnalysisDecision.suggestedState.businessStage}/${message.latestAnalysisDecision.suggestedState.actionOwner}/${message.latestAnalysisDecision.suggestedState.lifecycleStatus}`
+                : '-' }}
             </div>
           </article>
           <EmptyState v-if="selectedThreadId && !messageLoading && messages.length === 0">该线程暂无邮件</EmptyState>

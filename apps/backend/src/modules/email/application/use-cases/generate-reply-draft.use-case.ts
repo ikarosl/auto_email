@@ -6,7 +6,10 @@ import { BuildAiContextUseCase } from '../../../context/application/use-cases/bu
 import { ContextPurpose } from '../../../context/domain/enums/context-purpose.enum.js';
 import type { InquiryMessageRepository } from '../../../inquiry/application/ports/inquiry-message.repository.js';
 import type { InquiryRepository } from '../../../inquiry/application/ports/inquiry.repository.js';
-import { InquiryStatus } from '../../../inquiry/domain/enums/inquiry-status.enum.js';
+import {
+  InquiryActionOwner,
+  InquiryBusinessStage,
+} from '../../../inquiry/domain/enums/inquiry-state.enum.js';
 import type { EmailMessageRepository } from '../ports/email-message.repository.js';
 import type { ReplyDraftAiAdapter } from '../ports/reply-draft-ai.adapter.js';
 import {
@@ -21,8 +24,7 @@ const MAX_ATTEMPTS = 3;
 export interface GenerateReplyDraftInput {
   inquiryCaseId: string;
   sourceEmailMessageId?: string;
-  aiDecisionId?: string;
-  targetStatus?: InquiryStatus;
+  emailAnalysisDecisionId?: string;
   commercialTerms?: string;
   initiatedBy?: string;
   regenerate?: boolean;
@@ -42,8 +44,7 @@ export class GenerateReplyDraftUseCase {
     const inquiry = await this.inquiryRepository.findById(input.inquiryCaseId);
     if (!inquiry) throw new BusinessError('Inquiry not found.', 'INQUIRY_NOT_FOUND');
 
-    const targetStatus = input.targetStatus ?? inquiry.status;
-    const draftType = resolveDraftType(targetStatus);
+    const draftType = resolveDraftType(inquiry.businessStage, inquiry.actionOwner);
     if (draftType === 'quote_reply' && !input.commercialTerms?.trim()) {
       throw new BusinessError(
         'Quote draft generation requires human-confirmed commercial terms.',
@@ -102,7 +103,7 @@ export class GenerateReplyDraftUseCase {
           inquiryCaseId: input.inquiryCaseId,
           sourceEmailMessageId: sourceMessage.id,
           contextSnapshotId: context.contextSnapshotId,
-          aiDecisionId: input.aiDecisionId ?? null,
+          emailAnalysisDecisionId: input.emailAnalysisDecisionId ?? null,
           idempotencyKey: input.regenerate ? `${stableKey}:regen:${randomUUID()}` : stableKey,
           draftType: output.draftType,
           status: 'pending_review',
@@ -147,12 +148,18 @@ export class GenerateReplyDraftUseCase {
   }
 }
 
-function resolveDraftType(status: InquiryStatus): AiReplyDraftOutput['draftType'] {
-  if (status === InquiryStatus.NEED_CLARIFICATION) return 'clarification_request';
-  if (status === InquiryStatus.NEED_ENGINEER_REVIEW) return 'engineer_review_acknowledgement';
-  if (status === InquiryStatus.READY_FOR_QUOTE) return 'quote_reply';
+function resolveDraftType(
+  businessStage: InquiryBusinessStage,
+  actionOwner: InquiryActionOwner,
+): AiReplyDraftOutput['draftType'] {
+  if (actionOwner !== InquiryActionOwner.US) {
+    throw new BusinessError('Reply draft generation requires actionOwner=us.', 'DRAFT_ACTION_OWNER_NOT_US');
+  }
+  if (businessStage === InquiryBusinessStage.INTAKE) return 'clarification_request';
+  if (businessStage === InquiryBusinessStage.TECHNICAL_REVIEW) return 'engineer_review_acknowledgement';
+  if (businessStage === InquiryBusinessStage.COMMERCIAL) return 'quote_reply';
   throw new BusinessError(
-    `Reply draft generation is not enabled for inquiry status ${status}.`,
+    `Reply draft generation is not enabled for business stage ${businessStage}.`,
     'DRAFT_STATUS_NOT_SUPPORTED',
   );
 }

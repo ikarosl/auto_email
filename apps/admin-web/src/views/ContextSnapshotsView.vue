@@ -146,7 +146,7 @@ onMounted(load);
         <!-- Inquiry & Email info -->
         <Card class="flex items-center gap-3 p-3 text-sm">
           <Badge v-if="detail.inquiryCase" tone="default">
-            {{ detail.inquiryCase.status }}
+            {{ detail.inquiryCase.businessStage }}/{{ detail.inquiryCase.actionOwner }}/{{ detail.inquiryCase.lifecycleStatus }}
           </Badge>
           <span class="font-medium">{{ detail.inquiryCase?.subject || '-' }}</span>
           <span v-if="detail.emailMessage" class="text-muted-foreground">
@@ -168,7 +168,9 @@ onMounted(load);
             <div v-if="detail.contextPayload?.inquiryState">
               <h3 class="font-semibold">inquiryState</h3>
               <div class="mt-1 grid grid-cols-2 gap-2 text-sm">
-                <div>状态: <StatusPill :status="detail.contextPayload.inquiryState.status" /></div>
+                <div>阶段: {{ detail.contextPayload.inquiryState.businessStage }}</div>
+                <div>等待方: {{ detail.contextPayload.inquiryState.actionOwner }}</div>
+                <div>生命周期: {{ detail.contextPayload.inquiryState.lifecycleStatus }}</div>
                 <div>客户: {{ detail.contextPayload.inquiryState.customerEmail }}</div>
                 <div>主题: {{ detail.contextPayload.inquiryState.subject }}</div>
               </div>
@@ -227,9 +229,9 @@ onMounted(load);
                 {{ detail.emailMessage.bodyText || '(无正文)' }}
               </div>
             </div>
-            <div v-if="detail.emailMessage?.aiDecisions?.length">
+            <div v-if="detail.emailMessage?.analysisDecisions?.length">
               <h3 class="font-semibold">AI 决策</h3>
-              <div class="mt-1"><JsonBlock :value="detail.emailMessage.aiDecisions" /></div>
+              <div class="mt-1"><JsonBlock :value="detail.emailMessage.analysisDecisions" /></div>
             </div>
           </div>
         </Card>

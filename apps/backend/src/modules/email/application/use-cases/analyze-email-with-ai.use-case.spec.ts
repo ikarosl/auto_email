@@ -1,7 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
-import { InquiryStatus } from '../../../inquiry/domain/enums/inquiry-status.enum.js';
 import { EmailAiAnalysisAdapter } from '../ports/email-ai-analysis.adapter.js';
 import { AnalyzeEmailWithAiUseCase } from './analyze-email-with-ai.use-case.js';
 import { EmailMessage } from '../../domain/entities/email-message.entity.js';
@@ -11,27 +10,13 @@ import { AiInteractionDebugLogger, AiInteractionDebugLogEntry } from '../ports/a
 
 describe('AnalyzeEmailWithAiUseCase', () => {
   it('parses and validates valid JSON output', async () => {
-    const useCase = new AnalyzeEmailWithAiUseCase(new StaticAiAdapter(JSON.stringify({
-      isInquiry: true,
-      classification: 'valid_inquiry',
-      suggestedStatus: InquiryStatus.NEED_ENGINEER_REVIEW,
-      confidence: 0.88,
-      riskLevel: 'medium',
-      reason: 'Technical requirements are mostly clear.',
-      missingFields: [],
-      extractedRequirements: {
-        productType: 'circulator',
-      },
-      quoteBoundaryDetected: false,
-      humanReviewRequired: true,
-      nextAction: 'Send to engineering review after human confirmation.',
-    })));
+    const useCase = new AnalyzeEmailWithAiUseCase(new StaticAiAdapter(JSON.stringify(createValidAnalysis())));
 
     const result = await useCase.execute(createEmailMessage());
 
     assert.equal(result.success, true);
     if (result.success) {
-      assert.equal(result.analysis.suggestedStatus, InquiryStatus.NEED_ENGINEER_REVIEW);
+      assert.equal(result.analysis.suggestedState.businessStage, 'technical_review');
     }
   });
 
@@ -146,9 +131,19 @@ class MemoryAiInteractionDebugLogger implements AiInteractionDebugLogger {
 
 function createValidAnalysis(overrides: Record<string, unknown> = {}) {
   return {
-    isInquiry: true,
-    classification: 'valid_inquiry',
-    suggestedStatus: InquiryStatus.NEED_ENGINEER_REVIEW,
+    messageClassification: 'customer_inquiry',
+    events: [{
+      eventType: 'requirements_provided',
+      actor: 'customer',
+      confidence: 0.88,
+      evidence: 'Customer supplied technical requirements.',
+      payload: {},
+    }],
+    suggestedState: {
+      businessStage: 'technical_review',
+      actionOwner: 'us',
+      lifecycleStatus: 'active',
+    },
     confidence: 0.88,
     riskLevel: 'medium',
     reason: 'Technical requirements are mostly clear.',

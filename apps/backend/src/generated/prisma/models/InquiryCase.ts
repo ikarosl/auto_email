@@ -20,8 +20,18 @@ export type InquiryCaseModel = runtime.Types.Result.DefaultSelection<Prisma.$Inq
 
 export type AggregateInquiryCase = {
   _count: InquiryCaseCountAggregateOutputType | null
+  _avg: InquiryCaseAvgAggregateOutputType | null
+  _sum: InquiryCaseSumAggregateOutputType | null
   _min: InquiryCaseMinAggregateOutputType | null
   _max: InquiryCaseMaxAggregateOutputType | null
+}
+
+export type InquiryCaseAvgAggregateOutputType = {
+  stateVersion: number | null
+}
+
+export type InquiryCaseSumAggregateOutputType = {
+  stateVersion: number | null
 }
 
 export type InquiryCaseMinAggregateOutputType = {
@@ -29,7 +39,10 @@ export type InquiryCaseMinAggregateOutputType = {
   customerId: string | null
   organizationId: string | null
   primaryCustomerId: string | null
-  status: string | null
+  businessStage: $Enums.InquiryBusinessStage | null
+  actionOwner: $Enums.InquiryActionOwner | null
+  lifecycleStatus: $Enums.InquiryLifecycleStatus | null
+  stateVersion: number | null
   subject: string | null
   rawSubject: string | null
   businessSubject: string | null
@@ -49,7 +62,10 @@ export type InquiryCaseMaxAggregateOutputType = {
   customerId: string | null
   organizationId: string | null
   primaryCustomerId: string | null
-  status: string | null
+  businessStage: $Enums.InquiryBusinessStage | null
+  actionOwner: $Enums.InquiryActionOwner | null
+  lifecycleStatus: $Enums.InquiryLifecycleStatus | null
+  stateVersion: number | null
   subject: string | null
   rawSubject: string | null
   businessSubject: string | null
@@ -69,7 +85,10 @@ export type InquiryCaseCountAggregateOutputType = {
   customerId: number
   organizationId: number
   primaryCustomerId: number
-  status: number
+  businessStage: number
+  actionOwner: number
+  lifecycleStatus: number
+  stateVersion: number
   subject: number
   rawSubject: number
   businessSubject: number
@@ -86,12 +105,23 @@ export type InquiryCaseCountAggregateOutputType = {
 }
 
 
+export type InquiryCaseAvgAggregateInputType = {
+  stateVersion?: true
+}
+
+export type InquiryCaseSumAggregateInputType = {
+  stateVersion?: true
+}
+
 export type InquiryCaseMinAggregateInputType = {
   id?: true
   customerId?: true
   organizationId?: true
   primaryCustomerId?: true
-  status?: true
+  businessStage?: true
+  actionOwner?: true
+  lifecycleStatus?: true
+  stateVersion?: true
   subject?: true
   rawSubject?: true
   businessSubject?: true
@@ -111,7 +141,10 @@ export type InquiryCaseMaxAggregateInputType = {
   customerId?: true
   organizationId?: true
   primaryCustomerId?: true
-  status?: true
+  businessStage?: true
+  actionOwner?: true
+  lifecycleStatus?: true
+  stateVersion?: true
   subject?: true
   rawSubject?: true
   businessSubject?: true
@@ -131,7 +164,10 @@ export type InquiryCaseCountAggregateInputType = {
   customerId?: true
   organizationId?: true
   primaryCustomerId?: true
-  status?: true
+  businessStage?: true
+  actionOwner?: true
+  lifecycleStatus?: true
+  stateVersion?: true
   subject?: true
   rawSubject?: true
   businessSubject?: true
@@ -185,6 +221,18 @@ export type InquiryCaseAggregateArgs<ExtArgs extends runtime.Types.Extensions.In
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: InquiryCaseAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: InquiryCaseSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: InquiryCaseMinAggregateInputType
@@ -215,6 +263,8 @@ export type InquiryCaseGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   _count?: InquiryCaseCountAggregateInputType | true
+  _avg?: InquiryCaseAvgAggregateInputType
+  _sum?: InquiryCaseSumAggregateInputType
   _min?: InquiryCaseMinAggregateInputType
   _max?: InquiryCaseMaxAggregateInputType
 }
@@ -224,7 +274,10 @@ export type InquiryCaseGroupByOutputType = {
   customerId: string
   organizationId: string | null
   primaryCustomerId: string | null
-  status: string
+  businessStage: $Enums.InquiryBusinessStage
+  actionOwner: $Enums.InquiryActionOwner
+  lifecycleStatus: $Enums.InquiryLifecycleStatus
+  stateVersion: number
   subject: string | null
   rawSubject: string | null
   businessSubject: string | null
@@ -238,6 +291,8 @@ export type InquiryCaseGroupByOutputType = {
   updatedAt: Date
   deletedAt: Date | null
   _count: InquiryCaseCountAggregateOutputType | null
+  _avg: InquiryCaseAvgAggregateOutputType | null
+  _sum: InquiryCaseSumAggregateOutputType | null
   _min: InquiryCaseMinAggregateOutputType | null
   _max: InquiryCaseMaxAggregateOutputType | null
 }
@@ -265,7 +320,10 @@ export type InquiryCaseWhereInput = {
   customerId?: Prisma.StringFilter<"InquiryCase"> | string
   organizationId?: Prisma.StringNullableFilter<"InquiryCase"> | string | null
   primaryCustomerId?: Prisma.StringNullableFilter<"InquiryCase"> | string | null
-  status?: Prisma.StringFilter<"InquiryCase"> | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFilter<"InquiryCase"> | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFilter<"InquiryCase"> | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFilter<"InquiryCase"> | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFilter<"InquiryCase"> | number
   subject?: Prisma.StringNullableFilter<"InquiryCase"> | string | null
   rawSubject?: Prisma.StringNullableFilter<"InquiryCase"> | string | null
   businessSubject?: Prisma.StringNullableFilter<"InquiryCase"> | string | null
@@ -282,14 +340,16 @@ export type InquiryCaseWhereInput = {
   organization?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
   primaryCustomer?: Prisma.XOR<Prisma.CustomerNullableScalarRelationFilter, Prisma.CustomerWhereInput> | null
   inquiryMessages?: Prisma.InquiryMessageListRelationFilter
-  aiDecisions?: Prisma.AiDecisionListRelationFilter
+  analysisDecisions?: Prisma.EmailAnalysisDecisionListRelationFilter
+  businessEvents?: Prisma.InquiryBusinessEventListRelationFilter
+  stateDecisions?: Prisma.InquiryStateDecisionListRelationFilter
+  stateTransitions?: Prisma.InquiryStateTransitionListRelationFilter
+  recoveryRecords?: Prisma.EmailRecoveryRecordListRelationFilter
   structuredFacts?: Prisma.XOR<Prisma.InquiryStructuredFactNullableScalarRelationFilter, Prisma.InquiryStructuredFactWhereInput> | null
   replyDrafts?: Prisma.ReplyDraftListRelationFilter
   contextSnapshots?: Prisma.AiContextSnapshotListRelationFilter
   contextSummary?: Prisma.XOR<Prisma.InquiryContextSummaryNullableScalarRelationFilter, Prisma.InquiryContextSummaryWhereInput> | null
-  statusLogs?: Prisma.InquiryStatusLogListRelationFilter
   attachments?: Prisma.EmailAttachmentListRelationFilter
-  workflowDecisions?: Prisma.EmailWorkflowDecisionListRelationFilter
   sendAttempts?: Prisma.EmailSendAttemptListRelationFilter
 }
 
@@ -298,7 +358,10 @@ export type InquiryCaseOrderByWithRelationInput = {
   customerId?: Prisma.SortOrder
   organizationId?: Prisma.SortOrderInput | Prisma.SortOrder
   primaryCustomerId?: Prisma.SortOrderInput | Prisma.SortOrder
-  status?: Prisma.SortOrder
+  businessStage?: Prisma.SortOrder
+  actionOwner?: Prisma.SortOrder
+  lifecycleStatus?: Prisma.SortOrder
+  stateVersion?: Prisma.SortOrder
   subject?: Prisma.SortOrderInput | Prisma.SortOrder
   rawSubject?: Prisma.SortOrderInput | Prisma.SortOrder
   businessSubject?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -315,14 +378,16 @@ export type InquiryCaseOrderByWithRelationInput = {
   organization?: Prisma.OrganizationOrderByWithRelationInput
   primaryCustomer?: Prisma.CustomerOrderByWithRelationInput
   inquiryMessages?: Prisma.InquiryMessageOrderByRelationAggregateInput
-  aiDecisions?: Prisma.AiDecisionOrderByRelationAggregateInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionOrderByRelationAggregateInput
+  businessEvents?: Prisma.InquiryBusinessEventOrderByRelationAggregateInput
+  stateDecisions?: Prisma.InquiryStateDecisionOrderByRelationAggregateInput
+  stateTransitions?: Prisma.InquiryStateTransitionOrderByRelationAggregateInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordOrderByRelationAggregateInput
   structuredFacts?: Prisma.InquiryStructuredFactOrderByWithRelationInput
   replyDrafts?: Prisma.ReplyDraftOrderByRelationAggregateInput
   contextSnapshots?: Prisma.AiContextSnapshotOrderByRelationAggregateInput
   contextSummary?: Prisma.InquiryContextSummaryOrderByWithRelationInput
-  statusLogs?: Prisma.InquiryStatusLogOrderByRelationAggregateInput
   attachments?: Prisma.EmailAttachmentOrderByRelationAggregateInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionOrderByRelationAggregateInput
   sendAttempts?: Prisma.EmailSendAttemptOrderByRelationAggregateInput
 }
 
@@ -334,7 +399,10 @@ export type InquiryCaseWhereUniqueInput = Prisma.AtLeast<{
   customerId?: Prisma.StringFilter<"InquiryCase"> | string
   organizationId?: Prisma.StringNullableFilter<"InquiryCase"> | string | null
   primaryCustomerId?: Prisma.StringNullableFilter<"InquiryCase"> | string | null
-  status?: Prisma.StringFilter<"InquiryCase"> | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFilter<"InquiryCase"> | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFilter<"InquiryCase"> | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFilter<"InquiryCase"> | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFilter<"InquiryCase"> | number
   subject?: Prisma.StringNullableFilter<"InquiryCase"> | string | null
   rawSubject?: Prisma.StringNullableFilter<"InquiryCase"> | string | null
   businessSubject?: Prisma.StringNullableFilter<"InquiryCase"> | string | null
@@ -351,14 +419,16 @@ export type InquiryCaseWhereUniqueInput = Prisma.AtLeast<{
   organization?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
   primaryCustomer?: Prisma.XOR<Prisma.CustomerNullableScalarRelationFilter, Prisma.CustomerWhereInput> | null
   inquiryMessages?: Prisma.InquiryMessageListRelationFilter
-  aiDecisions?: Prisma.AiDecisionListRelationFilter
+  analysisDecisions?: Prisma.EmailAnalysisDecisionListRelationFilter
+  businessEvents?: Prisma.InquiryBusinessEventListRelationFilter
+  stateDecisions?: Prisma.InquiryStateDecisionListRelationFilter
+  stateTransitions?: Prisma.InquiryStateTransitionListRelationFilter
+  recoveryRecords?: Prisma.EmailRecoveryRecordListRelationFilter
   structuredFacts?: Prisma.XOR<Prisma.InquiryStructuredFactNullableScalarRelationFilter, Prisma.InquiryStructuredFactWhereInput> | null
   replyDrafts?: Prisma.ReplyDraftListRelationFilter
   contextSnapshots?: Prisma.AiContextSnapshotListRelationFilter
   contextSummary?: Prisma.XOR<Prisma.InquiryContextSummaryNullableScalarRelationFilter, Prisma.InquiryContextSummaryWhereInput> | null
-  statusLogs?: Prisma.InquiryStatusLogListRelationFilter
   attachments?: Prisma.EmailAttachmentListRelationFilter
-  workflowDecisions?: Prisma.EmailWorkflowDecisionListRelationFilter
   sendAttempts?: Prisma.EmailSendAttemptListRelationFilter
 }, "id">
 
@@ -367,7 +437,10 @@ export type InquiryCaseOrderByWithAggregationInput = {
   customerId?: Prisma.SortOrder
   organizationId?: Prisma.SortOrderInput | Prisma.SortOrder
   primaryCustomerId?: Prisma.SortOrderInput | Prisma.SortOrder
-  status?: Prisma.SortOrder
+  businessStage?: Prisma.SortOrder
+  actionOwner?: Prisma.SortOrder
+  lifecycleStatus?: Prisma.SortOrder
+  stateVersion?: Prisma.SortOrder
   subject?: Prisma.SortOrderInput | Prisma.SortOrder
   rawSubject?: Prisma.SortOrderInput | Prisma.SortOrder
   businessSubject?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -381,8 +454,10 @@ export type InquiryCaseOrderByWithAggregationInput = {
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.InquiryCaseCountOrderByAggregateInput
+  _avg?: Prisma.InquiryCaseAvgOrderByAggregateInput
   _max?: Prisma.InquiryCaseMaxOrderByAggregateInput
   _min?: Prisma.InquiryCaseMinOrderByAggregateInput
+  _sum?: Prisma.InquiryCaseSumOrderByAggregateInput
 }
 
 export type InquiryCaseScalarWhereWithAggregatesInput = {
@@ -393,7 +468,10 @@ export type InquiryCaseScalarWhereWithAggregatesInput = {
   customerId?: Prisma.StringWithAggregatesFilter<"InquiryCase"> | string
   organizationId?: Prisma.StringNullableWithAggregatesFilter<"InquiryCase"> | string | null
   primaryCustomerId?: Prisma.StringNullableWithAggregatesFilter<"InquiryCase"> | string | null
-  status?: Prisma.StringWithAggregatesFilter<"InquiryCase"> | string
+  businessStage?: Prisma.EnumInquiryBusinessStageWithAggregatesFilter<"InquiryCase"> | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerWithAggregatesFilter<"InquiryCase"> | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusWithAggregatesFilter<"InquiryCase"> | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntWithAggregatesFilter<"InquiryCase"> | number
   subject?: Prisma.StringNullableWithAggregatesFilter<"InquiryCase"> | string | null
   rawSubject?: Prisma.StringNullableWithAggregatesFilter<"InquiryCase"> | string | null
   businessSubject?: Prisma.StringNullableWithAggregatesFilter<"InquiryCase"> | string | null
@@ -410,7 +488,10 @@ export type InquiryCaseScalarWhereWithAggregatesInput = {
 
 export type InquiryCaseCreateInput = {
   id?: string
-  status?: string
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
   subject?: string | null
   rawSubject?: string | null
   businessSubject?: string | null
@@ -427,14 +508,16 @@ export type InquiryCaseCreateInput = {
   organization?: Prisma.OrganizationCreateNestedOneWithoutInquiryCasesInput
   primaryCustomer?: Prisma.CustomerCreateNestedOneWithoutPrimaryInquiryCasesInput
   inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutInquiryCaseInput
-  aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutInquiryCaseInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionCreateNestedManyWithoutInquiryCaseInput
+  businessEvents?: Prisma.InquiryBusinessEventCreateNestedManyWithoutInquiryCaseInput
+  stateDecisions?: Prisma.InquiryStateDecisionCreateNestedManyWithoutInquiryCaseInput
+  stateTransitions?: Prisma.InquiryStateTransitionCreateNestedManyWithoutInquiryCaseInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutInquiryCaseInput
   structuredFacts?: Prisma.InquiryStructuredFactCreateNestedOneWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutInquiryCaseInput
   contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
-  statusLogs?: Prisma.InquiryStatusLogCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutInquiryCaseInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutInquiryCaseInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutInquiryCaseInput
 }
 
@@ -443,7 +526,10 @@ export type InquiryCaseUncheckedCreateInput = {
   customerId: string
   organizationId?: string | null
   primaryCustomerId?: string | null
-  status?: string
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
   subject?: string | null
   rawSubject?: string | null
   businessSubject?: string | null
@@ -457,20 +543,25 @@ export type InquiryCaseUncheckedCreateInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutInquiryCaseInput
-  aiDecisions?: Prisma.AiDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedCreateNestedManyWithoutInquiryCaseInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  stateTransitions?: Prisma.InquiryStateTransitionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutInquiryCaseInput
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedOneWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutInquiryCaseInput
   contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
-  statusLogs?: Prisma.InquiryStatusLogUncheckedCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutInquiryCaseInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutInquiryCaseInput
 }
 
 export type InquiryCaseUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -487,14 +578,16 @@ export type InquiryCaseUpdateInput = {
   organization?: Prisma.OrganizationUpdateOneWithoutInquiryCasesNestedInput
   primaryCustomer?: Prisma.CustomerUpdateOneWithoutPrimaryInquiryCasesNestedInput
   inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutInquiryCaseNestedInput
-  aiDecisions?: Prisma.AiDecisionUpdateManyWithoutInquiryCaseNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUpdateManyWithoutInquiryCaseNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUpdateManyWithoutInquiryCaseNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUpdateManyWithoutInquiryCaseNestedInput
+  stateTransitions?: Prisma.InquiryStateTransitionUpdateManyWithoutInquiryCaseNestedInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUpdateManyWithoutInquiryCaseNestedInput
   structuredFacts?: Prisma.InquiryStructuredFactUpdateOneWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUpdateManyWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutInquiryCaseNestedInput
   contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
-  statusLogs?: Prisma.InquiryStatusLogUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutInquiryCaseNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutInquiryCaseNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutInquiryCaseNestedInput
 }
 
@@ -503,7 +596,10 @@ export type InquiryCaseUncheckedUpdateInput = {
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   primaryCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -517,14 +613,16 @@ export type InquiryCaseUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutInquiryCaseNestedInput
-  aiDecisions?: Prisma.AiDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  stateTransitions?: Prisma.InquiryStateTransitionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutInquiryCaseNestedInput
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateOneWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutInquiryCaseNestedInput
   contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
-  statusLogs?: Prisma.InquiryStatusLogUncheckedUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutInquiryCaseNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutInquiryCaseNestedInput
 }
 
@@ -533,7 +631,10 @@ export type InquiryCaseCreateManyInput = {
   customerId: string
   organizationId?: string | null
   primaryCustomerId?: string | null
-  status?: string
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
   subject?: string | null
   rawSubject?: string | null
   businessSubject?: string | null
@@ -550,7 +651,10 @@ export type InquiryCaseCreateManyInput = {
 
 export type InquiryCaseUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -570,7 +674,10 @@ export type InquiryCaseUncheckedUpdateManyInput = {
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   primaryCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -605,7 +712,10 @@ export type InquiryCaseCountOrderByAggregateInput = {
   customerId?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   primaryCustomerId?: Prisma.SortOrder
-  status?: Prisma.SortOrder
+  businessStage?: Prisma.SortOrder
+  actionOwner?: Prisma.SortOrder
+  lifecycleStatus?: Prisma.SortOrder
+  stateVersion?: Prisma.SortOrder
   subject?: Prisma.SortOrder
   rawSubject?: Prisma.SortOrder
   businessSubject?: Prisma.SortOrder
@@ -620,12 +730,19 @@ export type InquiryCaseCountOrderByAggregateInput = {
   deletedAt?: Prisma.SortOrder
 }
 
+export type InquiryCaseAvgOrderByAggregateInput = {
+  stateVersion?: Prisma.SortOrder
+}
+
 export type InquiryCaseMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   primaryCustomerId?: Prisma.SortOrder
-  status?: Prisma.SortOrder
+  businessStage?: Prisma.SortOrder
+  actionOwner?: Prisma.SortOrder
+  lifecycleStatus?: Prisma.SortOrder
+  stateVersion?: Prisma.SortOrder
   subject?: Prisma.SortOrder
   rawSubject?: Prisma.SortOrder
   businessSubject?: Prisma.SortOrder
@@ -645,7 +762,10 @@ export type InquiryCaseMinOrderByAggregateInput = {
   customerId?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   primaryCustomerId?: Prisma.SortOrder
-  status?: Prisma.SortOrder
+  businessStage?: Prisma.SortOrder
+  actionOwner?: Prisma.SortOrder
+  lifecycleStatus?: Prisma.SortOrder
+  stateVersion?: Prisma.SortOrder
   subject?: Prisma.SortOrder
   rawSubject?: Prisma.SortOrder
   businessSubject?: Prisma.SortOrder
@@ -658,6 +778,10 @@ export type InquiryCaseMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
+}
+
+export type InquiryCaseSumOrderByAggregateInput = {
+  stateVersion?: Prisma.SortOrder
 }
 
 export type InquiryCaseScalarRelationFilter = {
@@ -807,6 +931,18 @@ export type InquiryCaseUpdateOneWithoutAttachmentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.InquiryCaseUpdateToOneWithWhereWithoutAttachmentsInput, Prisma.InquiryCaseUpdateWithoutAttachmentsInput>, Prisma.InquiryCaseUncheckedUpdateWithoutAttachmentsInput>
 }
 
+export type EnumInquiryBusinessStageFieldUpdateOperationsInput = {
+  set?: $Enums.InquiryBusinessStage
+}
+
+export type EnumInquiryActionOwnerFieldUpdateOperationsInput = {
+  set?: $Enums.InquiryActionOwner
+}
+
+export type EnumInquiryLifecycleStatusFieldUpdateOperationsInput = {
+  set?: $Enums.InquiryLifecycleStatus
+}
+
 export type InquiryCaseCreateNestedOneWithoutInquiryMessagesInput = {
   create?: Prisma.XOR<Prisma.InquiryCaseCreateWithoutInquiryMessagesInput, Prisma.InquiryCaseUncheckedCreateWithoutInquiryMessagesInput>
   connectOrCreate?: Prisma.InquiryCaseCreateOrConnectWithoutInquiryMessagesInput
@@ -821,20 +957,76 @@ export type InquiryCaseUpdateOneRequiredWithoutInquiryMessagesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.InquiryCaseUpdateToOneWithWhereWithoutInquiryMessagesInput, Prisma.InquiryCaseUpdateWithoutInquiryMessagesInput>, Prisma.InquiryCaseUncheckedUpdateWithoutInquiryMessagesInput>
 }
 
-export type InquiryCaseCreateNestedOneWithoutAiDecisionsInput = {
-  create?: Prisma.XOR<Prisma.InquiryCaseCreateWithoutAiDecisionsInput, Prisma.InquiryCaseUncheckedCreateWithoutAiDecisionsInput>
-  connectOrCreate?: Prisma.InquiryCaseCreateOrConnectWithoutAiDecisionsInput
+export type InquiryCaseCreateNestedOneWithoutAnalysisDecisionsInput = {
+  create?: Prisma.XOR<Prisma.InquiryCaseCreateWithoutAnalysisDecisionsInput, Prisma.InquiryCaseUncheckedCreateWithoutAnalysisDecisionsInput>
+  connectOrCreate?: Prisma.InquiryCaseCreateOrConnectWithoutAnalysisDecisionsInput
   connect?: Prisma.InquiryCaseWhereUniqueInput
 }
 
-export type InquiryCaseUpdateOneWithoutAiDecisionsNestedInput = {
-  create?: Prisma.XOR<Prisma.InquiryCaseCreateWithoutAiDecisionsInput, Prisma.InquiryCaseUncheckedCreateWithoutAiDecisionsInput>
-  connectOrCreate?: Prisma.InquiryCaseCreateOrConnectWithoutAiDecisionsInput
-  upsert?: Prisma.InquiryCaseUpsertWithoutAiDecisionsInput
+export type InquiryCaseUpdateOneRequiredWithoutAnalysisDecisionsNestedInput = {
+  create?: Prisma.XOR<Prisma.InquiryCaseCreateWithoutAnalysisDecisionsInput, Prisma.InquiryCaseUncheckedCreateWithoutAnalysisDecisionsInput>
+  connectOrCreate?: Prisma.InquiryCaseCreateOrConnectWithoutAnalysisDecisionsInput
+  upsert?: Prisma.InquiryCaseUpsertWithoutAnalysisDecisionsInput
+  connect?: Prisma.InquiryCaseWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.InquiryCaseUpdateToOneWithWhereWithoutAnalysisDecisionsInput, Prisma.InquiryCaseUpdateWithoutAnalysisDecisionsInput>, Prisma.InquiryCaseUncheckedUpdateWithoutAnalysisDecisionsInput>
+}
+
+export type InquiryCaseCreateNestedOneWithoutBusinessEventsInput = {
+  create?: Prisma.XOR<Prisma.InquiryCaseCreateWithoutBusinessEventsInput, Prisma.InquiryCaseUncheckedCreateWithoutBusinessEventsInput>
+  connectOrCreate?: Prisma.InquiryCaseCreateOrConnectWithoutBusinessEventsInput
+  connect?: Prisma.InquiryCaseWhereUniqueInput
+}
+
+export type InquiryCaseUpdateOneRequiredWithoutBusinessEventsNestedInput = {
+  create?: Prisma.XOR<Prisma.InquiryCaseCreateWithoutBusinessEventsInput, Prisma.InquiryCaseUncheckedCreateWithoutBusinessEventsInput>
+  connectOrCreate?: Prisma.InquiryCaseCreateOrConnectWithoutBusinessEventsInput
+  upsert?: Prisma.InquiryCaseUpsertWithoutBusinessEventsInput
+  connect?: Prisma.InquiryCaseWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.InquiryCaseUpdateToOneWithWhereWithoutBusinessEventsInput, Prisma.InquiryCaseUpdateWithoutBusinessEventsInput>, Prisma.InquiryCaseUncheckedUpdateWithoutBusinessEventsInput>
+}
+
+export type InquiryCaseCreateNestedOneWithoutStateDecisionsInput = {
+  create?: Prisma.XOR<Prisma.InquiryCaseCreateWithoutStateDecisionsInput, Prisma.InquiryCaseUncheckedCreateWithoutStateDecisionsInput>
+  connectOrCreate?: Prisma.InquiryCaseCreateOrConnectWithoutStateDecisionsInput
+  connect?: Prisma.InquiryCaseWhereUniqueInput
+}
+
+export type InquiryCaseUpdateOneRequiredWithoutStateDecisionsNestedInput = {
+  create?: Prisma.XOR<Prisma.InquiryCaseCreateWithoutStateDecisionsInput, Prisma.InquiryCaseUncheckedCreateWithoutStateDecisionsInput>
+  connectOrCreate?: Prisma.InquiryCaseCreateOrConnectWithoutStateDecisionsInput
+  upsert?: Prisma.InquiryCaseUpsertWithoutStateDecisionsInput
+  connect?: Prisma.InquiryCaseWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.InquiryCaseUpdateToOneWithWhereWithoutStateDecisionsInput, Prisma.InquiryCaseUpdateWithoutStateDecisionsInput>, Prisma.InquiryCaseUncheckedUpdateWithoutStateDecisionsInput>
+}
+
+export type InquiryCaseCreateNestedOneWithoutStateTransitionsInput = {
+  create?: Prisma.XOR<Prisma.InquiryCaseCreateWithoutStateTransitionsInput, Prisma.InquiryCaseUncheckedCreateWithoutStateTransitionsInput>
+  connectOrCreate?: Prisma.InquiryCaseCreateOrConnectWithoutStateTransitionsInput
+  connect?: Prisma.InquiryCaseWhereUniqueInput
+}
+
+export type InquiryCaseUpdateOneRequiredWithoutStateTransitionsNestedInput = {
+  create?: Prisma.XOR<Prisma.InquiryCaseCreateWithoutStateTransitionsInput, Prisma.InquiryCaseUncheckedCreateWithoutStateTransitionsInput>
+  connectOrCreate?: Prisma.InquiryCaseCreateOrConnectWithoutStateTransitionsInput
+  upsert?: Prisma.InquiryCaseUpsertWithoutStateTransitionsInput
+  connect?: Prisma.InquiryCaseWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.InquiryCaseUpdateToOneWithWhereWithoutStateTransitionsInput, Prisma.InquiryCaseUpdateWithoutStateTransitionsInput>, Prisma.InquiryCaseUncheckedUpdateWithoutStateTransitionsInput>
+}
+
+export type InquiryCaseCreateNestedOneWithoutRecoveryRecordsInput = {
+  create?: Prisma.XOR<Prisma.InquiryCaseCreateWithoutRecoveryRecordsInput, Prisma.InquiryCaseUncheckedCreateWithoutRecoveryRecordsInput>
+  connectOrCreate?: Prisma.InquiryCaseCreateOrConnectWithoutRecoveryRecordsInput
+  connect?: Prisma.InquiryCaseWhereUniqueInput
+}
+
+export type InquiryCaseUpdateOneWithoutRecoveryRecordsNestedInput = {
+  create?: Prisma.XOR<Prisma.InquiryCaseCreateWithoutRecoveryRecordsInput, Prisma.InquiryCaseUncheckedCreateWithoutRecoveryRecordsInput>
+  connectOrCreate?: Prisma.InquiryCaseCreateOrConnectWithoutRecoveryRecordsInput
+  upsert?: Prisma.InquiryCaseUpsertWithoutRecoveryRecordsInput
   disconnect?: Prisma.InquiryCaseWhereInput | boolean
   delete?: Prisma.InquiryCaseWhereInput | boolean
   connect?: Prisma.InquiryCaseWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.InquiryCaseUpdateToOneWithWhereWithoutAiDecisionsInput, Prisma.InquiryCaseUpdateWithoutAiDecisionsInput>, Prisma.InquiryCaseUncheckedUpdateWithoutAiDecisionsInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.InquiryCaseUpdateToOneWithWhereWithoutRecoveryRecordsInput, Prisma.InquiryCaseUpdateWithoutRecoveryRecordsInput>, Prisma.InquiryCaseUncheckedUpdateWithoutRecoveryRecordsInput>
 }
 
 export type InquiryCaseCreateNestedOneWithoutStructuredFactsInput = {
@@ -879,20 +1071,6 @@ export type InquiryCaseUpdateOneRequiredWithoutSendAttemptsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.InquiryCaseUpdateToOneWithWhereWithoutSendAttemptsInput, Prisma.InquiryCaseUpdateWithoutSendAttemptsInput>, Prisma.InquiryCaseUncheckedUpdateWithoutSendAttemptsInput>
 }
 
-export type InquiryCaseCreateNestedOneWithoutWorkflowDecisionsInput = {
-  create?: Prisma.XOR<Prisma.InquiryCaseCreateWithoutWorkflowDecisionsInput, Prisma.InquiryCaseUncheckedCreateWithoutWorkflowDecisionsInput>
-  connectOrCreate?: Prisma.InquiryCaseCreateOrConnectWithoutWorkflowDecisionsInput
-  connect?: Prisma.InquiryCaseWhereUniqueInput
-}
-
-export type InquiryCaseUpdateOneRequiredWithoutWorkflowDecisionsNestedInput = {
-  create?: Prisma.XOR<Prisma.InquiryCaseCreateWithoutWorkflowDecisionsInput, Prisma.InquiryCaseUncheckedCreateWithoutWorkflowDecisionsInput>
-  connectOrCreate?: Prisma.InquiryCaseCreateOrConnectWithoutWorkflowDecisionsInput
-  upsert?: Prisma.InquiryCaseUpsertWithoutWorkflowDecisionsInput
-  connect?: Prisma.InquiryCaseWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.InquiryCaseUpdateToOneWithWhereWithoutWorkflowDecisionsInput, Prisma.InquiryCaseUpdateWithoutWorkflowDecisionsInput>, Prisma.InquiryCaseUncheckedUpdateWithoutWorkflowDecisionsInput>
-}
-
 export type InquiryCaseCreateNestedOneWithoutContextSnapshotsInput = {
   create?: Prisma.XOR<Prisma.InquiryCaseCreateWithoutContextSnapshotsInput, Prisma.InquiryCaseUncheckedCreateWithoutContextSnapshotsInput>
   connectOrCreate?: Prisma.InquiryCaseCreateOrConnectWithoutContextSnapshotsInput
@@ -923,23 +1101,12 @@ export type InquiryCaseUpdateOneRequiredWithoutContextSummaryNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.InquiryCaseUpdateToOneWithWhereWithoutContextSummaryInput, Prisma.InquiryCaseUpdateWithoutContextSummaryInput>, Prisma.InquiryCaseUncheckedUpdateWithoutContextSummaryInput>
 }
 
-export type InquiryCaseCreateNestedOneWithoutStatusLogsInput = {
-  create?: Prisma.XOR<Prisma.InquiryCaseCreateWithoutStatusLogsInput, Prisma.InquiryCaseUncheckedCreateWithoutStatusLogsInput>
-  connectOrCreate?: Prisma.InquiryCaseCreateOrConnectWithoutStatusLogsInput
-  connect?: Prisma.InquiryCaseWhereUniqueInput
-}
-
-export type InquiryCaseUpdateOneRequiredWithoutStatusLogsNestedInput = {
-  create?: Prisma.XOR<Prisma.InquiryCaseCreateWithoutStatusLogsInput, Prisma.InquiryCaseUncheckedCreateWithoutStatusLogsInput>
-  connectOrCreate?: Prisma.InquiryCaseCreateOrConnectWithoutStatusLogsInput
-  upsert?: Prisma.InquiryCaseUpsertWithoutStatusLogsInput
-  connect?: Prisma.InquiryCaseWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.InquiryCaseUpdateToOneWithWhereWithoutStatusLogsInput, Prisma.InquiryCaseUpdateWithoutStatusLogsInput>, Prisma.InquiryCaseUncheckedUpdateWithoutStatusLogsInput>
-}
-
 export type InquiryCaseCreateWithoutCustomerInput = {
   id?: string
-  status?: string
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
   subject?: string | null
   rawSubject?: string | null
   businessSubject?: string | null
@@ -955,14 +1122,16 @@ export type InquiryCaseCreateWithoutCustomerInput = {
   organization?: Prisma.OrganizationCreateNestedOneWithoutInquiryCasesInput
   primaryCustomer?: Prisma.CustomerCreateNestedOneWithoutPrimaryInquiryCasesInput
   inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutInquiryCaseInput
-  aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutInquiryCaseInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionCreateNestedManyWithoutInquiryCaseInput
+  businessEvents?: Prisma.InquiryBusinessEventCreateNestedManyWithoutInquiryCaseInput
+  stateDecisions?: Prisma.InquiryStateDecisionCreateNestedManyWithoutInquiryCaseInput
+  stateTransitions?: Prisma.InquiryStateTransitionCreateNestedManyWithoutInquiryCaseInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutInquiryCaseInput
   structuredFacts?: Prisma.InquiryStructuredFactCreateNestedOneWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutInquiryCaseInput
   contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
-  statusLogs?: Prisma.InquiryStatusLogCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutInquiryCaseInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutInquiryCaseInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutInquiryCaseInput
 }
 
@@ -970,7 +1139,10 @@ export type InquiryCaseUncheckedCreateWithoutCustomerInput = {
   id?: string
   organizationId?: string | null
   primaryCustomerId?: string | null
-  status?: string
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
   subject?: string | null
   rawSubject?: string | null
   businessSubject?: string | null
@@ -984,14 +1156,16 @@ export type InquiryCaseUncheckedCreateWithoutCustomerInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutInquiryCaseInput
-  aiDecisions?: Prisma.AiDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedCreateNestedManyWithoutInquiryCaseInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  stateTransitions?: Prisma.InquiryStateTransitionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutInquiryCaseInput
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedOneWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutInquiryCaseInput
   contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
-  statusLogs?: Prisma.InquiryStatusLogUncheckedCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutInquiryCaseInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutInquiryCaseInput
 }
 
@@ -1007,7 +1181,10 @@ export type InquiryCaseCreateManyCustomerInputEnvelope = {
 
 export type InquiryCaseCreateWithoutPrimaryCustomerInput = {
   id?: string
-  status?: string
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
   subject?: string | null
   rawSubject?: string | null
   businessSubject?: string | null
@@ -1023,14 +1200,16 @@ export type InquiryCaseCreateWithoutPrimaryCustomerInput = {
   customer: Prisma.CustomerCreateNestedOneWithoutInquiryCasesInput
   organization?: Prisma.OrganizationCreateNestedOneWithoutInquiryCasesInput
   inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutInquiryCaseInput
-  aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutInquiryCaseInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionCreateNestedManyWithoutInquiryCaseInput
+  businessEvents?: Prisma.InquiryBusinessEventCreateNestedManyWithoutInquiryCaseInput
+  stateDecisions?: Prisma.InquiryStateDecisionCreateNestedManyWithoutInquiryCaseInput
+  stateTransitions?: Prisma.InquiryStateTransitionCreateNestedManyWithoutInquiryCaseInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutInquiryCaseInput
   structuredFacts?: Prisma.InquiryStructuredFactCreateNestedOneWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutInquiryCaseInput
   contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
-  statusLogs?: Prisma.InquiryStatusLogCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutInquiryCaseInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutInquiryCaseInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutInquiryCaseInput
 }
 
@@ -1038,7 +1217,10 @@ export type InquiryCaseUncheckedCreateWithoutPrimaryCustomerInput = {
   id?: string
   customerId: string
   organizationId?: string | null
-  status?: string
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
   subject?: string | null
   rawSubject?: string | null
   businessSubject?: string | null
@@ -1052,14 +1234,16 @@ export type InquiryCaseUncheckedCreateWithoutPrimaryCustomerInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutInquiryCaseInput
-  aiDecisions?: Prisma.AiDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedCreateNestedManyWithoutInquiryCaseInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  stateTransitions?: Prisma.InquiryStateTransitionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutInquiryCaseInput
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedOneWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutInquiryCaseInput
   contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
-  statusLogs?: Prisma.InquiryStatusLogUncheckedCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutInquiryCaseInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutInquiryCaseInput
 }
 
@@ -1097,7 +1281,10 @@ export type InquiryCaseScalarWhereInput = {
   customerId?: Prisma.StringFilter<"InquiryCase"> | string
   organizationId?: Prisma.StringNullableFilter<"InquiryCase"> | string | null
   primaryCustomerId?: Prisma.StringNullableFilter<"InquiryCase"> | string | null
-  status?: Prisma.StringFilter<"InquiryCase"> | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFilter<"InquiryCase"> | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFilter<"InquiryCase"> | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFilter<"InquiryCase"> | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFilter<"InquiryCase"> | number
   subject?: Prisma.StringNullableFilter<"InquiryCase"> | string | null
   rawSubject?: Prisma.StringNullableFilter<"InquiryCase"> | string | null
   businessSubject?: Prisma.StringNullableFilter<"InquiryCase"> | string | null
@@ -1130,7 +1317,10 @@ export type InquiryCaseUpdateManyWithWhereWithoutPrimaryCustomerInput = {
 
 export type InquiryCaseCreateWithoutOrganizationInput = {
   id?: string
-  status?: string
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
   subject?: string | null
   rawSubject?: string | null
   businessSubject?: string | null
@@ -1146,14 +1336,16 @@ export type InquiryCaseCreateWithoutOrganizationInput = {
   customer: Prisma.CustomerCreateNestedOneWithoutInquiryCasesInput
   primaryCustomer?: Prisma.CustomerCreateNestedOneWithoutPrimaryInquiryCasesInput
   inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutInquiryCaseInput
-  aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutInquiryCaseInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionCreateNestedManyWithoutInquiryCaseInput
+  businessEvents?: Prisma.InquiryBusinessEventCreateNestedManyWithoutInquiryCaseInput
+  stateDecisions?: Prisma.InquiryStateDecisionCreateNestedManyWithoutInquiryCaseInput
+  stateTransitions?: Prisma.InquiryStateTransitionCreateNestedManyWithoutInquiryCaseInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutInquiryCaseInput
   structuredFacts?: Prisma.InquiryStructuredFactCreateNestedOneWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutInquiryCaseInput
   contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
-  statusLogs?: Prisma.InquiryStatusLogCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutInquiryCaseInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutInquiryCaseInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutInquiryCaseInput
 }
 
@@ -1161,7 +1353,10 @@ export type InquiryCaseUncheckedCreateWithoutOrganizationInput = {
   id?: string
   customerId: string
   primaryCustomerId?: string | null
-  status?: string
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
   subject?: string | null
   rawSubject?: string | null
   businessSubject?: string | null
@@ -1175,14 +1370,16 @@ export type InquiryCaseUncheckedCreateWithoutOrganizationInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutInquiryCaseInput
-  aiDecisions?: Prisma.AiDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedCreateNestedManyWithoutInquiryCaseInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  stateTransitions?: Prisma.InquiryStateTransitionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutInquiryCaseInput
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedOneWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutInquiryCaseInput
   contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
-  statusLogs?: Prisma.InquiryStatusLogUncheckedCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutInquiryCaseInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutInquiryCaseInput
 }
 
@@ -1214,7 +1411,10 @@ export type InquiryCaseUpdateManyWithWhereWithoutOrganizationInput = {
 
 export type InquiryCaseCreateWithoutAttachmentsInput = {
   id?: string
-  status?: string
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
   subject?: string | null
   rawSubject?: string | null
   businessSubject?: string | null
@@ -1231,13 +1431,15 @@ export type InquiryCaseCreateWithoutAttachmentsInput = {
   organization?: Prisma.OrganizationCreateNestedOneWithoutInquiryCasesInput
   primaryCustomer?: Prisma.CustomerCreateNestedOneWithoutPrimaryInquiryCasesInput
   inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutInquiryCaseInput
-  aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutInquiryCaseInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionCreateNestedManyWithoutInquiryCaseInput
+  businessEvents?: Prisma.InquiryBusinessEventCreateNestedManyWithoutInquiryCaseInput
+  stateDecisions?: Prisma.InquiryStateDecisionCreateNestedManyWithoutInquiryCaseInput
+  stateTransitions?: Prisma.InquiryStateTransitionCreateNestedManyWithoutInquiryCaseInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutInquiryCaseInput
   structuredFacts?: Prisma.InquiryStructuredFactCreateNestedOneWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutInquiryCaseInput
   contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
-  statusLogs?: Prisma.InquiryStatusLogCreateNestedManyWithoutInquiryCaseInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutInquiryCaseInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutInquiryCaseInput
 }
 
@@ -1246,7 +1448,10 @@ export type InquiryCaseUncheckedCreateWithoutAttachmentsInput = {
   customerId: string
   organizationId?: string | null
   primaryCustomerId?: string | null
-  status?: string
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
   subject?: string | null
   rawSubject?: string | null
   businessSubject?: string | null
@@ -1260,13 +1465,15 @@ export type InquiryCaseUncheckedCreateWithoutAttachmentsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutInquiryCaseInput
-  aiDecisions?: Prisma.AiDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedCreateNestedManyWithoutInquiryCaseInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  stateTransitions?: Prisma.InquiryStateTransitionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutInquiryCaseInput
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedOneWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutInquiryCaseInput
   contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
-  statusLogs?: Prisma.InquiryStatusLogUncheckedCreateNestedManyWithoutInquiryCaseInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutInquiryCaseInput
 }
 
@@ -1288,7 +1495,10 @@ export type InquiryCaseUpdateToOneWithWhereWithoutAttachmentsInput = {
 
 export type InquiryCaseUpdateWithoutAttachmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1305,13 +1515,15 @@ export type InquiryCaseUpdateWithoutAttachmentsInput = {
   organization?: Prisma.OrganizationUpdateOneWithoutInquiryCasesNestedInput
   primaryCustomer?: Prisma.CustomerUpdateOneWithoutPrimaryInquiryCasesNestedInput
   inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutInquiryCaseNestedInput
-  aiDecisions?: Prisma.AiDecisionUpdateManyWithoutInquiryCaseNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUpdateManyWithoutInquiryCaseNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUpdateManyWithoutInquiryCaseNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUpdateManyWithoutInquiryCaseNestedInput
+  stateTransitions?: Prisma.InquiryStateTransitionUpdateManyWithoutInquiryCaseNestedInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUpdateManyWithoutInquiryCaseNestedInput
   structuredFacts?: Prisma.InquiryStructuredFactUpdateOneWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUpdateManyWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutInquiryCaseNestedInput
   contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
-  statusLogs?: Prisma.InquiryStatusLogUpdateManyWithoutInquiryCaseNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutInquiryCaseNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutInquiryCaseNestedInput
 }
 
@@ -1320,7 +1532,10 @@ export type InquiryCaseUncheckedUpdateWithoutAttachmentsInput = {
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   primaryCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1334,19 +1549,24 @@ export type InquiryCaseUncheckedUpdateWithoutAttachmentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutInquiryCaseNestedInput
-  aiDecisions?: Prisma.AiDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  stateTransitions?: Prisma.InquiryStateTransitionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutInquiryCaseNestedInput
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateOneWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutInquiryCaseNestedInput
   contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
-  statusLogs?: Prisma.InquiryStatusLogUncheckedUpdateManyWithoutInquiryCaseNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseCreateWithoutInquiryMessagesInput = {
   id?: string
-  status?: string
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
   subject?: string | null
   rawSubject?: string | null
   businessSubject?: string | null
@@ -1362,14 +1582,16 @@ export type InquiryCaseCreateWithoutInquiryMessagesInput = {
   customer: Prisma.CustomerCreateNestedOneWithoutInquiryCasesInput
   organization?: Prisma.OrganizationCreateNestedOneWithoutInquiryCasesInput
   primaryCustomer?: Prisma.CustomerCreateNestedOneWithoutPrimaryInquiryCasesInput
-  aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutInquiryCaseInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionCreateNestedManyWithoutInquiryCaseInput
+  businessEvents?: Prisma.InquiryBusinessEventCreateNestedManyWithoutInquiryCaseInput
+  stateDecisions?: Prisma.InquiryStateDecisionCreateNestedManyWithoutInquiryCaseInput
+  stateTransitions?: Prisma.InquiryStateTransitionCreateNestedManyWithoutInquiryCaseInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutInquiryCaseInput
   structuredFacts?: Prisma.InquiryStructuredFactCreateNestedOneWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutInquiryCaseInput
   contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
-  statusLogs?: Prisma.InquiryStatusLogCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutInquiryCaseInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutInquiryCaseInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutInquiryCaseInput
 }
 
@@ -1378,7 +1600,10 @@ export type InquiryCaseUncheckedCreateWithoutInquiryMessagesInput = {
   customerId: string
   organizationId?: string | null
   primaryCustomerId?: string | null
-  status?: string
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
   subject?: string | null
   rawSubject?: string | null
   businessSubject?: string | null
@@ -1391,14 +1616,16 @@ export type InquiryCaseUncheckedCreateWithoutInquiryMessagesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  aiDecisions?: Prisma.AiDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedCreateNestedManyWithoutInquiryCaseInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  stateTransitions?: Prisma.InquiryStateTransitionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutInquiryCaseInput
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedOneWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutInquiryCaseInput
   contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
-  statusLogs?: Prisma.InquiryStatusLogUncheckedCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutInquiryCaseInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutInquiryCaseInput
 }
 
@@ -1420,7 +1647,10 @@ export type InquiryCaseUpdateToOneWithWhereWithoutInquiryMessagesInput = {
 
 export type InquiryCaseUpdateWithoutInquiryMessagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1436,14 +1666,16 @@ export type InquiryCaseUpdateWithoutInquiryMessagesInput = {
   customer?: Prisma.CustomerUpdateOneRequiredWithoutInquiryCasesNestedInput
   organization?: Prisma.OrganizationUpdateOneWithoutInquiryCasesNestedInput
   primaryCustomer?: Prisma.CustomerUpdateOneWithoutPrimaryInquiryCasesNestedInput
-  aiDecisions?: Prisma.AiDecisionUpdateManyWithoutInquiryCaseNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUpdateManyWithoutInquiryCaseNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUpdateManyWithoutInquiryCaseNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUpdateManyWithoutInquiryCaseNestedInput
+  stateTransitions?: Prisma.InquiryStateTransitionUpdateManyWithoutInquiryCaseNestedInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUpdateManyWithoutInquiryCaseNestedInput
   structuredFacts?: Prisma.InquiryStructuredFactUpdateOneWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUpdateManyWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutInquiryCaseNestedInput
   contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
-  statusLogs?: Prisma.InquiryStatusLogUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutInquiryCaseNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutInquiryCaseNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutInquiryCaseNestedInput
 }
 
@@ -1452,7 +1684,10 @@ export type InquiryCaseUncheckedUpdateWithoutInquiryMessagesInput = {
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   primaryCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1465,20 +1700,25 @@ export type InquiryCaseUncheckedUpdateWithoutInquiryMessagesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  aiDecisions?: Prisma.AiDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  stateTransitions?: Prisma.InquiryStateTransitionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutInquiryCaseNestedInput
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateOneWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutInquiryCaseNestedInput
   contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
-  statusLogs?: Prisma.InquiryStatusLogUncheckedUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutInquiryCaseNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutInquiryCaseNestedInput
 }
 
-export type InquiryCaseCreateWithoutAiDecisionsInput = {
+export type InquiryCaseCreateWithoutAnalysisDecisionsInput = {
   id?: string
-  status?: string
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
   subject?: string | null
   rawSubject?: string | null
   businessSubject?: string | null
@@ -1495,22 +1735,27 @@ export type InquiryCaseCreateWithoutAiDecisionsInput = {
   organization?: Prisma.OrganizationCreateNestedOneWithoutInquiryCasesInput
   primaryCustomer?: Prisma.CustomerCreateNestedOneWithoutPrimaryInquiryCasesInput
   inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutInquiryCaseInput
+  businessEvents?: Prisma.InquiryBusinessEventCreateNestedManyWithoutInquiryCaseInput
+  stateDecisions?: Prisma.InquiryStateDecisionCreateNestedManyWithoutInquiryCaseInput
+  stateTransitions?: Prisma.InquiryStateTransitionCreateNestedManyWithoutInquiryCaseInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutInquiryCaseInput
   structuredFacts?: Prisma.InquiryStructuredFactCreateNestedOneWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutInquiryCaseInput
   contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
-  statusLogs?: Prisma.InquiryStatusLogCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutInquiryCaseInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutInquiryCaseInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutInquiryCaseInput
 }
 
-export type InquiryCaseUncheckedCreateWithoutAiDecisionsInput = {
+export type InquiryCaseUncheckedCreateWithoutAnalysisDecisionsInput = {
   id?: string
   customerId: string
   organizationId?: string | null
   primaryCustomerId?: string | null
-  status?: string
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
   subject?: string | null
   rawSubject?: string | null
   businessSubject?: string | null
@@ -1524,35 +1769,40 @@ export type InquiryCaseUncheckedCreateWithoutAiDecisionsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutInquiryCaseInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedCreateNestedManyWithoutInquiryCaseInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  stateTransitions?: Prisma.InquiryStateTransitionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutInquiryCaseInput
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedOneWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutInquiryCaseInput
   contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
-  statusLogs?: Prisma.InquiryStatusLogUncheckedCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutInquiryCaseInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutInquiryCaseInput
 }
 
-export type InquiryCaseCreateOrConnectWithoutAiDecisionsInput = {
+export type InquiryCaseCreateOrConnectWithoutAnalysisDecisionsInput = {
   where: Prisma.InquiryCaseWhereUniqueInput
-  create: Prisma.XOR<Prisma.InquiryCaseCreateWithoutAiDecisionsInput, Prisma.InquiryCaseUncheckedCreateWithoutAiDecisionsInput>
+  create: Prisma.XOR<Prisma.InquiryCaseCreateWithoutAnalysisDecisionsInput, Prisma.InquiryCaseUncheckedCreateWithoutAnalysisDecisionsInput>
 }
 
-export type InquiryCaseUpsertWithoutAiDecisionsInput = {
-  update: Prisma.XOR<Prisma.InquiryCaseUpdateWithoutAiDecisionsInput, Prisma.InquiryCaseUncheckedUpdateWithoutAiDecisionsInput>
-  create: Prisma.XOR<Prisma.InquiryCaseCreateWithoutAiDecisionsInput, Prisma.InquiryCaseUncheckedCreateWithoutAiDecisionsInput>
+export type InquiryCaseUpsertWithoutAnalysisDecisionsInput = {
+  update: Prisma.XOR<Prisma.InquiryCaseUpdateWithoutAnalysisDecisionsInput, Prisma.InquiryCaseUncheckedUpdateWithoutAnalysisDecisionsInput>
+  create: Prisma.XOR<Prisma.InquiryCaseCreateWithoutAnalysisDecisionsInput, Prisma.InquiryCaseUncheckedCreateWithoutAnalysisDecisionsInput>
   where?: Prisma.InquiryCaseWhereInput
 }
 
-export type InquiryCaseUpdateToOneWithWhereWithoutAiDecisionsInput = {
+export type InquiryCaseUpdateToOneWithWhereWithoutAnalysisDecisionsInput = {
   where?: Prisma.InquiryCaseWhereInput
-  data: Prisma.XOR<Prisma.InquiryCaseUpdateWithoutAiDecisionsInput, Prisma.InquiryCaseUncheckedUpdateWithoutAiDecisionsInput>
+  data: Prisma.XOR<Prisma.InquiryCaseUpdateWithoutAnalysisDecisionsInput, Prisma.InquiryCaseUncheckedUpdateWithoutAnalysisDecisionsInput>
 }
 
-export type InquiryCaseUpdateWithoutAiDecisionsInput = {
+export type InquiryCaseUpdateWithoutAnalysisDecisionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1569,22 +1819,27 @@ export type InquiryCaseUpdateWithoutAiDecisionsInput = {
   organization?: Prisma.OrganizationUpdateOneWithoutInquiryCasesNestedInput
   primaryCustomer?: Prisma.CustomerUpdateOneWithoutPrimaryInquiryCasesNestedInput
   inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutInquiryCaseNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUpdateManyWithoutInquiryCaseNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUpdateManyWithoutInquiryCaseNestedInput
+  stateTransitions?: Prisma.InquiryStateTransitionUpdateManyWithoutInquiryCaseNestedInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUpdateManyWithoutInquiryCaseNestedInput
   structuredFacts?: Prisma.InquiryStructuredFactUpdateOneWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUpdateManyWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutInquiryCaseNestedInput
   contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
-  statusLogs?: Prisma.InquiryStatusLogUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutInquiryCaseNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutInquiryCaseNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutInquiryCaseNestedInput
 }
 
-export type InquiryCaseUncheckedUpdateWithoutAiDecisionsInput = {
+export type InquiryCaseUncheckedUpdateWithoutAnalysisDecisionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   primaryCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1598,19 +1853,24 @@ export type InquiryCaseUncheckedUpdateWithoutAiDecisionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  stateTransitions?: Prisma.InquiryStateTransitionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutInquiryCaseNestedInput
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateOneWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutInquiryCaseNestedInput
   contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
-  statusLogs?: Prisma.InquiryStatusLogUncheckedUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutInquiryCaseNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutInquiryCaseNestedInput
 }
 
-export type InquiryCaseCreateWithoutStructuredFactsInput = {
+export type InquiryCaseCreateWithoutBusinessEventsInput = {
   id?: string
-  status?: string
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
   subject?: string | null
   rawSubject?: string | null
   businessSubject?: string | null
@@ -1627,22 +1887,27 @@ export type InquiryCaseCreateWithoutStructuredFactsInput = {
   organization?: Prisma.OrganizationCreateNestedOneWithoutInquiryCasesInput
   primaryCustomer?: Prisma.CustomerCreateNestedOneWithoutPrimaryInquiryCasesInput
   inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutInquiryCaseInput
-  aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutInquiryCaseInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionCreateNestedManyWithoutInquiryCaseInput
+  stateDecisions?: Prisma.InquiryStateDecisionCreateNestedManyWithoutInquiryCaseInput
+  stateTransitions?: Prisma.InquiryStateTransitionCreateNestedManyWithoutInquiryCaseInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutInquiryCaseInput
+  structuredFacts?: Prisma.InquiryStructuredFactCreateNestedOneWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutInquiryCaseInput
   contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
-  statusLogs?: Prisma.InquiryStatusLogCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutInquiryCaseInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutInquiryCaseInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutInquiryCaseInput
 }
 
-export type InquiryCaseUncheckedCreateWithoutStructuredFactsInput = {
+export type InquiryCaseUncheckedCreateWithoutBusinessEventsInput = {
   id?: string
   customerId: string
   organizationId?: string | null
   primaryCustomerId?: string | null
-  status?: string
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
   subject?: string | null
   rawSubject?: string | null
   businessSubject?: string | null
@@ -1656,13 +1921,623 @@ export type InquiryCaseUncheckedCreateWithoutStructuredFactsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutInquiryCaseInput
-  aiDecisions?: Prisma.AiDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  stateTransitions?: Prisma.InquiryStateTransitionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutInquiryCaseInput
+  structuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedOneWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutInquiryCaseInput
   contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
-  statusLogs?: Prisma.InquiryStatusLogUncheckedCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutInquiryCaseInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutInquiryCaseInput
+}
+
+export type InquiryCaseCreateOrConnectWithoutBusinessEventsInput = {
+  where: Prisma.InquiryCaseWhereUniqueInput
+  create: Prisma.XOR<Prisma.InquiryCaseCreateWithoutBusinessEventsInput, Prisma.InquiryCaseUncheckedCreateWithoutBusinessEventsInput>
+}
+
+export type InquiryCaseUpsertWithoutBusinessEventsInput = {
+  update: Prisma.XOR<Prisma.InquiryCaseUpdateWithoutBusinessEventsInput, Prisma.InquiryCaseUncheckedUpdateWithoutBusinessEventsInput>
+  create: Prisma.XOR<Prisma.InquiryCaseCreateWithoutBusinessEventsInput, Prisma.InquiryCaseUncheckedCreateWithoutBusinessEventsInput>
+  where?: Prisma.InquiryCaseWhereInput
+}
+
+export type InquiryCaseUpdateToOneWithWhereWithoutBusinessEventsInput = {
+  where?: Prisma.InquiryCaseWhereInput
+  data: Prisma.XOR<Prisma.InquiryCaseUpdateWithoutBusinessEventsInput, Prisma.InquiryCaseUncheckedUpdateWithoutBusinessEventsInput>
+}
+
+export type InquiryCaseUpdateWithoutBusinessEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutInquiryCasesNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutInquiryCasesNestedInput
+  primaryCustomer?: Prisma.CustomerUpdateOneWithoutPrimaryInquiryCasesNestedInput
+  inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutInquiryCaseNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUpdateManyWithoutInquiryCaseNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUpdateManyWithoutInquiryCaseNestedInput
+  stateTransitions?: Prisma.InquiryStateTransitionUpdateManyWithoutInquiryCaseNestedInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUpdateManyWithoutInquiryCaseNestedInput
+  structuredFacts?: Prisma.InquiryStructuredFactUpdateOneWithoutInquiryCaseNestedInput
+  replyDrafts?: Prisma.ReplyDraftUpdateManyWithoutInquiryCaseNestedInput
+  contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutInquiryCaseNestedInput
+  contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
+  attachments?: Prisma.EmailAttachmentUpdateManyWithoutInquiryCaseNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutInquiryCaseNestedInput
+}
+
+export type InquiryCaseUncheckedUpdateWithoutBusinessEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  stateTransitions?: Prisma.InquiryStateTransitionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  structuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateOneWithoutInquiryCaseNestedInput
+  replyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
+  attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutInquiryCaseNestedInput
+}
+
+export type InquiryCaseCreateWithoutStateDecisionsInput = {
+  id?: string
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
+  subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
+  productType?: string | null
+  latestMessageAt?: Date | string | null
+  closedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  customer: Prisma.CustomerCreateNestedOneWithoutInquiryCasesInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutInquiryCasesInput
+  primaryCustomer?: Prisma.CustomerCreateNestedOneWithoutPrimaryInquiryCasesInput
+  inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutInquiryCaseInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionCreateNestedManyWithoutInquiryCaseInput
+  businessEvents?: Prisma.InquiryBusinessEventCreateNestedManyWithoutInquiryCaseInput
+  stateTransitions?: Prisma.InquiryStateTransitionCreateNestedManyWithoutInquiryCaseInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutInquiryCaseInput
+  structuredFacts?: Prisma.InquiryStructuredFactCreateNestedOneWithoutInquiryCaseInput
+  replyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutInquiryCaseInput
+  contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutInquiryCaseInput
+  contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
+  attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutInquiryCaseInput
+  sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutInquiryCaseInput
+}
+
+export type InquiryCaseUncheckedCreateWithoutStateDecisionsInput = {
+  id?: string
+  customerId: string
+  organizationId?: string | null
+  primaryCustomerId?: string | null
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
+  subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
+  productType?: string | null
+  latestMessageAt?: Date | string | null
+  closedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutInquiryCaseInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedCreateNestedManyWithoutInquiryCaseInput
+  stateTransitions?: Prisma.InquiryStateTransitionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutInquiryCaseInput
+  structuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedOneWithoutInquiryCaseInput
+  replyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutInquiryCaseInput
+  contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutInquiryCaseInput
+  contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
+  attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutInquiryCaseInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutInquiryCaseInput
+}
+
+export type InquiryCaseCreateOrConnectWithoutStateDecisionsInput = {
+  where: Prisma.InquiryCaseWhereUniqueInput
+  create: Prisma.XOR<Prisma.InquiryCaseCreateWithoutStateDecisionsInput, Prisma.InquiryCaseUncheckedCreateWithoutStateDecisionsInput>
+}
+
+export type InquiryCaseUpsertWithoutStateDecisionsInput = {
+  update: Prisma.XOR<Prisma.InquiryCaseUpdateWithoutStateDecisionsInput, Prisma.InquiryCaseUncheckedUpdateWithoutStateDecisionsInput>
+  create: Prisma.XOR<Prisma.InquiryCaseCreateWithoutStateDecisionsInput, Prisma.InquiryCaseUncheckedCreateWithoutStateDecisionsInput>
+  where?: Prisma.InquiryCaseWhereInput
+}
+
+export type InquiryCaseUpdateToOneWithWhereWithoutStateDecisionsInput = {
+  where?: Prisma.InquiryCaseWhereInput
+  data: Prisma.XOR<Prisma.InquiryCaseUpdateWithoutStateDecisionsInput, Prisma.InquiryCaseUncheckedUpdateWithoutStateDecisionsInput>
+}
+
+export type InquiryCaseUpdateWithoutStateDecisionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutInquiryCasesNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutInquiryCasesNestedInput
+  primaryCustomer?: Prisma.CustomerUpdateOneWithoutPrimaryInquiryCasesNestedInput
+  inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutInquiryCaseNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUpdateManyWithoutInquiryCaseNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUpdateManyWithoutInquiryCaseNestedInput
+  stateTransitions?: Prisma.InquiryStateTransitionUpdateManyWithoutInquiryCaseNestedInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUpdateManyWithoutInquiryCaseNestedInput
+  structuredFacts?: Prisma.InquiryStructuredFactUpdateOneWithoutInquiryCaseNestedInput
+  replyDrafts?: Prisma.ReplyDraftUpdateManyWithoutInquiryCaseNestedInput
+  contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutInquiryCaseNestedInput
+  contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
+  attachments?: Prisma.EmailAttachmentUpdateManyWithoutInquiryCaseNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutInquiryCaseNestedInput
+}
+
+export type InquiryCaseUncheckedUpdateWithoutStateDecisionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  stateTransitions?: Prisma.InquiryStateTransitionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  structuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateOneWithoutInquiryCaseNestedInput
+  replyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
+  attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutInquiryCaseNestedInput
+}
+
+export type InquiryCaseCreateWithoutStateTransitionsInput = {
+  id?: string
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
+  subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
+  productType?: string | null
+  latestMessageAt?: Date | string | null
+  closedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  customer: Prisma.CustomerCreateNestedOneWithoutInquiryCasesInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutInquiryCasesInput
+  primaryCustomer?: Prisma.CustomerCreateNestedOneWithoutPrimaryInquiryCasesInput
+  inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutInquiryCaseInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionCreateNestedManyWithoutInquiryCaseInput
+  businessEvents?: Prisma.InquiryBusinessEventCreateNestedManyWithoutInquiryCaseInput
+  stateDecisions?: Prisma.InquiryStateDecisionCreateNestedManyWithoutInquiryCaseInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutInquiryCaseInput
+  structuredFacts?: Prisma.InquiryStructuredFactCreateNestedOneWithoutInquiryCaseInput
+  replyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutInquiryCaseInput
+  contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutInquiryCaseInput
+  contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
+  attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutInquiryCaseInput
+  sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutInquiryCaseInput
+}
+
+export type InquiryCaseUncheckedCreateWithoutStateTransitionsInput = {
+  id?: string
+  customerId: string
+  organizationId?: string | null
+  primaryCustomerId?: string | null
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
+  subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
+  productType?: string | null
+  latestMessageAt?: Date | string | null
+  closedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutInquiryCaseInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedCreateNestedManyWithoutInquiryCaseInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutInquiryCaseInput
+  structuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedOneWithoutInquiryCaseInput
+  replyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutInquiryCaseInput
+  contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutInquiryCaseInput
+  contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
+  attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutInquiryCaseInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutInquiryCaseInput
+}
+
+export type InquiryCaseCreateOrConnectWithoutStateTransitionsInput = {
+  where: Prisma.InquiryCaseWhereUniqueInput
+  create: Prisma.XOR<Prisma.InquiryCaseCreateWithoutStateTransitionsInput, Prisma.InquiryCaseUncheckedCreateWithoutStateTransitionsInput>
+}
+
+export type InquiryCaseUpsertWithoutStateTransitionsInput = {
+  update: Prisma.XOR<Prisma.InquiryCaseUpdateWithoutStateTransitionsInput, Prisma.InquiryCaseUncheckedUpdateWithoutStateTransitionsInput>
+  create: Prisma.XOR<Prisma.InquiryCaseCreateWithoutStateTransitionsInput, Prisma.InquiryCaseUncheckedCreateWithoutStateTransitionsInput>
+  where?: Prisma.InquiryCaseWhereInput
+}
+
+export type InquiryCaseUpdateToOneWithWhereWithoutStateTransitionsInput = {
+  where?: Prisma.InquiryCaseWhereInput
+  data: Prisma.XOR<Prisma.InquiryCaseUpdateWithoutStateTransitionsInput, Prisma.InquiryCaseUncheckedUpdateWithoutStateTransitionsInput>
+}
+
+export type InquiryCaseUpdateWithoutStateTransitionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutInquiryCasesNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutInquiryCasesNestedInput
+  primaryCustomer?: Prisma.CustomerUpdateOneWithoutPrimaryInquiryCasesNestedInput
+  inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutInquiryCaseNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUpdateManyWithoutInquiryCaseNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUpdateManyWithoutInquiryCaseNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUpdateManyWithoutInquiryCaseNestedInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUpdateManyWithoutInquiryCaseNestedInput
+  structuredFacts?: Prisma.InquiryStructuredFactUpdateOneWithoutInquiryCaseNestedInput
+  replyDrafts?: Prisma.ReplyDraftUpdateManyWithoutInquiryCaseNestedInput
+  contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutInquiryCaseNestedInput
+  contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
+  attachments?: Prisma.EmailAttachmentUpdateManyWithoutInquiryCaseNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutInquiryCaseNestedInput
+}
+
+export type InquiryCaseUncheckedUpdateWithoutStateTransitionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  structuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateOneWithoutInquiryCaseNestedInput
+  replyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
+  attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutInquiryCaseNestedInput
+}
+
+export type InquiryCaseCreateWithoutRecoveryRecordsInput = {
+  id?: string
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
+  subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
+  productType?: string | null
+  latestMessageAt?: Date | string | null
+  closedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  customer: Prisma.CustomerCreateNestedOneWithoutInquiryCasesInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutInquiryCasesInput
+  primaryCustomer?: Prisma.CustomerCreateNestedOneWithoutPrimaryInquiryCasesInput
+  inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutInquiryCaseInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionCreateNestedManyWithoutInquiryCaseInput
+  businessEvents?: Prisma.InquiryBusinessEventCreateNestedManyWithoutInquiryCaseInput
+  stateDecisions?: Prisma.InquiryStateDecisionCreateNestedManyWithoutInquiryCaseInput
+  stateTransitions?: Prisma.InquiryStateTransitionCreateNestedManyWithoutInquiryCaseInput
+  structuredFacts?: Prisma.InquiryStructuredFactCreateNestedOneWithoutInquiryCaseInput
+  replyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutInquiryCaseInput
+  contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutInquiryCaseInput
+  contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
+  attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutInquiryCaseInput
+  sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutInquiryCaseInput
+}
+
+export type InquiryCaseUncheckedCreateWithoutRecoveryRecordsInput = {
+  id?: string
+  customerId: string
+  organizationId?: string | null
+  primaryCustomerId?: string | null
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
+  subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
+  productType?: string | null
+  latestMessageAt?: Date | string | null
+  closedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutInquiryCaseInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedCreateNestedManyWithoutInquiryCaseInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  stateTransitions?: Prisma.InquiryStateTransitionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  structuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedOneWithoutInquiryCaseInput
+  replyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutInquiryCaseInput
+  contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutInquiryCaseInput
+  contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
+  attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutInquiryCaseInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutInquiryCaseInput
+}
+
+export type InquiryCaseCreateOrConnectWithoutRecoveryRecordsInput = {
+  where: Prisma.InquiryCaseWhereUniqueInput
+  create: Prisma.XOR<Prisma.InquiryCaseCreateWithoutRecoveryRecordsInput, Prisma.InquiryCaseUncheckedCreateWithoutRecoveryRecordsInput>
+}
+
+export type InquiryCaseUpsertWithoutRecoveryRecordsInput = {
+  update: Prisma.XOR<Prisma.InquiryCaseUpdateWithoutRecoveryRecordsInput, Prisma.InquiryCaseUncheckedUpdateWithoutRecoveryRecordsInput>
+  create: Prisma.XOR<Prisma.InquiryCaseCreateWithoutRecoveryRecordsInput, Prisma.InquiryCaseUncheckedCreateWithoutRecoveryRecordsInput>
+  where?: Prisma.InquiryCaseWhereInput
+}
+
+export type InquiryCaseUpdateToOneWithWhereWithoutRecoveryRecordsInput = {
+  where?: Prisma.InquiryCaseWhereInput
+  data: Prisma.XOR<Prisma.InquiryCaseUpdateWithoutRecoveryRecordsInput, Prisma.InquiryCaseUncheckedUpdateWithoutRecoveryRecordsInput>
+}
+
+export type InquiryCaseUpdateWithoutRecoveryRecordsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutInquiryCasesNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutInquiryCasesNestedInput
+  primaryCustomer?: Prisma.CustomerUpdateOneWithoutPrimaryInquiryCasesNestedInput
+  inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutInquiryCaseNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUpdateManyWithoutInquiryCaseNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUpdateManyWithoutInquiryCaseNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUpdateManyWithoutInquiryCaseNestedInput
+  stateTransitions?: Prisma.InquiryStateTransitionUpdateManyWithoutInquiryCaseNestedInput
+  structuredFacts?: Prisma.InquiryStructuredFactUpdateOneWithoutInquiryCaseNestedInput
+  replyDrafts?: Prisma.ReplyDraftUpdateManyWithoutInquiryCaseNestedInput
+  contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutInquiryCaseNestedInput
+  contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
+  attachments?: Prisma.EmailAttachmentUpdateManyWithoutInquiryCaseNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutInquiryCaseNestedInput
+}
+
+export type InquiryCaseUncheckedUpdateWithoutRecoveryRecordsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
+  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  stateTransitions?: Prisma.InquiryStateTransitionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  structuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateOneWithoutInquiryCaseNestedInput
+  replyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
+  attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutInquiryCaseNestedInput
+}
+
+export type InquiryCaseCreateWithoutStructuredFactsInput = {
+  id?: string
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
+  subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
+  productType?: string | null
+  latestMessageAt?: Date | string | null
+  closedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  customer: Prisma.CustomerCreateNestedOneWithoutInquiryCasesInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutInquiryCasesInput
+  primaryCustomer?: Prisma.CustomerCreateNestedOneWithoutPrimaryInquiryCasesInput
+  inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutInquiryCaseInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionCreateNestedManyWithoutInquiryCaseInput
+  businessEvents?: Prisma.InquiryBusinessEventCreateNestedManyWithoutInquiryCaseInput
+  stateDecisions?: Prisma.InquiryStateDecisionCreateNestedManyWithoutInquiryCaseInput
+  stateTransitions?: Prisma.InquiryStateTransitionCreateNestedManyWithoutInquiryCaseInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutInquiryCaseInput
+  replyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutInquiryCaseInput
+  contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutInquiryCaseInput
+  contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
+  attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutInquiryCaseInput
+  sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutInquiryCaseInput
+}
+
+export type InquiryCaseUncheckedCreateWithoutStructuredFactsInput = {
+  id?: string
+  customerId: string
+  organizationId?: string | null
+  primaryCustomerId?: string | null
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
+  subject?: string | null
+  rawSubject?: string | null
+  businessSubject?: string | null
+  businessSubjectSource?: string
+  businessSubjectLocked?: boolean
+  businessSubjectUpdatedAt?: Date | string | null
+  productType?: string | null
+  latestMessageAt?: Date | string | null
+  closedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutInquiryCaseInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedCreateNestedManyWithoutInquiryCaseInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  stateTransitions?: Prisma.InquiryStateTransitionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutInquiryCaseInput
+  replyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutInquiryCaseInput
+  contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutInquiryCaseInput
+  contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
+  attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutInquiryCaseInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutInquiryCaseInput
 }
 
@@ -1684,7 +2559,10 @@ export type InquiryCaseUpdateToOneWithWhereWithoutStructuredFactsInput = {
 
 export type InquiryCaseUpdateWithoutStructuredFactsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1701,13 +2579,15 @@ export type InquiryCaseUpdateWithoutStructuredFactsInput = {
   organization?: Prisma.OrganizationUpdateOneWithoutInquiryCasesNestedInput
   primaryCustomer?: Prisma.CustomerUpdateOneWithoutPrimaryInquiryCasesNestedInput
   inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutInquiryCaseNestedInput
-  aiDecisions?: Prisma.AiDecisionUpdateManyWithoutInquiryCaseNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUpdateManyWithoutInquiryCaseNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUpdateManyWithoutInquiryCaseNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUpdateManyWithoutInquiryCaseNestedInput
+  stateTransitions?: Prisma.InquiryStateTransitionUpdateManyWithoutInquiryCaseNestedInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUpdateManyWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUpdateManyWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutInquiryCaseNestedInput
   contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
-  statusLogs?: Prisma.InquiryStatusLogUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutInquiryCaseNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutInquiryCaseNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutInquiryCaseNestedInput
 }
 
@@ -1716,7 +2596,10 @@ export type InquiryCaseUncheckedUpdateWithoutStructuredFactsInput = {
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   primaryCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1730,19 +2613,24 @@ export type InquiryCaseUncheckedUpdateWithoutStructuredFactsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutInquiryCaseNestedInput
-  aiDecisions?: Prisma.AiDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  stateTransitions?: Prisma.InquiryStateTransitionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutInquiryCaseNestedInput
   contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
-  statusLogs?: Prisma.InquiryStatusLogUncheckedUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutInquiryCaseNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseCreateWithoutReplyDraftsInput = {
   id?: string
-  status?: string
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
   subject?: string | null
   rawSubject?: string | null
   businessSubject?: string | null
@@ -1759,13 +2647,15 @@ export type InquiryCaseCreateWithoutReplyDraftsInput = {
   organization?: Prisma.OrganizationCreateNestedOneWithoutInquiryCasesInput
   primaryCustomer?: Prisma.CustomerCreateNestedOneWithoutPrimaryInquiryCasesInput
   inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutInquiryCaseInput
-  aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutInquiryCaseInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionCreateNestedManyWithoutInquiryCaseInput
+  businessEvents?: Prisma.InquiryBusinessEventCreateNestedManyWithoutInquiryCaseInput
+  stateDecisions?: Prisma.InquiryStateDecisionCreateNestedManyWithoutInquiryCaseInput
+  stateTransitions?: Prisma.InquiryStateTransitionCreateNestedManyWithoutInquiryCaseInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutInquiryCaseInput
   structuredFacts?: Prisma.InquiryStructuredFactCreateNestedOneWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutInquiryCaseInput
   contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
-  statusLogs?: Prisma.InquiryStatusLogCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutInquiryCaseInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutInquiryCaseInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutInquiryCaseInput
 }
 
@@ -1774,7 +2664,10 @@ export type InquiryCaseUncheckedCreateWithoutReplyDraftsInput = {
   customerId: string
   organizationId?: string | null
   primaryCustomerId?: string | null
-  status?: string
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
   subject?: string | null
   rawSubject?: string | null
   businessSubject?: string | null
@@ -1788,13 +2681,15 @@ export type InquiryCaseUncheckedCreateWithoutReplyDraftsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutInquiryCaseInput
-  aiDecisions?: Prisma.AiDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedCreateNestedManyWithoutInquiryCaseInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  stateTransitions?: Prisma.InquiryStateTransitionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutInquiryCaseInput
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedOneWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutInquiryCaseInput
   contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
-  statusLogs?: Prisma.InquiryStatusLogUncheckedCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutInquiryCaseInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutInquiryCaseInput
 }
 
@@ -1816,7 +2711,10 @@ export type InquiryCaseUpdateToOneWithWhereWithoutReplyDraftsInput = {
 
 export type InquiryCaseUpdateWithoutReplyDraftsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1833,13 +2731,15 @@ export type InquiryCaseUpdateWithoutReplyDraftsInput = {
   organization?: Prisma.OrganizationUpdateOneWithoutInquiryCasesNestedInput
   primaryCustomer?: Prisma.CustomerUpdateOneWithoutPrimaryInquiryCasesNestedInput
   inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutInquiryCaseNestedInput
-  aiDecisions?: Prisma.AiDecisionUpdateManyWithoutInquiryCaseNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUpdateManyWithoutInquiryCaseNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUpdateManyWithoutInquiryCaseNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUpdateManyWithoutInquiryCaseNestedInput
+  stateTransitions?: Prisma.InquiryStateTransitionUpdateManyWithoutInquiryCaseNestedInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUpdateManyWithoutInquiryCaseNestedInput
   structuredFacts?: Prisma.InquiryStructuredFactUpdateOneWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutInquiryCaseNestedInput
   contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
-  statusLogs?: Prisma.InquiryStatusLogUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutInquiryCaseNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutInquiryCaseNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutInquiryCaseNestedInput
 }
 
@@ -1848,7 +2748,10 @@ export type InquiryCaseUncheckedUpdateWithoutReplyDraftsInput = {
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   primaryCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1862,19 +2765,24 @@ export type InquiryCaseUncheckedUpdateWithoutReplyDraftsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutInquiryCaseNestedInput
-  aiDecisions?: Prisma.AiDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  stateTransitions?: Prisma.InquiryStateTransitionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutInquiryCaseNestedInput
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateOneWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutInquiryCaseNestedInput
   contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
-  statusLogs?: Prisma.InquiryStatusLogUncheckedUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutInquiryCaseNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseCreateWithoutSendAttemptsInput = {
   id?: string
-  status?: string
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
   subject?: string | null
   rawSubject?: string | null
   businessSubject?: string | null
@@ -1891,14 +2799,16 @@ export type InquiryCaseCreateWithoutSendAttemptsInput = {
   organization?: Prisma.OrganizationCreateNestedOneWithoutInquiryCasesInput
   primaryCustomer?: Prisma.CustomerCreateNestedOneWithoutPrimaryInquiryCasesInput
   inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutInquiryCaseInput
-  aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutInquiryCaseInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionCreateNestedManyWithoutInquiryCaseInput
+  businessEvents?: Prisma.InquiryBusinessEventCreateNestedManyWithoutInquiryCaseInput
+  stateDecisions?: Prisma.InquiryStateDecisionCreateNestedManyWithoutInquiryCaseInput
+  stateTransitions?: Prisma.InquiryStateTransitionCreateNestedManyWithoutInquiryCaseInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutInquiryCaseInput
   structuredFacts?: Prisma.InquiryStructuredFactCreateNestedOneWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutInquiryCaseInput
   contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
-  statusLogs?: Prisma.InquiryStatusLogCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutInquiryCaseInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutInquiryCaseInput
 }
 
 export type InquiryCaseUncheckedCreateWithoutSendAttemptsInput = {
@@ -1906,7 +2816,10 @@ export type InquiryCaseUncheckedCreateWithoutSendAttemptsInput = {
   customerId: string
   organizationId?: string | null
   primaryCustomerId?: string | null
-  status?: string
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
   subject?: string | null
   rawSubject?: string | null
   businessSubject?: string | null
@@ -1920,14 +2833,16 @@ export type InquiryCaseUncheckedCreateWithoutSendAttemptsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutInquiryCaseInput
-  aiDecisions?: Prisma.AiDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedCreateNestedManyWithoutInquiryCaseInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  stateTransitions?: Prisma.InquiryStateTransitionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutInquiryCaseInput
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedOneWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutInquiryCaseInput
   contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
-  statusLogs?: Prisma.InquiryStatusLogUncheckedCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutInquiryCaseInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
 }
 
 export type InquiryCaseCreateOrConnectWithoutSendAttemptsInput = {
@@ -1948,7 +2863,10 @@ export type InquiryCaseUpdateToOneWithWhereWithoutSendAttemptsInput = {
 
 export type InquiryCaseUpdateWithoutSendAttemptsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1965,14 +2883,16 @@ export type InquiryCaseUpdateWithoutSendAttemptsInput = {
   organization?: Prisma.OrganizationUpdateOneWithoutInquiryCasesNestedInput
   primaryCustomer?: Prisma.CustomerUpdateOneWithoutPrimaryInquiryCasesNestedInput
   inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutInquiryCaseNestedInput
-  aiDecisions?: Prisma.AiDecisionUpdateManyWithoutInquiryCaseNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUpdateManyWithoutInquiryCaseNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUpdateManyWithoutInquiryCaseNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUpdateManyWithoutInquiryCaseNestedInput
+  stateTransitions?: Prisma.InquiryStateTransitionUpdateManyWithoutInquiryCaseNestedInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUpdateManyWithoutInquiryCaseNestedInput
   structuredFacts?: Prisma.InquiryStructuredFactUpdateOneWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUpdateManyWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutInquiryCaseNestedInput
   contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
-  statusLogs?: Prisma.InquiryStatusLogUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutInquiryCaseNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseUncheckedUpdateWithoutSendAttemptsInput = {
@@ -1980,7 +2900,10 @@ export type InquiryCaseUncheckedUpdateWithoutSendAttemptsInput = {
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   primaryCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1994,151 +2917,24 @@ export type InquiryCaseUncheckedUpdateWithoutSendAttemptsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutInquiryCaseNestedInput
-  aiDecisions?: Prisma.AiDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  stateTransitions?: Prisma.InquiryStateTransitionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutInquiryCaseNestedInput
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateOneWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutInquiryCaseNestedInput
   contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
-  statusLogs?: Prisma.InquiryStatusLogUncheckedUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutInquiryCaseNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
-}
-
-export type InquiryCaseCreateWithoutWorkflowDecisionsInput = {
-  id?: string
-  status?: string
-  subject?: string | null
-  rawSubject?: string | null
-  businessSubject?: string | null
-  businessSubjectSource?: string
-  businessSubjectLocked?: boolean
-  businessSubjectUpdatedAt?: Date | string | null
-  productType?: string | null
-  latestMessageAt?: Date | string | null
-  closedAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  customer: Prisma.CustomerCreateNestedOneWithoutInquiryCasesInput
-  organization?: Prisma.OrganizationCreateNestedOneWithoutInquiryCasesInput
-  primaryCustomer?: Prisma.CustomerCreateNestedOneWithoutPrimaryInquiryCasesInput
-  inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutInquiryCaseInput
-  aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutInquiryCaseInput
-  structuredFacts?: Prisma.InquiryStructuredFactCreateNestedOneWithoutInquiryCaseInput
-  replyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutInquiryCaseInput
-  contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutInquiryCaseInput
-  contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
-  statusLogs?: Prisma.InquiryStatusLogCreateNestedManyWithoutInquiryCaseInput
-  attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutInquiryCaseInput
-  sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutInquiryCaseInput
-}
-
-export type InquiryCaseUncheckedCreateWithoutWorkflowDecisionsInput = {
-  id?: string
-  customerId: string
-  organizationId?: string | null
-  primaryCustomerId?: string | null
-  status?: string
-  subject?: string | null
-  rawSubject?: string | null
-  businessSubject?: string | null
-  businessSubjectSource?: string
-  businessSubjectLocked?: boolean
-  businessSubjectUpdatedAt?: Date | string | null
-  productType?: string | null
-  latestMessageAt?: Date | string | null
-  closedAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutInquiryCaseInput
-  aiDecisions?: Prisma.AiDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
-  structuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedOneWithoutInquiryCaseInput
-  replyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutInquiryCaseInput
-  contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutInquiryCaseInput
-  contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
-  statusLogs?: Prisma.InquiryStatusLogUncheckedCreateNestedManyWithoutInquiryCaseInput
-  attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutInquiryCaseInput
-  sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutInquiryCaseInput
-}
-
-export type InquiryCaseCreateOrConnectWithoutWorkflowDecisionsInput = {
-  where: Prisma.InquiryCaseWhereUniqueInput
-  create: Prisma.XOR<Prisma.InquiryCaseCreateWithoutWorkflowDecisionsInput, Prisma.InquiryCaseUncheckedCreateWithoutWorkflowDecisionsInput>
-}
-
-export type InquiryCaseUpsertWithoutWorkflowDecisionsInput = {
-  update: Prisma.XOR<Prisma.InquiryCaseUpdateWithoutWorkflowDecisionsInput, Prisma.InquiryCaseUncheckedUpdateWithoutWorkflowDecisionsInput>
-  create: Prisma.XOR<Prisma.InquiryCaseCreateWithoutWorkflowDecisionsInput, Prisma.InquiryCaseUncheckedCreateWithoutWorkflowDecisionsInput>
-  where?: Prisma.InquiryCaseWhereInput
-}
-
-export type InquiryCaseUpdateToOneWithWhereWithoutWorkflowDecisionsInput = {
-  where?: Prisma.InquiryCaseWhereInput
-  data: Prisma.XOR<Prisma.InquiryCaseUpdateWithoutWorkflowDecisionsInput, Prisma.InquiryCaseUncheckedUpdateWithoutWorkflowDecisionsInput>
-}
-
-export type InquiryCaseUpdateWithoutWorkflowDecisionsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
-  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  customer?: Prisma.CustomerUpdateOneRequiredWithoutInquiryCasesNestedInput
-  organization?: Prisma.OrganizationUpdateOneWithoutInquiryCasesNestedInput
-  primaryCustomer?: Prisma.CustomerUpdateOneWithoutPrimaryInquiryCasesNestedInput
-  inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutInquiryCaseNestedInput
-  aiDecisions?: Prisma.AiDecisionUpdateManyWithoutInquiryCaseNestedInput
-  structuredFacts?: Prisma.InquiryStructuredFactUpdateOneWithoutInquiryCaseNestedInput
-  replyDrafts?: Prisma.ReplyDraftUpdateManyWithoutInquiryCaseNestedInput
-  contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutInquiryCaseNestedInput
-  contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
-  statusLogs?: Prisma.InquiryStatusLogUpdateManyWithoutInquiryCaseNestedInput
-  attachments?: Prisma.EmailAttachmentUpdateManyWithoutInquiryCaseNestedInput
-  sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutInquiryCaseNestedInput
-}
-
-export type InquiryCaseUncheckedUpdateWithoutWorkflowDecisionsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  customerId?: Prisma.StringFieldUpdateOperationsInput | string
-  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  primaryCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
-  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutInquiryCaseNestedInput
-  aiDecisions?: Prisma.AiDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
-  structuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateOneWithoutInquiryCaseNestedInput
-  replyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutInquiryCaseNestedInput
-  contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutInquiryCaseNestedInput
-  contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
-  statusLogs?: Prisma.InquiryStatusLogUncheckedUpdateManyWithoutInquiryCaseNestedInput
-  attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutInquiryCaseNestedInput
-  sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseCreateWithoutContextSnapshotsInput = {
   id?: string
-  status?: string
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
   subject?: string | null
   rawSubject?: string | null
   businessSubject?: string | null
@@ -2155,13 +2951,15 @@ export type InquiryCaseCreateWithoutContextSnapshotsInput = {
   organization?: Prisma.OrganizationCreateNestedOneWithoutInquiryCasesInput
   primaryCustomer?: Prisma.CustomerCreateNestedOneWithoutPrimaryInquiryCasesInput
   inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutInquiryCaseInput
-  aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutInquiryCaseInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionCreateNestedManyWithoutInquiryCaseInput
+  businessEvents?: Prisma.InquiryBusinessEventCreateNestedManyWithoutInquiryCaseInput
+  stateDecisions?: Prisma.InquiryStateDecisionCreateNestedManyWithoutInquiryCaseInput
+  stateTransitions?: Prisma.InquiryStateTransitionCreateNestedManyWithoutInquiryCaseInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutInquiryCaseInput
   structuredFacts?: Prisma.InquiryStructuredFactCreateNestedOneWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutInquiryCaseInput
   contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
-  statusLogs?: Prisma.InquiryStatusLogCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutInquiryCaseInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutInquiryCaseInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutInquiryCaseInput
 }
 
@@ -2170,7 +2968,10 @@ export type InquiryCaseUncheckedCreateWithoutContextSnapshotsInput = {
   customerId: string
   organizationId?: string | null
   primaryCustomerId?: string | null
-  status?: string
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
   subject?: string | null
   rawSubject?: string | null
   businessSubject?: string | null
@@ -2184,13 +2985,15 @@ export type InquiryCaseUncheckedCreateWithoutContextSnapshotsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutInquiryCaseInput
-  aiDecisions?: Prisma.AiDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedCreateNestedManyWithoutInquiryCaseInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  stateTransitions?: Prisma.InquiryStateTransitionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutInquiryCaseInput
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedOneWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutInquiryCaseInput
   contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
-  statusLogs?: Prisma.InquiryStatusLogUncheckedCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutInquiryCaseInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutInquiryCaseInput
 }
 
@@ -2212,7 +3015,10 @@ export type InquiryCaseUpdateToOneWithWhereWithoutContextSnapshotsInput = {
 
 export type InquiryCaseUpdateWithoutContextSnapshotsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2229,13 +3035,15 @@ export type InquiryCaseUpdateWithoutContextSnapshotsInput = {
   organization?: Prisma.OrganizationUpdateOneWithoutInquiryCasesNestedInput
   primaryCustomer?: Prisma.CustomerUpdateOneWithoutPrimaryInquiryCasesNestedInput
   inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutInquiryCaseNestedInput
-  aiDecisions?: Prisma.AiDecisionUpdateManyWithoutInquiryCaseNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUpdateManyWithoutInquiryCaseNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUpdateManyWithoutInquiryCaseNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUpdateManyWithoutInquiryCaseNestedInput
+  stateTransitions?: Prisma.InquiryStateTransitionUpdateManyWithoutInquiryCaseNestedInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUpdateManyWithoutInquiryCaseNestedInput
   structuredFacts?: Prisma.InquiryStructuredFactUpdateOneWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUpdateManyWithoutInquiryCaseNestedInput
   contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
-  statusLogs?: Prisma.InquiryStatusLogUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutInquiryCaseNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutInquiryCaseNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutInquiryCaseNestedInput
 }
 
@@ -2244,7 +3052,10 @@ export type InquiryCaseUncheckedUpdateWithoutContextSnapshotsInput = {
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   primaryCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2258,19 +3069,24 @@ export type InquiryCaseUncheckedUpdateWithoutContextSnapshotsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutInquiryCaseNestedInput
-  aiDecisions?: Prisma.AiDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  stateTransitions?: Prisma.InquiryStateTransitionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutInquiryCaseNestedInput
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateOneWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutInquiryCaseNestedInput
   contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
-  statusLogs?: Prisma.InquiryStatusLogUncheckedUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutInquiryCaseNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutInquiryCaseNestedInput
 }
 
 export type InquiryCaseCreateWithoutContextSummaryInput = {
   id?: string
-  status?: string
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
   subject?: string | null
   rawSubject?: string | null
   businessSubject?: string | null
@@ -2287,13 +3103,15 @@ export type InquiryCaseCreateWithoutContextSummaryInput = {
   organization?: Prisma.OrganizationCreateNestedOneWithoutInquiryCasesInput
   primaryCustomer?: Prisma.CustomerCreateNestedOneWithoutPrimaryInquiryCasesInput
   inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutInquiryCaseInput
-  aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutInquiryCaseInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionCreateNestedManyWithoutInquiryCaseInput
+  businessEvents?: Prisma.InquiryBusinessEventCreateNestedManyWithoutInquiryCaseInput
+  stateDecisions?: Prisma.InquiryStateDecisionCreateNestedManyWithoutInquiryCaseInput
+  stateTransitions?: Prisma.InquiryStateTransitionCreateNestedManyWithoutInquiryCaseInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordCreateNestedManyWithoutInquiryCaseInput
   structuredFacts?: Prisma.InquiryStructuredFactCreateNestedOneWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutInquiryCaseInput
-  statusLogs?: Prisma.InquiryStatusLogCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutInquiryCaseInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutInquiryCaseInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutInquiryCaseInput
 }
 
@@ -2302,7 +3120,10 @@ export type InquiryCaseUncheckedCreateWithoutContextSummaryInput = {
   customerId: string
   organizationId?: string | null
   primaryCustomerId?: string | null
-  status?: string
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
   subject?: string | null
   rawSubject?: string | null
   businessSubject?: string | null
@@ -2316,13 +3137,15 @@ export type InquiryCaseUncheckedCreateWithoutContextSummaryInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutInquiryCaseInput
-  aiDecisions?: Prisma.AiDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedCreateNestedManyWithoutInquiryCaseInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  stateTransitions?: Prisma.InquiryStateTransitionUncheckedCreateNestedManyWithoutInquiryCaseInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUncheckedCreateNestedManyWithoutInquiryCaseInput
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedOneWithoutInquiryCaseInput
   replyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutInquiryCaseInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutInquiryCaseInput
-  statusLogs?: Prisma.InquiryStatusLogUncheckedCreateNestedManyWithoutInquiryCaseInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutInquiryCaseInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutInquiryCaseInput
 }
 
@@ -2344,7 +3167,10 @@ export type InquiryCaseUpdateToOneWithWhereWithoutContextSummaryInput = {
 
 export type InquiryCaseUpdateWithoutContextSummaryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2361,13 +3187,15 @@ export type InquiryCaseUpdateWithoutContextSummaryInput = {
   organization?: Prisma.OrganizationUpdateOneWithoutInquiryCasesNestedInput
   primaryCustomer?: Prisma.CustomerUpdateOneWithoutPrimaryInquiryCasesNestedInput
   inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutInquiryCaseNestedInput
-  aiDecisions?: Prisma.AiDecisionUpdateManyWithoutInquiryCaseNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUpdateManyWithoutInquiryCaseNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUpdateManyWithoutInquiryCaseNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUpdateManyWithoutInquiryCaseNestedInput
+  stateTransitions?: Prisma.InquiryStateTransitionUpdateManyWithoutInquiryCaseNestedInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUpdateManyWithoutInquiryCaseNestedInput
   structuredFacts?: Prisma.InquiryStructuredFactUpdateOneWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUpdateManyWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutInquiryCaseNestedInput
-  statusLogs?: Prisma.InquiryStatusLogUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutInquiryCaseNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutInquiryCaseNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutInquiryCaseNestedInput
 }
 
@@ -2376,7 +3204,10 @@ export type InquiryCaseUncheckedUpdateWithoutContextSummaryInput = {
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   primaryCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2390,145 +3221,15 @@ export type InquiryCaseUncheckedUpdateWithoutContextSummaryInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutInquiryCaseNestedInput
-  aiDecisions?: Prisma.AiDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  stateTransitions?: Prisma.InquiryStateTransitionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutInquiryCaseNestedInput
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateOneWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutInquiryCaseNestedInput
-  statusLogs?: Prisma.InquiryStatusLogUncheckedUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutInquiryCaseNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
-  sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutInquiryCaseNestedInput
-}
-
-export type InquiryCaseCreateWithoutStatusLogsInput = {
-  id?: string
-  status?: string
-  subject?: string | null
-  rawSubject?: string | null
-  businessSubject?: string | null
-  businessSubjectSource?: string
-  businessSubjectLocked?: boolean
-  businessSubjectUpdatedAt?: Date | string | null
-  productType?: string | null
-  latestMessageAt?: Date | string | null
-  closedAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  customer: Prisma.CustomerCreateNestedOneWithoutInquiryCasesInput
-  organization?: Prisma.OrganizationCreateNestedOneWithoutInquiryCasesInput
-  primaryCustomer?: Prisma.CustomerCreateNestedOneWithoutPrimaryInquiryCasesInput
-  inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutInquiryCaseInput
-  aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutInquiryCaseInput
-  structuredFacts?: Prisma.InquiryStructuredFactCreateNestedOneWithoutInquiryCaseInput
-  replyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutInquiryCaseInput
-  contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutInquiryCaseInput
-  contextSummary?: Prisma.InquiryContextSummaryCreateNestedOneWithoutInquiryCaseInput
-  attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutInquiryCaseInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutInquiryCaseInput
-  sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutInquiryCaseInput
-}
-
-export type InquiryCaseUncheckedCreateWithoutStatusLogsInput = {
-  id?: string
-  customerId: string
-  organizationId?: string | null
-  primaryCustomerId?: string | null
-  status?: string
-  subject?: string | null
-  rawSubject?: string | null
-  businessSubject?: string | null
-  businessSubjectSource?: string
-  businessSubjectLocked?: boolean
-  businessSubjectUpdatedAt?: Date | string | null
-  productType?: string | null
-  latestMessageAt?: Date | string | null
-  closedAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutInquiryCaseInput
-  aiDecisions?: Prisma.AiDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
-  structuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedOneWithoutInquiryCaseInput
-  replyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutInquiryCaseInput
-  contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutInquiryCaseInput
-  contextSummary?: Prisma.InquiryContextSummaryUncheckedCreateNestedOneWithoutInquiryCaseInput
-  attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutInquiryCaseInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutInquiryCaseInput
-  sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutInquiryCaseInput
-}
-
-export type InquiryCaseCreateOrConnectWithoutStatusLogsInput = {
-  where: Prisma.InquiryCaseWhereUniqueInput
-  create: Prisma.XOR<Prisma.InquiryCaseCreateWithoutStatusLogsInput, Prisma.InquiryCaseUncheckedCreateWithoutStatusLogsInput>
-}
-
-export type InquiryCaseUpsertWithoutStatusLogsInput = {
-  update: Prisma.XOR<Prisma.InquiryCaseUpdateWithoutStatusLogsInput, Prisma.InquiryCaseUncheckedUpdateWithoutStatusLogsInput>
-  create: Prisma.XOR<Prisma.InquiryCaseCreateWithoutStatusLogsInput, Prisma.InquiryCaseUncheckedCreateWithoutStatusLogsInput>
-  where?: Prisma.InquiryCaseWhereInput
-}
-
-export type InquiryCaseUpdateToOneWithWhereWithoutStatusLogsInput = {
-  where?: Prisma.InquiryCaseWhereInput
-  data: Prisma.XOR<Prisma.InquiryCaseUpdateWithoutStatusLogsInput, Prisma.InquiryCaseUncheckedUpdateWithoutStatusLogsInput>
-}
-
-export type InquiryCaseUpdateWithoutStatusLogsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
-  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  customer?: Prisma.CustomerUpdateOneRequiredWithoutInquiryCasesNestedInput
-  organization?: Prisma.OrganizationUpdateOneWithoutInquiryCasesNestedInput
-  primaryCustomer?: Prisma.CustomerUpdateOneWithoutPrimaryInquiryCasesNestedInput
-  inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutInquiryCaseNestedInput
-  aiDecisions?: Prisma.AiDecisionUpdateManyWithoutInquiryCaseNestedInput
-  structuredFacts?: Prisma.InquiryStructuredFactUpdateOneWithoutInquiryCaseNestedInput
-  replyDrafts?: Prisma.ReplyDraftUpdateManyWithoutInquiryCaseNestedInput
-  contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutInquiryCaseNestedInput
-  contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
-  attachments?: Prisma.EmailAttachmentUpdateManyWithoutInquiryCaseNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutInquiryCaseNestedInput
-  sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutInquiryCaseNestedInput
-}
-
-export type InquiryCaseUncheckedUpdateWithoutStatusLogsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  customerId?: Prisma.StringFieldUpdateOperationsInput | string
-  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  primaryCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  businessSubjectSource?: Prisma.StringFieldUpdateOperationsInput | string
-  businessSubjectLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  businessSubjectUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  productType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  latestMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutInquiryCaseNestedInput
-  aiDecisions?: Prisma.AiDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
-  structuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateOneWithoutInquiryCaseNestedInput
-  replyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutInquiryCaseNestedInput
-  contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutInquiryCaseNestedInput
-  contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
-  attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutInquiryCaseNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutInquiryCaseNestedInput
 }
 
@@ -2536,7 +3237,10 @@ export type InquiryCaseCreateManyCustomerInput = {
   id?: string
   organizationId?: string | null
   primaryCustomerId?: string | null
-  status?: string
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
   subject?: string | null
   rawSubject?: string | null
   businessSubject?: string | null
@@ -2555,7 +3259,10 @@ export type InquiryCaseCreateManyPrimaryCustomerInput = {
   id?: string
   customerId: string
   organizationId?: string | null
-  status?: string
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
   subject?: string | null
   rawSubject?: string | null
   businessSubject?: string | null
@@ -2572,7 +3279,10 @@ export type InquiryCaseCreateManyPrimaryCustomerInput = {
 
 export type InquiryCaseUpdateWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2588,14 +3298,16 @@ export type InquiryCaseUpdateWithoutCustomerInput = {
   organization?: Prisma.OrganizationUpdateOneWithoutInquiryCasesNestedInput
   primaryCustomer?: Prisma.CustomerUpdateOneWithoutPrimaryInquiryCasesNestedInput
   inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutInquiryCaseNestedInput
-  aiDecisions?: Prisma.AiDecisionUpdateManyWithoutInquiryCaseNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUpdateManyWithoutInquiryCaseNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUpdateManyWithoutInquiryCaseNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUpdateManyWithoutInquiryCaseNestedInput
+  stateTransitions?: Prisma.InquiryStateTransitionUpdateManyWithoutInquiryCaseNestedInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUpdateManyWithoutInquiryCaseNestedInput
   structuredFacts?: Prisma.InquiryStructuredFactUpdateOneWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUpdateManyWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutInquiryCaseNestedInput
   contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
-  statusLogs?: Prisma.InquiryStatusLogUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutInquiryCaseNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutInquiryCaseNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutInquiryCaseNestedInput
 }
 
@@ -2603,7 +3315,10 @@ export type InquiryCaseUncheckedUpdateWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   primaryCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2617,14 +3332,16 @@ export type InquiryCaseUncheckedUpdateWithoutCustomerInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutInquiryCaseNestedInput
-  aiDecisions?: Prisma.AiDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  stateTransitions?: Prisma.InquiryStateTransitionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutInquiryCaseNestedInput
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateOneWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutInquiryCaseNestedInput
   contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
-  statusLogs?: Prisma.InquiryStatusLogUncheckedUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutInquiryCaseNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutInquiryCaseNestedInput
 }
 
@@ -2632,7 +3349,10 @@ export type InquiryCaseUncheckedUpdateManyWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   primaryCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2649,7 +3369,10 @@ export type InquiryCaseUncheckedUpdateManyWithoutCustomerInput = {
 
 export type InquiryCaseUpdateWithoutPrimaryCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2665,14 +3388,16 @@ export type InquiryCaseUpdateWithoutPrimaryCustomerInput = {
   customer?: Prisma.CustomerUpdateOneRequiredWithoutInquiryCasesNestedInput
   organization?: Prisma.OrganizationUpdateOneWithoutInquiryCasesNestedInput
   inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutInquiryCaseNestedInput
-  aiDecisions?: Prisma.AiDecisionUpdateManyWithoutInquiryCaseNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUpdateManyWithoutInquiryCaseNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUpdateManyWithoutInquiryCaseNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUpdateManyWithoutInquiryCaseNestedInput
+  stateTransitions?: Prisma.InquiryStateTransitionUpdateManyWithoutInquiryCaseNestedInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUpdateManyWithoutInquiryCaseNestedInput
   structuredFacts?: Prisma.InquiryStructuredFactUpdateOneWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUpdateManyWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutInquiryCaseNestedInput
   contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
-  statusLogs?: Prisma.InquiryStatusLogUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutInquiryCaseNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutInquiryCaseNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutInquiryCaseNestedInput
 }
 
@@ -2680,7 +3405,10 @@ export type InquiryCaseUncheckedUpdateWithoutPrimaryCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2694,14 +3422,16 @@ export type InquiryCaseUncheckedUpdateWithoutPrimaryCustomerInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutInquiryCaseNestedInput
-  aiDecisions?: Prisma.AiDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  stateTransitions?: Prisma.InquiryStateTransitionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutInquiryCaseNestedInput
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateOneWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutInquiryCaseNestedInput
   contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
-  statusLogs?: Prisma.InquiryStatusLogUncheckedUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutInquiryCaseNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutInquiryCaseNestedInput
 }
 
@@ -2709,7 +3439,10 @@ export type InquiryCaseUncheckedUpdateManyWithoutPrimaryCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2728,7 +3461,10 @@ export type InquiryCaseCreateManyOrganizationInput = {
   id?: string
   customerId: string
   primaryCustomerId?: string | null
-  status?: string
+  businessStage?: $Enums.InquiryBusinessStage
+  actionOwner?: $Enums.InquiryActionOwner
+  lifecycleStatus?: $Enums.InquiryLifecycleStatus
+  stateVersion?: number
   subject?: string | null
   rawSubject?: string | null
   businessSubject?: string | null
@@ -2745,7 +3481,10 @@ export type InquiryCaseCreateManyOrganizationInput = {
 
 export type InquiryCaseUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2761,14 +3500,16 @@ export type InquiryCaseUpdateWithoutOrganizationInput = {
   customer?: Prisma.CustomerUpdateOneRequiredWithoutInquiryCasesNestedInput
   primaryCustomer?: Prisma.CustomerUpdateOneWithoutPrimaryInquiryCasesNestedInput
   inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutInquiryCaseNestedInput
-  aiDecisions?: Prisma.AiDecisionUpdateManyWithoutInquiryCaseNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUpdateManyWithoutInquiryCaseNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUpdateManyWithoutInquiryCaseNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUpdateManyWithoutInquiryCaseNestedInput
+  stateTransitions?: Prisma.InquiryStateTransitionUpdateManyWithoutInquiryCaseNestedInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUpdateManyWithoutInquiryCaseNestedInput
   structuredFacts?: Prisma.InquiryStructuredFactUpdateOneWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUpdateManyWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutInquiryCaseNestedInput
   contextSummary?: Prisma.InquiryContextSummaryUpdateOneWithoutInquiryCaseNestedInput
-  statusLogs?: Prisma.InquiryStatusLogUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutInquiryCaseNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutInquiryCaseNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutInquiryCaseNestedInput
 }
 
@@ -2776,7 +3517,10 @@ export type InquiryCaseUncheckedUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   primaryCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2790,14 +3534,16 @@ export type InquiryCaseUncheckedUpdateWithoutOrganizationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutInquiryCaseNestedInput
-  aiDecisions?: Prisma.AiDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  analysisDecisions?: Prisma.EmailAnalysisDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  businessEvents?: Prisma.InquiryBusinessEventUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  stateDecisions?: Prisma.InquiryStateDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  stateTransitions?: Prisma.InquiryStateTransitionUncheckedUpdateManyWithoutInquiryCaseNestedInput
+  recoveryRecords?: Prisma.EmailRecoveryRecordUncheckedUpdateManyWithoutInquiryCaseNestedInput
   structuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateOneWithoutInquiryCaseNestedInput
   replyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutInquiryCaseNestedInput
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutInquiryCaseNestedInput
   contextSummary?: Prisma.InquiryContextSummaryUncheckedUpdateOneWithoutInquiryCaseNestedInput
-  statusLogs?: Prisma.InquiryStatusLogUncheckedUpdateManyWithoutInquiryCaseNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutInquiryCaseNestedInput
-  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutInquiryCaseNestedInput
 }
 
@@ -2805,7 +3551,10 @@ export type InquiryCaseUncheckedUpdateManyWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   primaryCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  businessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
+  actionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
+  lifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
+  stateVersion?: Prisma.IntFieldUpdateOperationsInput | number
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rawSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   businessSubject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2827,23 +3576,27 @@ export type InquiryCaseUncheckedUpdateManyWithoutOrganizationInput = {
 
 export type InquiryCaseCountOutputType = {
   inquiryMessages: number
-  aiDecisions: number
+  analysisDecisions: number
+  businessEvents: number
+  stateDecisions: number
+  stateTransitions: number
+  recoveryRecords: number
   replyDrafts: number
   contextSnapshots: number
-  statusLogs: number
   attachments: number
-  workflowDecisions: number
   sendAttempts: number
 }
 
 export type InquiryCaseCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   inquiryMessages?: boolean | InquiryCaseCountOutputTypeCountInquiryMessagesArgs
-  aiDecisions?: boolean | InquiryCaseCountOutputTypeCountAiDecisionsArgs
+  analysisDecisions?: boolean | InquiryCaseCountOutputTypeCountAnalysisDecisionsArgs
+  businessEvents?: boolean | InquiryCaseCountOutputTypeCountBusinessEventsArgs
+  stateDecisions?: boolean | InquiryCaseCountOutputTypeCountStateDecisionsArgs
+  stateTransitions?: boolean | InquiryCaseCountOutputTypeCountStateTransitionsArgs
+  recoveryRecords?: boolean | InquiryCaseCountOutputTypeCountRecoveryRecordsArgs
   replyDrafts?: boolean | InquiryCaseCountOutputTypeCountReplyDraftsArgs
   contextSnapshots?: boolean | InquiryCaseCountOutputTypeCountContextSnapshotsArgs
-  statusLogs?: boolean | InquiryCaseCountOutputTypeCountStatusLogsArgs
   attachments?: boolean | InquiryCaseCountOutputTypeCountAttachmentsArgs
-  workflowDecisions?: boolean | InquiryCaseCountOutputTypeCountWorkflowDecisionsArgs
   sendAttempts?: boolean | InquiryCaseCountOutputTypeCountSendAttemptsArgs
 }
 
@@ -2867,8 +3620,36 @@ export type InquiryCaseCountOutputTypeCountInquiryMessagesArgs<ExtArgs extends r
 /**
  * InquiryCaseCountOutputType without action
  */
-export type InquiryCaseCountOutputTypeCountAiDecisionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.AiDecisionWhereInput
+export type InquiryCaseCountOutputTypeCountAnalysisDecisionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmailAnalysisDecisionWhereInput
+}
+
+/**
+ * InquiryCaseCountOutputType without action
+ */
+export type InquiryCaseCountOutputTypeCountBusinessEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.InquiryBusinessEventWhereInput
+}
+
+/**
+ * InquiryCaseCountOutputType without action
+ */
+export type InquiryCaseCountOutputTypeCountStateDecisionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.InquiryStateDecisionWhereInput
+}
+
+/**
+ * InquiryCaseCountOutputType without action
+ */
+export type InquiryCaseCountOutputTypeCountStateTransitionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.InquiryStateTransitionWhereInput
+}
+
+/**
+ * InquiryCaseCountOutputType without action
+ */
+export type InquiryCaseCountOutputTypeCountRecoveryRecordsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmailRecoveryRecordWhereInput
 }
 
 /**
@@ -2888,22 +3669,8 @@ export type InquiryCaseCountOutputTypeCountContextSnapshotsArgs<ExtArgs extends 
 /**
  * InquiryCaseCountOutputType without action
  */
-export type InquiryCaseCountOutputTypeCountStatusLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.InquiryStatusLogWhereInput
-}
-
-/**
- * InquiryCaseCountOutputType without action
- */
 export type InquiryCaseCountOutputTypeCountAttachmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.EmailAttachmentWhereInput
-}
-
-/**
- * InquiryCaseCountOutputType without action
- */
-export type InquiryCaseCountOutputTypeCountWorkflowDecisionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.EmailWorkflowDecisionWhereInput
 }
 
 /**
@@ -2919,7 +3686,10 @@ export type InquiryCaseSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   customerId?: boolean
   organizationId?: boolean
   primaryCustomerId?: boolean
-  status?: boolean
+  businessStage?: boolean
+  actionOwner?: boolean
+  lifecycleStatus?: boolean
+  stateVersion?: boolean
   subject?: boolean
   rawSubject?: boolean
   businessSubject?: boolean
@@ -2936,14 +3706,16 @@ export type InquiryCaseSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   organization?: boolean | Prisma.InquiryCase$organizationArgs<ExtArgs>
   primaryCustomer?: boolean | Prisma.InquiryCase$primaryCustomerArgs<ExtArgs>
   inquiryMessages?: boolean | Prisma.InquiryCase$inquiryMessagesArgs<ExtArgs>
-  aiDecisions?: boolean | Prisma.InquiryCase$aiDecisionsArgs<ExtArgs>
+  analysisDecisions?: boolean | Prisma.InquiryCase$analysisDecisionsArgs<ExtArgs>
+  businessEvents?: boolean | Prisma.InquiryCase$businessEventsArgs<ExtArgs>
+  stateDecisions?: boolean | Prisma.InquiryCase$stateDecisionsArgs<ExtArgs>
+  stateTransitions?: boolean | Prisma.InquiryCase$stateTransitionsArgs<ExtArgs>
+  recoveryRecords?: boolean | Prisma.InquiryCase$recoveryRecordsArgs<ExtArgs>
   structuredFacts?: boolean | Prisma.InquiryCase$structuredFactsArgs<ExtArgs>
   replyDrafts?: boolean | Prisma.InquiryCase$replyDraftsArgs<ExtArgs>
   contextSnapshots?: boolean | Prisma.InquiryCase$contextSnapshotsArgs<ExtArgs>
   contextSummary?: boolean | Prisma.InquiryCase$contextSummaryArgs<ExtArgs>
-  statusLogs?: boolean | Prisma.InquiryCase$statusLogsArgs<ExtArgs>
   attachments?: boolean | Prisma.InquiryCase$attachmentsArgs<ExtArgs>
-  workflowDecisions?: boolean | Prisma.InquiryCase$workflowDecisionsArgs<ExtArgs>
   sendAttempts?: boolean | Prisma.InquiryCase$sendAttemptsArgs<ExtArgs>
   _count?: boolean | Prisma.InquiryCaseCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["inquiryCase"]>
@@ -2953,7 +3725,10 @@ export type InquiryCaseSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   customerId?: boolean
   organizationId?: boolean
   primaryCustomerId?: boolean
-  status?: boolean
+  businessStage?: boolean
+  actionOwner?: boolean
+  lifecycleStatus?: boolean
+  stateVersion?: boolean
   subject?: boolean
   rawSubject?: boolean
   businessSubject?: boolean
@@ -2976,7 +3751,10 @@ export type InquiryCaseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   customerId?: boolean
   organizationId?: boolean
   primaryCustomerId?: boolean
-  status?: boolean
+  businessStage?: boolean
+  actionOwner?: boolean
+  lifecycleStatus?: boolean
+  stateVersion?: boolean
   subject?: boolean
   rawSubject?: boolean
   businessSubject?: boolean
@@ -2999,7 +3777,10 @@ export type InquiryCaseSelectScalar = {
   customerId?: boolean
   organizationId?: boolean
   primaryCustomerId?: boolean
-  status?: boolean
+  businessStage?: boolean
+  actionOwner?: boolean
+  lifecycleStatus?: boolean
+  stateVersion?: boolean
   subject?: boolean
   rawSubject?: boolean
   businessSubject?: boolean
@@ -3014,20 +3795,22 @@ export type InquiryCaseSelectScalar = {
   deletedAt?: boolean
 }
 
-export type InquiryCaseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "customerId" | "organizationId" | "primaryCustomerId" | "status" | "subject" | "rawSubject" | "businessSubject" | "businessSubjectSource" | "businessSubjectLocked" | "businessSubjectUpdatedAt" | "productType" | "latestMessageAt" | "closedAt" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["inquiryCase"]>
+export type InquiryCaseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "customerId" | "organizationId" | "primaryCustomerId" | "businessStage" | "actionOwner" | "lifecycleStatus" | "stateVersion" | "subject" | "rawSubject" | "businessSubject" | "businessSubjectSource" | "businessSubjectLocked" | "businessSubjectUpdatedAt" | "productType" | "latestMessageAt" | "closedAt" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["inquiryCase"]>
 export type InquiryCaseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
   organization?: boolean | Prisma.InquiryCase$organizationArgs<ExtArgs>
   primaryCustomer?: boolean | Prisma.InquiryCase$primaryCustomerArgs<ExtArgs>
   inquiryMessages?: boolean | Prisma.InquiryCase$inquiryMessagesArgs<ExtArgs>
-  aiDecisions?: boolean | Prisma.InquiryCase$aiDecisionsArgs<ExtArgs>
+  analysisDecisions?: boolean | Prisma.InquiryCase$analysisDecisionsArgs<ExtArgs>
+  businessEvents?: boolean | Prisma.InquiryCase$businessEventsArgs<ExtArgs>
+  stateDecisions?: boolean | Prisma.InquiryCase$stateDecisionsArgs<ExtArgs>
+  stateTransitions?: boolean | Prisma.InquiryCase$stateTransitionsArgs<ExtArgs>
+  recoveryRecords?: boolean | Prisma.InquiryCase$recoveryRecordsArgs<ExtArgs>
   structuredFacts?: boolean | Prisma.InquiryCase$structuredFactsArgs<ExtArgs>
   replyDrafts?: boolean | Prisma.InquiryCase$replyDraftsArgs<ExtArgs>
   contextSnapshots?: boolean | Prisma.InquiryCase$contextSnapshotsArgs<ExtArgs>
   contextSummary?: boolean | Prisma.InquiryCase$contextSummaryArgs<ExtArgs>
-  statusLogs?: boolean | Prisma.InquiryCase$statusLogsArgs<ExtArgs>
   attachments?: boolean | Prisma.InquiryCase$attachmentsArgs<ExtArgs>
-  workflowDecisions?: boolean | Prisma.InquiryCase$workflowDecisionsArgs<ExtArgs>
   sendAttempts?: boolean | Prisma.InquiryCase$sendAttemptsArgs<ExtArgs>
   _count?: boolean | Prisma.InquiryCaseCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -3049,14 +3832,16 @@ export type $InquiryCasePayload<ExtArgs extends runtime.Types.Extensions.Interna
     organization: Prisma.$OrganizationPayload<ExtArgs> | null
     primaryCustomer: Prisma.$CustomerPayload<ExtArgs> | null
     inquiryMessages: Prisma.$InquiryMessagePayload<ExtArgs>[]
-    aiDecisions: Prisma.$AiDecisionPayload<ExtArgs>[]
+    analysisDecisions: Prisma.$EmailAnalysisDecisionPayload<ExtArgs>[]
+    businessEvents: Prisma.$InquiryBusinessEventPayload<ExtArgs>[]
+    stateDecisions: Prisma.$InquiryStateDecisionPayload<ExtArgs>[]
+    stateTransitions: Prisma.$InquiryStateTransitionPayload<ExtArgs>[]
+    recoveryRecords: Prisma.$EmailRecoveryRecordPayload<ExtArgs>[]
     structuredFacts: Prisma.$InquiryStructuredFactPayload<ExtArgs> | null
     replyDrafts: Prisma.$ReplyDraftPayload<ExtArgs>[]
     contextSnapshots: Prisma.$AiContextSnapshotPayload<ExtArgs>[]
     contextSummary: Prisma.$InquiryContextSummaryPayload<ExtArgs> | null
-    statusLogs: Prisma.$InquiryStatusLogPayload<ExtArgs>[]
     attachments: Prisma.$EmailAttachmentPayload<ExtArgs>[]
-    workflowDecisions: Prisma.$EmailWorkflowDecisionPayload<ExtArgs>[]
     sendAttempts: Prisma.$EmailSendAttemptPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -3064,7 +3849,10 @@ export type $InquiryCasePayload<ExtArgs extends runtime.Types.Extensions.Interna
     customerId: string
     organizationId: string | null
     primaryCustomerId: string | null
-    status: string
+    businessStage: $Enums.InquiryBusinessStage
+    actionOwner: $Enums.InquiryActionOwner
+    lifecycleStatus: $Enums.InquiryLifecycleStatus
+    stateVersion: number
     subject: string | null
     rawSubject: string | null
     businessSubject: string | null
@@ -3475,14 +4263,16 @@ export interface Prisma__InquiryCaseClient<T, Null = never, ExtArgs extends runt
   organization<T extends Prisma.InquiryCase$organizationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InquiryCase$organizationArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   primaryCustomer<T extends Prisma.InquiryCase$primaryCustomerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InquiryCase$primaryCustomerArgs<ExtArgs>>): Prisma.Prisma__CustomerClient<runtime.Types.Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   inquiryMessages<T extends Prisma.InquiryCase$inquiryMessagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InquiryCase$inquiryMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InquiryMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  aiDecisions<T extends Prisma.InquiryCase$aiDecisionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InquiryCase$aiDecisionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiDecisionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  analysisDecisions<T extends Prisma.InquiryCase$analysisDecisionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InquiryCase$analysisDecisionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmailAnalysisDecisionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  businessEvents<T extends Prisma.InquiryCase$businessEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InquiryCase$businessEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InquiryBusinessEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  stateDecisions<T extends Prisma.InquiryCase$stateDecisionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InquiryCase$stateDecisionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InquiryStateDecisionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  stateTransitions<T extends Prisma.InquiryCase$stateTransitionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InquiryCase$stateTransitionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InquiryStateTransitionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  recoveryRecords<T extends Prisma.InquiryCase$recoveryRecordsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InquiryCase$recoveryRecordsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmailRecoveryRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   structuredFacts<T extends Prisma.InquiryCase$structuredFactsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InquiryCase$structuredFactsArgs<ExtArgs>>): Prisma.Prisma__InquiryStructuredFactClient<runtime.Types.Result.GetResult<Prisma.$InquiryStructuredFactPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   replyDrafts<T extends Prisma.InquiryCase$replyDraftsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InquiryCase$replyDraftsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReplyDraftPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   contextSnapshots<T extends Prisma.InquiryCase$contextSnapshotsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InquiryCase$contextSnapshotsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiContextSnapshotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   contextSummary<T extends Prisma.InquiryCase$contextSummaryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InquiryCase$contextSummaryArgs<ExtArgs>>): Prisma.Prisma__InquiryContextSummaryClient<runtime.Types.Result.GetResult<Prisma.$InquiryContextSummaryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  statusLogs<T extends Prisma.InquiryCase$statusLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InquiryCase$statusLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InquiryStatusLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   attachments<T extends Prisma.InquiryCase$attachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InquiryCase$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmailAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  workflowDecisions<T extends Prisma.InquiryCase$workflowDecisionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InquiryCase$workflowDecisionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmailWorkflowDecisionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   sendAttempts<T extends Prisma.InquiryCase$sendAttemptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InquiryCase$sendAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmailSendAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -3517,7 +4307,10 @@ export interface InquiryCaseFieldRefs {
   readonly customerId: Prisma.FieldRef<"InquiryCase", 'String'>
   readonly organizationId: Prisma.FieldRef<"InquiryCase", 'String'>
   readonly primaryCustomerId: Prisma.FieldRef<"InquiryCase", 'String'>
-  readonly status: Prisma.FieldRef<"InquiryCase", 'String'>
+  readonly businessStage: Prisma.FieldRef<"InquiryCase", 'InquiryBusinessStage'>
+  readonly actionOwner: Prisma.FieldRef<"InquiryCase", 'InquiryActionOwner'>
+  readonly lifecycleStatus: Prisma.FieldRef<"InquiryCase", 'InquiryLifecycleStatus'>
+  readonly stateVersion: Prisma.FieldRef<"InquiryCase", 'Int'>
   readonly subject: Prisma.FieldRef<"InquiryCase", 'String'>
   readonly rawSubject: Prisma.FieldRef<"InquiryCase", 'String'>
   readonly businessSubject: Prisma.FieldRef<"InquiryCase", 'String'>
@@ -3993,27 +4786,123 @@ export type InquiryCase$inquiryMessagesArgs<ExtArgs extends runtime.Types.Extens
 }
 
 /**
- * InquiryCase.aiDecisions
+ * InquiryCase.analysisDecisions
  */
-export type InquiryCase$aiDecisionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type InquiryCase$analysisDecisionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the AiDecision
+   * Select specific fields to fetch from the EmailAnalysisDecision
    */
-  select?: Prisma.AiDecisionSelect<ExtArgs> | null
+  select?: Prisma.EmailAnalysisDecisionSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the AiDecision
+   * Omit specific fields from the EmailAnalysisDecision
    */
-  omit?: Prisma.AiDecisionOmit<ExtArgs> | null
+  omit?: Prisma.EmailAnalysisDecisionOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.AiDecisionInclude<ExtArgs> | null
-  where?: Prisma.AiDecisionWhereInput
-  orderBy?: Prisma.AiDecisionOrderByWithRelationInput | Prisma.AiDecisionOrderByWithRelationInput[]
-  cursor?: Prisma.AiDecisionWhereUniqueInput
+  include?: Prisma.EmailAnalysisDecisionInclude<ExtArgs> | null
+  where?: Prisma.EmailAnalysisDecisionWhereInput
+  orderBy?: Prisma.EmailAnalysisDecisionOrderByWithRelationInput | Prisma.EmailAnalysisDecisionOrderByWithRelationInput[]
+  cursor?: Prisma.EmailAnalysisDecisionWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.AiDecisionScalarFieldEnum | Prisma.AiDecisionScalarFieldEnum[]
+  distinct?: Prisma.EmailAnalysisDecisionScalarFieldEnum | Prisma.EmailAnalysisDecisionScalarFieldEnum[]
+}
+
+/**
+ * InquiryCase.businessEvents
+ */
+export type InquiryCase$businessEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InquiryBusinessEvent
+   */
+  select?: Prisma.InquiryBusinessEventSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the InquiryBusinessEvent
+   */
+  omit?: Prisma.InquiryBusinessEventOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InquiryBusinessEventInclude<ExtArgs> | null
+  where?: Prisma.InquiryBusinessEventWhereInput
+  orderBy?: Prisma.InquiryBusinessEventOrderByWithRelationInput | Prisma.InquiryBusinessEventOrderByWithRelationInput[]
+  cursor?: Prisma.InquiryBusinessEventWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.InquiryBusinessEventScalarFieldEnum | Prisma.InquiryBusinessEventScalarFieldEnum[]
+}
+
+/**
+ * InquiryCase.stateDecisions
+ */
+export type InquiryCase$stateDecisionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InquiryStateDecision
+   */
+  select?: Prisma.InquiryStateDecisionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the InquiryStateDecision
+   */
+  omit?: Prisma.InquiryStateDecisionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InquiryStateDecisionInclude<ExtArgs> | null
+  where?: Prisma.InquiryStateDecisionWhereInput
+  orderBy?: Prisma.InquiryStateDecisionOrderByWithRelationInput | Prisma.InquiryStateDecisionOrderByWithRelationInput[]
+  cursor?: Prisma.InquiryStateDecisionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.InquiryStateDecisionScalarFieldEnum | Prisma.InquiryStateDecisionScalarFieldEnum[]
+}
+
+/**
+ * InquiryCase.stateTransitions
+ */
+export type InquiryCase$stateTransitionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InquiryStateTransition
+   */
+  select?: Prisma.InquiryStateTransitionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the InquiryStateTransition
+   */
+  omit?: Prisma.InquiryStateTransitionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InquiryStateTransitionInclude<ExtArgs> | null
+  where?: Prisma.InquiryStateTransitionWhereInput
+  orderBy?: Prisma.InquiryStateTransitionOrderByWithRelationInput | Prisma.InquiryStateTransitionOrderByWithRelationInput[]
+  cursor?: Prisma.InquiryStateTransitionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.InquiryStateTransitionScalarFieldEnum | Prisma.InquiryStateTransitionScalarFieldEnum[]
+}
+
+/**
+ * InquiryCase.recoveryRecords
+ */
+export type InquiryCase$recoveryRecordsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmailRecoveryRecord
+   */
+  select?: Prisma.EmailRecoveryRecordSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmailRecoveryRecord
+   */
+  omit?: Prisma.EmailRecoveryRecordOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmailRecoveryRecordInclude<ExtArgs> | null
+  where?: Prisma.EmailRecoveryRecordWhereInput
+  orderBy?: Prisma.EmailRecoveryRecordOrderByWithRelationInput | Prisma.EmailRecoveryRecordOrderByWithRelationInput[]
+  cursor?: Prisma.EmailRecoveryRecordWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EmailRecoveryRecordScalarFieldEnum | Prisma.EmailRecoveryRecordScalarFieldEnum[]
 }
 
 /**
@@ -4103,30 +4992,6 @@ export type InquiryCase$contextSummaryArgs<ExtArgs extends runtime.Types.Extensi
 }
 
 /**
- * InquiryCase.statusLogs
- */
-export type InquiryCase$statusLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the InquiryStatusLog
-   */
-  select?: Prisma.InquiryStatusLogSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the InquiryStatusLog
-   */
-  omit?: Prisma.InquiryStatusLogOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.InquiryStatusLogInclude<ExtArgs> | null
-  where?: Prisma.InquiryStatusLogWhereInput
-  orderBy?: Prisma.InquiryStatusLogOrderByWithRelationInput | Prisma.InquiryStatusLogOrderByWithRelationInput[]
-  cursor?: Prisma.InquiryStatusLogWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.InquiryStatusLogScalarFieldEnum | Prisma.InquiryStatusLogScalarFieldEnum[]
-}
-
-/**
  * InquiryCase.attachments
  */
 export type InquiryCase$attachmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4148,30 +5013,6 @@ export type InquiryCase$attachmentsArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   distinct?: Prisma.EmailAttachmentScalarFieldEnum | Prisma.EmailAttachmentScalarFieldEnum[]
-}
-
-/**
- * InquiryCase.workflowDecisions
- */
-export type InquiryCase$workflowDecisionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the EmailWorkflowDecision
-   */
-  select?: Prisma.EmailWorkflowDecisionSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the EmailWorkflowDecision
-   */
-  omit?: Prisma.EmailWorkflowDecisionOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.EmailWorkflowDecisionInclude<ExtArgs> | null
-  where?: Prisma.EmailWorkflowDecisionWhereInput
-  orderBy?: Prisma.EmailWorkflowDecisionOrderByWithRelationInput | Prisma.EmailWorkflowDecisionOrderByWithRelationInput[]
-  cursor?: Prisma.EmailWorkflowDecisionWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.EmailWorkflowDecisionScalarFieldEnum | Prisma.EmailWorkflowDecisionScalarFieldEnum[]
 }
 
 /**

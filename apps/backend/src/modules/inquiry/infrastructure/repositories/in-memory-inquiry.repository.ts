@@ -35,7 +35,7 @@ export class InMemoryInquiryRepository implements InquiryRepository {
     return Array.from(this.inquiryCases.values())
       .filter((inquiryCase) =>
         inquiryCase.customerEmail.toLowerCase() === customerEmail.toLowerCase() &&
-        inquiryCase.status !== 'closed',
+        inquiryCase.lifecycleStatus === 'active',
       )
       .sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime());
   }
@@ -49,7 +49,7 @@ export class InMemoryInquiryRepository implements InquiryRepository {
     return Array.from(this.inquiryCases.values())
       .filter((inquiryCase) =>
         (inquiryCase.customerDomain ?? extractEmailDomain(inquiryCase.customerEmail)) === domain &&
-        inquiryCase.status !== 'closed',
+        inquiryCase.lifecycleStatus === 'active',
       )
       .sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime());
   }

@@ -24,21 +24,6 @@ export async function updateInquiry(id: string, data: Record<string, unknown>) {
   return response.data.data;
 }
 
-export async function transitionInquiryStatus(
-  inquiryId: string,
-  data: {
-    toStatus: string;
-    reason?: string;
-    operatorType?: string;
-  },
-) {
-  const response = await http.post(
-    `/${API_ROUTE_SEGMENTS.inquiries}/${inquiryId}/transitions`,
-    data,
-  );
-  return response.data;
-}
-
 export async function linkMessageToInquiry(
   inquiryId: string,
   data: {

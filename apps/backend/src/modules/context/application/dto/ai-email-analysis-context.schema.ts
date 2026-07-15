@@ -1,7 +1,11 @@
 import { z } from 'zod';
 
 import { EmailDirection } from '../../../email/domain/enums/email-direction.enum.js';
-import { InquiryStatus } from '../../../inquiry/domain/enums/inquiry-status.enum.js';
+import {
+  InquiryActionOwner,
+  InquiryBusinessStage,
+  InquiryLifecycleStatus,
+} from '../../../inquiry/domain/enums/inquiry-state.enum.js';
 
 const dateTimeStringSchema = z.string().trim().min(1);
 const cleanBodySchema = z.string().trim().min(1);
@@ -62,7 +66,10 @@ export const aiEmailThreadSummaryContextSchema = z.object({
 
 export const aiEmailAnalysisContextPayloadSchema = z.object({
   inquiryState: z.object({
-    status: z.nativeEnum(InquiryStatus),
+    businessStage: z.nativeEnum(InquiryBusinessStage),
+    actionOwner: z.nativeEnum(InquiryActionOwner),
+    lifecycleStatus: z.nativeEnum(InquiryLifecycleStatus),
+    stateVersion: z.number().int().nonnegative(),
     customerEmail: z.string().trim().min(1),
     subject: z.string().trim().min(1),
     latestMessageAt: dateTimeStringSchema,

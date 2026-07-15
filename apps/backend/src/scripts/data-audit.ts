@@ -32,7 +32,7 @@ async function run(): Promise<void> {
   const openInquiries = await prisma.inquiryCase.findMany({
     where: {
       deletedAt: null,
-      status: { notIn: ['closed', 'invalid'] },
+      lifecycleStatus: 'active',
       customer: { domain: { not: null }, email: { not: { endsWith: '@gmail.com' } } },
     },
     include: { customer: true },
@@ -66,7 +66,7 @@ async function run(): Promise<void> {
   const formTitleInquiries = await prisma.inquiryCase.findMany({
     where: {
       deletedAt: null,
-      status: { not: 'invalid' },
+      lifecycleStatus: { not: 'invalid' },
       OR: [
         { businessSubject: { contains: '你有一个网站表单提交的新询盘' } },
       ],
@@ -93,13 +93,13 @@ async function run(): Promise<void> {
       inquiryCases: {
         some: {
           deletedAt: null,
-          status: { notIn: ['closed', 'invalid'] },
+          lifecycleStatus: 'active',
         },
       },
     },
     include: {
       inquiryCases: {
-        where: { deletedAt: null, status: { notIn: ['closed', 'invalid'] } },
+        where: { deletedAt: null, lifecycleStatus: 'active' },
       },
     },
   });

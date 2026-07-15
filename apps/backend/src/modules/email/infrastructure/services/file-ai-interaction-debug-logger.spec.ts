@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, it } from 'node:test';
 
-import { InquiryStatus } from '../../../inquiry/domain/enums/inquiry-status.enum.js';
+import { INITIAL_INQUIRY_STATE } from '../../../inquiry/domain/enums/inquiry-state.enum.js';
 import { EmailDirection } from '../../domain/enums/email-direction.enum.js';
 import { EmailSource } from '../../domain/enums/email-source.enum.js';
 import { FileAiInteractionDebugLogger } from './file-ai-interaction-debug-logger.js';
@@ -22,7 +22,7 @@ describe('FileAiInteractionDebugLogger', () => {
       const logger = new FileAiInteractionDebugLogger();
       const contextPayload = {
         inquiryState: {
-          status: InquiryStatus.NEW,
+          ...INITIAL_INQUIRY_STATE,
           customerEmail: 'buyer@example.com',
           subject: 'RF inquiry',
           latestMessageAt: '2026-06-23T00:00:00.000Z',

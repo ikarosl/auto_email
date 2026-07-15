@@ -21,7 +21,7 @@ export class UpdateCustomerStatusFromAiAnalysisUseCase {
   async execute(
     input: UpdateCustomerStatusFromAiAnalysisInput,
   ): Promise<CustomerStatusUpdateResult> {
-    if (input.analysis.classification === 'valid_inquiry') {
+    if (['customer_inquiry', 'customer_follow_up'].includes(input.analysis.messageClassification)) {
       await this.customerRepository.updateStatusByEmail({
         email: input.customerEmail,
         status: CustomerStatus.ACTIVE,
@@ -31,7 +31,10 @@ export class UpdateCustomerStatusFromAiAnalysisUseCase {
       return { updated: true, status: CustomerStatus.ACTIVE };
     }
 
-    if (input.analysis.classification === 'invalid' && input.analysis.confidence >= INVALID_CUSTOMER_CONFIDENCE_THRESHOLD) {
+    if (
+      ['invalid', 'commercial_solicitation', 'unrelated_product'].includes(input.analysis.messageClassification)
+      && input.analysis.confidence >= INVALID_CUSTOMER_CONFIDENCE_THRESHOLD
+    ) {
       await this.customerRepository.updateStatusByEmail({
         email: input.customerEmail,
         status: CustomerStatus.INVALID,

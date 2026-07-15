@@ -37,7 +37,9 @@ export class ContextSnapshotController {
           inquiryCase: {
             select: {
               id: true,
-              status: true,
+              businessStage: true,
+              actionOwner: true,
+              lifecycleStatus: true,
               subject: true,
             },
           },
@@ -72,7 +74,9 @@ export class ContextSnapshotController {
         inquiryCase: {
           select: {
             id: true,
-            status: true,
+            businessStage: true,
+            actionOwner: true,
+            lifecycleStatus: true,
             subject: true,
           },
         },

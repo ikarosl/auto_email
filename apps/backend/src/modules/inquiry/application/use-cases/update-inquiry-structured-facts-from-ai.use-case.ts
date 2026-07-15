@@ -11,7 +11,7 @@ export class UpdateInquiryStructuredFactsFromAiUseCase {
   constructor(private readonly prisma: PrismaService) {}
 
   async execute(input: UpdateInquiryStructuredFactsFromAiInput): Promise<void> {
-    if (input.analysis.classification !== 'valid_inquiry') return;
+    if (!['customer_inquiry', 'customer_follow_up'].includes(input.analysis.messageClassification)) return;
 
     const requirements = input.analysis.extractedRequirements;
     const existing = await this.prisma.inquiryStructuredFact.findUnique({

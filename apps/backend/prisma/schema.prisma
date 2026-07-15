@@ -7,6 +7,26 @@ datasource db {
   provider = "postgresql"
 }
 
+enum InquiryBusinessStage {
+  intake
+  technical_review
+  commercial
+  contract
+}
+
+enum InquiryActionOwner {
+  us
+  customer
+  none
+}
+
+enum InquiryLifecycleStatus {
+  active
+  won
+  lost
+  invalid
+}
+
 model MailboxAccount {
   id              String             @id @default(dbgenerated("'mailbox_' || gen_random_uuid()::TEXT"))
   emailAddress    String             @unique @map("email_address")
@@ -131,14 +151,17 @@ model EmailMessage {
   mailboxAccount       MailboxAccount?     @relation(fields: [mailboxAccountId], references: [id], onDelete: SetNull)
   emailThread          EmailThread?        @relation(fields: [emailThreadId], references: [id], onDelete: SetNull)
   inquiryMessages      InquiryMessage[]
-  aiDecisions          AiDecision[]
+  analysisDecisions    EmailAnalysisDecision[]
+  businessEvents       InquiryBusinessEvent[]
+  stateDecisions       InquiryStateDecision[]
+  triggeredRecoveries  EmailRecoveryRecord[] @relation("RecoveryTriggerEmail")
+  recoveredByRecords   EmailRecoveryRecord[] @relation("RecoveredEmail")
   sourceReplyDrafts    ReplyDraft[]        @relation("ReplyDraftSourceEmail")
   sentReplyDrafts      ReplyDraft[]        @relation("ReplyDraftSentEmail")
   contextSnapshots     AiContextSnapshot[]
   updatedStructuredFacts InquiryStructuredFact[]
   attachments          EmailAttachment[]
   sendAttempts         EmailSendAttempt[]
-  workflowDecisions    EmailWorkflowDecision[]
 
   @@index([emailThreadId])
   @@index([fromEmail])
@@ -196,7 +219,10 @@ model InquiryCase {
   customerId      String                  @map("customer_id")
   organizationId  String?                 @map("organization_id")
   primaryCustomerId String?               @map("primary_customer_id")
-  status          String                  @default("new")
+  businessStage   InquiryBusinessStage    @default(intake) @map("business_stage")
+  actionOwner     InquiryActionOwner      @default(us) @map("action_owner")
+  lifecycleStatus InquiryLifecycleStatus  @default(active) @map("lifecycle_status")
+  stateVersion    Int                     @default(0) @map("state_version")
   subject         String?
   rawSubject      String?                 @map("raw_subject")
   businessSubject String?                 @map("business_subject")
@@ -213,20 +239,24 @@ model InquiryCase {
   organization    Organization?           @relation(fields: [organizationId], references: [id], onDelete: SetNull)
   primaryCustomer Customer?               @relation("InquiryPrimaryCustomer", fields: [primaryCustomerId], references: [id], onDelete: SetNull)
   inquiryMessages InquiryMessage[]
-  aiDecisions     AiDecision[]
+  analysisDecisions EmailAnalysisDecision[]
+  businessEvents  InquiryBusinessEvent[]
+  stateDecisions  InquiryStateDecision[]
+  stateTransitions InquiryStateTransition[]
+  recoveryRecords EmailRecoveryRecord[]
   structuredFacts InquiryStructuredFact?
   replyDrafts     ReplyDraft[]
   contextSnapshots AiContextSnapshot[]
   contextSummary  InquiryContextSummary?
-  statusLogs      InquiryStatusLog[]
   attachments     EmailAttachment[]
-  workflowDecisions EmailWorkflowDecision[]
   sendAttempts    EmailSendAttempt[]
 
   @@index([customerId])
   @@index([organizationId])
   @@index([primaryCustomerId])
-  @@index([status])
+  @@index([businessStage])
+  @@index([actionOwner])
+  @@index([lifecycleStatus])
   @@index([latestMessageAt])
   @@map("inquiry_cases")
 }
@@ -268,42 +298,159 @@ model ProcessedEmail {
   @@map("processed_emails")
 }
 
-model AiDecision {
-  id                    String        @id @default(dbgenerated("'ai_decision_' || gen_random_uuid()::TEXT"))
-  emailMessageId         String?       @map("email_message_id")
-  inquiryCaseId          String?       @map("inquiry_case_id")
-  classification         String?
-  suggestedStatus        String?       @map("suggested_status")
-  confidence             Decimal?      @db.Decimal(5, 4)
-  riskLevel              String?       @map("risk_level")
-  reason                 String?
-  missingFields          Json          @default("[]") @map("missing_fields")
-  extractedRequirements  Json          @default("{}") @map("extracted_requirements")
-  quoteBoundaryDetected  Boolean       @default(false) @map("quote_boundary_detected")
-  humanReviewRequired    Boolean       @default(true) @map("human_review_required")
-  nextAction             String?       @map("next_action")
-  rawResult              Json          @default("{}") @map("raw_result")
-  modelName              String?       @map("model_name")
-  success                Boolean       @default(true)
-  errorCode              String?       @map("error_code")
-  errorMessage           String?       @map("error_message")
-  executionStatus        String        @default("not_evaluated") @map("execution_status")
-  executionFromStatus    String?       @map("execution_from_status")
-  executionToStatus      String?       @map("execution_to_status")
-  executionReason        String?       @map("execution_reason")
-  executionPolicyVersion String?       @map("execution_policy_version")
-  executedAt             DateTime?     @map("executed_at") @db.Timestamptz(6)
-  createdAt              DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
-  emailMessage           EmailMessage? @relation(fields: [emailMessageId], references: [id], onDelete: SetNull)
-  inquiryCase            InquiryCase?  @relation(fields: [inquiryCaseId], references: [id], onDelete: SetNull)
-  replyDrafts            ReplyDraft[]
-  workflowDecisions      EmailWorkflowDecision[]
+model EmailAnalysisDecision {
+  id                       String        @id @default(dbgenerated("'email_analysis_' || gen_random_uuid()::TEXT"))
+  emailMessageId           String        @map("email_message_id")
+  inquiryCaseId            String        @map("inquiry_case_id")
+  contextSnapshotId        String?       @map("context_snapshot_id")
+  direction                String
+  messageClassification    String?       @map("message_classification")
+  suggestedBusinessStage   InquiryBusinessStage?   @map("suggested_business_stage")
+  suggestedActionOwner     InquiryActionOwner?     @map("suggested_action_owner")
+  suggestedLifecycleStatus InquiryLifecycleStatus? @map("suggested_lifecycle_status")
+  confidence               Decimal?      @db.Decimal(5, 4)
+  riskLevel                String?       @map("risk_level")
+  reason                   String?
+  missingFields            Json          @default("[]") @map("missing_fields")
+  extractedRequirements    Json          @default("{}") @map("extracted_requirements")
+  quoteBoundaryDetected    Boolean       @default(false) @map("quote_boundary_detected")
+  humanReviewRequired      Boolean       @default(false) @map("human_review_required")
+  nextAction               String?       @map("next_action")
+  rawResult                Json          @default("{}") @map("raw_result")
+  rawOutput                String?       @map("raw_output")
+  modelName                String?       @map("model_name")
+  promptVersion            String?       @map("prompt_version")
+  success                  Boolean       @default(true)
+  errorCode                String?       @map("error_code")
+  errorMessage             String?       @map("error_message")
+  idempotencyKey           String        @unique @map("idempotency_key")
+  createdAt                DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  emailMessage             EmailMessage  @relation(fields: [emailMessageId], references: [id], onDelete: Cascade)
+  inquiryCase              InquiryCase   @relation(fields: [inquiryCaseId], references: [id], onDelete: Cascade)
+  replyDrafts              ReplyDraft[]
+  businessEvents           InquiryBusinessEvent[]
+  stateDecision            InquiryStateDecision?
 
   @@index([emailMessageId])
-  @@index([inquiryCaseId])
+  @@index([inquiryCaseId, createdAt])
+  @@index([messageClassification])
+  @@map("email_analysis_decisions")
+}
+
+model InquiryBusinessEvent {
+  id                 String        @id @default(dbgenerated("'business_event_' || gen_random_uuid()::TEXT"))
+  inquiryCaseId      String        @map("inquiry_case_id")
+  emailMessageId     String?       @map("email_message_id")
+  analysisDecisionId String?       @map("analysis_decision_id")
+  correctedEventId   String?       @map("corrected_event_id")
+  eventType          String        @map("event_type")
+  actor              String
+  sequenceInEmail    Int           @default(0) @map("sequence_in_email")
+  confidence         Decimal?      @db.Decimal(5, 4)
+  evidence           String?
+  payloadJson        Json          @default("{}") @map("payload_json")
+  sourceType         String        @default("ai") @map("source_type")
+  occurredAt         DateTime      @map("occurred_at") @db.Timestamptz(6)
+  createdAt          DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  inquiryCase        InquiryCase   @relation(fields: [inquiryCaseId], references: [id], onDelete: Cascade)
+  emailMessage       EmailMessage? @relation(fields: [emailMessageId], references: [id], onDelete: SetNull)
+  analysisDecision   EmailAnalysisDecision? @relation(fields: [analysisDecisionId], references: [id], onDelete: SetNull)
+  correctedEvent     InquiryBusinessEvent? @relation("BusinessEventCorrections", fields: [correctedEventId], references: [id], onDelete: SetNull)
+  corrections        InquiryBusinessEvent[] @relation("BusinessEventCorrections")
+
+  @@index([inquiryCaseId, occurredAt])
+  @@index([emailMessageId])
+  @@index([analysisDecisionId])
+  @@index([eventType])
+  @@map("inquiry_business_events")
+}
+
+model InquiryStateDecision {
+  id                       String        @id @default(dbgenerated("'state_decision_' || gen_random_uuid()::TEXT"))
+  inquiryCaseId            String        @map("inquiry_case_id")
+  emailMessageId           String?       @map("email_message_id")
+  analysisDecisionId       String?       @unique @map("analysis_decision_id")
+  replayRunId              String?       @map("replay_run_id")
+  beforeBusinessStage      InquiryBusinessStage   @map("before_business_stage")
+  beforeActionOwner        InquiryActionOwner     @map("before_action_owner")
+  beforeLifecycleStatus    InquiryLifecycleStatus @map("before_lifecycle_status")
+  beforeStateVersion       Int           @map("before_state_version")
+  suggestedBusinessStage   InquiryBusinessStage   @map("suggested_business_stage")
+  suggestedActionOwner     InquiryActionOwner     @map("suggested_action_owner")
+  suggestedLifecycleStatus InquiryLifecycleStatus @map("suggested_lifecycle_status")
+  appliedBusinessStage     InquiryBusinessStage?  @map("applied_business_stage")
+  appliedActionOwner       InquiryActionOwner?    @map("applied_action_owner")
+  appliedLifecycleStatus   InquiryLifecycleStatus? @map("applied_lifecycle_status")
+  confidence               Decimal?      @db.Decimal(5, 4)
+  riskLevel                String?       @map("risk_level")
+  eventValidationPassed    Boolean       @default(false) @map("event_validation_passed")
+  humanReviewAdvisory      Boolean       @default(false) @map("human_review_advisory")
+  baselineIncomplete       Boolean       @default(false) @map("baseline_incomplete")
+  executionStatus          String        @default("pending") @map("execution_status")
+  executionReason          String?       @map("execution_reason")
+  policyVersion            String        @map("policy_version")
+  decisionSource           String        @default("ai") @map("decision_source")
+  eventOccurredAt          DateTime      @map("event_occurred_at") @db.Timestamptz(6)
+  executedAt               DateTime?     @map("executed_at") @db.Timestamptz(6)
+  createdAt                DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                DateTime      @default(now()) @map("updated_at") @db.Timestamptz(6)
+  inquiryCase              InquiryCase   @relation(fields: [inquiryCaseId], references: [id], onDelete: Cascade)
+  emailMessage             EmailMessage? @relation(fields: [emailMessageId], references: [id], onDelete: SetNull)
+  analysisDecision         EmailAnalysisDecision? @relation(fields: [analysisDecisionId], references: [id], onDelete: SetNull)
+  transitions             InquiryStateTransition[]
+
+  @@index([inquiryCaseId, eventOccurredAt])
   @@index([executionStatus])
-  @@index([createdAt])
-  @@map("ai_decisions")
+  @@index([replayRunId])
+  @@map("inquiry_state_decisions")
+}
+
+model InquiryStateTransition {
+  id                  String        @id @default(dbgenerated("'state_transition_' || gen_random_uuid()::TEXT"))
+  inquiryCaseId       String        @map("inquiry_case_id")
+  stateDecisionId     String        @map("state_decision_id")
+  fromBusinessStage   InquiryBusinessStage   @map("from_business_stage")
+  fromActionOwner     InquiryActionOwner     @map("from_action_owner")
+  fromLifecycleStatus InquiryLifecycleStatus @map("from_lifecycle_status")
+  toBusinessStage     InquiryBusinessStage   @map("to_business_stage")
+  toActionOwner       InquiryActionOwner     @map("to_action_owner")
+  toLifecycleStatus   InquiryLifecycleStatus @map("to_lifecycle_status")
+  changedDimensionsJson Json        @default("[]") @map("changed_dimensions_json")
+  reason              String?
+  changedBy           String?       @map("changed_by")
+  changedByType       String        @map("changed_by_type")
+  eventOccurredAt     DateTime      @map("event_occurred_at") @db.Timestamptz(6)
+  processedAt         DateTime      @default(now()) @map("processed_at") @db.Timestamptz(6)
+  createdAt           DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  inquiryCase         InquiryCase   @relation(fields: [inquiryCaseId], references: [id], onDelete: Cascade)
+  stateDecision       InquiryStateDecision @relation(fields: [stateDecisionId], references: [id], onDelete: Cascade)
+
+  @@index([inquiryCaseId, eventOccurredAt])
+  @@index([stateDecisionId])
+  @@map("inquiry_state_transitions")
+}
+
+model EmailRecoveryRecord {
+  id                 String        @id @default(dbgenerated("'recovery_' || gen_random_uuid()::TEXT"))
+  inquiryCaseId      String?       @map("inquiry_case_id")
+  triggerEmailId     String        @map("trigger_email_id")
+  recoveredEmailId   String        @map("recovered_email_id")
+  expectedMessageId  String        @map("expected_message_id")
+  confidence         Decimal       @db.Decimal(5, 4)
+  evidenceJson       Json          @default("{}") @map("evidence_json")
+  recoveryStatus     String        @default("context_only") @map("recovery_status")
+  replayRunId        String?       @map("replay_run_id")
+  baselineIncomplete Boolean       @default(false) @map("baseline_incomplete")
+  createdAt          DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime      @default(now()) @map("updated_at") @db.Timestamptz(6)
+  inquiryCase        InquiryCase?  @relation(fields: [inquiryCaseId], references: [id], onDelete: SetNull)
+  triggerEmail       EmailMessage  @relation("RecoveryTriggerEmail", fields: [triggerEmailId], references: [id], onDelete: Cascade)
+  recoveredEmail     EmailMessage  @relation("RecoveredEmail", fields: [recoveredEmailId], references: [id], onDelete: Cascade)
+
+  @@unique([triggerEmailId, recoveredEmailId])
+  @@index([inquiryCaseId])
+  @@index([recoveryStatus])
+  @@map("email_recovery_records")
 }
 
 model InquiryStructuredFact {
@@ -344,7 +491,7 @@ model ReplyDraft {
   sourceEmailMessageId     String?       @map("source_email_message_id")
   sentEmailMessageId       String?       @map("sent_email_message_id")
   contextSnapshotId        String?       @map("context_snapshot_id")
-  aiDecisionId             String?       @map("ai_decision_id")
+  emailAnalysisDecisionId  String?       @map("email_analysis_decision_id")
   idempotencyKey           String?       @unique @map("idempotency_key")
   draftType                String        @map("draft_type")
   status                   String        @default("pending_review")
@@ -373,7 +520,7 @@ model ReplyDraft {
   inquiryCase              InquiryCase   @relation(fields: [inquiryCaseId], references: [id], onDelete: Cascade)
   sourceEmailMessage       EmailMessage? @relation("ReplyDraftSourceEmail", fields: [sourceEmailMessageId], references: [id], onDelete: SetNull)
   sentEmailMessage         EmailMessage? @relation("ReplyDraftSentEmail", fields: [sentEmailMessageId], references: [id], onDelete: SetNull)
-  aiDecision               AiDecision?   @relation(fields: [aiDecisionId], references: [id], onDelete: SetNull)
+  emailAnalysisDecision    EmailAnalysisDecision? @relation(fields: [emailAnalysisDecisionId], references: [id], onDelete: SetNull)
   attachments              ReplyDraftAttachment[]
   sendAttempts             EmailSendAttempt[]
 
@@ -381,7 +528,7 @@ model ReplyDraft {
   @@index([status])
   @@index([sourceEmailMessageId])
   @@index([sentEmailMessageId])
-  @@index([aiDecisionId])
+  @@index([emailAnalysisDecisionId])
   @@map("reply_drafts")
 }
 
@@ -427,42 +574,6 @@ model EmailSendAttempt {
   @@map("email_send_attempts")
 }
 
-model EmailWorkflowDecision {
-  id                         String      @id
-  emailMessageId             String      @map("email_message_id")
-  inquiryCaseId              String      @map("inquiry_case_id")
-  aiDecisionId               String?     @map("ai_decision_id")
-  direction                  String
-  source                     String
-  eventType                  String      @map("event_type")
-  responseExpected           Boolean     @default(false) @map("response_expected")
-  suggestedStatus            String?     @map("suggested_status")
-  confidence                 Decimal?    @db.Decimal(5, 4)
-  riskLevel                  String?     @map("risk_level")
-  reason                     String?
-  commercialBoundaryDetected Boolean     @default(false) @map("commercial_boundary_detected")
-  humanReviewRequired        Boolean     @default(true) @map("human_review_required")
-  decisionSource             String      @map("decision_source")
-  modelName                  String?     @map("model_name")
-  promptVersion              String?     @map("prompt_version")
-  rawResult                  Json        @default("{}") @map("raw_result")
-  executionStatus            String      @default("pending") @map("execution_status")
-  executionFromStatus        String?     @map("execution_from_status")
-  executionToStatus          String?     @map("execution_to_status")
-  executionReason            String?     @map("execution_reason")
-  executedAt                 DateTime?   @map("executed_at") @db.Timestamptz(6)
-  idempotencyKey             String      @unique @map("idempotency_key")
-  createdAt                  DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt                  DateTime    @default(now()) @map("updated_at") @db.Timestamptz(6)
-  emailMessage               EmailMessage @relation(fields: [emailMessageId], references: [id], onDelete: Cascade)
-  inquiryCase                InquiryCase  @relation(fields: [inquiryCaseId], references: [id], onDelete: Cascade)
-  aiDecision                 AiDecision?  @relation(fields: [aiDecisionId], references: [id], onDelete: SetNull)
-
-  @@index([inquiryCaseId, createdAt])
-  @@index([emailMessageId])
-  @@index([executionStatus])
-  @@map("email_workflow_decisions")
-}
 model AiContextSnapshot {
   id               String        @id @default(dbgenerated("'context_snapshot_' || gen_random_uuid()::TEXT"))
   inquiryCaseId    String?       @map("inquiry_case_id")
@@ -501,20 +612,4 @@ model InquiryContextSummary {
 
   @@index([updatedAt])
   @@map("inquiry_context_summaries")
-}
-
-model InquiryStatusLog {
-  id             String      @id @default(dbgenerated("'status_log_' || gen_random_uuid()::TEXT"))
-  inquiryCaseId  String      @map("inquiry_case_id")
-  fromStatus     String?     @map("from_status")
-  toStatus       String      @map("to_status")
-  reason         String?
-  changedBy      String?     @map("changed_by")
-  changedByType  String      @map("changed_by_type")
-  createdAt      DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
-  inquiryCase    InquiryCase @relation(fields: [inquiryCaseId], references: [id], onDelete: Cascade)
-
-  @@index([inquiryCaseId])
-  @@index([createdAt])
-  @@map("inquiry_status_logs")
 }

@@ -3,7 +3,17 @@ import { access } from 'node:fs/promises';
 
 import { BusinessError } from '../../../../common/errors/business-error.js';
 import { PrismaService } from '../../../../common/database/prisma.service.js';
-import { InquiryStatus } from '../../../inquiry/domain/enums/inquiry-status.enum.js';
+import { ApplyInquiryStateDecisionUseCase } from '../../../inquiry/application/use-cases/apply-inquiry-state-decision.use-case.js';
+import { InquiryBusinessEventType } from '../../../inquiry/domain/enums/inquiry-business-event.enum.js';
+import {
+  InquiryActionOwner,
+  InquiryBusinessStage,
+  InquiryLifecycleStatus,
+} from '../../../inquiry/domain/enums/inquiry-state.enum.js';
+import {
+  INQUIRY_STATE_POLICY_VERSION,
+  reduceInquiryState,
+} from '../../../inquiry/domain/services/inquiry-state-reducer.js';
 import type { EmailSenderAdapter } from '../ports/email-sender.adapter.js';
 import { MailRuntimeConfigService } from '../../infrastructure/config/mail-runtime-config.service.js';
 
@@ -17,6 +27,7 @@ export class SendApprovedReplyUseCase {
     private readonly prisma: PrismaService,
     private readonly runtimeConfig: MailRuntimeConfigService,
     private readonly sender: EmailSenderAdapter,
+    private readonly applyStateDecisionUseCase: ApplyInquiryStateDecisionUseCase,
   ) {}
 
   async execute(input: SendApprovedReplyInput) {
@@ -138,11 +149,22 @@ export class SendApprovedReplyUseCase {
   }) {
     const now = new Date();
     const emailId = `email_${randomUUID()}`;
-    const workflowDecisionId = `workflow_decision_${randomUUID()}`;
+    const analysisDecisionId = `email_analysis_${randomUUID()}`;
+    const stateDecisionId = `state_decision_${randomUUID()}`;
     const source = input.sendStatus === 'simulated' ? 'simulated_send' : 'smtp';
-    const workflowEvent = resolveSystemDraftEvent(input.draft.draftType, input.draft.inquiryCase.status);
+    const deterministic = resolveSystemDraftEvent(input.draft.draftType, input.draft.inquiryCase);
+    const reduction = reduceInquiryState({
+      current: input.draft.inquiryCase,
+      suggested: deterministic.suggestedState,
+      events: deterministic.events.map((event) => ({ eventType: event.eventType, confidence: 1 })),
+      messageClassification: 'our_response',
+      confidence: 1,
+      riskLevel: 'low',
+      minimumConfidence: 0.9,
+      historicalBackfill: false,
+    });
 
-    return this.prisma.$transaction(async (tx) => {
+    const persisted = await this.prisma.$transaction(async (tx) => {
       await tx.emailMessage.create({
         data: {
           id: emailId,
@@ -185,26 +207,76 @@ export class SendApprovedReplyUseCase {
           updatedAt: now,
         },
       });
-      await tx.emailWorkflowDecision.create({
+      await tx.emailAnalysisDecision.create({
         data: {
-          id: workflowDecisionId,
+          id: analysisDecisionId,
           emailMessageId: emailId,
           inquiryCaseId: input.draft.inquiryCaseId,
-          aiDecisionId: input.draft.aiDecisionId ?? null,
           direction: 'outbound',
-          source,
-          eventType: workflowEvent.eventType,
-          responseExpected: workflowEvent.responseExpected,
-          suggestedStatus: workflowEvent.toStatus ?? null,
+          messageClassification: 'our_response',
+          suggestedBusinessStage: deterministic.suggestedState.businessStage,
+          suggestedActionOwner: deterministic.suggestedState.actionOwner,
+          suggestedLifecycleStatus: deterministic.suggestedState.lifecycleStatus,
           confidence: 1,
           riskLevel: 'low',
           reason: `${source} approved ${input.draft.draftType} draft was sent.`,
-          commercialBoundaryDetected: workflowEvent.commercialBoundaryDetected,
+          missingFields: [],
+          extractedRequirements: {},
+          quoteBoundaryDetected: deterministic.commercialBoundaryDetected,
           humanReviewRequired: true,
-          decisionSource: 'system_rule',
+          nextAction: deterministic.responseExpected ? 'Wait for customer response.' : 'No state action required.',
+          rawResult: {
+            draftType: input.draft.draftType,
+            replyDraftId: input.draft.id,
+            events: deterministic.events,
+            suggestedState: deterministic.suggestedState,
+          },
+          modelName: 'system_rule',
           promptVersion: 'system-draft-v1',
-          rawResult: { draftType: input.draft.draftType, replyDraftId: input.draft.id },
+          success: true,
           idempotencyKey: `system-send-event:${input.attemptId}`,
+        },
+      });
+      for (const [index, event] of deterministic.events.entries()) {
+        await tx.inquiryBusinessEvent.create({
+          data: {
+            id: `business_event_${randomUUID()}`,
+            inquiryCaseId: input.draft.inquiryCaseId,
+            emailMessageId: emailId,
+            analysisDecisionId,
+            eventType: event.eventType,
+            actor: 'us',
+            sequenceInEmail: index,
+            confidence: 1,
+            evidence: `${input.draft.draftType} approved draft`,
+            payloadJson: { replyDraftId: input.draft.id, sendAttemptId: input.attemptId },
+            sourceType: 'system_rule',
+            occurredAt: now,
+          },
+        });
+      }
+      await tx.inquiryStateDecision.create({
+        data: {
+          id: stateDecisionId,
+          inquiryCaseId: input.draft.inquiryCaseId,
+          emailMessageId: emailId,
+          analysisDecisionId,
+          beforeBusinessStage: input.draft.inquiryCase.businessStage,
+          beforeActionOwner: input.draft.inquiryCase.actionOwner,
+          beforeLifecycleStatus: input.draft.inquiryCase.lifecycleStatus,
+          beforeStateVersion: input.draft.inquiryCase.stateVersion,
+          suggestedBusinessStage: reduction.suggested.businessStage,
+          suggestedActionOwner: reduction.suggested.actionOwner,
+          suggestedLifecycleStatus: reduction.suggested.lifecycleStatus,
+          confidence: 1,
+          riskLevel: 'low',
+          eventValidationPassed: reduction.eventValidationPassed,
+          humanReviewAdvisory: false,
+          executionStatus: reduction.executionStatus === 'eligible' ? 'pending' : reduction.executionStatus,
+          executionReason: reduction.reason,
+          policyVersion: INQUIRY_STATE_POLICY_VERSION,
+          decisionSource: 'system_rule',
+          eventOccurredAt: now,
         },
       });
       await tx.emailSendAttempt.update({
@@ -228,58 +300,40 @@ export class SendApprovedReplyUseCase {
         },
       });
 
-      const transition = workflowEvent.toStatus
-        ? { from: input.draft.inquiryCase.status, to: workflowEvent.toStatus }
-        : undefined;
-      let transitionStatus: 'applied' | 'conflict' | 'not_required' = 'not_required';
-      if (transition) {
-        const update = await tx.inquiryCase.updateMany({
-          where: { id: input.draft.inquiryCaseId, status: transition.from },
-          data: { status: transition.to, updatedAt: now },
-        });
-        if (update.count === 1) {
-          transitionStatus = 'applied';
-          await tx.inquiryStatusLog.create({
-            data: {
-              id: `status_log_${randomUUID()}`,
-              inquiryCaseId: input.draft.inquiryCaseId,
-              fromStatus: transition.from,
-              toStatus: transition.to,
-              reason: `${source} reply sent from approved draft`,
-              changedBy: workflowDecisionId,
-              changedByType: 'system',
-            },
-          });
-        } else {
-          transitionStatus = 'conflict';
-        }
-      }
-      await tx.emailWorkflowDecision.update({
-        where: { id: workflowDecisionId },
-        data: {
-          executionStatus: transitionStatus === 'not_required' ? 'no_change' : transitionStatus,
-          executionFromStatus: input.draft.inquiryCase.status,
-          executionToStatus: transition?.to ?? null,
-          executionReason: transitionStatus === 'applied'
-            ? `${source} approved draft send applied a deterministic status event.`
-            : transitionStatus === 'conflict'
-              ? 'Inquiry status changed before the deterministic send event was applied.'
-              : 'This approved draft type does not require a status change.',
-          executedAt: now,
-          updatedAt: now,
-        },
-      });
-
       return {
         replyDraftId: input.draft.id,
         sendAttemptId: input.attemptId,
         outboundEmailMessageId: emailId,
         operationMode: this.runtimeConfig.operationMode,
         sendStatus: input.sendStatus,
-        transitionStatus,
-        workflowDecisionId,
+        stateDecisionId,
+        analysisDecisionId,
+        reduction,
       };
     });
+
+    let stateExecutionStatus: string = reduction.executionStatus;
+    if (reduction.executionStatus === 'eligible') {
+      try {
+        const applied = await this.applyStateDecisionUseCase.applyAutomatic(
+          stateDecisionId,
+          reduction.safeState,
+          reduction.pendingLifecycleStatus,
+        );
+        stateExecutionStatus = applied.executionStatus;
+      } catch (error) {
+        stateExecutionStatus = 'failed';
+        await this.prisma.inquiryStateDecision.update({
+          where: { id: stateDecisionId },
+          data: {
+            executionStatus: 'failed',
+            executionReason: error instanceof Error ? error.message : String(error),
+            executedAt: new Date(),
+          },
+        });
+      }
+    }
+    return { ...persisted, stateExecutionStatus };
   }
 
   private async recordFailure(
@@ -307,34 +361,50 @@ export class SendApprovedReplyUseCase {
   }
 }
 
-function resolveSystemDraftEvent(draftType: string, currentStatus: string) {
-  if (draftType === 'clarification_request' && currentStatus === InquiryStatus.NEED_CLARIFICATION) {
+function resolveSystemDraftEvent(draftType: string, current: {
+  businessStage: InquiryBusinessStage;
+  actionOwner: InquiryActionOwner;
+  lifecycleStatus: InquiryLifecycleStatus;
+}) {
+  if (draftType === 'clarification_request') {
     return {
-      eventType: 'customer_response_requested',
+      events: [
+        { eventType: InquiryBusinessEventType.CLARIFICATION_REQUESTED },
+        { eventType: InquiryBusinessEventType.CUSTOMER_RESPONSE_REQUESTED },
+      ],
       responseExpected: true,
       commercialBoundaryDetected: false,
-      toStatus: InquiryStatus.WAITING_CUSTOMER,
+      suggestedState: { ...current, actionOwner: InquiryActionOwner.CUSTOMER },
     };
   }
-  if (draftType === 'quote_reply' && currentStatus === InquiryStatus.READY_FOR_QUOTE) {
+  if (draftType === 'quote_reply') {
     return {
-      eventType: 'formal_quote_sent',
+      events: [
+        { eventType: InquiryBusinessEventType.FORMAL_QUOTE_SENT },
+        { eventType: InquiryBusinessEventType.CUSTOMER_RESPONSE_REQUESTED },
+      ],
       responseExpected: true,
       commercialBoundaryDetected: true,
-      toStatus: InquiryStatus.QUOTED,
+      suggestedState: {
+        businessStage: InquiryBusinessStage.COMMERCIAL,
+        actionOwner: InquiryActionOwner.CUSTOMER,
+        lifecycleStatus: InquiryLifecycleStatus.ACTIVE,
+      },
     };
   }
   if (draftType === 'engineer_review_acknowledgement') {
     return {
-      eventType: 'engineer_review_acknowledgement',
+      events: [{ eventType: InquiryBusinessEventType.GENERAL_CORRESPONDENCE }],
       responseExpected: false,
       commercialBoundaryDetected: false,
+      suggestedState: current,
     };
   }
   return {
-    eventType: 'general_correspondence',
+    events: [{ eventType: InquiryBusinessEventType.GENERAL_CORRESPONDENCE }],
     responseExpected: false,
     commercialBoundaryDetected: false,
+    suggestedState: current,
   };
 }
 

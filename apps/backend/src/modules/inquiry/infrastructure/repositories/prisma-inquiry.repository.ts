@@ -25,7 +25,10 @@ export class PrismaInquiryRepository implements InquiryRepository {
       customerId: contact.customer.id,
       organizationId: contact.organization?.id ?? inquiryCase.organizationId ?? null,
       primaryCustomerId: contact.customer.id,
-      status: inquiryCase.status,
+      businessStage: inquiryCase.businessStage,
+      actionOwner: inquiryCase.actionOwner,
+      lifecycleStatus: inquiryCase.lifecycleStatus,
+      stateVersion: inquiryCase.stateVersion,
       subject: inquiryCase.subject,
       rawSubject: inquiryCase.rawSubject ?? inquiryCase.subject,
       businessSubject: inquiryCase.businessSubject ?? inquiryCase.subject,
@@ -78,7 +81,7 @@ export class PrismaInquiryRepository implements InquiryRepository {
     const records = await this.prisma.inquiryCase.findMany({
       where: {
         customerId: customer.id,
-        status: { not: 'closed' },
+        lifecycleStatus: 'active',
       },
       include: { customer: true, organization: true },
       orderBy: { updatedAt: 'desc' },
@@ -94,7 +97,7 @@ export class PrismaInquiryRepository implements InquiryRepository {
 
     const records = await this.prisma.inquiryCase.findMany({
       where: {
-        status: { not: 'closed' },
+        lifecycleStatus: 'active',
         OR: [
           { organization: { domain } },
           { customer: { domain } },
@@ -171,7 +174,10 @@ async function upsertOrganization(
 
 function toDomain(record: {
   id: string;
-  status: string;
+  businessStage: InquiryCase['businessStage'];
+  actionOwner: InquiryCase['actionOwner'];
+  lifecycleStatus: InquiryCase['lifecycleStatus'];
+  stateVersion: number;
   subject: string | null;
   rawSubject?: string | null;
   businessSubject?: string | null;
@@ -199,7 +205,10 @@ function toDomain(record: {
     businessSubjectSource: (record.businessSubjectSource as InquiryCase['businessSubjectSource']) ?? undefined,
     businessSubjectLocked: record.businessSubjectLocked ?? undefined,
     businessSubjectUpdatedAt: record.businessSubjectUpdatedAt ?? undefined,
-    status: record.status as InquiryCase['status'],
+    businessStage: record.businessStage,
+    actionOwner: record.actionOwner,
+    lifecycleStatus: record.lifecycleStatus,
+    stateVersion: record.stateVersion,
     latestMessageAt: record.latestMessageAt ?? record.createdAt,
     createdAt: record.createdAt,
     updatedAt: record.updatedAt,

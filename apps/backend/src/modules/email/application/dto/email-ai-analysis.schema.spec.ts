@@ -1,52 +1,18 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
-import { InquiryStatus } from '../../../inquiry/domain/enums/inquiry-status.enum.js';
 import { emailAiAnalysisSchema } from './email-ai-analysis.schema.js';
 
 describe('emailAiAnalysisSchema', () => {
-  it('accepts a valid AI analysis result', () => {
-    const result = emailAiAnalysisSchema.safeParse({
-      isInquiry: true,
-      classification: 'valid_inquiry',
-      suggestedStatus: InquiryStatus.NEED_CLARIFICATION,
-      confidence: 0.82,
-      riskLevel: 'medium',
-      reason: 'Customer provided frequency and quantity but missed power and VSWR.',
-      missingFields: ['power', 'vswr'],
-      extractedRequirements: {
-        productType: 'circulator',
-        frequencyRange: '12-15GHz',
-        quantity: '10 pcs',
-      },
-      quoteBoundaryDetected: false,
-      humanReviewRequired: true,
-      nextAction: 'Ask customer for missing technical parameters.',
-    });
-
+  it('accepts a unified email workflow analysis', () => {
+    const result = emailAiAnalysisSchema.safeParse(createAnalysis());
     assert.equal(result.success, true);
   });
 
   it('coerces numeric extracted requirement values to strings', () => {
-    const result = emailAiAnalysisSchema.safeParse({
-      isInquiry: true,
-      classification: 'valid_inquiry',
-      suggestedStatus: InquiryStatus.NEED_ENGINEER_REVIEW,
-      confidence: 0.9,
-      riskLevel: 'low',
-      reason: 'Customer provided clear requirements.',
-      missingFields: [],
-      extractedRequirements: {
-        productType: 'isolator',
-        power: 20,
-        quantity: 50,
-        application: 123,
-      },
-      quoteBoundaryDetected: false,
-      humanReviewRequired: true,
-      nextAction: 'Send to engineering review.',
-    });
-
+    const result = emailAiAnalysisSchema.safeParse(createAnalysis({
+      extractedRequirements: { productType: 'isolator', power: 20, quantity: 50, application: 123 },
+    }));
     assert.equal(result.success, true);
     if (result.success) {
       assert.equal(result.data.extractedRequirements.power, '20');
@@ -55,39 +21,50 @@ describe('emailAiAnalysisSchema', () => {
     }
   });
 
-  it('rejects quote boundary output without human review', () => {
-    const result = emailAiAnalysisSchema.safeParse({
-      isInquiry: true,
-      classification: 'invalid',
-      suggestedStatus: InquiryStatus.NEED_ENGINEER_REVIEW,
-      confidence: 0.91,
-      riskLevel: 'high',
-      reason: 'Customer asked for price and lead time.',
-      missingFields: [],
-      extractedRequirements: {},
-      quoteBoundaryDetected: true,
-      humanReviewRequired: false,
-      nextAction: 'Manual review required.',
-    });
-
+  it('rejects a terminal lifecycle state with a non-none owner', () => {
+    const result = emailAiAnalysisSchema.safeParse(createAnalysis({
+      suggestedState: { businessStage: 'commercial', actionOwner: 'us', lifecycleStatus: 'lost' },
+    }));
     assert.equal(result.success, false);
   });
 
-  it('rejects ready_for_quote output without human review', () => {
-    const result = emailAiAnalysisSchema.safeParse({
-      isInquiry: true,
-      classification: 'valid_inquiry',
-      suggestedStatus: InquiryStatus.READY_FOR_QUOTE,
-      confidence: 0.7,
-      riskLevel: 'medium',
-      reason: 'Customer provided enough details.',
-      missingFields: [],
-      extractedRequirements: {},
-      quoteBoundaryDetected: false,
-      humanReviewRequired: false,
-      nextAction: 'Prepare quotation handoff.',
-    });
-
+  it('rejects an unknown business event', () => {
+    const result = emailAiAnalysisSchema.safeParse(createAnalysis({
+      events: [{
+        eventType: 'invented_event',
+        actor: 'customer',
+        confidence: 0.9,
+        evidence: 'Evidence',
+        payload: {},
+      }],
+    }));
     assert.equal(result.success, false);
   });
 });
+
+function createAnalysis(overrides: Record<string, unknown> = {}) {
+  return {
+    messageClassification: 'customer_inquiry',
+    events: [{
+      eventType: 'requirements_provided',
+      actor: 'customer',
+      confidence: 0.92,
+      evidence: 'Customer supplied frequency and quantity.',
+      payload: {},
+    }],
+    suggestedState: {
+      businessStage: 'technical_review',
+      actionOwner: 'us',
+      lifecycleStatus: 'active',
+    },
+    confidence: 0.92,
+    riskLevel: 'low',
+    reason: 'Technical requirements are ready for review.',
+    missingFields: [],
+    extractedRequirements: { productType: 'circulator', frequencyRange: '12-15GHz' },
+    quoteBoundaryDetected: false,
+    humanReviewRequired: true,
+    nextAction: 'Review the requirements.',
+    ...overrides,
+  };
+}

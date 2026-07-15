@@ -183,7 +183,10 @@ function buildContextPayload(
 ): AiEmailAnalysisContextPayload {
   return {
     inquiryState: {
-      status: input.inquiryCase.status,
+      businessStage: input.inquiryCase.businessStage,
+      actionOwner: input.inquiryCase.actionOwner,
+      lifecycleStatus: input.inquiryCase.lifecycleStatus,
+      stateVersion: input.inquiryCase.stateVersion,
       customerEmail: input.inquiryCase.customerEmail,
       subject: formatSubject(input.inquiryCase.businessSubject ?? input.inquiryCase.subject),
       latestMessageAt: input.inquiryCase.latestMessageAt.toISOString(),
@@ -208,9 +211,9 @@ function buildContextPayload(
     outputInstruction: {
       format: 'json_only',
       schema: input.outputSchema ?? {
-        isInquiry: 'boolean',
-        classification: 'valid_inquiry | invalid | unrelated_product | commercial | unknown',
-        suggestedStatus: 'new | need_clarification | need_engineer_review | ready_for_quote | quoted | closed | invalid',
+        messageClassification: 'customer_inquiry | customer_follow_up | our_response | internal | invalid | unrelated_product | commercial_solicitation | unknown',
+        events: 'array of { eventType, actor, confidence, evidence, payload }',
+        suggestedState: 'object with businessStage, actionOwner, lifecycleStatus',
         confidence: 'number between 0 and 1',
         riskLevel: 'low | medium | high',
         reason: 'string',
