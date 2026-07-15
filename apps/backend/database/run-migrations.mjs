@@ -205,7 +205,19 @@ async function verifyCriticalSchema(client) {
       FROM information_schema.tables
       WHERE table_schema = current_schema()
         AND table_name = 'email_recovery_records'
-    ) AS email_recovery_records_ready
+    ) AS email_recovery_records_ready,
+    EXISTS (
+      SELECT 1
+      FROM information_schema.tables
+      WHERE table_schema = current_schema()
+        AND table_name = 'inquiry_processing_mode_transitions'
+    ) AS inquiry_processing_mode_transitions_ready,
+    EXISTS (
+      SELECT 1
+      FROM information_schema.tables
+      WHERE table_schema = current_schema()
+        AND table_name = 'inquiry_replay_runs'
+    ) AS inquiry_replay_runs_ready
   `);
   const requiredTables = [
     'email_analysis_decisions',
@@ -213,6 +225,8 @@ async function verifyCriticalSchema(client) {
     'inquiry_state_decisions',
     'inquiry_state_transitions',
     'email_recovery_records',
+    'inquiry_processing_mode_transitions',
+    'inquiry_replay_runs',
   ];
   const missingTables = requiredTables.filter((table) => !result.rows[0]?.[`${table}_ready`]);
   if (missingTables.length > 0) {
@@ -226,10 +240,44 @@ async function verifyCriticalSchema(client) {
       AND table_name = 'inquiry_cases'
   `);
   const actualInquiryColumns = new Set(inquiryColumns.rows.map((row) => row.column_name));
-  const requiredInquiryColumns = ['business_stage', 'action_owner', 'lifecycle_status', 'state_version'];
+  const requiredInquiryColumns = [
+    'business_stage',
+    'action_owner',
+    'lifecycle_status',
+    'state_version',
+    'processing_mode',
+    'processing_mode_reason',
+    'processing_mode_changed_at',
+    'processing_mode_changed_by',
+  ];
   const missingInquiryColumns = requiredInquiryColumns.filter((column) => !actualInquiryColumns.has(column));
   if (missingInquiryColumns.length > 0) {
     throw new Error(`Migration verification failed: missing inquiry_cases columns: ${missingInquiryColumns.join(', ')}.`);
+  }
+
+  const analysisColumns = await client.query(`
+    SELECT column_name
+    FROM information_schema.columns
+    WHERE table_schema = current_schema()
+      AND table_name = 'email_analysis_decisions'
+  `);
+  const actualAnalysisColumns = new Set(analysisColumns.rows.map((row) => row.column_name));
+  const requiredAnalysisColumns = [
+    'is_inquiry',
+    'inquiry_scope',
+    'scope_relationship',
+    'inquiry_scope_confidence',
+    'detected_products',
+    'replay_run_id',
+    'is_effective',
+  ];
+  const missingAnalysisColumns = requiredAnalysisColumns.filter(
+    (column) => !actualAnalysisColumns.has(column),
+  );
+  if (missingAnalysisColumns.length > 0) {
+    throw new Error(
+      `Migration verification failed: missing email_analysis_decisions columns: ${missingAnalysisColumns.join(', ')}.`,
+    );
   }
 
   console.log('verified three-dimensional inquiry schema');

@@ -12,7 +12,7 @@ import {
   ShieldAlert,
   Unlock,
 } from 'lucide-vue-next';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import { WEB_ROUTES } from '@email-inquiry/shared';
 
@@ -25,6 +25,7 @@ import {
   linkMessageToInquiry,
   moveInquiryMessage,
   updateInquiry,
+  updateInquiryProcessingMode,
   fetchStateDecisions,
   applyStateDecision,
   rejectStateDecision,
@@ -82,6 +83,14 @@ const correctionActionOwner = ref<InquiryActionOwner>('us');
 const correctionLifecycleStatus = ref<InquiryLifecycleStatus>('active');
 const correctionReason = ref('');
 
+watch(correctionLifecycleStatus, (lifecycleStatus) => {
+  if (lifecycleStatus !== 'active') {
+    correctionActionOwner.value = 'none';
+  } else if (correctionActionOwner.value === 'none') {
+    correctionActionOwner.value = 'us';
+  }
+});
+
 const showMoveDialog = ref(false);
 const moveMessageId = ref('');
 const moveTargetId = ref('');
@@ -95,6 +104,9 @@ const showDecisionReview = ref(false);
 const decisionReviewAction = ref<'apply' | 'reject'>('apply');
 const decisionReviewId = ref('');
 const decisionReviewReason = ref('');
+const showProcessingModeDialog = ref(false);
+const targetProcessingMode = ref<'automatic' | 'manual'>('manual');
+const processingModeReason = ref('');
 
 const email_source = {
   system_detected: '系统检测历史补录',
@@ -106,6 +118,7 @@ const fullSnapshot = ref<any>(null);
 const currentStage = computed(() => (item.value as any)?.businessStage ?? 'intake');
 const currentOwner = computed(() => (item.value as any)?.actionOwner ?? 'us');
 const currentLifecycle = computed(() => (item.value as any)?.lifecycleStatus ?? 'active');
+const currentProcessingMode = computed(() => item.value?.processingMode ?? 'automatic');
 const latestStateDecision = computed(() => stateDecisions.value[0] ?? null);
 
 const latestConfidencePercent = computed(() => {
@@ -185,12 +198,15 @@ function openCorrection() {
 
 async function submitCorrection() {
   if (!correctionReason.value.trim()) return;
+  const actionOwner = correctionLifecycleStatus.value === 'active'
+    ? correctionActionOwner.value
+    : 'none';
   saving.value = true;
   error.value = '';
   try {
     await submitStateCorrection(String(route.params.id), {
       businessStage: correctionBusinessStage.value,
-      actionOwner: correctionActionOwner.value,
+      actionOwner,
       lifecycleStatus: correctionLifecycleStatus.value,
       reason: correctionReason.value,
     });
@@ -275,6 +291,35 @@ async function toggleLock() {
   } finally { saving.value = false; }
 }
 
+function openProcessingModeDialog(mode: 'automatic' | 'manual') {
+  targetProcessingMode.value = mode;
+  processingModeReason.value = '';
+  showProcessingModeDialog.value = true;
+}
+
+async function submitProcessingMode() {
+  if (!item.value) return;
+  if (targetProcessingMode.value === 'manual' && !processingModeReason.value.trim()) return;
+  saving.value = true;
+  error.value = '';
+  try {
+    const result = await updateInquiryProcessingMode(item.value.id, {
+      mode: targetProcessingMode.value,
+      reason: processingModeReason.value.trim() || undefined,
+    });
+    if (targetProcessingMode.value === 'automatic' && result.replayRun?.status !== 'completed') {
+      throw new Error(result.replayRun?.errorMessage || '历史状态回补未完成，询盘继续保持人工模式。');
+    }
+    showProcessingModeDialog.value = false;
+    showSuccess(targetProcessingMode.value === 'manual' ? '已切换人工处理' : '历史状态回补完成，已恢复自动处理');
+    await load();
+  } catch (err) {
+    error.value = (err as any)?.response?.data?.message || (err instanceof Error ? err.message : String(err));
+  } finally {
+    saving.value = false;
+  }
+}
+
 async function doMoveMessage() {
   if (!moveMessageId.value || !moveTargetId.value) return;
   saving.value = true;
@@ -348,6 +393,29 @@ onMounted(load);
             <div class="text-sm text-muted-foreground">生命周期</div>
             <div class="mt-1"><Badge :tone="lifecycleTone(currentLifecycle)">{{ getLifecycleLabel(currentLifecycle) }}</Badge></div>
             <div class="mt-2"><Button size="sm" variant="outline" @click="openCorrection()">校正</Button></div>
+          </div>
+          <div class="rounded-md border border-border p-3">
+            <div class="flex items-center justify-between gap-2">
+              <div>
+                <div class="text-sm text-muted-foreground">处理模式</div>
+                <Badge class="mt-1" :tone="currentProcessingMode === 'manual' ? 'warning' : 'success'">
+                  {{ currentProcessingMode === 'manual' ? '人工处理' : '自动处理' }}
+                </Badge>
+              </div>
+              <Button
+                size="sm"
+                variant="outline"
+                @click="openProcessingModeDialog(currentProcessingMode === 'manual' ? 'automatic' : 'manual')"
+              >
+                {{ currentProcessingMode === 'manual' ? '恢复自动' : '转人工' }}
+              </Button>
+            </div>
+            <p v-if="item.processingModeReason" class="mt-2 text-xs text-muted-foreground">
+              {{ item.processingModeReason }}
+            </p>
+            <p v-if="currentProcessingMode === 'manual'" class="mt-2 text-xs text-amber-700">
+              新邮件只入库和归并，不执行 AI 分析、状态流转或草稿生成。
+            </p>
           </div>
           <div>
             <div class="text-sm text-muted-foreground">业务主题</div>
@@ -507,14 +575,52 @@ onMounted(load);
     </div>
 
     <Teleport to="body">
+      <div v-if="showProcessingModeDialog" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40" @click.self="showProcessingModeDialog = false">
+        <Card class="w-full max-w-md p-4">
+          <h2 class="font-semibold">{{ targetProcessingMode === 'manual' ? '切换人工处理' : '恢复自动处理' }}</h2>
+          <p class="mt-1 text-sm text-muted-foreground">
+            {{ targetProcessingMode === 'manual'
+              ? '切换后新邮件只入库和归并，AI 分析、状态流转和草稿生成都会暂停。'
+              : '系统会先按邮件时间线执行状态回补；只有回补完整成功后才恢复自动处理。' }}
+          </p>
+          <div v-if="targetProcessingMode === 'manual'" class="mt-3">
+            <label class="text-sm text-muted-foreground">原因（必填）</label>
+            <textarea v-model="processingModeReason" rows="3" class="mt-1 w-full rounded border px-3 py-2 text-sm" />
+          </div>
+          <div class="mt-4 flex justify-end gap-2">
+            <Button variant="ghost" @click="showProcessingModeDialog = false">取消</Button>
+            <Button
+              :disabled="saving || (targetProcessingMode === 'manual' && !processingModeReason.trim())"
+              @click="submitProcessingMode"
+            >{{ saving ? '处理中...' : '确认' }}</Button>
+          </div>
+        </Card>
+      </div>
+    </Teleport>
+
+    <Teleport to="body">
       <div v-if="showCorrection" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40" @click.self="showCorrection = false">
         <Card class="w-full max-w-md p-4">
           <h2 class="font-semibold">人工状态校正</h2>
           <p class="mt-1 text-sm text-muted-foreground">会新增校正事件并进入状态决策。</p>
           <div class="mt-3 space-y-3">
             <div><label class="text-sm text-muted-foreground">业务阶段</label><select v-model="correctionBusinessStage" class="mt-1 w-full rounded border px-2 py-1"><option value="intake">需求接入</option><option value="technical_review">技术评审</option><option value="commercial">商务阶段</option><option value="contract">合同阶段</option></select></div>
-            <div><label class="text-sm text-muted-foreground">等待方</label><select v-model="correctionActionOwner" class="mt-1 w-full rounded border px-2 py-1"><option value="us">等待我方</option><option value="customer">等待客户</option><option value="none">无需等待</option></select></div>
-            <div><label class="text-sm text-muted-foreground">生命周期</label><select v-model="correctionLifecycleStatus" class="mt-1 w-full rounded border px-2 py-1"><option value="active">进行中</option><option value="won">已赢单</option><option value="lost">已丢单</option><option value="invalid">无效</option></select></div>
+            <div>
+              <label class="text-sm text-muted-foreground">等待方</label>
+              <select
+                v-model="correctionActionOwner"
+                class="mt-1 w-full rounded border px-2 py-1 disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground"
+                :disabled="correctionLifecycleStatus !== 'active'"
+              >
+                <option value="us">等待我方</option>
+                <option value="customer">等待客户</option>
+                <option value="none">无需等待</option>
+              </select>
+              <p v-if="correctionLifecycleStatus !== 'active'" class="mt-1 text-xs text-muted-foreground">
+                终态询盘没有后续等待方，系统将自动设为“无需等待”。
+              </p>
+            </div>
+            <div><label class="text-sm text-muted-foreground">生命周期</label><select v-model="correctionLifecycleStatus" class="mt-1 w-full rounded border px-2 py-1"><option value="active">进行中</option><option value="won">已成交</option><option value="lost">已丢单</option><option value="invalid">无效</option></select></div>
             <div><label class="text-sm text-muted-foreground">原因（必填）</label><textarea v-model="correctionReason" class="mt-1 w-full rounded border px-2 py-1 text-sm" rows="2" /></div>
             <div class="flex justify-end gap-2">
               <Button variant="ghost" @click="showCorrection = false">取消</Button>

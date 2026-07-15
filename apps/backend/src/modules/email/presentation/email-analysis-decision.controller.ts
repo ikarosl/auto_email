@@ -24,6 +24,7 @@ export class EmailAnalysisDecisionController {
     const page = parsePage(pageQuery);
     const limit = parseLimit(limitQuery);
     const where = {
+      isEffective: true,
       ...(inquiryCaseId ? { inquiryCaseId } : {}),
       ...(['inbound', 'outbound'].includes(direction || '') ? { direction } : {}),
     };
@@ -60,6 +61,12 @@ function mapDecision(record: any) {
     inquiryCaseId: record.inquiryCaseId,
     direction: record.direction,
     messageClassification: record.messageClassification,
+    isInquiry: record.isInquiry,
+    inquiryScope: record.inquiryScope,
+    scopeRelationship: record.scopeRelationship,
+    inquiryScopeConfidence: toNumber(record.inquiryScopeConfidence),
+    detectedProducts: record.detectedProducts,
+    isEffective: record.isEffective,
     suggestedState: record.suggestedBusinessStage ? {
       businessStage: record.suggestedBusinessStage,
       actionOwner: record.suggestedActionOwner,

@@ -27,10 +27,12 @@ export type AggregateEmailAnalysisDecision = {
 }
 
 export type EmailAnalysisDecisionAvgAggregateOutputType = {
+  inquiryScopeConfidence: runtime.Decimal | null
   confidence: runtime.Decimal | null
 }
 
 export type EmailAnalysisDecisionSumAggregateOutputType = {
+  inquiryScopeConfidence: runtime.Decimal | null
   confidence: runtime.Decimal | null
 }
 
@@ -41,6 +43,12 @@ export type EmailAnalysisDecisionMinAggregateOutputType = {
   contextSnapshotId: string | null
   direction: string | null
   messageClassification: string | null
+  isInquiry: boolean | null
+  inquiryScope: string | null
+  scopeRelationship: string | null
+  inquiryScopeConfidence: runtime.Decimal | null
+  replayRunId: string | null
+  isEffective: boolean | null
   suggestedBusinessStage: $Enums.InquiryBusinessStage | null
   suggestedActionOwner: $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus: $Enums.InquiryLifecycleStatus | null
@@ -67,6 +75,12 @@ export type EmailAnalysisDecisionMaxAggregateOutputType = {
   contextSnapshotId: string | null
   direction: string | null
   messageClassification: string | null
+  isInquiry: boolean | null
+  inquiryScope: string | null
+  scopeRelationship: string | null
+  inquiryScopeConfidence: runtime.Decimal | null
+  replayRunId: string | null
+  isEffective: boolean | null
   suggestedBusinessStage: $Enums.InquiryBusinessStage | null
   suggestedActionOwner: $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus: $Enums.InquiryLifecycleStatus | null
@@ -93,6 +107,13 @@ export type EmailAnalysisDecisionCountAggregateOutputType = {
   contextSnapshotId: number
   direction: number
   messageClassification: number
+  isInquiry: number
+  inquiryScope: number
+  scopeRelationship: number
+  inquiryScopeConfidence: number
+  detectedProducts: number
+  replayRunId: number
+  isEffective: number
   suggestedBusinessStage: number
   suggestedActionOwner: number
   suggestedLifecycleStatus: number
@@ -118,10 +139,12 @@ export type EmailAnalysisDecisionCountAggregateOutputType = {
 
 
 export type EmailAnalysisDecisionAvgAggregateInputType = {
+  inquiryScopeConfidence?: true
   confidence?: true
 }
 
 export type EmailAnalysisDecisionSumAggregateInputType = {
+  inquiryScopeConfidence?: true
   confidence?: true
 }
 
@@ -132,6 +155,12 @@ export type EmailAnalysisDecisionMinAggregateInputType = {
   contextSnapshotId?: true
   direction?: true
   messageClassification?: true
+  isInquiry?: true
+  inquiryScope?: true
+  scopeRelationship?: true
+  inquiryScopeConfidence?: true
+  replayRunId?: true
+  isEffective?: true
   suggestedBusinessStage?: true
   suggestedActionOwner?: true
   suggestedLifecycleStatus?: true
@@ -158,6 +187,12 @@ export type EmailAnalysisDecisionMaxAggregateInputType = {
   contextSnapshotId?: true
   direction?: true
   messageClassification?: true
+  isInquiry?: true
+  inquiryScope?: true
+  scopeRelationship?: true
+  inquiryScopeConfidence?: true
+  replayRunId?: true
+  isEffective?: true
   suggestedBusinessStage?: true
   suggestedActionOwner?: true
   suggestedLifecycleStatus?: true
@@ -184,6 +219,13 @@ export type EmailAnalysisDecisionCountAggregateInputType = {
   contextSnapshotId?: true
   direction?: true
   messageClassification?: true
+  isInquiry?: true
+  inquiryScope?: true
+  scopeRelationship?: true
+  inquiryScopeConfidence?: true
+  detectedProducts?: true
+  replayRunId?: true
+  isEffective?: true
   suggestedBusinessStage?: true
   suggestedActionOwner?: true
   suggestedLifecycleStatus?: true
@@ -300,6 +342,13 @@ export type EmailAnalysisDecisionGroupByOutputType = {
   contextSnapshotId: string | null
   direction: string
   messageClassification: string | null
+  isInquiry: boolean | null
+  inquiryScope: string | null
+  scopeRelationship: string | null
+  inquiryScopeConfidence: runtime.Decimal | null
+  detectedProducts: runtime.JsonValue
+  replayRunId: string | null
+  isEffective: boolean
   suggestedBusinessStage: $Enums.InquiryBusinessStage | null
   suggestedActionOwner: $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus: $Enums.InquiryLifecycleStatus | null
@@ -352,6 +401,13 @@ export type EmailAnalysisDecisionWhereInput = {
   contextSnapshotId?: Prisma.StringNullableFilter<"EmailAnalysisDecision"> | string | null
   direction?: Prisma.StringFilter<"EmailAnalysisDecision"> | string
   messageClassification?: Prisma.StringNullableFilter<"EmailAnalysisDecision"> | string | null
+  isInquiry?: Prisma.BoolNullableFilter<"EmailAnalysisDecision"> | boolean | null
+  inquiryScope?: Prisma.StringNullableFilter<"EmailAnalysisDecision"> | string | null
+  scopeRelationship?: Prisma.StringNullableFilter<"EmailAnalysisDecision"> | string | null
+  inquiryScopeConfidence?: Prisma.DecimalNullableFilter<"EmailAnalysisDecision"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  detectedProducts?: Prisma.JsonFilter<"EmailAnalysisDecision">
+  replayRunId?: Prisma.StringNullableFilter<"EmailAnalysisDecision"> | string | null
+  isEffective?: Prisma.BoolFilter<"EmailAnalysisDecision"> | boolean
   suggestedBusinessStage?: Prisma.EnumInquiryBusinessStageNullableFilter<"EmailAnalysisDecision"> | $Enums.InquiryBusinessStage | null
   suggestedActionOwner?: Prisma.EnumInquiryActionOwnerNullableFilter<"EmailAnalysisDecision"> | $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusNullableFilter<"EmailAnalysisDecision"> | $Enums.InquiryLifecycleStatus | null
@@ -386,6 +442,13 @@ export type EmailAnalysisDecisionOrderByWithRelationInput = {
   contextSnapshotId?: Prisma.SortOrderInput | Prisma.SortOrder
   direction?: Prisma.SortOrder
   messageClassification?: Prisma.SortOrderInput | Prisma.SortOrder
+  isInquiry?: Prisma.SortOrderInput | Prisma.SortOrder
+  inquiryScope?: Prisma.SortOrderInput | Prisma.SortOrder
+  scopeRelationship?: Prisma.SortOrderInput | Prisma.SortOrder
+  inquiryScopeConfidence?: Prisma.SortOrderInput | Prisma.SortOrder
+  detectedProducts?: Prisma.SortOrder
+  replayRunId?: Prisma.SortOrderInput | Prisma.SortOrder
+  isEffective?: Prisma.SortOrder
   suggestedBusinessStage?: Prisma.SortOrderInput | Prisma.SortOrder
   suggestedActionOwner?: Prisma.SortOrderInput | Prisma.SortOrder
   suggestedLifecycleStatus?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -424,6 +487,13 @@ export type EmailAnalysisDecisionWhereUniqueInput = Prisma.AtLeast<{
   contextSnapshotId?: Prisma.StringNullableFilter<"EmailAnalysisDecision"> | string | null
   direction?: Prisma.StringFilter<"EmailAnalysisDecision"> | string
   messageClassification?: Prisma.StringNullableFilter<"EmailAnalysisDecision"> | string | null
+  isInquiry?: Prisma.BoolNullableFilter<"EmailAnalysisDecision"> | boolean | null
+  inquiryScope?: Prisma.StringNullableFilter<"EmailAnalysisDecision"> | string | null
+  scopeRelationship?: Prisma.StringNullableFilter<"EmailAnalysisDecision"> | string | null
+  inquiryScopeConfidence?: Prisma.DecimalNullableFilter<"EmailAnalysisDecision"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  detectedProducts?: Prisma.JsonFilter<"EmailAnalysisDecision">
+  replayRunId?: Prisma.StringNullableFilter<"EmailAnalysisDecision"> | string | null
+  isEffective?: Prisma.BoolFilter<"EmailAnalysisDecision"> | boolean
   suggestedBusinessStage?: Prisma.EnumInquiryBusinessStageNullableFilter<"EmailAnalysisDecision"> | $Enums.InquiryBusinessStage | null
   suggestedActionOwner?: Prisma.EnumInquiryActionOwnerNullableFilter<"EmailAnalysisDecision"> | $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusNullableFilter<"EmailAnalysisDecision"> | $Enums.InquiryLifecycleStatus | null
@@ -457,6 +527,13 @@ export type EmailAnalysisDecisionOrderByWithAggregationInput = {
   contextSnapshotId?: Prisma.SortOrderInput | Prisma.SortOrder
   direction?: Prisma.SortOrder
   messageClassification?: Prisma.SortOrderInput | Prisma.SortOrder
+  isInquiry?: Prisma.SortOrderInput | Prisma.SortOrder
+  inquiryScope?: Prisma.SortOrderInput | Prisma.SortOrder
+  scopeRelationship?: Prisma.SortOrderInput | Prisma.SortOrder
+  inquiryScopeConfidence?: Prisma.SortOrderInput | Prisma.SortOrder
+  detectedProducts?: Prisma.SortOrder
+  replayRunId?: Prisma.SortOrderInput | Prisma.SortOrder
+  isEffective?: Prisma.SortOrder
   suggestedBusinessStage?: Prisma.SortOrderInput | Prisma.SortOrder
   suggestedActionOwner?: Prisma.SortOrderInput | Prisma.SortOrder
   suggestedLifecycleStatus?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -494,6 +571,13 @@ export type EmailAnalysisDecisionScalarWhereWithAggregatesInput = {
   contextSnapshotId?: Prisma.StringNullableWithAggregatesFilter<"EmailAnalysisDecision"> | string | null
   direction?: Prisma.StringWithAggregatesFilter<"EmailAnalysisDecision"> | string
   messageClassification?: Prisma.StringNullableWithAggregatesFilter<"EmailAnalysisDecision"> | string | null
+  isInquiry?: Prisma.BoolNullableWithAggregatesFilter<"EmailAnalysisDecision"> | boolean | null
+  inquiryScope?: Prisma.StringNullableWithAggregatesFilter<"EmailAnalysisDecision"> | string | null
+  scopeRelationship?: Prisma.StringNullableWithAggregatesFilter<"EmailAnalysisDecision"> | string | null
+  inquiryScopeConfidence?: Prisma.DecimalNullableWithAggregatesFilter<"EmailAnalysisDecision"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  detectedProducts?: Prisma.JsonWithAggregatesFilter<"EmailAnalysisDecision">
+  replayRunId?: Prisma.StringNullableWithAggregatesFilter<"EmailAnalysisDecision"> | string | null
+  isEffective?: Prisma.BoolWithAggregatesFilter<"EmailAnalysisDecision"> | boolean
   suggestedBusinessStage?: Prisma.EnumInquiryBusinessStageNullableWithAggregatesFilter<"EmailAnalysisDecision"> | $Enums.InquiryBusinessStage | null
   suggestedActionOwner?: Prisma.EnumInquiryActionOwnerNullableWithAggregatesFilter<"EmailAnalysisDecision"> | $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusNullableWithAggregatesFilter<"EmailAnalysisDecision"> | $Enums.InquiryLifecycleStatus | null
@@ -521,6 +605,13 @@ export type EmailAnalysisDecisionCreateInput = {
   contextSnapshotId?: string | null
   direction: string
   messageClassification?: string | null
+  isInquiry?: boolean | null
+  inquiryScope?: string | null
+  scopeRelationship?: string | null
+  inquiryScopeConfidence?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  detectedProducts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  replayRunId?: string | null
+  isEffective?: boolean
   suggestedBusinessStage?: $Enums.InquiryBusinessStage | null
   suggestedActionOwner?: $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus?: $Enums.InquiryLifecycleStatus | null
@@ -555,6 +646,13 @@ export type EmailAnalysisDecisionUncheckedCreateInput = {
   contextSnapshotId?: string | null
   direction: string
   messageClassification?: string | null
+  isInquiry?: boolean | null
+  inquiryScope?: string | null
+  scopeRelationship?: string | null
+  inquiryScopeConfidence?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  detectedProducts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  replayRunId?: string | null
+  isEffective?: boolean
   suggestedBusinessStage?: $Enums.InquiryBusinessStage | null
   suggestedActionOwner?: $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus?: $Enums.InquiryLifecycleStatus | null
@@ -585,6 +683,13 @@ export type EmailAnalysisDecisionUpdateInput = {
   contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   direction?: Prisma.StringFieldUpdateOperationsInput | string
   messageClassification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isInquiry?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  inquiryScope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  scopeRelationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inquiryScopeConfidence?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  detectedProducts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suggestedBusinessStage?: Prisma.NullableEnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage | null
   suggestedActionOwner?: Prisma.NullableEnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus?: Prisma.NullableEnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus | null
@@ -619,6 +724,13 @@ export type EmailAnalysisDecisionUncheckedUpdateInput = {
   contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   direction?: Prisma.StringFieldUpdateOperationsInput | string
   messageClassification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isInquiry?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  inquiryScope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  scopeRelationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inquiryScopeConfidence?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  detectedProducts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suggestedBusinessStage?: Prisma.NullableEnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage | null
   suggestedActionOwner?: Prisma.NullableEnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus?: Prisma.NullableEnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus | null
@@ -651,6 +763,13 @@ export type EmailAnalysisDecisionCreateManyInput = {
   contextSnapshotId?: string | null
   direction: string
   messageClassification?: string | null
+  isInquiry?: boolean | null
+  inquiryScope?: string | null
+  scopeRelationship?: string | null
+  inquiryScopeConfidence?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  detectedProducts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  replayRunId?: string | null
+  isEffective?: boolean
   suggestedBusinessStage?: $Enums.InquiryBusinessStage | null
   suggestedActionOwner?: $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus?: $Enums.InquiryLifecycleStatus | null
@@ -678,6 +797,13 @@ export type EmailAnalysisDecisionUpdateManyMutationInput = {
   contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   direction?: Prisma.StringFieldUpdateOperationsInput | string
   messageClassification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isInquiry?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  inquiryScope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  scopeRelationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inquiryScopeConfidence?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  detectedProducts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suggestedBusinessStage?: Prisma.NullableEnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage | null
   suggestedActionOwner?: Prisma.NullableEnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus?: Prisma.NullableEnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus | null
@@ -707,6 +833,13 @@ export type EmailAnalysisDecisionUncheckedUpdateManyInput = {
   contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   direction?: Prisma.StringFieldUpdateOperationsInput | string
   messageClassification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isInquiry?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  inquiryScope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  scopeRelationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inquiryScopeConfidence?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  detectedProducts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suggestedBusinessStage?: Prisma.NullableEnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage | null
   suggestedActionOwner?: Prisma.NullableEnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus?: Prisma.NullableEnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus | null
@@ -746,6 +879,13 @@ export type EmailAnalysisDecisionCountOrderByAggregateInput = {
   contextSnapshotId?: Prisma.SortOrder
   direction?: Prisma.SortOrder
   messageClassification?: Prisma.SortOrder
+  isInquiry?: Prisma.SortOrder
+  inquiryScope?: Prisma.SortOrder
+  scopeRelationship?: Prisma.SortOrder
+  inquiryScopeConfidence?: Prisma.SortOrder
+  detectedProducts?: Prisma.SortOrder
+  replayRunId?: Prisma.SortOrder
+  isEffective?: Prisma.SortOrder
   suggestedBusinessStage?: Prisma.SortOrder
   suggestedActionOwner?: Prisma.SortOrder
   suggestedLifecycleStatus?: Prisma.SortOrder
@@ -769,6 +909,7 @@ export type EmailAnalysisDecisionCountOrderByAggregateInput = {
 }
 
 export type EmailAnalysisDecisionAvgOrderByAggregateInput = {
+  inquiryScopeConfidence?: Prisma.SortOrder
   confidence?: Prisma.SortOrder
 }
 
@@ -779,6 +920,12 @@ export type EmailAnalysisDecisionMaxOrderByAggregateInput = {
   contextSnapshotId?: Prisma.SortOrder
   direction?: Prisma.SortOrder
   messageClassification?: Prisma.SortOrder
+  isInquiry?: Prisma.SortOrder
+  inquiryScope?: Prisma.SortOrder
+  scopeRelationship?: Prisma.SortOrder
+  inquiryScopeConfidence?: Prisma.SortOrder
+  replayRunId?: Prisma.SortOrder
+  isEffective?: Prisma.SortOrder
   suggestedBusinessStage?: Prisma.SortOrder
   suggestedActionOwner?: Prisma.SortOrder
   suggestedLifecycleStatus?: Prisma.SortOrder
@@ -805,6 +952,12 @@ export type EmailAnalysisDecisionMinOrderByAggregateInput = {
   contextSnapshotId?: Prisma.SortOrder
   direction?: Prisma.SortOrder
   messageClassification?: Prisma.SortOrder
+  isInquiry?: Prisma.SortOrder
+  inquiryScope?: Prisma.SortOrder
+  scopeRelationship?: Prisma.SortOrder
+  inquiryScopeConfidence?: Prisma.SortOrder
+  replayRunId?: Prisma.SortOrder
+  isEffective?: Prisma.SortOrder
   suggestedBusinessStage?: Prisma.SortOrder
   suggestedActionOwner?: Prisma.SortOrder
   suggestedLifecycleStatus?: Prisma.SortOrder
@@ -825,6 +978,7 @@ export type EmailAnalysisDecisionMinOrderByAggregateInput = {
 }
 
 export type EmailAnalysisDecisionSumOrderByAggregateInput = {
+  inquiryScopeConfidence?: Prisma.SortOrder
   confidence?: Prisma.SortOrder
 }
 
@@ -917,6 +1071,18 @@ export type EmailAnalysisDecisionUncheckedUpdateManyWithoutInquiryCaseNestedInpu
   deleteMany?: Prisma.EmailAnalysisDecisionScalarWhereInput | Prisma.EmailAnalysisDecisionScalarWhereInput[]
 }
 
+export type NullableBoolFieldUpdateOperationsInput = {
+  set?: boolean | null
+}
+
+export type NullableDecimalFieldUpdateOperationsInput = {
+  set?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
+}
+
 export type NullableEnumInquiryBusinessStageFieldUpdateOperationsInput = {
   set?: $Enums.InquiryBusinessStage | null
 }
@@ -927,14 +1093,6 @@ export type NullableEnumInquiryActionOwnerFieldUpdateOperationsInput = {
 
 export type NullableEnumInquiryLifecycleStatusFieldUpdateOperationsInput = {
   set?: $Enums.InquiryLifecycleStatus | null
-}
-
-export type NullableDecimalFieldUpdateOperationsInput = {
-  set?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type EmailAnalysisDecisionCreateNestedOneWithoutBusinessEventsInput = {
@@ -990,6 +1148,13 @@ export type EmailAnalysisDecisionCreateWithoutEmailMessageInput = {
   contextSnapshotId?: string | null
   direction: string
   messageClassification?: string | null
+  isInquiry?: boolean | null
+  inquiryScope?: string | null
+  scopeRelationship?: string | null
+  inquiryScopeConfidence?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  detectedProducts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  replayRunId?: string | null
+  isEffective?: boolean
   suggestedBusinessStage?: $Enums.InquiryBusinessStage | null
   suggestedActionOwner?: $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus?: $Enums.InquiryLifecycleStatus | null
@@ -1022,6 +1187,13 @@ export type EmailAnalysisDecisionUncheckedCreateWithoutEmailMessageInput = {
   contextSnapshotId?: string | null
   direction: string
   messageClassification?: string | null
+  isInquiry?: boolean | null
+  inquiryScope?: string | null
+  scopeRelationship?: string | null
+  inquiryScopeConfidence?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  detectedProducts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  replayRunId?: string | null
+  isEffective?: boolean
   suggestedBusinessStage?: $Enums.InquiryBusinessStage | null
   suggestedActionOwner?: $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus?: $Enums.InquiryLifecycleStatus | null
@@ -1083,6 +1255,13 @@ export type EmailAnalysisDecisionScalarWhereInput = {
   contextSnapshotId?: Prisma.StringNullableFilter<"EmailAnalysisDecision"> | string | null
   direction?: Prisma.StringFilter<"EmailAnalysisDecision"> | string
   messageClassification?: Prisma.StringNullableFilter<"EmailAnalysisDecision"> | string | null
+  isInquiry?: Prisma.BoolNullableFilter<"EmailAnalysisDecision"> | boolean | null
+  inquiryScope?: Prisma.StringNullableFilter<"EmailAnalysisDecision"> | string | null
+  scopeRelationship?: Prisma.StringNullableFilter<"EmailAnalysisDecision"> | string | null
+  inquiryScopeConfidence?: Prisma.DecimalNullableFilter<"EmailAnalysisDecision"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  detectedProducts?: Prisma.JsonFilter<"EmailAnalysisDecision">
+  replayRunId?: Prisma.StringNullableFilter<"EmailAnalysisDecision"> | string | null
+  isEffective?: Prisma.BoolFilter<"EmailAnalysisDecision"> | boolean
   suggestedBusinessStage?: Prisma.EnumInquiryBusinessStageNullableFilter<"EmailAnalysisDecision"> | $Enums.InquiryBusinessStage | null
   suggestedActionOwner?: Prisma.EnumInquiryActionOwnerNullableFilter<"EmailAnalysisDecision"> | $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusNullableFilter<"EmailAnalysisDecision"> | $Enums.InquiryLifecycleStatus | null
@@ -1110,6 +1289,13 @@ export type EmailAnalysisDecisionCreateWithoutInquiryCaseInput = {
   contextSnapshotId?: string | null
   direction: string
   messageClassification?: string | null
+  isInquiry?: boolean | null
+  inquiryScope?: string | null
+  scopeRelationship?: string | null
+  inquiryScopeConfidence?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  detectedProducts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  replayRunId?: string | null
+  isEffective?: boolean
   suggestedBusinessStage?: $Enums.InquiryBusinessStage | null
   suggestedActionOwner?: $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus?: $Enums.InquiryLifecycleStatus | null
@@ -1142,6 +1328,13 @@ export type EmailAnalysisDecisionUncheckedCreateWithoutInquiryCaseInput = {
   contextSnapshotId?: string | null
   direction: string
   messageClassification?: string | null
+  isInquiry?: boolean | null
+  inquiryScope?: string | null
+  scopeRelationship?: string | null
+  inquiryScopeConfidence?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  detectedProducts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  replayRunId?: string | null
+  isEffective?: boolean
   suggestedBusinessStage?: $Enums.InquiryBusinessStage | null
   suggestedActionOwner?: $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus?: $Enums.InquiryLifecycleStatus | null
@@ -1198,6 +1391,13 @@ export type EmailAnalysisDecisionCreateWithoutBusinessEventsInput = {
   contextSnapshotId?: string | null
   direction: string
   messageClassification?: string | null
+  isInquiry?: boolean | null
+  inquiryScope?: string | null
+  scopeRelationship?: string | null
+  inquiryScopeConfidence?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  detectedProducts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  replayRunId?: string | null
+  isEffective?: boolean
   suggestedBusinessStage?: $Enums.InquiryBusinessStage | null
   suggestedActionOwner?: $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus?: $Enums.InquiryLifecycleStatus | null
@@ -1231,6 +1431,13 @@ export type EmailAnalysisDecisionUncheckedCreateWithoutBusinessEventsInput = {
   contextSnapshotId?: string | null
   direction: string
   messageClassification?: string | null
+  isInquiry?: boolean | null
+  inquiryScope?: string | null
+  scopeRelationship?: string | null
+  inquiryScopeConfidence?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  detectedProducts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  replayRunId?: string | null
+  isEffective?: boolean
   suggestedBusinessStage?: $Enums.InquiryBusinessStage | null
   suggestedActionOwner?: $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus?: $Enums.InquiryLifecycleStatus | null
@@ -1276,6 +1483,13 @@ export type EmailAnalysisDecisionUpdateWithoutBusinessEventsInput = {
   contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   direction?: Prisma.StringFieldUpdateOperationsInput | string
   messageClassification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isInquiry?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  inquiryScope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  scopeRelationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inquiryScopeConfidence?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  detectedProducts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suggestedBusinessStage?: Prisma.NullableEnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage | null
   suggestedActionOwner?: Prisma.NullableEnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus?: Prisma.NullableEnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus | null
@@ -1309,6 +1523,13 @@ export type EmailAnalysisDecisionUncheckedUpdateWithoutBusinessEventsInput = {
   contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   direction?: Prisma.StringFieldUpdateOperationsInput | string
   messageClassification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isInquiry?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  inquiryScope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  scopeRelationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inquiryScopeConfidence?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  detectedProducts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suggestedBusinessStage?: Prisma.NullableEnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage | null
   suggestedActionOwner?: Prisma.NullableEnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus?: Prisma.NullableEnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus | null
@@ -1338,6 +1559,13 @@ export type EmailAnalysisDecisionCreateWithoutStateDecisionInput = {
   contextSnapshotId?: string | null
   direction: string
   messageClassification?: string | null
+  isInquiry?: boolean | null
+  inquiryScope?: string | null
+  scopeRelationship?: string | null
+  inquiryScopeConfidence?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  detectedProducts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  replayRunId?: string | null
+  isEffective?: boolean
   suggestedBusinessStage?: $Enums.InquiryBusinessStage | null
   suggestedActionOwner?: $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus?: $Enums.InquiryLifecycleStatus | null
@@ -1371,6 +1599,13 @@ export type EmailAnalysisDecisionUncheckedCreateWithoutStateDecisionInput = {
   contextSnapshotId?: string | null
   direction: string
   messageClassification?: string | null
+  isInquiry?: boolean | null
+  inquiryScope?: string | null
+  scopeRelationship?: string | null
+  inquiryScopeConfidence?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  detectedProducts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  replayRunId?: string | null
+  isEffective?: boolean
   suggestedBusinessStage?: $Enums.InquiryBusinessStage | null
   suggestedActionOwner?: $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus?: $Enums.InquiryLifecycleStatus | null
@@ -1416,6 +1651,13 @@ export type EmailAnalysisDecisionUpdateWithoutStateDecisionInput = {
   contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   direction?: Prisma.StringFieldUpdateOperationsInput | string
   messageClassification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isInquiry?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  inquiryScope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  scopeRelationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inquiryScopeConfidence?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  detectedProducts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suggestedBusinessStage?: Prisma.NullableEnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage | null
   suggestedActionOwner?: Prisma.NullableEnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus?: Prisma.NullableEnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus | null
@@ -1449,6 +1691,13 @@ export type EmailAnalysisDecisionUncheckedUpdateWithoutStateDecisionInput = {
   contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   direction?: Prisma.StringFieldUpdateOperationsInput | string
   messageClassification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isInquiry?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  inquiryScope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  scopeRelationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inquiryScopeConfidence?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  detectedProducts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suggestedBusinessStage?: Prisma.NullableEnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage | null
   suggestedActionOwner?: Prisma.NullableEnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus?: Prisma.NullableEnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus | null
@@ -1478,6 +1727,13 @@ export type EmailAnalysisDecisionCreateWithoutReplyDraftsInput = {
   contextSnapshotId?: string | null
   direction: string
   messageClassification?: string | null
+  isInquiry?: boolean | null
+  inquiryScope?: string | null
+  scopeRelationship?: string | null
+  inquiryScopeConfidence?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  detectedProducts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  replayRunId?: string | null
+  isEffective?: boolean
   suggestedBusinessStage?: $Enums.InquiryBusinessStage | null
   suggestedActionOwner?: $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus?: $Enums.InquiryLifecycleStatus | null
@@ -1511,6 +1767,13 @@ export type EmailAnalysisDecisionUncheckedCreateWithoutReplyDraftsInput = {
   contextSnapshotId?: string | null
   direction: string
   messageClassification?: string | null
+  isInquiry?: boolean | null
+  inquiryScope?: string | null
+  scopeRelationship?: string | null
+  inquiryScopeConfidence?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  detectedProducts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  replayRunId?: string | null
+  isEffective?: boolean
   suggestedBusinessStage?: $Enums.InquiryBusinessStage | null
   suggestedActionOwner?: $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus?: $Enums.InquiryLifecycleStatus | null
@@ -1556,6 +1819,13 @@ export type EmailAnalysisDecisionUpdateWithoutReplyDraftsInput = {
   contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   direction?: Prisma.StringFieldUpdateOperationsInput | string
   messageClassification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isInquiry?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  inquiryScope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  scopeRelationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inquiryScopeConfidence?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  detectedProducts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suggestedBusinessStage?: Prisma.NullableEnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage | null
   suggestedActionOwner?: Prisma.NullableEnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus?: Prisma.NullableEnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus | null
@@ -1589,6 +1859,13 @@ export type EmailAnalysisDecisionUncheckedUpdateWithoutReplyDraftsInput = {
   contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   direction?: Prisma.StringFieldUpdateOperationsInput | string
   messageClassification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isInquiry?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  inquiryScope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  scopeRelationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inquiryScopeConfidence?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  detectedProducts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suggestedBusinessStage?: Prisma.NullableEnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage | null
   suggestedActionOwner?: Prisma.NullableEnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus?: Prisma.NullableEnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus | null
@@ -1619,6 +1896,13 @@ export type EmailAnalysisDecisionCreateManyEmailMessageInput = {
   contextSnapshotId?: string | null
   direction: string
   messageClassification?: string | null
+  isInquiry?: boolean | null
+  inquiryScope?: string | null
+  scopeRelationship?: string | null
+  inquiryScopeConfidence?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  detectedProducts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  replayRunId?: string | null
+  isEffective?: boolean
   suggestedBusinessStage?: $Enums.InquiryBusinessStage | null
   suggestedActionOwner?: $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus?: $Enums.InquiryLifecycleStatus | null
@@ -1646,6 +1930,13 @@ export type EmailAnalysisDecisionUpdateWithoutEmailMessageInput = {
   contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   direction?: Prisma.StringFieldUpdateOperationsInput | string
   messageClassification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isInquiry?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  inquiryScope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  scopeRelationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inquiryScopeConfidence?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  detectedProducts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suggestedBusinessStage?: Prisma.NullableEnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage | null
   suggestedActionOwner?: Prisma.NullableEnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus?: Prisma.NullableEnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus | null
@@ -1678,6 +1969,13 @@ export type EmailAnalysisDecisionUncheckedUpdateWithoutEmailMessageInput = {
   contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   direction?: Prisma.StringFieldUpdateOperationsInput | string
   messageClassification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isInquiry?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  inquiryScope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  scopeRelationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inquiryScopeConfidence?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  detectedProducts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suggestedBusinessStage?: Prisma.NullableEnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage | null
   suggestedActionOwner?: Prisma.NullableEnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus?: Prisma.NullableEnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus | null
@@ -1709,6 +2007,13 @@ export type EmailAnalysisDecisionUncheckedUpdateManyWithoutEmailMessageInput = {
   contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   direction?: Prisma.StringFieldUpdateOperationsInput | string
   messageClassification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isInquiry?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  inquiryScope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  scopeRelationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inquiryScopeConfidence?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  detectedProducts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suggestedBusinessStage?: Prisma.NullableEnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage | null
   suggestedActionOwner?: Prisma.NullableEnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus?: Prisma.NullableEnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus | null
@@ -1737,6 +2042,13 @@ export type EmailAnalysisDecisionCreateManyInquiryCaseInput = {
   contextSnapshotId?: string | null
   direction: string
   messageClassification?: string | null
+  isInquiry?: boolean | null
+  inquiryScope?: string | null
+  scopeRelationship?: string | null
+  inquiryScopeConfidence?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  detectedProducts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  replayRunId?: string | null
+  isEffective?: boolean
   suggestedBusinessStage?: $Enums.InquiryBusinessStage | null
   suggestedActionOwner?: $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus?: $Enums.InquiryLifecycleStatus | null
@@ -1764,6 +2076,13 @@ export type EmailAnalysisDecisionUpdateWithoutInquiryCaseInput = {
   contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   direction?: Prisma.StringFieldUpdateOperationsInput | string
   messageClassification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isInquiry?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  inquiryScope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  scopeRelationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inquiryScopeConfidence?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  detectedProducts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suggestedBusinessStage?: Prisma.NullableEnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage | null
   suggestedActionOwner?: Prisma.NullableEnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus?: Prisma.NullableEnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus | null
@@ -1796,6 +2115,13 @@ export type EmailAnalysisDecisionUncheckedUpdateWithoutInquiryCaseInput = {
   contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   direction?: Prisma.StringFieldUpdateOperationsInput | string
   messageClassification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isInquiry?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  inquiryScope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  scopeRelationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inquiryScopeConfidence?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  detectedProducts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suggestedBusinessStage?: Prisma.NullableEnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage | null
   suggestedActionOwner?: Prisma.NullableEnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus?: Prisma.NullableEnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus | null
@@ -1827,6 +2153,13 @@ export type EmailAnalysisDecisionUncheckedUpdateManyWithoutInquiryCaseInput = {
   contextSnapshotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   direction?: Prisma.StringFieldUpdateOperationsInput | string
   messageClassification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isInquiry?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  inquiryScope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  scopeRelationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inquiryScopeConfidence?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  detectedProducts?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suggestedBusinessStage?: Prisma.NullableEnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage | null
   suggestedActionOwner?: Prisma.NullableEnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner | null
   suggestedLifecycleStatus?: Prisma.NullableEnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus | null
@@ -1896,6 +2229,13 @@ export type EmailAnalysisDecisionSelect<ExtArgs extends runtime.Types.Extensions
   contextSnapshotId?: boolean
   direction?: boolean
   messageClassification?: boolean
+  isInquiry?: boolean
+  inquiryScope?: boolean
+  scopeRelationship?: boolean
+  inquiryScopeConfidence?: boolean
+  detectedProducts?: boolean
+  replayRunId?: boolean
+  isEffective?: boolean
   suggestedBusinessStage?: boolean
   suggestedActionOwner?: boolean
   suggestedLifecycleStatus?: boolean
@@ -1931,6 +2271,13 @@ export type EmailAnalysisDecisionSelectCreateManyAndReturn<ExtArgs extends runti
   contextSnapshotId?: boolean
   direction?: boolean
   messageClassification?: boolean
+  isInquiry?: boolean
+  inquiryScope?: boolean
+  scopeRelationship?: boolean
+  inquiryScopeConfidence?: boolean
+  detectedProducts?: boolean
+  replayRunId?: boolean
+  isEffective?: boolean
   suggestedBusinessStage?: boolean
   suggestedActionOwner?: boolean
   suggestedLifecycleStatus?: boolean
@@ -1962,6 +2309,13 @@ export type EmailAnalysisDecisionSelectUpdateManyAndReturn<ExtArgs extends runti
   contextSnapshotId?: boolean
   direction?: boolean
   messageClassification?: boolean
+  isInquiry?: boolean
+  inquiryScope?: boolean
+  scopeRelationship?: boolean
+  inquiryScopeConfidence?: boolean
+  detectedProducts?: boolean
+  replayRunId?: boolean
+  isEffective?: boolean
   suggestedBusinessStage?: boolean
   suggestedActionOwner?: boolean
   suggestedLifecycleStatus?: boolean
@@ -1993,6 +2347,13 @@ export type EmailAnalysisDecisionSelectScalar = {
   contextSnapshotId?: boolean
   direction?: boolean
   messageClassification?: boolean
+  isInquiry?: boolean
+  inquiryScope?: boolean
+  scopeRelationship?: boolean
+  inquiryScopeConfidence?: boolean
+  detectedProducts?: boolean
+  replayRunId?: boolean
+  isEffective?: boolean
   suggestedBusinessStage?: boolean
   suggestedActionOwner?: boolean
   suggestedLifecycleStatus?: boolean
@@ -2015,7 +2376,7 @@ export type EmailAnalysisDecisionSelectScalar = {
   createdAt?: boolean
 }
 
-export type EmailAnalysisDecisionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "emailMessageId" | "inquiryCaseId" | "contextSnapshotId" | "direction" | "messageClassification" | "suggestedBusinessStage" | "suggestedActionOwner" | "suggestedLifecycleStatus" | "confidence" | "riskLevel" | "reason" | "missingFields" | "extractedRequirements" | "quoteBoundaryDetected" | "humanReviewRequired" | "nextAction" | "rawResult" | "rawOutput" | "modelName" | "promptVersion" | "success" | "errorCode" | "errorMessage" | "idempotencyKey" | "createdAt", ExtArgs["result"]["emailAnalysisDecision"]>
+export type EmailAnalysisDecisionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "emailMessageId" | "inquiryCaseId" | "contextSnapshotId" | "direction" | "messageClassification" | "isInquiry" | "inquiryScope" | "scopeRelationship" | "inquiryScopeConfidence" | "detectedProducts" | "replayRunId" | "isEffective" | "suggestedBusinessStage" | "suggestedActionOwner" | "suggestedLifecycleStatus" | "confidence" | "riskLevel" | "reason" | "missingFields" | "extractedRequirements" | "quoteBoundaryDetected" | "humanReviewRequired" | "nextAction" | "rawResult" | "rawOutput" | "modelName" | "promptVersion" | "success" | "errorCode" | "errorMessage" | "idempotencyKey" | "createdAt", ExtArgs["result"]["emailAnalysisDecision"]>
 export type EmailAnalysisDecisionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   emailMessage?: boolean | Prisma.EmailMessageDefaultArgs<ExtArgs>
   inquiryCase?: boolean | Prisma.InquiryCaseDefaultArgs<ExtArgs>
@@ -2049,6 +2410,13 @@ export type $EmailAnalysisDecisionPayload<ExtArgs extends runtime.Types.Extensio
     contextSnapshotId: string | null
     direction: string
     messageClassification: string | null
+    isInquiry: boolean | null
+    inquiryScope: string | null
+    scopeRelationship: string | null
+    inquiryScopeConfidence: runtime.Decimal | null
+    detectedProducts: runtime.JsonValue
+    replayRunId: string | null
+    isEffective: boolean
     suggestedBusinessStage: $Enums.InquiryBusinessStage | null
     suggestedActionOwner: $Enums.InquiryActionOwner | null
     suggestedLifecycleStatus: $Enums.InquiryLifecycleStatus | null
@@ -2503,6 +2871,13 @@ export interface EmailAnalysisDecisionFieldRefs {
   readonly contextSnapshotId: Prisma.FieldRef<"EmailAnalysisDecision", 'String'>
   readonly direction: Prisma.FieldRef<"EmailAnalysisDecision", 'String'>
   readonly messageClassification: Prisma.FieldRef<"EmailAnalysisDecision", 'String'>
+  readonly isInquiry: Prisma.FieldRef<"EmailAnalysisDecision", 'Boolean'>
+  readonly inquiryScope: Prisma.FieldRef<"EmailAnalysisDecision", 'String'>
+  readonly scopeRelationship: Prisma.FieldRef<"EmailAnalysisDecision", 'String'>
+  readonly inquiryScopeConfidence: Prisma.FieldRef<"EmailAnalysisDecision", 'Decimal'>
+  readonly detectedProducts: Prisma.FieldRef<"EmailAnalysisDecision", 'Json'>
+  readonly replayRunId: Prisma.FieldRef<"EmailAnalysisDecision", 'String'>
+  readonly isEffective: Prisma.FieldRef<"EmailAnalysisDecision", 'Boolean'>
   readonly suggestedBusinessStage: Prisma.FieldRef<"EmailAnalysisDecision", 'InquiryBusinessStage'>
   readonly suggestedActionOwner: Prisma.FieldRef<"EmailAnalysisDecision", 'InquiryActionOwner'>
   readonly suggestedLifecycleStatus: Prisma.FieldRef<"EmailAnalysisDecision", 'InquiryLifecycleStatus'>

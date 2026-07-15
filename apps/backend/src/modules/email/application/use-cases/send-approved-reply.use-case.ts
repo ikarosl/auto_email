@@ -40,6 +40,12 @@ export class SendApprovedReplyUseCase {
       },
     });
     if (!draft) throw new BusinessError('Reply draft not found.', 'REPLY_DRAFT_NOT_FOUND');
+    if (draft.inquiryCase.processingMode === 'manual') {
+      throw new BusinessError(
+        'Sending system drafts is disabled while the inquiry is in manual processing mode.',
+        'INQUIRY_MANUAL_PROCESSING_MODE',
+      );
+    }
     if (draft.status !== 'approved') {
       throw new BusinessError('Only approved drafts can be sent.', 'REPLY_DRAFT_NOT_APPROVED');
     }

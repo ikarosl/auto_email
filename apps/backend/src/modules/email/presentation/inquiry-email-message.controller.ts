@@ -109,6 +109,15 @@ export class InquiryEmailMessageController {
     if (!existingEmail || existingEmail.deletedAt) {
       throw new NotFoundException(`Email message not found: ${body.emailMessageId}`);
     }
+    const existingOwner = await this.prisma.inquiryMessage.findFirst({
+      where: { emailMessageId: body.emailMessageId },
+      select: { id: true, inquiryCaseId: true },
+    });
+    if (existingOwner && existingOwner.inquiryCaseId !== id) {
+      throw new BadRequestException(
+        `Email already belongs to inquiry ${existingOwner.inquiryCaseId}. Use the move endpoint to change ownership.`,
+      );
+    }
 
     const now = new Date();
     const record = await this.prisma.inquiryMessage.upsert({

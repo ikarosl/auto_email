@@ -42,6 +42,7 @@ export type InquiryStateDecisionMinAggregateOutputType = {
   emailMessageId: string | null
   analysisDecisionId: string | null
   replayRunId: string | null
+  isEffective: boolean | null
   beforeBusinessStage: $Enums.InquiryBusinessStage | null
   beforeActionOwner: $Enums.InquiryActionOwner | null
   beforeLifecycleStatus: $Enums.InquiryLifecycleStatus | null
@@ -73,6 +74,7 @@ export type InquiryStateDecisionMaxAggregateOutputType = {
   emailMessageId: string | null
   analysisDecisionId: string | null
   replayRunId: string | null
+  isEffective: boolean | null
   beforeBusinessStage: $Enums.InquiryBusinessStage | null
   beforeActionOwner: $Enums.InquiryActionOwner | null
   beforeLifecycleStatus: $Enums.InquiryLifecycleStatus | null
@@ -104,6 +106,7 @@ export type InquiryStateDecisionCountAggregateOutputType = {
   emailMessageId: number
   analysisDecisionId: number
   replayRunId: number
+  isEffective: number
   beforeBusinessStage: number
   beforeActionOwner: number
   beforeLifecycleStatus: number
@@ -147,6 +150,7 @@ export type InquiryStateDecisionMinAggregateInputType = {
   emailMessageId?: true
   analysisDecisionId?: true
   replayRunId?: true
+  isEffective?: true
   beforeBusinessStage?: true
   beforeActionOwner?: true
   beforeLifecycleStatus?: true
@@ -178,6 +182,7 @@ export type InquiryStateDecisionMaxAggregateInputType = {
   emailMessageId?: true
   analysisDecisionId?: true
   replayRunId?: true
+  isEffective?: true
   beforeBusinessStage?: true
   beforeActionOwner?: true
   beforeLifecycleStatus?: true
@@ -209,6 +214,7 @@ export type InquiryStateDecisionCountAggregateInputType = {
   emailMessageId?: true
   analysisDecisionId?: true
   replayRunId?: true
+  isEffective?: true
   beforeBusinessStage?: true
   beforeActionOwner?: true
   beforeLifecycleStatus?: true
@@ -327,6 +333,7 @@ export type InquiryStateDecisionGroupByOutputType = {
   emailMessageId: string | null
   analysisDecisionId: string | null
   replayRunId: string | null
+  isEffective: boolean
   beforeBusinessStage: $Enums.InquiryBusinessStage
   beforeActionOwner: $Enums.InquiryActionOwner
   beforeLifecycleStatus: $Enums.InquiryLifecycleStatus
@@ -381,6 +388,7 @@ export type InquiryStateDecisionWhereInput = {
   emailMessageId?: Prisma.StringNullableFilter<"InquiryStateDecision"> | string | null
   analysisDecisionId?: Prisma.StringNullableFilter<"InquiryStateDecision"> | string | null
   replayRunId?: Prisma.StringNullableFilter<"InquiryStateDecision"> | string | null
+  isEffective?: Prisma.BoolFilter<"InquiryStateDecision"> | boolean
   beforeBusinessStage?: Prisma.EnumInquiryBusinessStageFilter<"InquiryStateDecision"> | $Enums.InquiryBusinessStage
   beforeActionOwner?: Prisma.EnumInquiryActionOwnerFilter<"InquiryStateDecision"> | $Enums.InquiryActionOwner
   beforeLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFilter<"InquiryStateDecision"> | $Enums.InquiryLifecycleStatus
@@ -416,6 +424,7 @@ export type InquiryStateDecisionOrderByWithRelationInput = {
   emailMessageId?: Prisma.SortOrderInput | Prisma.SortOrder
   analysisDecisionId?: Prisma.SortOrderInput | Prisma.SortOrder
   replayRunId?: Prisma.SortOrderInput | Prisma.SortOrder
+  isEffective?: Prisma.SortOrder
   beforeBusinessStage?: Prisma.SortOrder
   beforeActionOwner?: Prisma.SortOrder
   beforeLifecycleStatus?: Prisma.SortOrder
@@ -454,6 +463,7 @@ export type InquiryStateDecisionWhereUniqueInput = Prisma.AtLeast<{
   inquiryCaseId?: Prisma.StringFilter<"InquiryStateDecision"> | string
   emailMessageId?: Prisma.StringNullableFilter<"InquiryStateDecision"> | string | null
   replayRunId?: Prisma.StringNullableFilter<"InquiryStateDecision"> | string | null
+  isEffective?: Prisma.BoolFilter<"InquiryStateDecision"> | boolean
   beforeBusinessStage?: Prisma.EnumInquiryBusinessStageFilter<"InquiryStateDecision"> | $Enums.InquiryBusinessStage
   beforeActionOwner?: Prisma.EnumInquiryActionOwnerFilter<"InquiryStateDecision"> | $Enums.InquiryActionOwner
   beforeLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFilter<"InquiryStateDecision"> | $Enums.InquiryLifecycleStatus
@@ -489,6 +499,7 @@ export type InquiryStateDecisionOrderByWithAggregationInput = {
   emailMessageId?: Prisma.SortOrderInput | Prisma.SortOrder
   analysisDecisionId?: Prisma.SortOrderInput | Prisma.SortOrder
   replayRunId?: Prisma.SortOrderInput | Prisma.SortOrder
+  isEffective?: Prisma.SortOrder
   beforeBusinessStage?: Prisma.SortOrder
   beforeActionOwner?: Prisma.SortOrder
   beforeLifecycleStatus?: Prisma.SortOrder
@@ -528,6 +539,7 @@ export type InquiryStateDecisionScalarWhereWithAggregatesInput = {
   emailMessageId?: Prisma.StringNullableWithAggregatesFilter<"InquiryStateDecision"> | string | null
   analysisDecisionId?: Prisma.StringNullableWithAggregatesFilter<"InquiryStateDecision"> | string | null
   replayRunId?: Prisma.StringNullableWithAggregatesFilter<"InquiryStateDecision"> | string | null
+  isEffective?: Prisma.BoolWithAggregatesFilter<"InquiryStateDecision"> | boolean
   beforeBusinessStage?: Prisma.EnumInquiryBusinessStageWithAggregatesFilter<"InquiryStateDecision"> | $Enums.InquiryBusinessStage
   beforeActionOwner?: Prisma.EnumInquiryActionOwnerWithAggregatesFilter<"InquiryStateDecision"> | $Enums.InquiryActionOwner
   beforeLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusWithAggregatesFilter<"InquiryStateDecision"> | $Enums.InquiryLifecycleStatus
@@ -556,6 +568,7 @@ export type InquiryStateDecisionScalarWhereWithAggregatesInput = {
 export type InquiryStateDecisionCreateInput = {
   id?: string
   replayRunId?: string | null
+  isEffective?: boolean
   beforeBusinessStage: $Enums.InquiryBusinessStage
   beforeActionOwner: $Enums.InquiryActionOwner
   beforeLifecycleStatus: $Enums.InquiryLifecycleStatus
@@ -591,6 +604,7 @@ export type InquiryStateDecisionUncheckedCreateInput = {
   emailMessageId?: string | null
   analysisDecisionId?: string | null
   replayRunId?: string | null
+  isEffective?: boolean
   beforeBusinessStage: $Enums.InquiryBusinessStage
   beforeActionOwner: $Enums.InquiryActionOwner
   beforeLifecycleStatus: $Enums.InquiryLifecycleStatus
@@ -620,6 +634,7 @@ export type InquiryStateDecisionUncheckedCreateInput = {
 export type InquiryStateDecisionUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   beforeBusinessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
   beforeActionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
   beforeLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
@@ -655,6 +670,7 @@ export type InquiryStateDecisionUncheckedUpdateInput = {
   emailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   analysisDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   beforeBusinessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
   beforeActionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
   beforeLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
@@ -687,6 +703,7 @@ export type InquiryStateDecisionCreateManyInput = {
   emailMessageId?: string | null
   analysisDecisionId?: string | null
   replayRunId?: string | null
+  isEffective?: boolean
   beforeBusinessStage: $Enums.InquiryBusinessStage
   beforeActionOwner: $Enums.InquiryActionOwner
   beforeLifecycleStatus: $Enums.InquiryLifecycleStatus
@@ -715,6 +732,7 @@ export type InquiryStateDecisionCreateManyInput = {
 export type InquiryStateDecisionUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   beforeBusinessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
   beforeActionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
   beforeLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
@@ -746,6 +764,7 @@ export type InquiryStateDecisionUncheckedUpdateManyInput = {
   emailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   analysisDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   beforeBusinessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
   beforeActionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
   beforeLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
@@ -792,6 +811,7 @@ export type InquiryStateDecisionCountOrderByAggregateInput = {
   emailMessageId?: Prisma.SortOrder
   analysisDecisionId?: Prisma.SortOrder
   replayRunId?: Prisma.SortOrder
+  isEffective?: Prisma.SortOrder
   beforeBusinessStage?: Prisma.SortOrder
   beforeActionOwner?: Prisma.SortOrder
   beforeLifecycleStatus?: Prisma.SortOrder
@@ -828,6 +848,7 @@ export type InquiryStateDecisionMaxOrderByAggregateInput = {
   emailMessageId?: Prisma.SortOrder
   analysisDecisionId?: Prisma.SortOrder
   replayRunId?: Prisma.SortOrder
+  isEffective?: Prisma.SortOrder
   beforeBusinessStage?: Prisma.SortOrder
   beforeActionOwner?: Prisma.SortOrder
   beforeLifecycleStatus?: Prisma.SortOrder
@@ -859,6 +880,7 @@ export type InquiryStateDecisionMinOrderByAggregateInput = {
   emailMessageId?: Prisma.SortOrder
   analysisDecisionId?: Prisma.SortOrder
   replayRunId?: Prisma.SortOrder
+  isEffective?: Prisma.SortOrder
   beforeBusinessStage?: Prisma.SortOrder
   beforeActionOwner?: Prisma.SortOrder
   beforeLifecycleStatus?: Prisma.SortOrder
@@ -1027,6 +1049,7 @@ export type InquiryStateDecisionUpdateOneRequiredWithoutTransitionsNestedInput =
 export type InquiryStateDecisionCreateWithoutEmailMessageInput = {
   id?: string
   replayRunId?: string | null
+  isEffective?: boolean
   beforeBusinessStage: $Enums.InquiryBusinessStage
   beforeActionOwner: $Enums.InquiryActionOwner
   beforeLifecycleStatus: $Enums.InquiryLifecycleStatus
@@ -1060,6 +1083,7 @@ export type InquiryStateDecisionUncheckedCreateWithoutEmailMessageInput = {
   inquiryCaseId: string
   analysisDecisionId?: string | null
   replayRunId?: string | null
+  isEffective?: boolean
   beforeBusinessStage: $Enums.InquiryBusinessStage
   beforeActionOwner: $Enums.InquiryActionOwner
   beforeLifecycleStatus: $Enums.InquiryLifecycleStatus
@@ -1121,6 +1145,7 @@ export type InquiryStateDecisionScalarWhereInput = {
   emailMessageId?: Prisma.StringNullableFilter<"InquiryStateDecision"> | string | null
   analysisDecisionId?: Prisma.StringNullableFilter<"InquiryStateDecision"> | string | null
   replayRunId?: Prisma.StringNullableFilter<"InquiryStateDecision"> | string | null
+  isEffective?: Prisma.BoolFilter<"InquiryStateDecision"> | boolean
   beforeBusinessStage?: Prisma.EnumInquiryBusinessStageFilter<"InquiryStateDecision"> | $Enums.InquiryBusinessStage
   beforeActionOwner?: Prisma.EnumInquiryActionOwnerFilter<"InquiryStateDecision"> | $Enums.InquiryActionOwner
   beforeLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFilter<"InquiryStateDecision"> | $Enums.InquiryLifecycleStatus
@@ -1149,6 +1174,7 @@ export type InquiryStateDecisionScalarWhereInput = {
 export type InquiryStateDecisionCreateWithoutInquiryCaseInput = {
   id?: string
   replayRunId?: string | null
+  isEffective?: boolean
   beforeBusinessStage: $Enums.InquiryBusinessStage
   beforeActionOwner: $Enums.InquiryActionOwner
   beforeLifecycleStatus: $Enums.InquiryLifecycleStatus
@@ -1182,6 +1208,7 @@ export type InquiryStateDecisionUncheckedCreateWithoutInquiryCaseInput = {
   emailMessageId?: string | null
   analysisDecisionId?: string | null
   replayRunId?: string | null
+  isEffective?: boolean
   beforeBusinessStage: $Enums.InquiryBusinessStage
   beforeActionOwner: $Enums.InquiryActionOwner
   beforeLifecycleStatus: $Enums.InquiryLifecycleStatus
@@ -1237,6 +1264,7 @@ export type InquiryStateDecisionUpdateManyWithWhereWithoutInquiryCaseInput = {
 export type InquiryStateDecisionCreateWithoutAnalysisDecisionInput = {
   id?: string
   replayRunId?: string | null
+  isEffective?: boolean
   beforeBusinessStage: $Enums.InquiryBusinessStage
   beforeActionOwner: $Enums.InquiryActionOwner
   beforeLifecycleStatus: $Enums.InquiryLifecycleStatus
@@ -1270,6 +1298,7 @@ export type InquiryStateDecisionUncheckedCreateWithoutAnalysisDecisionInput = {
   inquiryCaseId: string
   emailMessageId?: string | null
   replayRunId?: string | null
+  isEffective?: boolean
   beforeBusinessStage: $Enums.InquiryBusinessStage
   beforeActionOwner: $Enums.InquiryActionOwner
   beforeLifecycleStatus: $Enums.InquiryLifecycleStatus
@@ -1315,6 +1344,7 @@ export type InquiryStateDecisionUpdateToOneWithWhereWithoutAnalysisDecisionInput
 export type InquiryStateDecisionUpdateWithoutAnalysisDecisionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   beforeBusinessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
   beforeActionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
   beforeLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
@@ -1348,6 +1378,7 @@ export type InquiryStateDecisionUncheckedUpdateWithoutAnalysisDecisionInput = {
   inquiryCaseId?: Prisma.StringFieldUpdateOperationsInput | string
   emailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   beforeBusinessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
   beforeActionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
   beforeLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
@@ -1377,6 +1408,7 @@ export type InquiryStateDecisionUncheckedUpdateWithoutAnalysisDecisionInput = {
 export type InquiryStateDecisionCreateWithoutTransitionsInput = {
   id?: string
   replayRunId?: string | null
+  isEffective?: boolean
   beforeBusinessStage: $Enums.InquiryBusinessStage
   beforeActionOwner: $Enums.InquiryActionOwner
   beforeLifecycleStatus: $Enums.InquiryLifecycleStatus
@@ -1411,6 +1443,7 @@ export type InquiryStateDecisionUncheckedCreateWithoutTransitionsInput = {
   emailMessageId?: string | null
   analysisDecisionId?: string | null
   replayRunId?: string | null
+  isEffective?: boolean
   beforeBusinessStage: $Enums.InquiryBusinessStage
   beforeActionOwner: $Enums.InquiryActionOwner
   beforeLifecycleStatus: $Enums.InquiryLifecycleStatus
@@ -1455,6 +1488,7 @@ export type InquiryStateDecisionUpdateToOneWithWhereWithoutTransitionsInput = {
 export type InquiryStateDecisionUpdateWithoutTransitionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   beforeBusinessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
   beforeActionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
   beforeLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
@@ -1489,6 +1523,7 @@ export type InquiryStateDecisionUncheckedUpdateWithoutTransitionsInput = {
   emailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   analysisDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   beforeBusinessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
   beforeActionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
   beforeLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
@@ -1519,6 +1554,7 @@ export type InquiryStateDecisionCreateManyEmailMessageInput = {
   inquiryCaseId: string
   analysisDecisionId?: string | null
   replayRunId?: string | null
+  isEffective?: boolean
   beforeBusinessStage: $Enums.InquiryBusinessStage
   beforeActionOwner: $Enums.InquiryActionOwner
   beforeLifecycleStatus: $Enums.InquiryLifecycleStatus
@@ -1547,6 +1583,7 @@ export type InquiryStateDecisionCreateManyEmailMessageInput = {
 export type InquiryStateDecisionUpdateWithoutEmailMessageInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   beforeBusinessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
   beforeActionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
   beforeLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
@@ -1580,6 +1617,7 @@ export type InquiryStateDecisionUncheckedUpdateWithoutEmailMessageInput = {
   inquiryCaseId?: Prisma.StringFieldUpdateOperationsInput | string
   analysisDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   beforeBusinessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
   beforeActionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
   beforeLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
@@ -1611,6 +1649,7 @@ export type InquiryStateDecisionUncheckedUpdateManyWithoutEmailMessageInput = {
   inquiryCaseId?: Prisma.StringFieldUpdateOperationsInput | string
   analysisDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   beforeBusinessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
   beforeActionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
   beforeLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
@@ -1641,6 +1680,7 @@ export type InquiryStateDecisionCreateManyInquiryCaseInput = {
   emailMessageId?: string | null
   analysisDecisionId?: string | null
   replayRunId?: string | null
+  isEffective?: boolean
   beforeBusinessStage: $Enums.InquiryBusinessStage
   beforeActionOwner: $Enums.InquiryActionOwner
   beforeLifecycleStatus: $Enums.InquiryLifecycleStatus
@@ -1669,6 +1709,7 @@ export type InquiryStateDecisionCreateManyInquiryCaseInput = {
 export type InquiryStateDecisionUpdateWithoutInquiryCaseInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   beforeBusinessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
   beforeActionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
   beforeLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
@@ -1702,6 +1743,7 @@ export type InquiryStateDecisionUncheckedUpdateWithoutInquiryCaseInput = {
   emailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   analysisDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   beforeBusinessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
   beforeActionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
   beforeLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
@@ -1733,6 +1775,7 @@ export type InquiryStateDecisionUncheckedUpdateManyWithoutInquiryCaseInput = {
   emailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   analysisDecisionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   beforeBusinessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
   beforeActionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
   beforeLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
@@ -1795,6 +1838,7 @@ export type InquiryStateDecisionSelect<ExtArgs extends runtime.Types.Extensions.
   emailMessageId?: boolean
   analysisDecisionId?: boolean
   replayRunId?: boolean
+  isEffective?: boolean
   beforeBusinessStage?: boolean
   beforeActionOwner?: boolean
   beforeLifecycleStatus?: boolean
@@ -1831,6 +1875,7 @@ export type InquiryStateDecisionSelectCreateManyAndReturn<ExtArgs extends runtim
   emailMessageId?: boolean
   analysisDecisionId?: boolean
   replayRunId?: boolean
+  isEffective?: boolean
   beforeBusinessStage?: boolean
   beforeActionOwner?: boolean
   beforeLifecycleStatus?: boolean
@@ -1865,6 +1910,7 @@ export type InquiryStateDecisionSelectUpdateManyAndReturn<ExtArgs extends runtim
   emailMessageId?: boolean
   analysisDecisionId?: boolean
   replayRunId?: boolean
+  isEffective?: boolean
   beforeBusinessStage?: boolean
   beforeActionOwner?: boolean
   beforeLifecycleStatus?: boolean
@@ -1899,6 +1945,7 @@ export type InquiryStateDecisionSelectScalar = {
   emailMessageId?: boolean
   analysisDecisionId?: boolean
   replayRunId?: boolean
+  isEffective?: boolean
   beforeBusinessStage?: boolean
   beforeActionOwner?: boolean
   beforeLifecycleStatus?: boolean
@@ -1924,7 +1971,7 @@ export type InquiryStateDecisionSelectScalar = {
   updatedAt?: boolean
 }
 
-export type InquiryStateDecisionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "inquiryCaseId" | "emailMessageId" | "analysisDecisionId" | "replayRunId" | "beforeBusinessStage" | "beforeActionOwner" | "beforeLifecycleStatus" | "beforeStateVersion" | "suggestedBusinessStage" | "suggestedActionOwner" | "suggestedLifecycleStatus" | "appliedBusinessStage" | "appliedActionOwner" | "appliedLifecycleStatus" | "confidence" | "riskLevel" | "eventValidationPassed" | "humanReviewAdvisory" | "baselineIncomplete" | "executionStatus" | "executionReason" | "policyVersion" | "decisionSource" | "eventOccurredAt" | "executedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["inquiryStateDecision"]>
+export type InquiryStateDecisionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "inquiryCaseId" | "emailMessageId" | "analysisDecisionId" | "replayRunId" | "isEffective" | "beforeBusinessStage" | "beforeActionOwner" | "beforeLifecycleStatus" | "beforeStateVersion" | "suggestedBusinessStage" | "suggestedActionOwner" | "suggestedLifecycleStatus" | "appliedBusinessStage" | "appliedActionOwner" | "appliedLifecycleStatus" | "confidence" | "riskLevel" | "eventValidationPassed" | "humanReviewAdvisory" | "baselineIncomplete" | "executionStatus" | "executionReason" | "policyVersion" | "decisionSource" | "eventOccurredAt" | "executedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["inquiryStateDecision"]>
 export type InquiryStateDecisionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   inquiryCase?: boolean | Prisma.InquiryCaseDefaultArgs<ExtArgs>
   emailMessage?: boolean | Prisma.InquiryStateDecision$emailMessageArgs<ExtArgs>
@@ -1957,6 +2004,7 @@ export type $InquiryStateDecisionPayload<ExtArgs extends runtime.Types.Extension
     emailMessageId: string | null
     analysisDecisionId: string | null
     replayRunId: string | null
+    isEffective: boolean
     beforeBusinessStage: $Enums.InquiryBusinessStage
     beforeActionOwner: $Enums.InquiryActionOwner
     beforeLifecycleStatus: $Enums.InquiryLifecycleStatus
@@ -2412,6 +2460,7 @@ export interface InquiryStateDecisionFieldRefs {
   readonly emailMessageId: Prisma.FieldRef<"InquiryStateDecision", 'String'>
   readonly analysisDecisionId: Prisma.FieldRef<"InquiryStateDecision", 'String'>
   readonly replayRunId: Prisma.FieldRef<"InquiryStateDecision", 'String'>
+  readonly isEffective: Prisma.FieldRef<"InquiryStateDecision", 'Boolean'>
   readonly beforeBusinessStage: Prisma.FieldRef<"InquiryStateDecision", 'InquiryBusinessStage'>
   readonly beforeActionOwner: Prisma.FieldRef<"InquiryStateDecision", 'InquiryActionOwner'>
   readonly beforeLifecycleStatus: Prisma.FieldRef<"InquiryStateDecision", 'InquiryLifecycleStatus'>

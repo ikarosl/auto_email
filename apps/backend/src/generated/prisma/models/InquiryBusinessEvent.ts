@@ -48,6 +48,8 @@ export type InquiryBusinessEventMinAggregateOutputType = {
   confidence: runtime.Decimal | null
   evidence: string | null
   sourceType: string | null
+  replayRunId: string | null
+  isEffective: boolean | null
   occurredAt: Date | null
   createdAt: Date | null
 }
@@ -64,6 +66,8 @@ export type InquiryBusinessEventMaxAggregateOutputType = {
   confidence: runtime.Decimal | null
   evidence: string | null
   sourceType: string | null
+  replayRunId: string | null
+  isEffective: boolean | null
   occurredAt: Date | null
   createdAt: Date | null
 }
@@ -81,6 +85,8 @@ export type InquiryBusinessEventCountAggregateOutputType = {
   evidence: number
   payloadJson: number
   sourceType: number
+  replayRunId: number
+  isEffective: number
   occurredAt: number
   createdAt: number
   _all: number
@@ -109,6 +115,8 @@ export type InquiryBusinessEventMinAggregateInputType = {
   confidence?: true
   evidence?: true
   sourceType?: true
+  replayRunId?: true
+  isEffective?: true
   occurredAt?: true
   createdAt?: true
 }
@@ -125,6 +133,8 @@ export type InquiryBusinessEventMaxAggregateInputType = {
   confidence?: true
   evidence?: true
   sourceType?: true
+  replayRunId?: true
+  isEffective?: true
   occurredAt?: true
   createdAt?: true
 }
@@ -142,6 +152,8 @@ export type InquiryBusinessEventCountAggregateInputType = {
   evidence?: true
   payloadJson?: true
   sourceType?: true
+  replayRunId?: true
+  isEffective?: true
   occurredAt?: true
   createdAt?: true
   _all?: true
@@ -246,6 +258,8 @@ export type InquiryBusinessEventGroupByOutputType = {
   evidence: string | null
   payloadJson: runtime.JsonValue
   sourceType: string
+  replayRunId: string | null
+  isEffective: boolean
   occurredAt: Date
   createdAt: Date
   _count: InquiryBusinessEventCountAggregateOutputType | null
@@ -286,6 +300,8 @@ export type InquiryBusinessEventWhereInput = {
   evidence?: Prisma.StringNullableFilter<"InquiryBusinessEvent"> | string | null
   payloadJson?: Prisma.JsonFilter<"InquiryBusinessEvent">
   sourceType?: Prisma.StringFilter<"InquiryBusinessEvent"> | string
+  replayRunId?: Prisma.StringNullableFilter<"InquiryBusinessEvent"> | string | null
+  isEffective?: Prisma.BoolFilter<"InquiryBusinessEvent"> | boolean
   occurredAt?: Prisma.DateTimeFilter<"InquiryBusinessEvent"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"InquiryBusinessEvent"> | Date | string
   inquiryCase?: Prisma.XOR<Prisma.InquiryCaseScalarRelationFilter, Prisma.InquiryCaseWhereInput>
@@ -308,6 +324,8 @@ export type InquiryBusinessEventOrderByWithRelationInput = {
   evidence?: Prisma.SortOrderInput | Prisma.SortOrder
   payloadJson?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
+  replayRunId?: Prisma.SortOrderInput | Prisma.SortOrder
+  isEffective?: Prisma.SortOrder
   occurredAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   inquiryCase?: Prisma.InquiryCaseOrderByWithRelationInput
@@ -333,6 +351,8 @@ export type InquiryBusinessEventWhereUniqueInput = Prisma.AtLeast<{
   evidence?: Prisma.StringNullableFilter<"InquiryBusinessEvent"> | string | null
   payloadJson?: Prisma.JsonFilter<"InquiryBusinessEvent">
   sourceType?: Prisma.StringFilter<"InquiryBusinessEvent"> | string
+  replayRunId?: Prisma.StringNullableFilter<"InquiryBusinessEvent"> | string | null
+  isEffective?: Prisma.BoolFilter<"InquiryBusinessEvent"> | boolean
   occurredAt?: Prisma.DateTimeFilter<"InquiryBusinessEvent"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"InquiryBusinessEvent"> | Date | string
   inquiryCase?: Prisma.XOR<Prisma.InquiryCaseScalarRelationFilter, Prisma.InquiryCaseWhereInput>
@@ -355,6 +375,8 @@ export type InquiryBusinessEventOrderByWithAggregationInput = {
   evidence?: Prisma.SortOrderInput | Prisma.SortOrder
   payloadJson?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
+  replayRunId?: Prisma.SortOrderInput | Prisma.SortOrder
+  isEffective?: Prisma.SortOrder
   occurredAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.InquiryBusinessEventCountOrderByAggregateInput
@@ -380,6 +402,8 @@ export type InquiryBusinessEventScalarWhereWithAggregatesInput = {
   evidence?: Prisma.StringNullableWithAggregatesFilter<"InquiryBusinessEvent"> | string | null
   payloadJson?: Prisma.JsonWithAggregatesFilter<"InquiryBusinessEvent">
   sourceType?: Prisma.StringWithAggregatesFilter<"InquiryBusinessEvent"> | string
+  replayRunId?: Prisma.StringNullableWithAggregatesFilter<"InquiryBusinessEvent"> | string | null
+  isEffective?: Prisma.BoolWithAggregatesFilter<"InquiryBusinessEvent"> | boolean
   occurredAt?: Prisma.DateTimeWithAggregatesFilter<"InquiryBusinessEvent"> | Date | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"InquiryBusinessEvent"> | Date | string
 }
@@ -393,6 +417,8 @@ export type InquiryBusinessEventCreateInput = {
   evidence?: string | null
   payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceType?: string
+  replayRunId?: string | null
+  isEffective?: boolean
   occurredAt: Date | string
   createdAt?: Date | string
   inquiryCase: Prisma.InquiryCaseCreateNestedOneWithoutBusinessEventsInput
@@ -415,6 +441,8 @@ export type InquiryBusinessEventUncheckedCreateInput = {
   evidence?: string | null
   payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceType?: string
+  replayRunId?: string | null
+  isEffective?: boolean
   occurredAt: Date | string
   createdAt?: Date | string
   corrections?: Prisma.InquiryBusinessEventUncheckedCreateNestedManyWithoutCorrectedEventInput
@@ -429,6 +457,8 @@ export type InquiryBusinessEventUpdateInput = {
   evidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceType?: Prisma.StringFieldUpdateOperationsInput | string
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   inquiryCase?: Prisma.InquiryCaseUpdateOneRequiredWithoutBusinessEventsNestedInput
@@ -451,6 +481,8 @@ export type InquiryBusinessEventUncheckedUpdateInput = {
   evidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceType?: Prisma.StringFieldUpdateOperationsInput | string
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   corrections?: Prisma.InquiryBusinessEventUncheckedUpdateManyWithoutCorrectedEventNestedInput
@@ -469,6 +501,8 @@ export type InquiryBusinessEventCreateManyInput = {
   evidence?: string | null
   payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceType?: string
+  replayRunId?: string | null
+  isEffective?: boolean
   occurredAt: Date | string
   createdAt?: Date | string
 }
@@ -482,6 +516,8 @@ export type InquiryBusinessEventUpdateManyMutationInput = {
   evidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceType?: Prisma.StringFieldUpdateOperationsInput | string
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -499,6 +535,8 @@ export type InquiryBusinessEventUncheckedUpdateManyInput = {
   evidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceType?: Prisma.StringFieldUpdateOperationsInput | string
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -531,6 +569,8 @@ export type InquiryBusinessEventCountOrderByAggregateInput = {
   evidence?: Prisma.SortOrder
   payloadJson?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
+  replayRunId?: Prisma.SortOrder
+  isEffective?: Prisma.SortOrder
   occurredAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -552,6 +592,8 @@ export type InquiryBusinessEventMaxOrderByAggregateInput = {
   confidence?: Prisma.SortOrder
   evidence?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
+  replayRunId?: Prisma.SortOrder
+  isEffective?: Prisma.SortOrder
   occurredAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -568,6 +610,8 @@ export type InquiryBusinessEventMinOrderByAggregateInput = {
   confidence?: Prisma.SortOrder
   evidence?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
+  replayRunId?: Prisma.SortOrder
+  isEffective?: Prisma.SortOrder
   occurredAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -770,6 +814,8 @@ export type InquiryBusinessEventCreateWithoutEmailMessageInput = {
   evidence?: string | null
   payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceType?: string
+  replayRunId?: string | null
+  isEffective?: boolean
   occurredAt: Date | string
   createdAt?: Date | string
   inquiryCase: Prisma.InquiryCaseCreateNestedOneWithoutBusinessEventsInput
@@ -790,6 +836,8 @@ export type InquiryBusinessEventUncheckedCreateWithoutEmailMessageInput = {
   evidence?: string | null
   payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceType?: string
+  replayRunId?: string | null
+  isEffective?: boolean
   occurredAt: Date | string
   createdAt?: Date | string
   corrections?: Prisma.InquiryBusinessEventUncheckedCreateNestedManyWithoutCorrectedEventInput
@@ -837,6 +885,8 @@ export type InquiryBusinessEventScalarWhereInput = {
   evidence?: Prisma.StringNullableFilter<"InquiryBusinessEvent"> | string | null
   payloadJson?: Prisma.JsonFilter<"InquiryBusinessEvent">
   sourceType?: Prisma.StringFilter<"InquiryBusinessEvent"> | string
+  replayRunId?: Prisma.StringNullableFilter<"InquiryBusinessEvent"> | string | null
+  isEffective?: Prisma.BoolFilter<"InquiryBusinessEvent"> | boolean
   occurredAt?: Prisma.DateTimeFilter<"InquiryBusinessEvent"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"InquiryBusinessEvent"> | Date | string
 }
@@ -850,6 +900,8 @@ export type InquiryBusinessEventCreateWithoutInquiryCaseInput = {
   evidence?: string | null
   payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceType?: string
+  replayRunId?: string | null
+  isEffective?: boolean
   occurredAt: Date | string
   createdAt?: Date | string
   emailMessage?: Prisma.EmailMessageCreateNestedOneWithoutBusinessEventsInput
@@ -870,6 +922,8 @@ export type InquiryBusinessEventUncheckedCreateWithoutInquiryCaseInput = {
   evidence?: string | null
   payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceType?: string
+  replayRunId?: string | null
+  isEffective?: boolean
   occurredAt: Date | string
   createdAt?: Date | string
   corrections?: Prisma.InquiryBusinessEventUncheckedCreateNestedManyWithoutCorrectedEventInput
@@ -910,6 +964,8 @@ export type InquiryBusinessEventCreateWithoutAnalysisDecisionInput = {
   evidence?: string | null
   payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceType?: string
+  replayRunId?: string | null
+  isEffective?: boolean
   occurredAt: Date | string
   createdAt?: Date | string
   inquiryCase: Prisma.InquiryCaseCreateNestedOneWithoutBusinessEventsInput
@@ -930,6 +986,8 @@ export type InquiryBusinessEventUncheckedCreateWithoutAnalysisDecisionInput = {
   evidence?: string | null
   payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceType?: string
+  replayRunId?: string | null
+  isEffective?: boolean
   occurredAt: Date | string
   createdAt?: Date | string
   corrections?: Prisma.InquiryBusinessEventUncheckedCreateNestedManyWithoutCorrectedEventInput
@@ -970,6 +1028,8 @@ export type InquiryBusinessEventCreateWithoutCorrectionsInput = {
   evidence?: string | null
   payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceType?: string
+  replayRunId?: string | null
+  isEffective?: boolean
   occurredAt: Date | string
   createdAt?: Date | string
   inquiryCase: Prisma.InquiryCaseCreateNestedOneWithoutBusinessEventsInput
@@ -991,6 +1051,8 @@ export type InquiryBusinessEventUncheckedCreateWithoutCorrectionsInput = {
   evidence?: string | null
   payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceType?: string
+  replayRunId?: string | null
+  isEffective?: boolean
   occurredAt: Date | string
   createdAt?: Date | string
 }
@@ -1009,6 +1071,8 @@ export type InquiryBusinessEventCreateWithoutCorrectedEventInput = {
   evidence?: string | null
   payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceType?: string
+  replayRunId?: string | null
+  isEffective?: boolean
   occurredAt: Date | string
   createdAt?: Date | string
   inquiryCase: Prisma.InquiryCaseCreateNestedOneWithoutBusinessEventsInput
@@ -1029,6 +1093,8 @@ export type InquiryBusinessEventUncheckedCreateWithoutCorrectedEventInput = {
   evidence?: string | null
   payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceType?: string
+  replayRunId?: string | null
+  isEffective?: boolean
   occurredAt: Date | string
   createdAt?: Date | string
   corrections?: Prisma.InquiryBusinessEventUncheckedCreateNestedManyWithoutCorrectedEventInput
@@ -1064,6 +1130,8 @@ export type InquiryBusinessEventUpdateWithoutCorrectionsInput = {
   evidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceType?: Prisma.StringFieldUpdateOperationsInput | string
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   inquiryCase?: Prisma.InquiryCaseUpdateOneRequiredWithoutBusinessEventsNestedInput
@@ -1085,6 +1153,8 @@ export type InquiryBusinessEventUncheckedUpdateWithoutCorrectionsInput = {
   evidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceType?: Prisma.StringFieldUpdateOperationsInput | string
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1117,6 +1187,8 @@ export type InquiryBusinessEventCreateManyEmailMessageInput = {
   evidence?: string | null
   payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceType?: string
+  replayRunId?: string | null
+  isEffective?: boolean
   occurredAt: Date | string
   createdAt?: Date | string
 }
@@ -1130,6 +1202,8 @@ export type InquiryBusinessEventUpdateWithoutEmailMessageInput = {
   evidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceType?: Prisma.StringFieldUpdateOperationsInput | string
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   inquiryCase?: Prisma.InquiryCaseUpdateOneRequiredWithoutBusinessEventsNestedInput
@@ -1150,6 +1224,8 @@ export type InquiryBusinessEventUncheckedUpdateWithoutEmailMessageInput = {
   evidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceType?: Prisma.StringFieldUpdateOperationsInput | string
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   corrections?: Prisma.InquiryBusinessEventUncheckedUpdateManyWithoutCorrectedEventNestedInput
@@ -1167,6 +1243,8 @@ export type InquiryBusinessEventUncheckedUpdateManyWithoutEmailMessageInput = {
   evidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceType?: Prisma.StringFieldUpdateOperationsInput | string
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1183,6 +1261,8 @@ export type InquiryBusinessEventCreateManyInquiryCaseInput = {
   evidence?: string | null
   payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceType?: string
+  replayRunId?: string | null
+  isEffective?: boolean
   occurredAt: Date | string
   createdAt?: Date | string
 }
@@ -1196,6 +1276,8 @@ export type InquiryBusinessEventUpdateWithoutInquiryCaseInput = {
   evidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceType?: Prisma.StringFieldUpdateOperationsInput | string
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   emailMessage?: Prisma.EmailMessageUpdateOneWithoutBusinessEventsNestedInput
@@ -1216,6 +1298,8 @@ export type InquiryBusinessEventUncheckedUpdateWithoutInquiryCaseInput = {
   evidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceType?: Prisma.StringFieldUpdateOperationsInput | string
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   corrections?: Prisma.InquiryBusinessEventUncheckedUpdateManyWithoutCorrectedEventNestedInput
@@ -1233,6 +1317,8 @@ export type InquiryBusinessEventUncheckedUpdateManyWithoutInquiryCaseInput = {
   evidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceType?: Prisma.StringFieldUpdateOperationsInput | string
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1249,6 +1335,8 @@ export type InquiryBusinessEventCreateManyAnalysisDecisionInput = {
   evidence?: string | null
   payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceType?: string
+  replayRunId?: string | null
+  isEffective?: boolean
   occurredAt: Date | string
   createdAt?: Date | string
 }
@@ -1262,6 +1350,8 @@ export type InquiryBusinessEventUpdateWithoutAnalysisDecisionInput = {
   evidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceType?: Prisma.StringFieldUpdateOperationsInput | string
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   inquiryCase?: Prisma.InquiryCaseUpdateOneRequiredWithoutBusinessEventsNestedInput
@@ -1282,6 +1372,8 @@ export type InquiryBusinessEventUncheckedUpdateWithoutAnalysisDecisionInput = {
   evidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceType?: Prisma.StringFieldUpdateOperationsInput | string
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   corrections?: Prisma.InquiryBusinessEventUncheckedUpdateManyWithoutCorrectedEventNestedInput
@@ -1299,6 +1391,8 @@ export type InquiryBusinessEventUncheckedUpdateManyWithoutAnalysisDecisionInput 
   evidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceType?: Prisma.StringFieldUpdateOperationsInput | string
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1315,6 +1409,8 @@ export type InquiryBusinessEventCreateManyCorrectedEventInput = {
   evidence?: string | null
   payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceType?: string
+  replayRunId?: string | null
+  isEffective?: boolean
   occurredAt: Date | string
   createdAt?: Date | string
 }
@@ -1328,6 +1424,8 @@ export type InquiryBusinessEventUpdateWithoutCorrectedEventInput = {
   evidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceType?: Prisma.StringFieldUpdateOperationsInput | string
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   inquiryCase?: Prisma.InquiryCaseUpdateOneRequiredWithoutBusinessEventsNestedInput
@@ -1348,6 +1446,8 @@ export type InquiryBusinessEventUncheckedUpdateWithoutCorrectedEventInput = {
   evidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceType?: Prisma.StringFieldUpdateOperationsInput | string
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   corrections?: Prisma.InquiryBusinessEventUncheckedUpdateManyWithoutCorrectedEventNestedInput
@@ -1365,6 +1465,8 @@ export type InquiryBusinessEventUncheckedUpdateManyWithoutCorrectedEventInput = 
   evidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   sourceType?: Prisma.StringFieldUpdateOperationsInput | string
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   occurredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1413,6 +1515,8 @@ export type InquiryBusinessEventSelect<ExtArgs extends runtime.Types.Extensions.
   evidence?: boolean
   payloadJson?: boolean
   sourceType?: boolean
+  replayRunId?: boolean
+  isEffective?: boolean
   occurredAt?: boolean
   createdAt?: boolean
   inquiryCase?: boolean | Prisma.InquiryCaseDefaultArgs<ExtArgs>
@@ -1436,6 +1540,8 @@ export type InquiryBusinessEventSelectCreateManyAndReturn<ExtArgs extends runtim
   evidence?: boolean
   payloadJson?: boolean
   sourceType?: boolean
+  replayRunId?: boolean
+  isEffective?: boolean
   occurredAt?: boolean
   createdAt?: boolean
   inquiryCase?: boolean | Prisma.InquiryCaseDefaultArgs<ExtArgs>
@@ -1457,6 +1563,8 @@ export type InquiryBusinessEventSelectUpdateManyAndReturn<ExtArgs extends runtim
   evidence?: boolean
   payloadJson?: boolean
   sourceType?: boolean
+  replayRunId?: boolean
+  isEffective?: boolean
   occurredAt?: boolean
   createdAt?: boolean
   inquiryCase?: boolean | Prisma.InquiryCaseDefaultArgs<ExtArgs>
@@ -1478,11 +1586,13 @@ export type InquiryBusinessEventSelectScalar = {
   evidence?: boolean
   payloadJson?: boolean
   sourceType?: boolean
+  replayRunId?: boolean
+  isEffective?: boolean
   occurredAt?: boolean
   createdAt?: boolean
 }
 
-export type InquiryBusinessEventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "inquiryCaseId" | "emailMessageId" | "analysisDecisionId" | "correctedEventId" | "eventType" | "actor" | "sequenceInEmail" | "confidence" | "evidence" | "payloadJson" | "sourceType" | "occurredAt" | "createdAt", ExtArgs["result"]["inquiryBusinessEvent"]>
+export type InquiryBusinessEventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "inquiryCaseId" | "emailMessageId" | "analysisDecisionId" | "correctedEventId" | "eventType" | "actor" | "sequenceInEmail" | "confidence" | "evidence" | "payloadJson" | "sourceType" | "replayRunId" | "isEffective" | "occurredAt" | "createdAt", ExtArgs["result"]["inquiryBusinessEvent"]>
 export type InquiryBusinessEventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   inquiryCase?: boolean | Prisma.InquiryCaseDefaultArgs<ExtArgs>
   emailMessage?: boolean | Prisma.InquiryBusinessEvent$emailMessageArgs<ExtArgs>
@@ -1526,6 +1636,8 @@ export type $InquiryBusinessEventPayload<ExtArgs extends runtime.Types.Extension
     evidence: string | null
     payloadJson: runtime.JsonValue
     sourceType: string
+    replayRunId: string | null
+    isEffective: boolean
     occurredAt: Date
     createdAt: Date
   }, ExtArgs["result"]["inquiryBusinessEvent"]>
@@ -1968,6 +2080,8 @@ export interface InquiryBusinessEventFieldRefs {
   readonly evidence: Prisma.FieldRef<"InquiryBusinessEvent", 'String'>
   readonly payloadJson: Prisma.FieldRef<"InquiryBusinessEvent", 'Json'>
   readonly sourceType: Prisma.FieldRef<"InquiryBusinessEvent", 'String'>
+  readonly replayRunId: Prisma.FieldRef<"InquiryBusinessEvent", 'String'>
+  readonly isEffective: Prisma.FieldRef<"InquiryBusinessEvent", 'Boolean'>
   readonly occurredAt: Prisma.FieldRef<"InquiryBusinessEvent", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"InquiryBusinessEvent", 'DateTime'>
 }

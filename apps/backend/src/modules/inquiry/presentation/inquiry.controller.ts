@@ -76,6 +76,7 @@ export class InquiryController {
     @Query('businessStage') businessStage?: string,
     @Query('actionOwner') actionOwner?: string,
     @Query('lifecycleStatus') lifecycleStatus?: string,
+    @Query('processingMode') processingMode?: string,
     @Query('customerEmail') customerEmail?: string,
     @Query('q') q?: string,
   ) {
@@ -86,6 +87,7 @@ export class InquiryController {
       ...(businessStage ? { businessStage } : {}),
       ...(actionOwner ? { actionOwner } : {}),
       ...(lifecycleStatus ? { lifecycleStatus } : {}),
+      ...(processingMode ? { processingMode } : {}),
       ...(customerEmail ? { customer: { email: { contains: customerEmail, mode: 'insensitive' } } } : {}),
       ...(q ? {
         OR: [
@@ -211,7 +213,7 @@ export class InquiryController {
     await this.requireInquiry(id);
     const page = parsePage(p);
     const limit = parseLimit(l);
-    const where = { inquiryCaseId: id };
+    const where = { inquiryCaseId: id, isEffective: true };
     const [total, records] = await Promise.all([
       this.prisma.inquiryStateDecision.count({ where }),
       this.prisma.inquiryStateDecision.findMany({
@@ -229,7 +231,7 @@ export class InquiryController {
     await this.requireInquiry(id);
     const page = parsePage(p);
     const limit = parseLimit(l);
-    const where = { inquiryCaseId: id };
+    const where = { inquiryCaseId: id, isEffective: true };
     const [total, records] = await Promise.all([
       this.prisma.inquiryBusinessEvent.count({ where }),
       this.prisma.inquiryBusinessEvent.findMany({
@@ -247,7 +249,7 @@ export class InquiryController {
     await this.requireInquiry(id);
     const page = parsePage(p);
     const limit = parseLimit(l);
-    const where = { inquiryCaseId: id };
+    const where = { inquiryCaseId: id, isEffective: true };
     const [total, records] = await Promise.all([
       this.prisma.inquiryStateTransition.count({ where }),
       this.prisma.inquiryStateTransition.findMany({
@@ -280,7 +282,7 @@ export class InquiryController {
         where,
         include: {
           emailMessage: {
-            include: { analysisDecisions: { orderBy: { createdAt: 'desc' }, take: 1 }, attachments: true },
+            include: { analysisDecisions: { where: { isEffective: true }, orderBy: { createdAt: 'desc' }, take: 1 }, attachments: true },
           },
         },
         orderBy: { emailMessage: { receivedAt: 'asc' } },
@@ -299,11 +301,11 @@ export class InquiryController {
       await Promise.all([
         this.prisma.inquiryMessage.findMany({
           where: { inquiryCaseId: id },
-          include: { emailMessage: { include: { attachments: true, analysisDecisions: true } } },
+          include: { emailMessage: { include: { attachments: true, analysisDecisions: { where: { isEffective: true } } } } },
           orderBy: { emailMessage: { receivedAt: 'asc' } },
         }),
-        this.prisma.emailAnalysisDecision.findFirst({ where: { inquiryCaseId: id }, orderBy: { createdAt: 'desc' } }),
-        this.prisma.inquiryStateDecision.findFirst({ where: { inquiryCaseId: id }, orderBy: { createdAt: 'desc' } }),
+        this.prisma.emailAnalysisDecision.findFirst({ where: { inquiryCaseId: id, isEffective: true }, orderBy: { createdAt: 'desc' } }),
+        this.prisma.inquiryStateDecision.findFirst({ where: { inquiryCaseId: id, isEffective: true }, orderBy: { createdAt: 'desc' } }),
         this.prisma.aiContextSnapshot.findFirst({ where: { inquiryCaseId: id }, orderBy: { createdAt: 'desc' } }),
         this.prisma.replyDraft.findFirst({ where: { inquiryCaseId: id }, orderBy: { createdAt: 'desc' } }),
       ]);
@@ -398,6 +400,10 @@ function mapInquiryCase(record: any) {
     actionOwner: record.actionOwner,
     lifecycleStatus: record.lifecycleStatus,
     stateVersion: record.stateVersion,
+    processingMode: record.processingMode,
+    processingModeReason: record.processingModeReason,
+    processingModeChangedAt: toDateIso(record.processingModeChangedAt),
+    processingModeChangedBy: record.processingModeChangedBy,
     subject: record.subject,
     rawSubject: record.rawSubject,
     businessSubject: record.businessSubject,
@@ -463,6 +469,12 @@ function mapAnalysisDecision(record: any) {
     inquiryCaseId: record.inquiryCaseId,
     direction: record.direction,
     messageClassification: record.messageClassification,
+    isInquiry: record.isInquiry,
+    inquiryScope: record.inquiryScope,
+    scopeRelationship: record.scopeRelationship,
+    inquiryScopeConfidence: toNumber(record.inquiryScopeConfidence),
+    detectedProducts: record.detectedProducts,
+    isEffective: record.isEffective,
     suggestedState: record.suggestedBusinessStage ? {
       businessStage: record.suggestedBusinessStage,
       actionOwner: record.suggestedActionOwner,
@@ -496,6 +508,7 @@ function mapBusinessEvent(record: any) {
     payload: record.payloadJson,
     payloadJson: record.payloadJson,
     sourceType: record.sourceType,
+    isEffective: record.isEffective,
     occurredAt: toDateIso(record.occurredAt),
     createdAt: toDateIso(record.createdAt),
   };
@@ -539,6 +552,7 @@ function mapStateDecision(record: any) {
     eventValidationPassed: record.eventValidationPassed,
     humanReviewAdvisory: record.humanReviewAdvisory,
     baselineIncomplete: record.baselineIncomplete,
+    isEffective: record.isEffective,
     executionStatus: record.executionStatus,
     executionReason: record.executionReason,
     policyVersion: record.policyVersion,
@@ -575,6 +589,7 @@ function mapStateTransition(record: any) {
     reason: record.reason,
     changedBy: record.changedBy,
     changedByType: record.changedByType,
+    isEffective: record.isEffective,
     eventOccurredAt: toDateIso(record.eventOccurredAt),
     processedAt: toDateIso(record.processedAt),
   };

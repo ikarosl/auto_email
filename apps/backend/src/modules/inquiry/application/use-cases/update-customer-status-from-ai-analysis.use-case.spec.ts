@@ -72,7 +72,14 @@ function createAnalysis(overrides: {
   reason: string;
 }) {
   return {
+    isInquiry: overrides.classification === 'customer_inquiry',
     messageClassification: overrides.classification,
+    inquiryScope: {
+      type: 'single_product' as const,
+      relationshipToExistingInquiry: 'not_applicable' as const,
+      confidence: 1,
+      detectedProducts: [],
+    },
     events: [{
       eventType: 'inquiry_received' as const,
       actor: 'customer' as const,

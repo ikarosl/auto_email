@@ -21,6 +21,7 @@ import {
 import { EmailMessage } from '../../domain/entities/email-message.entity.js';
 import { EmailDirection } from '../../domain/enums/email-direction.enum.js';
 import { EmailSource } from '../../domain/enums/email-source.enum.js';
+import type { EmailAiAnalysis } from '../../domain/value-objects/email-ai-analysis.vo.js';
 import { EmailMessageRepository } from '../ports/email-message.repository.js';
 import { EMAIL_ANALYSIS_PROMPT_VERSION } from '../prompts/email-analysis.prompt.js';
 import { AnalyzeEmailWithAiResult, AnalyzeEmailWithAiUseCase } from './analyze-email-with-ai.use-case.js';
@@ -35,6 +36,12 @@ export interface ProcessInquiryEmailEventResult {
   replyDraftId?: string;
   replyDraftError?: string;
   skippedReason?: string;
+  reductionExecutionStatus?: string;
+  simulatedState?: {
+    businessStage: InquiryBusinessStage;
+    actionOwner: InquiryActionOwner;
+    lifecycleStatus: InquiryLifecycleStatus;
+  };
 }
 
 export class ProcessInquiryEmailEventUseCase {
@@ -57,6 +64,11 @@ export class ProcessInquiryEmailEventUseCase {
     baselineIncomplete?: boolean;
     replayRunId?: string;
     suppressReplyDraft?: boolean;
+    bypassProcessingMode?: boolean;
+    bypassScopeGuard?: boolean;
+    simulationOnly?: boolean;
+    stateOverride?: InquiryCase;
+    recentEmailMessagesOverride?: EmailMessage[];
   }): Promise<ProcessInquiryEmailEventResult> {
     if (
       input.emailMessage.direction === EmailDirection.OUTBOUND
@@ -68,6 +80,14 @@ export class ProcessInquiryEmailEventUseCase {
       };
     }
 
+    if (input.inquiryCase.processingMode === 'manual' && !input.bypassProcessingMode) {
+      return {
+        kind: 'email_analysis',
+        stateExecutionStatus: 'manual_mode',
+        skippedReason: 'inquiry_manual_processing_mode',
+      };
+    }
+
     if (!isEnabled(process.env.AI_EMAIL_ANALYSIS_ENABLED, true)) {
       return {
         kind: 'email_analysis',
@@ -75,7 +95,9 @@ export class ProcessInquiryEmailEventUseCase {
       };
     }
 
-    const idempotencyKey = `email-analysis:${input.emailMessage.id}:${EMAIL_ANALYSIS_PROMPT_VERSION}`;
+    const idempotencyKey = input.replayRunId
+      ? `email-analysis:${input.inquiryCase.id}:${input.emailMessage.id}:${EMAIL_ANALYSIS_PROMPT_VERSION}:${input.replayRunId}`
+      : `email-analysis:${input.inquiryCase.id}:${input.emailMessage.id}:${EMAIL_ANALYSIS_PROMPT_VERSION}`;
     const existing = await this.prisma.emailAnalysisDecision.findUnique({ where: { idempotencyKey } });
     if (existing) {
       const stateDecision = await this.prisma.inquiryStateDecision.findUnique({
@@ -90,10 +112,10 @@ export class ProcessInquiryEmailEventUseCase {
       };
     }
 
-    const analysisInquiryCase = input.historicalBackfill
+    const analysisInquiryCase = input.stateOverride ?? (input.historicalBackfill
       ? await this.resolveHistoricalInquiryCase(input.inquiryCase, input.emailMessage.receivedAt)
-      : input.inquiryCase;
-    const recentEmailMessages = await this.listInquiryEmailMessages(
+      : input.inquiryCase);
+    const recentEmailMessages = input.recentEmailMessagesOverride ?? await this.listInquiryEmailMessages(
       input.inquiryCase.id,
       input.emailMessage.receivedAt,
     );
@@ -112,6 +134,8 @@ export class ProcessInquiryEmailEventUseCase {
           inquiryCaseId: input.inquiryCase.id,
           contextSnapshotId: analysisResult.contextSnapshotId ?? null,
           direction: input.emailMessage.direction,
+          replayRunId: input.replayRunId ?? null,
+          isEffective: !input.simulationOnly,
           rawResult: toJson({ errorCode: analysisResult.errorCode, message: analysisResult.message }),
           rawOutput: analysisResult.rawOutput ?? null,
           modelName: modelName(),
@@ -126,15 +150,21 @@ export class ProcessInquiryEmailEventUseCase {
     }
 
     const analysis = analysisResult.analysis;
-    await this.prisma.$transaction(async (tx) => {
-      await tx.emailAnalysisDecision.create({
+    await this.prisma.emailAnalysisDecision.create({
         data: {
           id: analysisDecisionId,
           emailMessageId: input.emailMessage.id,
           inquiryCaseId: input.inquiryCase.id,
           contextSnapshotId: analysisResult.contextSnapshotId ?? null,
           direction: input.emailMessage.direction,
+          isInquiry: analysis.isInquiry,
           messageClassification: analysis.messageClassification,
+          inquiryScope: analysis.inquiryScope.type,
+          scopeRelationship: analysis.inquiryScope.relationshipToExistingInquiry,
+          inquiryScopeConfidence: analysis.inquiryScope.confidence,
+          detectedProducts: analysis.inquiryScope.detectedProducts,
+          replayRunId: input.replayRunId ?? null,
+          isEffective: !input.simulationOnly,
           suggestedBusinessStage: analysis.suggestedState.businessStage,
           suggestedActionOwner: analysis.suggestedState.actionOwner,
           suggestedLifecycleStatus: analysis.suggestedState.lifecycleStatus,
@@ -154,6 +184,21 @@ export class ProcessInquiryEmailEventUseCase {
           idempotencyKey,
         },
       });
+
+    if (this.shouldEnterManualMode(input, analysis)) {
+      await this.enterManualMode(input, analysisDecisionId, analysis);
+      input.inquiryCase.processingMode = 'manual';
+      input.inquiryCase.processingModeReason = 'multiple_products';
+      return {
+        kind: 'email_analysis',
+        analysisResult,
+        analysisDecisionId,
+        stateExecutionStatus: 'manual_mode',
+        skippedReason: 'multiple_products_manual_mode',
+      };
+    }
+
+    await this.prisma.$transaction(async (tx) => {
       for (const [index, event] of analysis.events.entries()) {
         await tx.inquiryBusinessEvent.create({
           data: {
@@ -168,6 +213,8 @@ export class ProcessInquiryEmailEventUseCase {
             evidence: event.evidence,
             payloadJson: toJson(event.payload),
             sourceType: 'ai',
+            replayRunId: input.replayRunId ?? null,
+            isEffective: !input.simulationOnly,
             occurredAt: input.emailMessage.receivedAt,
           },
         });
@@ -188,7 +235,9 @@ export class ProcessInquiryEmailEventUseCase {
       historicalBackfill: input.historicalBackfill,
     });
     const stateDecisionId = `state_decision_${randomUUID()}`;
-    const configuredExecutionStatus = resolveConfiguredExecutionStatus(reduction.executionStatus);
+    const configuredExecutionStatus = input.simulationOnly
+      ? 'replay_simulated'
+      : resolveConfiguredExecutionStatus(reduction.executionStatus);
     await this.prisma.inquiryStateDecision.create({
       data: {
         id: stateDecisionId,
@@ -196,6 +245,7 @@ export class ProcessInquiryEmailEventUseCase {
         emailMessageId: input.emailMessage.id,
         analysisDecisionId,
         replayRunId: input.replayRunId ?? null,
+        isEffective: !input.simulationOnly,
         beforeBusinessStage: analysisInquiryCase.businessStage,
         beforeActionOwner: analysisInquiryCase.actionOwner,
         beforeLifecycleStatus: analysisInquiryCase.lifecycleStatus,
@@ -203,6 +253,9 @@ export class ProcessInquiryEmailEventUseCase {
         suggestedBusinessStage: reduction.suggested.businessStage,
         suggestedActionOwner: reduction.suggested.actionOwner,
         suggestedLifecycleStatus: reduction.suggested.lifecycleStatus,
+        appliedBusinessStage: input.simulationOnly ? reduction.safeState.businessStage : null,
+        appliedActionOwner: input.simulationOnly ? reduction.safeState.actionOwner : null,
+        appliedLifecycleStatus: input.simulationOnly ? reduction.safeState.lifecycleStatus : null,
         confidence: analysis.confidence,
         riskLevel: analysis.riskLevel,
         eventValidationPassed: reduction.eventValidationPassed,
@@ -215,6 +268,18 @@ export class ProcessInquiryEmailEventUseCase {
         eventOccurredAt: input.emailMessage.receivedAt,
       },
     });
+
+    if (input.simulationOnly) {
+      return {
+        kind: 'email_analysis',
+        analysisResult,
+        analysisDecisionId,
+        stateDecisionId,
+        stateExecutionStatus: configuredExecutionStatus,
+        reductionExecutionStatus: reduction.executionStatus,
+        simulatedState: reduction.safeState,
+      };
+    }
 
     let executionStatus = configuredExecutionStatus;
     if (configuredExecutionStatus === 'pending') {
@@ -260,6 +325,84 @@ export class ProcessInquiryEmailEventUseCase {
       stateExecutionStatus: executionStatus,
       ...draftResult,
     };
+  }
+
+  private shouldEnterManualMode(
+    input: {
+      emailMessage: EmailMessage;
+      inquiryCase: InquiryCase;
+      bypassScopeGuard?: boolean;
+    },
+    analysis: EmailAiAnalysis,
+  ): boolean {
+    return !input.bypassScopeGuard
+      && input.inquiryCase.processingMode === 'automatic'
+      && input.emailMessage.direction === EmailDirection.INBOUND
+      && analysis.isInquiry
+      && ['customer_inquiry', 'customer_follow_up'].includes(analysis.messageClassification)
+      && (
+        analysis.inquiryScope.type === 'multiple_products'
+        || ['additional_independent_requirement', 'separate_new_inquiry']
+          .includes(analysis.inquiryScope.relationshipToExistingInquiry)
+      )
+      && analysis.inquiryScope.confidence >= readMinimumConfidence();
+  }
+
+  private async enterManualMode(
+    input: { emailMessage: EmailMessage; inquiryCase: InquiryCase },
+    analysisDecisionId: string,
+    analysis: EmailAiAnalysis,
+  ): Promise<void> {
+    const now = new Date();
+    await this.prisma.$transaction(async (tx) => {
+      const changed = await tx.inquiryCase.updateMany({
+        where: { id: input.inquiryCase.id, processingMode: 'automatic' },
+        data: {
+          processingMode: 'manual',
+          processingModeReason: 'multiple_products',
+          processingModeChangedAt: now,
+          processingModeChangedBy: analysisDecisionId,
+          updatedAt: now,
+        },
+      });
+      if (changed.count !== 1) return;
+
+      await tx.inquiryProcessingModeTransition.create({
+        data: {
+          id: `processing_mode_transition_${randomUUID()}`,
+          inquiryCaseId: input.inquiryCase.id,
+          fromMode: 'automatic',
+          toMode: 'manual',
+          reason: analysis.inquiryScope.relationshipToExistingInquiry === 'additional_independent_requirement'
+            ? 'AI detected an additional independent product requirement during the inquiry.'
+            : analysis.inquiryScope.relationshipToExistingInquiry === 'separate_new_inquiry'
+              ? 'AI detected a separate new inquiry inside the matched email thread.'
+              : 'AI detected multiple independent product requirements.',
+          sourceEmailMessageId: input.emailMessage.id,
+          analysisDecisionId,
+          inquiryScope: analysis.inquiryScope.type,
+          scopeRelationship: analysis.inquiryScope.relationshipToExistingInquiry,
+          scopeConfidence: analysis.inquiryScope.confidence,
+          detectedProducts: analysis.inquiryScope.detectedProducts,
+          beforeStateJson: {
+            businessStage: input.inquiryCase.businessStage,
+            actionOwner: input.inquiryCase.actionOwner,
+            lifecycleStatus: input.inquiryCase.lifecycleStatus,
+            stateVersion: input.inquiryCase.stateVersion,
+          },
+          changedBy: analysisDecisionId,
+          changedByType: 'ai',
+          changedAt: now,
+        },
+      });
+      await tx.replyDraft.updateMany({
+        where: {
+          inquiryCaseId: input.inquiryCase.id,
+          status: { in: ['pending_review', 'approved', 'rejected'] },
+        },
+        data: { status: 'expired', updatedAt: now },
+      });
+    });
   }
 
   private async maybeGenerateReplyDraft(

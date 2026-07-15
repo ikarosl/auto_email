@@ -62,6 +62,8 @@ export const ModelName = {
   InquiryMessage: 'InquiryMessage',
   ProcessedEmail: 'ProcessedEmail',
   EmailAnalysisDecision: 'EmailAnalysisDecision',
+  InquiryProcessingModeTransition: 'InquiryProcessingModeTransition',
+  InquiryReplayRun: 'InquiryReplayRun',
   InquiryBusinessEvent: 'InquiryBusinessEvent',
   InquiryStateDecision: 'InquiryStateDecision',
   InquiryStateTransition: 'InquiryStateTransition',
@@ -249,6 +251,10 @@ export const InquiryCaseScalarFieldEnum = {
   actionOwner: 'actionOwner',
   lifecycleStatus: 'lifecycleStatus',
   stateVersion: 'stateVersion',
+  processingMode: 'processingMode',
+  processingModeReason: 'processingModeReason',
+  processingModeChangedAt: 'processingModeChangedAt',
+  processingModeChangedBy: 'processingModeChangedBy',
   subject: 'subject',
   rawSubject: 'rawSubject',
   businessSubject: 'businessSubject',
@@ -304,6 +310,13 @@ export const EmailAnalysisDecisionScalarFieldEnum = {
   contextSnapshotId: 'contextSnapshotId',
   direction: 'direction',
   messageClassification: 'messageClassification',
+  isInquiry: 'isInquiry',
+  inquiryScope: 'inquiryScope',
+  scopeRelationship: 'scopeRelationship',
+  inquiryScopeConfidence: 'inquiryScopeConfidence',
+  detectedProducts: 'detectedProducts',
+  replayRunId: 'replayRunId',
+  isEffective: 'isEffective',
   suggestedBusinessStage: 'suggestedBusinessStage',
   suggestedActionOwner: 'suggestedActionOwner',
   suggestedLifecycleStatus: 'suggestedLifecycleStatus',
@@ -329,6 +342,47 @@ export const EmailAnalysisDecisionScalarFieldEnum = {
 export type EmailAnalysisDecisionScalarFieldEnum = (typeof EmailAnalysisDecisionScalarFieldEnum)[keyof typeof EmailAnalysisDecisionScalarFieldEnum]
 
 
+export const InquiryProcessingModeTransitionScalarFieldEnum = {
+  id: 'id',
+  inquiryCaseId: 'inquiryCaseId',
+  fromMode: 'fromMode',
+  toMode: 'toMode',
+  reason: 'reason',
+  sourceEmailMessageId: 'sourceEmailMessageId',
+  analysisDecisionId: 'analysisDecisionId',
+  inquiryScope: 'inquiryScope',
+  scopeRelationship: 'scopeRelationship',
+  scopeConfidence: 'scopeConfidence',
+  detectedProducts: 'detectedProducts',
+  beforeStateJson: 'beforeStateJson',
+  changedBy: 'changedBy',
+  changedByType: 'changedByType',
+  changedAt: 'changedAt'
+} as const
+
+export type InquiryProcessingModeTransitionScalarFieldEnum = (typeof InquiryProcessingModeTransitionScalarFieldEnum)[keyof typeof InquiryProcessingModeTransitionScalarFieldEnum]
+
+
+export const InquiryReplayRunScalarFieldEnum = {
+  id: 'id',
+  inquiryCaseId: 'inquiryCaseId',
+  triggerType: 'triggerType',
+  status: 'status',
+  fromTime: 'fromTime',
+  throughTime: 'throughTime',
+  expectedStateVersion: 'expectedStateVersion',
+  baselineStateJson: 'baselineStateJson',
+  finalStateJson: 'finalStateJson',
+  timelineJson: 'timelineJson',
+  errorMessage: 'errorMessage',
+  initiatedBy: 'initiatedBy',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt'
+} as const
+
+export type InquiryReplayRunScalarFieldEnum = (typeof InquiryReplayRunScalarFieldEnum)[keyof typeof InquiryReplayRunScalarFieldEnum]
+
+
 export const InquiryBusinessEventScalarFieldEnum = {
   id: 'id',
   inquiryCaseId: 'inquiryCaseId',
@@ -342,6 +396,8 @@ export const InquiryBusinessEventScalarFieldEnum = {
   evidence: 'evidence',
   payloadJson: 'payloadJson',
   sourceType: 'sourceType',
+  replayRunId: 'replayRunId',
+  isEffective: 'isEffective',
   occurredAt: 'occurredAt',
   createdAt: 'createdAt'
 } as const
@@ -355,6 +411,7 @@ export const InquiryStateDecisionScalarFieldEnum = {
   emailMessageId: 'emailMessageId',
   analysisDecisionId: 'analysisDecisionId',
   replayRunId: 'replayRunId',
+  isEffective: 'isEffective',
   beforeBusinessStage: 'beforeBusinessStage',
   beforeActionOwner: 'beforeActionOwner',
   beforeLifecycleStatus: 'beforeLifecycleStatus',
@@ -387,6 +444,8 @@ export const InquiryStateTransitionScalarFieldEnum = {
   id: 'id',
   inquiryCaseId: 'inquiryCaseId',
   stateDecisionId: 'stateDecisionId',
+  replayRunId: 'replayRunId',
+  isEffective: 'isEffective',
   fromBusinessStage: 'fromBusinessStage',
   fromActionOwner: 'fromActionOwner',
   fromLifecycleStatus: 'fromLifecycleStatus',

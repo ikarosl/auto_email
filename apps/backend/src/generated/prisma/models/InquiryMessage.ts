@@ -243,12 +243,12 @@ export type InquiryMessageOrderByWithRelationInput = {
 
 export type InquiryMessageWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  emailMessageId?: string
   inquiryCaseId_emailMessageId?: Prisma.InquiryMessageInquiryCaseIdEmailMessageIdCompoundUniqueInput
   AND?: Prisma.InquiryMessageWhereInput | Prisma.InquiryMessageWhereInput[]
   OR?: Prisma.InquiryMessageWhereInput[]
   NOT?: Prisma.InquiryMessageWhereInput | Prisma.InquiryMessageWhereInput[]
   inquiryCaseId?: Prisma.StringFilter<"InquiryMessage"> | string
-  emailMessageId?: Prisma.StringFilter<"InquiryMessage"> | string
   relationType?: Prisma.StringFilter<"InquiryMessage"> | string
   direction?: Prisma.StringFilter<"InquiryMessage"> | string
   createdByType?: Prisma.StringFilter<"InquiryMessage"> | string
@@ -258,7 +258,7 @@ export type InquiryMessageWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"InquiryMessage"> | Date | string
   inquiryCase?: Prisma.XOR<Prisma.InquiryCaseScalarRelationFilter, Prisma.InquiryCaseWhereInput>
   emailMessage?: Prisma.XOR<Prisma.EmailMessageScalarRelationFilter, Prisma.EmailMessageWhereInput>
-}, "id" | "inquiryCaseId_emailMessageId">
+}, "id" | "inquiryCaseId_emailMessageId" | "emailMessageId">
 
 export type InquiryMessageOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

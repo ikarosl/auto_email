@@ -20,6 +20,7 @@ export class InMemoryInquiryRepository implements InquiryRepository {
       businessSubject: inquiryCase.businessSubject ?? inquiryCase.subject,
       businessSubjectSource: inquiryCase.businessSubjectSource ?? 'raw_email',
       businessSubjectLocked: inquiryCase.businessSubjectLocked ?? false,
+      processingMode: inquiryCase.processingMode ?? 'automatic',
       businessSubjectUpdatedAt: inquiryCase.businessSubjectUpdatedAt ?? new Date(),
     };
 

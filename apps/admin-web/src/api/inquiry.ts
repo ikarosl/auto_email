@@ -24,6 +24,23 @@ export async function updateInquiry(id: string, data: Record<string, unknown>) {
   return response.data.data;
 }
 
+export async function updateInquiryProcessingMode(
+  id: string,
+  data: { mode: 'automatic' | 'manual'; reason?: string; changedBy?: string },
+) {
+  const response = await http.patch<ApiPageResult<{ inquiry: InquiryListItem; replayRun: any }>>(
+    `/${API_ROUTE_SEGMENTS.inquiries}/${id}/processing-mode`,
+    data,
+  );
+  return response.data.data;
+}
+
+export async function fetchInquiryProcessingModeHistory(id: string) {
+  return fetchItem<{ transitions: any[]; replayRuns: any[] }>(
+    `/${API_ROUTE_SEGMENTS.inquiries}/${id}/processing-mode-history`,
+  );
+}
+
 export async function linkMessageToInquiry(
   inquiryId: string,
   data: {

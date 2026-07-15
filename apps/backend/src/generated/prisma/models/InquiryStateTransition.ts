@@ -28,6 +28,8 @@ export type InquiryStateTransitionMinAggregateOutputType = {
   id: string | null
   inquiryCaseId: string | null
   stateDecisionId: string | null
+  replayRunId: string | null
+  isEffective: boolean | null
   fromBusinessStage: $Enums.InquiryBusinessStage | null
   fromActionOwner: $Enums.InquiryActionOwner | null
   fromLifecycleStatus: $Enums.InquiryLifecycleStatus | null
@@ -46,6 +48,8 @@ export type InquiryStateTransitionMaxAggregateOutputType = {
   id: string | null
   inquiryCaseId: string | null
   stateDecisionId: string | null
+  replayRunId: string | null
+  isEffective: boolean | null
   fromBusinessStage: $Enums.InquiryBusinessStage | null
   fromActionOwner: $Enums.InquiryActionOwner | null
   fromLifecycleStatus: $Enums.InquiryLifecycleStatus | null
@@ -64,6 +68,8 @@ export type InquiryStateTransitionCountAggregateOutputType = {
   id: number
   inquiryCaseId: number
   stateDecisionId: number
+  replayRunId: number
+  isEffective: number
   fromBusinessStage: number
   fromActionOwner: number
   fromLifecycleStatus: number
@@ -85,6 +91,8 @@ export type InquiryStateTransitionMinAggregateInputType = {
   id?: true
   inquiryCaseId?: true
   stateDecisionId?: true
+  replayRunId?: true
+  isEffective?: true
   fromBusinessStage?: true
   fromActionOwner?: true
   fromLifecycleStatus?: true
@@ -103,6 +111,8 @@ export type InquiryStateTransitionMaxAggregateInputType = {
   id?: true
   inquiryCaseId?: true
   stateDecisionId?: true
+  replayRunId?: true
+  isEffective?: true
   fromBusinessStage?: true
   fromActionOwner?: true
   fromLifecycleStatus?: true
@@ -121,6 +131,8 @@ export type InquiryStateTransitionCountAggregateInputType = {
   id?: true
   inquiryCaseId?: true
   stateDecisionId?: true
+  replayRunId?: true
+  isEffective?: true
   fromBusinessStage?: true
   fromActionOwner?: true
   fromLifecycleStatus?: true
@@ -213,6 +225,8 @@ export type InquiryStateTransitionGroupByOutputType = {
   id: string
   inquiryCaseId: string
   stateDecisionId: string
+  replayRunId: string | null
+  isEffective: boolean
   fromBusinessStage: $Enums.InquiryBusinessStage
   fromActionOwner: $Enums.InquiryActionOwner
   fromLifecycleStatus: $Enums.InquiryLifecycleStatus
@@ -253,6 +267,8 @@ export type InquiryStateTransitionWhereInput = {
   id?: Prisma.StringFilter<"InquiryStateTransition"> | string
   inquiryCaseId?: Prisma.StringFilter<"InquiryStateTransition"> | string
   stateDecisionId?: Prisma.StringFilter<"InquiryStateTransition"> | string
+  replayRunId?: Prisma.StringNullableFilter<"InquiryStateTransition"> | string | null
+  isEffective?: Prisma.BoolFilter<"InquiryStateTransition"> | boolean
   fromBusinessStage?: Prisma.EnumInquiryBusinessStageFilter<"InquiryStateTransition"> | $Enums.InquiryBusinessStage
   fromActionOwner?: Prisma.EnumInquiryActionOwnerFilter<"InquiryStateTransition"> | $Enums.InquiryActionOwner
   fromLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFilter<"InquiryStateTransition"> | $Enums.InquiryLifecycleStatus
@@ -274,6 +290,8 @@ export type InquiryStateTransitionOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   inquiryCaseId?: Prisma.SortOrder
   stateDecisionId?: Prisma.SortOrder
+  replayRunId?: Prisma.SortOrderInput | Prisma.SortOrder
+  isEffective?: Prisma.SortOrder
   fromBusinessStage?: Prisma.SortOrder
   fromActionOwner?: Prisma.SortOrder
   fromLifecycleStatus?: Prisma.SortOrder
@@ -298,6 +316,8 @@ export type InquiryStateTransitionWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.InquiryStateTransitionWhereInput | Prisma.InquiryStateTransitionWhereInput[]
   inquiryCaseId?: Prisma.StringFilter<"InquiryStateTransition"> | string
   stateDecisionId?: Prisma.StringFilter<"InquiryStateTransition"> | string
+  replayRunId?: Prisma.StringNullableFilter<"InquiryStateTransition"> | string | null
+  isEffective?: Prisma.BoolFilter<"InquiryStateTransition"> | boolean
   fromBusinessStage?: Prisma.EnumInquiryBusinessStageFilter<"InquiryStateTransition"> | $Enums.InquiryBusinessStage
   fromActionOwner?: Prisma.EnumInquiryActionOwnerFilter<"InquiryStateTransition"> | $Enums.InquiryActionOwner
   fromLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFilter<"InquiryStateTransition"> | $Enums.InquiryLifecycleStatus
@@ -319,6 +339,8 @@ export type InquiryStateTransitionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   inquiryCaseId?: Prisma.SortOrder
   stateDecisionId?: Prisma.SortOrder
+  replayRunId?: Prisma.SortOrderInput | Prisma.SortOrder
+  isEffective?: Prisma.SortOrder
   fromBusinessStage?: Prisma.SortOrder
   fromActionOwner?: Prisma.SortOrder
   fromLifecycleStatus?: Prisma.SortOrder
@@ -344,6 +366,8 @@ export type InquiryStateTransitionScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"InquiryStateTransition"> | string
   inquiryCaseId?: Prisma.StringWithAggregatesFilter<"InquiryStateTransition"> | string
   stateDecisionId?: Prisma.StringWithAggregatesFilter<"InquiryStateTransition"> | string
+  replayRunId?: Prisma.StringNullableWithAggregatesFilter<"InquiryStateTransition"> | string | null
+  isEffective?: Prisma.BoolWithAggregatesFilter<"InquiryStateTransition"> | boolean
   fromBusinessStage?: Prisma.EnumInquiryBusinessStageWithAggregatesFilter<"InquiryStateTransition"> | $Enums.InquiryBusinessStage
   fromActionOwner?: Prisma.EnumInquiryActionOwnerWithAggregatesFilter<"InquiryStateTransition"> | $Enums.InquiryActionOwner
   fromLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusWithAggregatesFilter<"InquiryStateTransition"> | $Enums.InquiryLifecycleStatus
@@ -361,6 +385,8 @@ export type InquiryStateTransitionScalarWhereWithAggregatesInput = {
 
 export type InquiryStateTransitionCreateInput = {
   id?: string
+  replayRunId?: string | null
+  isEffective?: boolean
   fromBusinessStage: $Enums.InquiryBusinessStage
   fromActionOwner: $Enums.InquiryActionOwner
   fromLifecycleStatus: $Enums.InquiryLifecycleStatus
@@ -382,6 +408,8 @@ export type InquiryStateTransitionUncheckedCreateInput = {
   id?: string
   inquiryCaseId: string
   stateDecisionId: string
+  replayRunId?: string | null
+  isEffective?: boolean
   fromBusinessStage: $Enums.InquiryBusinessStage
   fromActionOwner: $Enums.InquiryActionOwner
   fromLifecycleStatus: $Enums.InquiryLifecycleStatus
@@ -399,6 +427,8 @@ export type InquiryStateTransitionUncheckedCreateInput = {
 
 export type InquiryStateTransitionUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fromBusinessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
   fromActionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
   fromLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
@@ -420,6 +450,8 @@ export type InquiryStateTransitionUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   inquiryCaseId?: Prisma.StringFieldUpdateOperationsInput | string
   stateDecisionId?: Prisma.StringFieldUpdateOperationsInput | string
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fromBusinessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
   fromActionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
   fromLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
@@ -439,6 +471,8 @@ export type InquiryStateTransitionCreateManyInput = {
   id?: string
   inquiryCaseId: string
   stateDecisionId: string
+  replayRunId?: string | null
+  isEffective?: boolean
   fromBusinessStage: $Enums.InquiryBusinessStage
   fromActionOwner: $Enums.InquiryActionOwner
   fromLifecycleStatus: $Enums.InquiryLifecycleStatus
@@ -456,6 +490,8 @@ export type InquiryStateTransitionCreateManyInput = {
 
 export type InquiryStateTransitionUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fromBusinessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
   fromActionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
   fromLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
@@ -475,6 +511,8 @@ export type InquiryStateTransitionUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   inquiryCaseId?: Prisma.StringFieldUpdateOperationsInput | string
   stateDecisionId?: Prisma.StringFieldUpdateOperationsInput | string
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fromBusinessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
   fromActionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
   fromLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
@@ -504,6 +542,8 @@ export type InquiryStateTransitionCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   inquiryCaseId?: Prisma.SortOrder
   stateDecisionId?: Prisma.SortOrder
+  replayRunId?: Prisma.SortOrder
+  isEffective?: Prisma.SortOrder
   fromBusinessStage?: Prisma.SortOrder
   fromActionOwner?: Prisma.SortOrder
   fromLifecycleStatus?: Prisma.SortOrder
@@ -523,6 +563,8 @@ export type InquiryStateTransitionMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   inquiryCaseId?: Prisma.SortOrder
   stateDecisionId?: Prisma.SortOrder
+  replayRunId?: Prisma.SortOrder
+  isEffective?: Prisma.SortOrder
   fromBusinessStage?: Prisma.SortOrder
   fromActionOwner?: Prisma.SortOrder
   fromLifecycleStatus?: Prisma.SortOrder
@@ -541,6 +583,8 @@ export type InquiryStateTransitionMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   inquiryCaseId?: Prisma.SortOrder
   stateDecisionId?: Prisma.SortOrder
+  replayRunId?: Prisma.SortOrder
+  isEffective?: Prisma.SortOrder
   fromBusinessStage?: Prisma.SortOrder
   fromActionOwner?: Prisma.SortOrder
   fromLifecycleStatus?: Prisma.SortOrder
@@ -641,6 +685,8 @@ export type InquiryStateTransitionUncheckedUpdateManyWithoutStateDecisionNestedI
 
 export type InquiryStateTransitionCreateWithoutInquiryCaseInput = {
   id?: string
+  replayRunId?: string | null
+  isEffective?: boolean
   fromBusinessStage: $Enums.InquiryBusinessStage
   fromActionOwner: $Enums.InquiryActionOwner
   fromLifecycleStatus: $Enums.InquiryLifecycleStatus
@@ -660,6 +706,8 @@ export type InquiryStateTransitionCreateWithoutInquiryCaseInput = {
 export type InquiryStateTransitionUncheckedCreateWithoutInquiryCaseInput = {
   id?: string
   stateDecisionId: string
+  replayRunId?: string | null
+  isEffective?: boolean
   fromBusinessStage: $Enums.InquiryBusinessStage
   fromActionOwner: $Enums.InquiryActionOwner
   fromLifecycleStatus: $Enums.InquiryLifecycleStatus
@@ -708,6 +756,8 @@ export type InquiryStateTransitionScalarWhereInput = {
   id?: Prisma.StringFilter<"InquiryStateTransition"> | string
   inquiryCaseId?: Prisma.StringFilter<"InquiryStateTransition"> | string
   stateDecisionId?: Prisma.StringFilter<"InquiryStateTransition"> | string
+  replayRunId?: Prisma.StringNullableFilter<"InquiryStateTransition"> | string | null
+  isEffective?: Prisma.BoolFilter<"InquiryStateTransition"> | boolean
   fromBusinessStage?: Prisma.EnumInquiryBusinessStageFilter<"InquiryStateTransition"> | $Enums.InquiryBusinessStage
   fromActionOwner?: Prisma.EnumInquiryActionOwnerFilter<"InquiryStateTransition"> | $Enums.InquiryActionOwner
   fromLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFilter<"InquiryStateTransition"> | $Enums.InquiryLifecycleStatus
@@ -725,6 +775,8 @@ export type InquiryStateTransitionScalarWhereInput = {
 
 export type InquiryStateTransitionCreateWithoutStateDecisionInput = {
   id?: string
+  replayRunId?: string | null
+  isEffective?: boolean
   fromBusinessStage: $Enums.InquiryBusinessStage
   fromActionOwner: $Enums.InquiryActionOwner
   fromLifecycleStatus: $Enums.InquiryLifecycleStatus
@@ -744,6 +796,8 @@ export type InquiryStateTransitionCreateWithoutStateDecisionInput = {
 export type InquiryStateTransitionUncheckedCreateWithoutStateDecisionInput = {
   id?: string
   inquiryCaseId: string
+  replayRunId?: string | null
+  isEffective?: boolean
   fromBusinessStage: $Enums.InquiryBusinessStage
   fromActionOwner: $Enums.InquiryActionOwner
   fromLifecycleStatus: $Enums.InquiryLifecycleStatus
@@ -788,6 +842,8 @@ export type InquiryStateTransitionUpdateManyWithWhereWithoutStateDecisionInput =
 export type InquiryStateTransitionCreateManyInquiryCaseInput = {
   id?: string
   stateDecisionId: string
+  replayRunId?: string | null
+  isEffective?: boolean
   fromBusinessStage: $Enums.InquiryBusinessStage
   fromActionOwner: $Enums.InquiryActionOwner
   fromLifecycleStatus: $Enums.InquiryLifecycleStatus
@@ -805,6 +861,8 @@ export type InquiryStateTransitionCreateManyInquiryCaseInput = {
 
 export type InquiryStateTransitionUpdateWithoutInquiryCaseInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fromBusinessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
   fromActionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
   fromLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
@@ -824,6 +882,8 @@ export type InquiryStateTransitionUpdateWithoutInquiryCaseInput = {
 export type InquiryStateTransitionUncheckedUpdateWithoutInquiryCaseInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   stateDecisionId?: Prisma.StringFieldUpdateOperationsInput | string
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fromBusinessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
   fromActionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
   fromLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
@@ -842,6 +902,8 @@ export type InquiryStateTransitionUncheckedUpdateWithoutInquiryCaseInput = {
 export type InquiryStateTransitionUncheckedUpdateManyWithoutInquiryCaseInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   stateDecisionId?: Prisma.StringFieldUpdateOperationsInput | string
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fromBusinessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
   fromActionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
   fromLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
@@ -860,6 +922,8 @@ export type InquiryStateTransitionUncheckedUpdateManyWithoutInquiryCaseInput = {
 export type InquiryStateTransitionCreateManyStateDecisionInput = {
   id?: string
   inquiryCaseId: string
+  replayRunId?: string | null
+  isEffective?: boolean
   fromBusinessStage: $Enums.InquiryBusinessStage
   fromActionOwner: $Enums.InquiryActionOwner
   fromLifecycleStatus: $Enums.InquiryLifecycleStatus
@@ -877,6 +941,8 @@ export type InquiryStateTransitionCreateManyStateDecisionInput = {
 
 export type InquiryStateTransitionUpdateWithoutStateDecisionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fromBusinessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
   fromActionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
   fromLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
@@ -896,6 +962,8 @@ export type InquiryStateTransitionUpdateWithoutStateDecisionInput = {
 export type InquiryStateTransitionUncheckedUpdateWithoutStateDecisionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   inquiryCaseId?: Prisma.StringFieldUpdateOperationsInput | string
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fromBusinessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
   fromActionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
   fromLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
@@ -914,6 +982,8 @@ export type InquiryStateTransitionUncheckedUpdateWithoutStateDecisionInput = {
 export type InquiryStateTransitionUncheckedUpdateManyWithoutStateDecisionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   inquiryCaseId?: Prisma.StringFieldUpdateOperationsInput | string
+  replayRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEffective?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fromBusinessStage?: Prisma.EnumInquiryBusinessStageFieldUpdateOperationsInput | $Enums.InquiryBusinessStage
   fromActionOwner?: Prisma.EnumInquiryActionOwnerFieldUpdateOperationsInput | $Enums.InquiryActionOwner
   fromLifecycleStatus?: Prisma.EnumInquiryLifecycleStatusFieldUpdateOperationsInput | $Enums.InquiryLifecycleStatus
@@ -935,6 +1005,8 @@ export type InquiryStateTransitionSelect<ExtArgs extends runtime.Types.Extension
   id?: boolean
   inquiryCaseId?: boolean
   stateDecisionId?: boolean
+  replayRunId?: boolean
+  isEffective?: boolean
   fromBusinessStage?: boolean
   fromActionOwner?: boolean
   fromLifecycleStatus?: boolean
@@ -956,6 +1028,8 @@ export type InquiryStateTransitionSelectCreateManyAndReturn<ExtArgs extends runt
   id?: boolean
   inquiryCaseId?: boolean
   stateDecisionId?: boolean
+  replayRunId?: boolean
+  isEffective?: boolean
   fromBusinessStage?: boolean
   fromActionOwner?: boolean
   fromLifecycleStatus?: boolean
@@ -977,6 +1051,8 @@ export type InquiryStateTransitionSelectUpdateManyAndReturn<ExtArgs extends runt
   id?: boolean
   inquiryCaseId?: boolean
   stateDecisionId?: boolean
+  replayRunId?: boolean
+  isEffective?: boolean
   fromBusinessStage?: boolean
   fromActionOwner?: boolean
   fromLifecycleStatus?: boolean
@@ -998,6 +1074,8 @@ export type InquiryStateTransitionSelectScalar = {
   id?: boolean
   inquiryCaseId?: boolean
   stateDecisionId?: boolean
+  replayRunId?: boolean
+  isEffective?: boolean
   fromBusinessStage?: boolean
   fromActionOwner?: boolean
   fromLifecycleStatus?: boolean
@@ -1013,7 +1091,7 @@ export type InquiryStateTransitionSelectScalar = {
   createdAt?: boolean
 }
 
-export type InquiryStateTransitionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "inquiryCaseId" | "stateDecisionId" | "fromBusinessStage" | "fromActionOwner" | "fromLifecycleStatus" | "toBusinessStage" | "toActionOwner" | "toLifecycleStatus" | "changedDimensionsJson" | "reason" | "changedBy" | "changedByType" | "eventOccurredAt" | "processedAt" | "createdAt", ExtArgs["result"]["inquiryStateTransition"]>
+export type InquiryStateTransitionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "inquiryCaseId" | "stateDecisionId" | "replayRunId" | "isEffective" | "fromBusinessStage" | "fromActionOwner" | "fromLifecycleStatus" | "toBusinessStage" | "toActionOwner" | "toLifecycleStatus" | "changedDimensionsJson" | "reason" | "changedBy" | "changedByType" | "eventOccurredAt" | "processedAt" | "createdAt", ExtArgs["result"]["inquiryStateTransition"]>
 export type InquiryStateTransitionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   inquiryCase?: boolean | Prisma.InquiryCaseDefaultArgs<ExtArgs>
   stateDecision?: boolean | Prisma.InquiryStateDecisionDefaultArgs<ExtArgs>
@@ -1037,6 +1115,8 @@ export type $InquiryStateTransitionPayload<ExtArgs extends runtime.Types.Extensi
     id: string
     inquiryCaseId: string
     stateDecisionId: string
+    replayRunId: string | null
+    isEffective: boolean
     fromBusinessStage: $Enums.InquiryBusinessStage
     fromActionOwner: $Enums.InquiryActionOwner
     fromLifecycleStatus: $Enums.InquiryLifecycleStatus
@@ -1478,6 +1558,8 @@ export interface InquiryStateTransitionFieldRefs {
   readonly id: Prisma.FieldRef<"InquiryStateTransition", 'String'>
   readonly inquiryCaseId: Prisma.FieldRef<"InquiryStateTransition", 'String'>
   readonly stateDecisionId: Prisma.FieldRef<"InquiryStateTransition", 'String'>
+  readonly replayRunId: Prisma.FieldRef<"InquiryStateTransition", 'String'>
+  readonly isEffective: Prisma.FieldRef<"InquiryStateTransition", 'Boolean'>
   readonly fromBusinessStage: Prisma.FieldRef<"InquiryStateTransition", 'InquiryBusinessStage'>
   readonly fromActionOwner: Prisma.FieldRef<"InquiryStateTransition", 'InquiryActionOwner'>
   readonly fromLifecycleStatus: Prisma.FieldRef<"InquiryStateTransition", 'InquiryLifecycleStatus'>

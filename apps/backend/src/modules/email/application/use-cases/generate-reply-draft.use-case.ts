@@ -43,6 +43,12 @@ export class GenerateReplyDraftUseCase {
   async execute(input: GenerateReplyDraftInput) {
     const inquiry = await this.inquiryRepository.findById(input.inquiryCaseId);
     if (!inquiry) throw new BusinessError('Inquiry not found.', 'INQUIRY_NOT_FOUND');
+    if (inquiry.processingMode === 'manual') {
+      throw new BusinessError(
+        'Reply draft generation is disabled while the inquiry is in manual processing mode.',
+        'INQUIRY_MANUAL_PROCESSING_MODE',
+      );
+    }
 
     const draftType = resolveDraftType(inquiry.businessStage, inquiry.actionOwner);
     if (draftType === 'quote_reply' && !input.commercialTerms?.trim()) {
@@ -64,7 +70,7 @@ export class GenerateReplyDraftUseCase {
     }
 
     const promptVersion = process.env.AI_REPLY_DRAFT_PROMPT_VERSION?.trim() || 'v1';
-    const stableKey = `auto:${sourceMessage.id}:${draftType}:${promptVersion}`;
+    const stableKey = `auto:${input.inquiryCaseId}:${sourceMessage.id}:${draftType}:${promptVersion}`;
     if (!input.regenerate) {
       const existing = await this.prisma.replyDraft.findUnique({ where: { idempotencyKey: stableKey } });
       if (existing) return existing;

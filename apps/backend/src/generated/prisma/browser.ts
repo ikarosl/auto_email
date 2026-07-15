@@ -73,6 +73,16 @@ export type ProcessedEmail = Prisma.ProcessedEmailModel
  */
 export type EmailAnalysisDecision = Prisma.EmailAnalysisDecisionModel
 /**
+ * Model InquiryProcessingModeTransition
+ * 
+ */
+export type InquiryProcessingModeTransition = Prisma.InquiryProcessingModeTransitionModel
+/**
+ * Model InquiryReplayRun
+ * 
+ */
+export type InquiryReplayRun = Prisma.InquiryReplayRunModel
+/**
  * Model InquiryBusinessEvent
  * 
  */

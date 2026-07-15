@@ -28,6 +28,7 @@ export class CreateInquiryFromEmailUseCase {
       businessSubjectLocked: false,
       businessSubjectUpdatedAt: now,
       ...INITIAL_INQUIRY_STATE,
+      processingMode: 'automatic',
       latestMessageAt: emailMessage.receivedAt,
       createdAt: now,
       updatedAt: now,

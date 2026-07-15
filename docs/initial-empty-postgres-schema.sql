@@ -12,6 +12,9 @@ CREATE TYPE "InquiryActionOwner" AS ENUM ('us', 'customer', 'none');
 -- CreateEnum
 CREATE TYPE "InquiryLifecycleStatus" AS ENUM ('active', 'won', 'lost', 'invalid');
 
+-- CreateEnum
+CREATE TYPE "InquiryProcessingMode" AS ENUM ('automatic', 'manual');
+
 -- CreateTable
 CREATE TABLE "mailbox_accounts" (
     "id" TEXT NOT NULL DEFAULT 'mailbox_' || gen_random_uuid()::TEXT,
@@ -172,6 +175,10 @@ CREATE TABLE "inquiry_cases" (
     "action_owner" "InquiryActionOwner" NOT NULL DEFAULT 'us',
     "lifecycle_status" "InquiryLifecycleStatus" NOT NULL DEFAULT 'active',
     "state_version" INTEGER NOT NULL DEFAULT 0,
+    "processing_mode" "InquiryProcessingMode" NOT NULL DEFAULT 'automatic',
+    "processing_mode_reason" TEXT,
+    "processing_mode_changed_at" TIMESTAMPTZ(6),
+    "processing_mode_changed_by" TEXT,
     "subject" TEXT,
     "raw_subject" TEXT,
     "business_subject" TEXT,
@@ -227,6 +234,13 @@ CREATE TABLE "email_analysis_decisions" (
     "context_snapshot_id" TEXT,
     "direction" TEXT NOT NULL,
     "message_classification" TEXT,
+    "is_inquiry" BOOLEAN,
+    "inquiry_scope" TEXT,
+    "scope_relationship" TEXT,
+    "inquiry_scope_confidence" DECIMAL(5,4),
+    "detected_products" JSONB NOT NULL DEFAULT '[]',
+    "replay_run_id" TEXT,
+    "is_effective" BOOLEAN NOT NULL DEFAULT true,
     "suggested_business_stage" "InquiryBusinessStage",
     "suggested_action_owner" "InquiryActionOwner",
     "suggested_lifecycle_status" "InquiryLifecycleStatus",
@@ -252,6 +266,47 @@ CREATE TABLE "email_analysis_decisions" (
 );
 
 -- CreateTable
+CREATE TABLE "inquiry_processing_mode_transitions" (
+    "id" TEXT NOT NULL DEFAULT 'processing_mode_transition_' || gen_random_uuid()::TEXT,
+    "inquiry_case_id" TEXT NOT NULL,
+    "from_mode" "InquiryProcessingMode" NOT NULL,
+    "to_mode" "InquiryProcessingMode" NOT NULL,
+    "reason" TEXT NOT NULL,
+    "source_email_message_id" TEXT,
+    "analysis_decision_id" TEXT,
+    "inquiry_scope" TEXT,
+    "scope_relationship" TEXT,
+    "scope_confidence" DECIMAL(5,4),
+    "detected_products" JSONB NOT NULL DEFAULT '[]',
+    "before_state_json" JSONB NOT NULL DEFAULT '{}',
+    "changed_by" TEXT NOT NULL,
+    "changed_by_type" TEXT NOT NULL,
+    "changed_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "inquiry_processing_mode_transitions_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "inquiry_replay_runs" (
+    "id" TEXT NOT NULL DEFAULT 'inquiry_replay_' || gen_random_uuid()::TEXT,
+    "inquiry_case_id" TEXT NOT NULL,
+    "trigger_type" TEXT NOT NULL,
+    "status" TEXT NOT NULL DEFAULT 'running',
+    "from_time" TIMESTAMPTZ(6) NOT NULL,
+    "through_time" TIMESTAMPTZ(6) NOT NULL,
+    "expected_state_version" INTEGER NOT NULL,
+    "baseline_state_json" JSONB NOT NULL DEFAULT '{}',
+    "final_state_json" JSONB NOT NULL DEFAULT '{}',
+    "timeline_json" JSONB NOT NULL DEFAULT '[]',
+    "error_message" TEXT,
+    "initiated_by" TEXT NOT NULL,
+    "started_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "completed_at" TIMESTAMPTZ(6),
+
+    CONSTRAINT "inquiry_replay_runs_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "inquiry_business_events" (
     "id" TEXT NOT NULL DEFAULT 'business_event_' || gen_random_uuid()::TEXT,
     "inquiry_case_id" TEXT NOT NULL,
@@ -265,6 +320,8 @@ CREATE TABLE "inquiry_business_events" (
     "evidence" TEXT,
     "payload_json" JSONB NOT NULL DEFAULT '{}',
     "source_type" TEXT NOT NULL DEFAULT 'ai',
+    "replay_run_id" TEXT,
+    "is_effective" BOOLEAN NOT NULL DEFAULT true,
     "occurred_at" TIMESTAMPTZ(6) NOT NULL,
     "created_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -278,6 +335,7 @@ CREATE TABLE "inquiry_state_decisions" (
     "email_message_id" TEXT,
     "analysis_decision_id" TEXT,
     "replay_run_id" TEXT,
+    "is_effective" BOOLEAN NOT NULL DEFAULT true,
     "before_business_stage" "InquiryBusinessStage" NOT NULL,
     "before_action_owner" "InquiryActionOwner" NOT NULL,
     "before_lifecycle_status" "InquiryLifecycleStatus" NOT NULL,
@@ -310,6 +368,8 @@ CREATE TABLE "inquiry_state_transitions" (
     "id" TEXT NOT NULL DEFAULT 'state_transition_' || gen_random_uuid()::TEXT,
     "inquiry_case_id" TEXT NOT NULL,
     "state_decision_id" TEXT NOT NULL,
+    "replay_run_id" TEXT,
+    "is_effective" BOOLEAN NOT NULL DEFAULT true,
     "from_business_stage" "InquiryBusinessStage" NOT NULL,
     "from_action_owner" "InquiryActionOwner" NOT NULL,
     "from_lifecycle_status" "InquiryLifecycleStatus" NOT NULL,
@@ -553,6 +613,9 @@ CREATE INDEX "inquiry_cases_action_owner_idx" ON "inquiry_cases"("action_owner")
 CREATE INDEX "inquiry_cases_lifecycle_status_idx" ON "inquiry_cases"("lifecycle_status");
 
 -- CreateIndex
+CREATE INDEX "inquiry_cases_processing_mode_idx" ON "inquiry_cases"("processing_mode");
+
+-- CreateIndex
 CREATE INDEX "inquiry_cases_latest_message_at_idx" ON "inquiry_cases"("latest_message_at");
 
 -- CreateIndex
@@ -563,6 +626,9 @@ CREATE INDEX "inquiry_messages_email_message_id_idx" ON "inquiry_messages"("emai
 
 -- CreateIndex
 CREATE UNIQUE INDEX "inquiry_messages_inquiry_case_id_email_message_id_key" ON "inquiry_messages"("inquiry_case_id", "email_message_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "inquiry_messages_email_message_id_key" ON "inquiry_messages"("email_message_id");
 
 -- CreateIndex
 CREATE INDEX "processed_emails_message_id_idx" ON "processed_emails"("message_id");
@@ -583,6 +649,21 @@ CREATE INDEX "email_analysis_decisions_inquiry_case_id_created_at_idx" ON "email
 CREATE INDEX "email_analysis_decisions_message_classification_idx" ON "email_analysis_decisions"("message_classification");
 
 -- CreateIndex
+CREATE INDEX "email_analysis_decisions_replay_run_id_idx" ON "email_analysis_decisions"("replay_run_id");
+
+-- CreateIndex
+CREATE INDEX "inquiry_processing_mode_transitions_inquiry_case_id_changed_idx" ON "inquiry_processing_mode_transitions"("inquiry_case_id", "changed_at");
+
+-- CreateIndex
+CREATE INDEX "inquiry_processing_mode_transitions_source_email_message_id_idx" ON "inquiry_processing_mode_transitions"("source_email_message_id");
+
+-- CreateIndex
+CREATE INDEX "inquiry_replay_runs_inquiry_case_id_started_at_idx" ON "inquiry_replay_runs"("inquiry_case_id", "started_at");
+
+-- CreateIndex
+CREATE INDEX "inquiry_replay_runs_status_idx" ON "inquiry_replay_runs"("status");
+
+-- CreateIndex
 CREATE INDEX "inquiry_business_events_inquiry_case_id_occurred_at_idx" ON "inquiry_business_events"("inquiry_case_id", "occurred_at");
 
 -- CreateIndex
@@ -593,6 +674,9 @@ CREATE INDEX "inquiry_business_events_analysis_decision_id_idx" ON "inquiry_busi
 
 -- CreateIndex
 CREATE INDEX "inquiry_business_events_event_type_idx" ON "inquiry_business_events"("event_type");
+
+-- CreateIndex
+CREATE INDEX "inquiry_business_events_replay_run_id_idx" ON "inquiry_business_events"("replay_run_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "inquiry_state_decisions_analysis_decision_id_key" ON "inquiry_state_decisions"("analysis_decision_id");
@@ -608,6 +692,9 @@ CREATE INDEX "inquiry_state_decisions_replay_run_id_idx" ON "inquiry_state_decis
 
 -- CreateIndex
 CREATE INDEX "inquiry_state_transitions_inquiry_case_id_event_occurred_at_idx" ON "inquiry_state_transitions"("inquiry_case_id", "event_occurred_at");
+
+-- CreateIndex
+CREATE INDEX "inquiry_state_transitions_replay_run_id_idx" ON "inquiry_state_transitions"("replay_run_id");
 
 -- CreateIndex
 CREATE INDEX "inquiry_state_transitions_state_decision_id_idx" ON "inquiry_state_transitions"("state_decision_id");
@@ -722,6 +809,12 @@ ALTER TABLE "email_analysis_decisions" ADD CONSTRAINT "email_analysis_decisions_
 
 -- AddForeignKey
 ALTER TABLE "email_analysis_decisions" ADD CONSTRAINT "email_analysis_decisions_inquiry_case_id_fkey" FOREIGN KEY ("inquiry_case_id") REFERENCES "inquiry_cases"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "inquiry_processing_mode_transitions" ADD CONSTRAINT "inquiry_processing_mode_transitions_inquiry_case_id_fkey" FOREIGN KEY ("inquiry_case_id") REFERENCES "inquiry_cases"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "inquiry_replay_runs" ADD CONSTRAINT "inquiry_replay_runs_inquiry_case_id_fkey" FOREIGN KEY ("inquiry_case_id") REFERENCES "inquiry_cases"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "inquiry_business_events" ADD CONSTRAINT "inquiry_business_events_inquiry_case_id_fkey" FOREIGN KEY ("inquiry_case_id") REFERENCES "inquiry_cases"("id") ON DELETE CASCADE ON UPDATE CASCADE;

@@ -66,7 +66,11 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnAppli
         ('business_stage'),
         ('action_owner'),
         ('lifecycle_status'),
-        ('state_version')
+        ('state_version'),
+        ('processing_mode'),
+        ('processing_mode_reason'),
+        ('processing_mode_changed_at'),
+        ('processing_mode_changed_by')
       ) AS required(column_name)
       LEFT JOIN information_schema.columns AS actual
         ON actual.table_schema = current_schema()
@@ -77,6 +81,25 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnAppli
     if (missingInquiryColumns.length > 0) {
       throw new Error(
         `Database schema is outdated. Missing inquiry_cases columns: ${missingInquiryColumns.join(', ')}. ` +
+        'Reset the development database with docs/initial-empty-postgres-schema.sql.',
+      );
+    }
+
+    const schemaRows = await this.$queryRaw<Array<{ missing: string[] | null }>>`
+      SELECT ARRAY_AGG(required.table_name ORDER BY required.table_name)
+        FILTER (WHERE actual.table_name IS NULL) AS missing
+      FROM (VALUES
+        ('inquiry_processing_mode_transitions'),
+        ('inquiry_replay_runs')
+      ) AS required(table_name)
+      LEFT JOIN information_schema.tables AS actual
+        ON actual.table_schema = current_schema()
+       AND actual.table_name = required.table_name
+    `;
+    const missingTables = schemaRows[0]?.missing ?? [];
+    if (missingTables.length > 0) {
+      throw new Error(
+        `Database schema is outdated. Missing tables: ${missingTables.join(', ')}. ` +
         'Reset the development database with docs/initial-empty-postgres-schema.sql.',
       );
     }

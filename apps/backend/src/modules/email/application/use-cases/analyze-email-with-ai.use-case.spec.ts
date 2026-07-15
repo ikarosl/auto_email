@@ -131,7 +131,14 @@ class MemoryAiInteractionDebugLogger implements AiInteractionDebugLogger {
 
 function createValidAnalysis(overrides: Record<string, unknown> = {}) {
   return {
+    isInquiry: true,
     messageClassification: 'customer_inquiry',
+    inquiryScope: {
+      type: 'single_product',
+      relationshipToExistingInquiry: 'not_applicable',
+      confidence: 0.98,
+      detectedProducts: ['circulator'],
+    },
     events: [{
       eventType: 'requirements_provided',
       actor: 'customer',

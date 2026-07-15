@@ -44,7 +44,14 @@ describe('emailAiAnalysisSchema', () => {
 
 function createAnalysis(overrides: Record<string, unknown> = {}) {
   return {
+    isInquiry: true,
     messageClassification: 'customer_inquiry',
+    inquiryScope: {
+      type: 'single_product',
+      relationshipToExistingInquiry: 'not_applicable',
+      confidence: 0.98,
+      detectedProducts: ['circulator'],
+    },
     events: [{
       eventType: 'requirements_provided',
       actor: 'customer',

@@ -4,6 +4,8 @@ import {
   InquiryLifecycleStatus,
 } from '../enums/inquiry-state.enum.js';
 
+export type InquiryProcessingMode = 'automatic' | 'manual';
+
 export interface InquiryCase {
   id: string;
   sourceEmailMessageId?: string;
@@ -22,6 +24,10 @@ export interface InquiryCase {
   actionOwner: InquiryActionOwner;
   lifecycleStatus: InquiryLifecycleStatus;
   stateVersion: number;
+  processingMode: InquiryProcessingMode;
+  processingModeReason?: string;
+  processingModeChangedAt?: Date;
+  processingModeChangedBy?: string;
   latestMessageAt: Date;
   createdAt: Date;
   updatedAt: Date;

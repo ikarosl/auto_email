@@ -42,20 +42,22 @@
 - 如果 API_PORT 改了，需要同步修改 LocalPort 值
 - Windows 专用（`Get-NetTCPConnection` + `Stop-Process`），Linux/Mac 需改用 `lsof -ti:3003 | xargs kill`
 
-## 历史邮件事件补偿与状态时间线恢复（暂缓，独立阶段）
+## 历史邮件事件补偿与状态时间线恢复
 
 ### 当前缺口
 
 - 在线入站、出站、人工补录和系统发送已经统一写入 `email_analysis_decisions`、`inquiry_business_events`、`inquiry_state_decisions` 和 `inquiry_state_transitions`。
 - 引用历史只缺少一个可信直接父邮件时，已经支持按 `parent -> child` 即时回放，并通过 `email_recovery_records.replay_run_id` 关联两次决策。
 - 不满足即时回放安全条件的恢复邮件只进入上下文，并将当前决策标记为 `baselineIncomplete=true`。
-- 尚未实现对数据库既有历史邮件的批量扫描、模拟重放和人工批准修复。
+- 已新增询盘级 `ReplayInquiryTimelineUseCase`，首先用于多产品误判后从 `manual` 恢复 `automatic`。
+- 回放按单个 `inquiryCaseId` 执行；不需要全库扫描或全库调度。
+- 尚未把邮件人工移动后的源/目标询盘，以及多封缺失引用邮件恢复接入该回放入口。
 - 人工补录且早于 `latestMessageAt` 的邮件会生成 `historical_backfill` 决策，但不会直接覆盖当前三维状态。
 
 ### 补偿方案设计要求
 
-- 单独实现历史补偿服务，不把批量重放逻辑继续堆入 IMAP 轮询用例。
-- 先提供只读扫描/报告模式，列出：
+- 复用询盘级历史补偿服务，不把重放逻辑继续堆入 IMAP 轮询或邮件移动接口。
+- 后续为单个询盘提供差异报告，列出：
   - 缺失入站 AI 决策的邮件。
   - 缺失出站工作流决策的邮件。
   - `system_detected` 恢复邮件。

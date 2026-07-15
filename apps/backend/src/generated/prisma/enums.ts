@@ -36,3 +36,11 @@ export const InquiryLifecycleStatus = {
 } as const
 
 export type InquiryLifecycleStatus = (typeof InquiryLifecycleStatus)[keyof typeof InquiryLifecycleStatus]
+
+
+export const InquiryProcessingMode = {
+  automatic: 'automatic',
+  manual: 'manual'
+} as const
+
+export type InquiryProcessingMode = (typeof InquiryProcessingMode)[keyof typeof InquiryProcessingMode]

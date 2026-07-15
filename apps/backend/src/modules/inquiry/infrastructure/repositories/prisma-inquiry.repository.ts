@@ -29,6 +29,10 @@ export class PrismaInquiryRepository implements InquiryRepository {
       actionOwner: inquiryCase.actionOwner,
       lifecycleStatus: inquiryCase.lifecycleStatus,
       stateVersion: inquiryCase.stateVersion,
+      processingMode: inquiryCase.processingMode,
+      processingModeReason: inquiryCase.processingModeReason ?? null,
+      processingModeChangedAt: inquiryCase.processingModeChangedAt ?? null,
+      processingModeChangedBy: inquiryCase.processingModeChangedBy ?? null,
       subject: inquiryCase.subject,
       rawSubject: inquiryCase.rawSubject ?? inquiryCase.subject,
       businessSubject: inquiryCase.businessSubject ?? inquiryCase.subject,
@@ -56,6 +60,10 @@ export class PrismaInquiryRepository implements InquiryRepository {
       businessSubjectSource: data.businessSubjectSource as InquiryCase['businessSubjectSource'],
       businessSubjectLocked: data.businessSubjectLocked,
       businessSubjectUpdatedAt: data.businessSubjectUpdatedAt,
+      processingMode: data.processingMode,
+      processingModeReason: data.processingModeReason ?? undefined,
+      processingModeChangedAt: data.processingModeChangedAt ?? undefined,
+      processingModeChangedBy: data.processingModeChangedBy ?? undefined,
       updatedAt: data.updatedAt,
     };
   }
@@ -178,6 +186,10 @@ function toDomain(record: {
   actionOwner: InquiryCase['actionOwner'];
   lifecycleStatus: InquiryCase['lifecycleStatus'];
   stateVersion: number;
+  processingMode: InquiryCase['processingMode'];
+  processingModeReason?: string | null;
+  processingModeChangedAt?: Date | null;
+  processingModeChangedBy?: string | null;
   subject: string | null;
   rawSubject?: string | null;
   businessSubject?: string | null;
@@ -209,6 +221,10 @@ function toDomain(record: {
     actionOwner: record.actionOwner,
     lifecycleStatus: record.lifecycleStatus,
     stateVersion: record.stateVersion,
+    processingMode: record.processingMode,
+    processingModeReason: record.processingModeReason ?? undefined,
+    processingModeChangedAt: record.processingModeChangedAt ?? undefined,
+    processingModeChangedBy: record.processingModeChangedBy ?? undefined,
     latestMessageAt: record.latestMessageAt ?? record.createdAt,
     createdAt: record.createdAt,
     updatedAt: record.updatedAt,

@@ -211,7 +211,9 @@ function buildContextPayload(
     outputInstruction: {
       format: 'json_only',
       schema: input.outputSchema ?? {
+        isInquiry: 'boolean',
         messageClassification: 'customer_inquiry | customer_follow_up | our_response | internal | invalid | unrelated_product | commercial_solicitation | unknown',
+        inquiryScope: 'object with type, relationshipToExistingInquiry, confidence, detectedProducts',
         events: 'array of { eventType, actor, confidence, evidence, payload }',
         suggestedState: 'object with businessStage, actionOwner, lifecycleStatus',
         confidence: 'number between 0 and 1',

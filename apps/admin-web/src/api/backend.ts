@@ -23,6 +23,8 @@ export {
   linkMessageToInquiry,
   moveInquiryMessage,
   updateInquiry,
+  updateInquiryProcessingMode,
+  fetchInquiryProcessingModeHistory,
 } from './inquiry';
 
 export { fetchCustomers, updateCustomer } from './customer';

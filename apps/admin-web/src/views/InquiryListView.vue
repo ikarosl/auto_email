@@ -56,7 +56,7 @@ const ownerFilters: Array<{ label: string; value: InquiryActionOwner | 'all' }> 
 const lifecycleFilters: Array<{ label: string; value: InquiryLifecycleStatus | 'all' }> = [
   { label: '全部周期', value: 'all' },
   { label: '进行中', value: 'active' },
-  { label: '已赢单', value: 'won' },
+  { label: '已成交', value: 'won' },
   { label: '已丢单', value: 'lost' },
   { label: '无效', value: 'invalid' },
 ];

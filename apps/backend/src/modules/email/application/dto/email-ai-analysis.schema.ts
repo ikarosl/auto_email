@@ -16,6 +16,7 @@ const extractedRequirementValueSchema = z
   .optional();
 
 export const emailWorkflowAnalysisSchema = z.object({
+  isInquiry: z.boolean(),
   messageClassification: z.enum([
     'customer_inquiry',
     'customer_follow_up',
@@ -26,6 +27,19 @@ export const emailWorkflowAnalysisSchema = z.object({
     'commercial_solicitation',
     'unknown',
   ]),
+  inquiryScope: z.object({
+    type: z.enum(['single_product', 'multiple_products', 'uncertain']),
+    relationshipToExistingInquiry: z.enum([
+      'same_requirement',
+      'replacement_requirement',
+      'additional_independent_requirement',
+      'separate_new_inquiry',
+      'not_applicable',
+      'uncertain',
+    ]),
+    confidence: z.number().min(0).max(1),
+    detectedProducts: z.array(z.string().trim().min(1)).default([]),
+  }),
   events: z.array(z.object({
     eventType: z.enum(AI_BUSINESS_EVENT_TYPES),
     actor: z.enum([

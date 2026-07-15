@@ -29,6 +29,7 @@ export class CreateInquiryUseCase {
       businessSubjectLocked: false,
       businessSubjectUpdatedAt: now,
       ...INITIAL_INQUIRY_STATE,
+      processingMode: 'automatic',
       latestMessageAt: input.latestMessageAt ?? now,
       createdAt: now,
       updatedAt: now,

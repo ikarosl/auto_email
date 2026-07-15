@@ -9,6 +9,7 @@ import { UpdateCustomerStatusFromAiAnalysisUseCase } from '../inquiry/applicatio
 import { ApplyInquiryStateDecisionUseCase } from '../inquiry/application/use-cases/apply-inquiry-state-decision.use-case.js';
 import { UpdateInquiryStructuredFactsFromAiUseCase } from '../inquiry/application/use-cases/update-inquiry-structured-facts-from-ai.use-case.js';
 import { GenerateBusinessSubjectUseCase } from '../inquiry/application/use-cases/generate-business-subject.use-case.js';
+import { ReplayInquiryTimelineUseCase } from '../inquiry/application/use-cases/replay-inquiry-timeline.use-case.js';
 import { InquiryMessageRepository } from '../inquiry/application/ports/inquiry-message.repository.js';
 import { InquiryRepository } from '../inquiry/application/ports/inquiry.repository.js';
 import { INQUIRY_MESSAGE_REPOSITORY, INQUIRY_REPOSITORY } from '../inquiry/inquiry.tokens.js';
@@ -56,6 +57,7 @@ import { InquiryReplyDraftController } from './presentation/inquiry-reply-draft.
 import { MailRuntimeController } from './presentation/mail-runtime.controller.js';
 import { InquiryEmailMessageController } from './presentation/inquiry-email-message.controller.js';
 import { EmailAnalysisDecisionController } from './presentation/email-analysis-decision.controller.js';
+import { InquiryProcessingModeController } from './presentation/inquiry-processing-mode.controller.js';
 import {
   ATTACHMENT_AI_READER_ADAPTER,
   ATTACHMENT_PARSER_ADAPTER,
@@ -80,6 +82,7 @@ import {
     MessageController,
     InquiryEmailMessageController,
     EmailAnalysisDecisionController,
+    InquiryProcessingModeController,
   ],
   providers: [
     MailRuntimeConfigService,
@@ -325,6 +328,29 @@ import {
         ReceiveInboundEmailUseCase,
         ProcessInquiryEmailEventUseCase,
         PrismaService,
+      ],
+    },
+    {
+      provide: ReplayInquiryTimelineUseCase,
+      useFactory: (
+        prisma: PrismaService,
+        inquiryRepository: InquiryRepository,
+        inquiryMessageRepository: InquiryMessageRepository,
+        emailMessageRepository: EmailMessageRepository,
+        processInquiryEmailEventUseCase: ProcessInquiryEmailEventUseCase,
+      ) => new ReplayInquiryTimelineUseCase(
+        prisma,
+        inquiryRepository,
+        inquiryMessageRepository,
+        emailMessageRepository,
+        processInquiryEmailEventUseCase,
+      ),
+      inject: [
+        PrismaService,
+        INQUIRY_REPOSITORY,
+        INQUIRY_MESSAGE_REPOSITORY,
+        EMAIL_MESSAGE_REPOSITORY,
+        ProcessInquiryEmailEventUseCase,
       ],
     },
   ],

@@ -395,6 +395,8 @@ export const ModelName = {
   InquiryMessage: 'InquiryMessage',
   ProcessedEmail: 'ProcessedEmail',
   EmailAnalysisDecision: 'EmailAnalysisDecision',
+  InquiryProcessingModeTransition: 'InquiryProcessingModeTransition',
+  InquiryReplayRun: 'InquiryReplayRun',
   InquiryBusinessEvent: 'InquiryBusinessEvent',
   InquiryStateDecision: 'InquiryStateDecision',
   InquiryStateTransition: 'InquiryStateTransition',
@@ -420,7 +422,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "mailboxAccount" | "mailboxSyncState" | "customer" | "organization" | "emailThread" | "emailMessage" | "emailAttachment" | "inquiryCase" | "inquiryMessage" | "processedEmail" | "emailAnalysisDecision" | "inquiryBusinessEvent" | "inquiryStateDecision" | "inquiryStateTransition" | "emailRecoveryRecord" | "inquiryStructuredFact" | "replyDraft" | "replyDraftAttachment" | "emailSendAttempt" | "aiContextSnapshot" | "inquiryContextSummary"
+    modelProps: "mailboxAccount" | "mailboxSyncState" | "customer" | "organization" | "emailThread" | "emailMessage" | "emailAttachment" | "inquiryCase" | "inquiryMessage" | "processedEmail" | "emailAnalysisDecision" | "inquiryProcessingModeTransition" | "inquiryReplayRun" | "inquiryBusinessEvent" | "inquiryStateDecision" | "inquiryStateTransition" | "emailRecoveryRecord" | "inquiryStructuredFact" | "replyDraft" | "replyDraftAttachment" | "emailSendAttempt" | "aiContextSnapshot" | "inquiryContextSummary"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1235,6 +1237,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.EmailAnalysisDecisionCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.EmailAnalysisDecisionCountAggregateOutputType> | number
+        }
+      }
+    }
+    InquiryProcessingModeTransition: {
+      payload: Prisma.$InquiryProcessingModeTransitionPayload<ExtArgs>
+      fields: Prisma.InquiryProcessingModeTransitionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.InquiryProcessingModeTransitionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryProcessingModeTransitionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.InquiryProcessingModeTransitionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryProcessingModeTransitionPayload>
+        }
+        findFirst: {
+          args: Prisma.InquiryProcessingModeTransitionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryProcessingModeTransitionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.InquiryProcessingModeTransitionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryProcessingModeTransitionPayload>
+        }
+        findMany: {
+          args: Prisma.InquiryProcessingModeTransitionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryProcessingModeTransitionPayload>[]
+        }
+        create: {
+          args: Prisma.InquiryProcessingModeTransitionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryProcessingModeTransitionPayload>
+        }
+        createMany: {
+          args: Prisma.InquiryProcessingModeTransitionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.InquiryProcessingModeTransitionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryProcessingModeTransitionPayload>[]
+        }
+        delete: {
+          args: Prisma.InquiryProcessingModeTransitionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryProcessingModeTransitionPayload>
+        }
+        update: {
+          args: Prisma.InquiryProcessingModeTransitionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryProcessingModeTransitionPayload>
+        }
+        deleteMany: {
+          args: Prisma.InquiryProcessingModeTransitionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.InquiryProcessingModeTransitionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.InquiryProcessingModeTransitionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryProcessingModeTransitionPayload>[]
+        }
+        upsert: {
+          args: Prisma.InquiryProcessingModeTransitionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryProcessingModeTransitionPayload>
+        }
+        aggregate: {
+          args: Prisma.InquiryProcessingModeTransitionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateInquiryProcessingModeTransition>
+        }
+        groupBy: {
+          args: Prisma.InquiryProcessingModeTransitionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InquiryProcessingModeTransitionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.InquiryProcessingModeTransitionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InquiryProcessingModeTransitionCountAggregateOutputType> | number
+        }
+      }
+    }
+    InquiryReplayRun: {
+      payload: Prisma.$InquiryReplayRunPayload<ExtArgs>
+      fields: Prisma.InquiryReplayRunFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.InquiryReplayRunFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryReplayRunPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.InquiryReplayRunFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryReplayRunPayload>
+        }
+        findFirst: {
+          args: Prisma.InquiryReplayRunFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryReplayRunPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.InquiryReplayRunFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryReplayRunPayload>
+        }
+        findMany: {
+          args: Prisma.InquiryReplayRunFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryReplayRunPayload>[]
+        }
+        create: {
+          args: Prisma.InquiryReplayRunCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryReplayRunPayload>
+        }
+        createMany: {
+          args: Prisma.InquiryReplayRunCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.InquiryReplayRunCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryReplayRunPayload>[]
+        }
+        delete: {
+          args: Prisma.InquiryReplayRunDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryReplayRunPayload>
+        }
+        update: {
+          args: Prisma.InquiryReplayRunUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryReplayRunPayload>
+        }
+        deleteMany: {
+          args: Prisma.InquiryReplayRunDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.InquiryReplayRunUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.InquiryReplayRunUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryReplayRunPayload>[]
+        }
+        upsert: {
+          args: Prisma.InquiryReplayRunUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InquiryReplayRunPayload>
+        }
+        aggregate: {
+          args: Prisma.InquiryReplayRunAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateInquiryReplayRun>
+        }
+        groupBy: {
+          args: Prisma.InquiryReplayRunGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InquiryReplayRunGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.InquiryReplayRunCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InquiryReplayRunCountAggregateOutputType> | number
         }
       }
     }
@@ -2176,6 +2326,10 @@ export const InquiryCaseScalarFieldEnum = {
   actionOwner: 'actionOwner',
   lifecycleStatus: 'lifecycleStatus',
   stateVersion: 'stateVersion',
+  processingMode: 'processingMode',
+  processingModeReason: 'processingModeReason',
+  processingModeChangedAt: 'processingModeChangedAt',
+  processingModeChangedBy: 'processingModeChangedBy',
   subject: 'subject',
   rawSubject: 'rawSubject',
   businessSubject: 'businessSubject',
@@ -2231,6 +2385,13 @@ export const EmailAnalysisDecisionScalarFieldEnum = {
   contextSnapshotId: 'contextSnapshotId',
   direction: 'direction',
   messageClassification: 'messageClassification',
+  isInquiry: 'isInquiry',
+  inquiryScope: 'inquiryScope',
+  scopeRelationship: 'scopeRelationship',
+  inquiryScopeConfidence: 'inquiryScopeConfidence',
+  detectedProducts: 'detectedProducts',
+  replayRunId: 'replayRunId',
+  isEffective: 'isEffective',
   suggestedBusinessStage: 'suggestedBusinessStage',
   suggestedActionOwner: 'suggestedActionOwner',
   suggestedLifecycleStatus: 'suggestedLifecycleStatus',
@@ -2256,6 +2417,47 @@ export const EmailAnalysisDecisionScalarFieldEnum = {
 export type EmailAnalysisDecisionScalarFieldEnum = (typeof EmailAnalysisDecisionScalarFieldEnum)[keyof typeof EmailAnalysisDecisionScalarFieldEnum]
 
 
+export const InquiryProcessingModeTransitionScalarFieldEnum = {
+  id: 'id',
+  inquiryCaseId: 'inquiryCaseId',
+  fromMode: 'fromMode',
+  toMode: 'toMode',
+  reason: 'reason',
+  sourceEmailMessageId: 'sourceEmailMessageId',
+  analysisDecisionId: 'analysisDecisionId',
+  inquiryScope: 'inquiryScope',
+  scopeRelationship: 'scopeRelationship',
+  scopeConfidence: 'scopeConfidence',
+  detectedProducts: 'detectedProducts',
+  beforeStateJson: 'beforeStateJson',
+  changedBy: 'changedBy',
+  changedByType: 'changedByType',
+  changedAt: 'changedAt'
+} as const
+
+export type InquiryProcessingModeTransitionScalarFieldEnum = (typeof InquiryProcessingModeTransitionScalarFieldEnum)[keyof typeof InquiryProcessingModeTransitionScalarFieldEnum]
+
+
+export const InquiryReplayRunScalarFieldEnum = {
+  id: 'id',
+  inquiryCaseId: 'inquiryCaseId',
+  triggerType: 'triggerType',
+  status: 'status',
+  fromTime: 'fromTime',
+  throughTime: 'throughTime',
+  expectedStateVersion: 'expectedStateVersion',
+  baselineStateJson: 'baselineStateJson',
+  finalStateJson: 'finalStateJson',
+  timelineJson: 'timelineJson',
+  errorMessage: 'errorMessage',
+  initiatedBy: 'initiatedBy',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt'
+} as const
+
+export type InquiryReplayRunScalarFieldEnum = (typeof InquiryReplayRunScalarFieldEnum)[keyof typeof InquiryReplayRunScalarFieldEnum]
+
+
 export const InquiryBusinessEventScalarFieldEnum = {
   id: 'id',
   inquiryCaseId: 'inquiryCaseId',
@@ -2269,6 +2471,8 @@ export const InquiryBusinessEventScalarFieldEnum = {
   evidence: 'evidence',
   payloadJson: 'payloadJson',
   sourceType: 'sourceType',
+  replayRunId: 'replayRunId',
+  isEffective: 'isEffective',
   occurredAt: 'occurredAt',
   createdAt: 'createdAt'
 } as const
@@ -2282,6 +2486,7 @@ export const InquiryStateDecisionScalarFieldEnum = {
   emailMessageId: 'emailMessageId',
   analysisDecisionId: 'analysisDecisionId',
   replayRunId: 'replayRunId',
+  isEffective: 'isEffective',
   beforeBusinessStage: 'beforeBusinessStage',
   beforeActionOwner: 'beforeActionOwner',
   beforeLifecycleStatus: 'beforeLifecycleStatus',
@@ -2314,6 +2519,8 @@ export const InquiryStateTransitionScalarFieldEnum = {
   id: 'id',
   inquiryCaseId: 'inquiryCaseId',
   stateDecisionId: 'stateDecisionId',
+  replayRunId: 'replayRunId',
+  isEffective: 'isEffective',
   fromBusinessStage: 'fromBusinessStage',
   fromActionOwner: 'fromActionOwner',
   fromLifecycleStatus: 'fromLifecycleStatus',
@@ -2651,6 +2858,20 @@ export type ListEnumInquiryLifecycleStatusFieldRefInput<$PrismaModel> = FieldRef
 
 
 /**
+ * Reference to a field of type 'InquiryProcessingMode'
+ */
+export type EnumInquiryProcessingModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InquiryProcessingMode'>
+    
+
+
+/**
+ * Reference to a field of type 'InquiryProcessingMode[]'
+ */
+export type ListEnumInquiryProcessingModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InquiryProcessingMode[]'>
+    
+
+
+/**
  * Reference to a field of type 'Decimal'
  */
 export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
@@ -2798,6 +3019,8 @@ export type GlobalOmitConfig = {
   inquiryMessage?: Prisma.InquiryMessageOmit
   processedEmail?: Prisma.ProcessedEmailOmit
   emailAnalysisDecision?: Prisma.EmailAnalysisDecisionOmit
+  inquiryProcessingModeTransition?: Prisma.InquiryProcessingModeTransitionOmit
+  inquiryReplayRun?: Prisma.InquiryReplayRunOmit
   inquiryBusinessEvent?: Prisma.InquiryBusinessEventOmit
   inquiryStateDecision?: Prisma.InquiryStateDecisionOmit
   inquiryStateTransition?: Prisma.InquiryStateTransitionOmit

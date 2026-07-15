@@ -1,8 +1,21 @@
-export const EMAIL_ANALYSIS_PROMPT_VERSION = 'email-workflow-v2';
+export const EMAIL_ANALYSIS_PROMPT_VERSION = 'email-workflow-v4';
 
 export const EMAIL_ANALYSIS_SYSTEM_PROMPT = `You analyze inbound and outbound email messages for an inquiry workflow.
 
 Use currentEmail.direction to distinguish customer messages from our messages. Extract every business event in the current email. A single email may contain multiple events. Events describe facts; suggestedState is your recommended state after processing the complete email.
+
+Determine inquiryScope separately from product quantity or variants:
+- single_product: one product family or one combined solution, even if it has several parameters, quantities, or variants.
+- multiple_products: two or more independent product needs that could proceed as separate inquiries.
+- uncertain: the email does not provide enough evidence to decide.
+- Do not classify accessories, connector options, quantity breaks, or alternatives for the same requirement as multiple products.
+- relationshipToExistingInquiry compares currentEmail with the existing inquiry history:
+  - same_requirement: the same product need is continuing.
+  - replacement_requirement: the customer replaces the old requirement; emit requirements_updated and keep one inquiry.
+  - additional_independent_requirement: another product need is added while the old need remains.
+  - separate_new_inquiry: the email clearly starts a different business opportunity that was matched to this case only by communication headers/contact.
+  - not_applicable: this is the first meaningful inquiry email.
+- An additional or separate product request is still a valid inquiry. Set isInquiry=true; never classify it as unrelated_product merely because it differs from the existing product.
 
 State dimensions:
 - businessStage: intake | technical_review | commercial | contract
@@ -26,7 +39,14 @@ Rules:
 
 Required shape:
 {
+  "isInquiry": true,
   "messageClassification": "customer_inquiry | customer_follow_up | our_response | internal | invalid | unrelated_product | commercial_solicitation | unknown",
+  "inquiryScope": {
+    "type": "single_product | multiple_products | uncertain",
+    "relationshipToExistingInquiry": "same_requirement | replacement_requirement | additional_independent_requirement | separate_new_inquiry | not_applicable | uncertain",
+    "confidence": 0.95,
+    "detectedProducts": ["product or independent requirement name"]
+  },
   "events": [{
     "eventType": "one allowed business event",
     "actor": "customer | us | system",

@@ -9,6 +9,7 @@ export interface ApiPageResult<T> {
 export type InquiryBusinessStage = 'intake' | 'technical_review' | 'commercial' | 'contract';
 export type InquiryActionOwner = 'us' | 'customer' | 'none';
 export type InquiryLifecycleStatus = 'active' | 'won' | 'lost' | 'invalid';
+export type InquiryProcessingMode = 'automatic' | 'manual';
 
 export interface InquiryStateValue {
   businessStage: InquiryBusinessStage;
@@ -67,6 +68,10 @@ export interface InquiryListItem {
   actionOwner: InquiryActionOwner;
   lifecycleStatus: InquiryLifecycleStatus;
   stateVersion: number;
+  processingMode: InquiryProcessingMode;
+  processingModeReason?: string | null;
+  processingModeChangedAt?: string | null;
+  processingModeChangedBy?: string | null;
   subject?: string | null;
   rawSubject?: string | null;
   businessSubject?: string | null;
@@ -204,6 +209,12 @@ export interface EmailAnalysisDecisionListItem {
   inquiryCaseId?: string | null;
   direction: 'inbound' | 'outbound';
   messageClassification?: EmailMessageClassification | null;
+  isInquiry?: boolean | null;
+  inquiryScope?: 'single_product' | 'multiple_products' | 'uncertain' | null;
+  scopeRelationship?: 'same_requirement' | 'replacement_requirement' | 'additional_independent_requirement' | 'separate_new_inquiry' | 'not_applicable' | 'uncertain' | null;
+  inquiryScopeConfidence?: number | null;
+  detectedProducts?: string[];
+  isEffective?: boolean;
   suggestedState?: InquiryStateValue | null;
   confidence?: number | null;
   riskLevel?: string | null;
@@ -261,6 +272,7 @@ export interface InquiryBusinessEventListItem {
   evidence?: string | null;
   payload?: unknown;
   sourceType: string;
+  isEffective?: boolean;
   occurredAt: string | null;
   createdAt: string | null;
 }
@@ -277,6 +289,7 @@ export interface InquiryStateDecisionListItem {
   eventValidationPassed: boolean;
   humanReviewAdvisory: boolean;
   baselineIncomplete: boolean;
+  isEffective?: boolean;
   executionStatus: string;
   executionReason?: string | null;
   policyVersion: string;
@@ -296,6 +309,7 @@ export interface InquiryStateTransitionListItem {
   reason?: string | null;
   changedBy?: string | null;
   changedByType: string;
+  isEffective?: boolean;
   eventOccurredAt: string | null;
   processedAt: string | null;
 }
