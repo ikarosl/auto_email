@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { InquiryListItem, InquiryStatus } from '@email-inquiry/shared';
+import type { EmailWorkflowDecisionListItem, InquiryListItem, InquiryStatus } from '@email-inquiry/shared';
 import {
   ArrowLeft,
   BrainCircuit,
@@ -14,7 +14,7 @@ import {
 } from 'lucide-vue-next';
 import { computed, onMounted, ref } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
-import { getInquiryStatusLabel, WEB_ROUTES, INQUIRY_STATUS_LABELS } from '@email-inquiry/shared';
+import { getInquiryStatusLabel, WEB_ROUTES } from '@email-inquiry/shared';
 
 import {
   createReplyDraft,
@@ -26,6 +26,9 @@ import {
   moveInquiryMessage,
   transitionInquiryStatus,
   updateInquiry,
+  applyWorkflowDecision,
+  fetchInquiryWorkflowDecisions,
+  rejectWorkflowDecision,
 } from '@/api/backend';
 import Badge from '@/components/ui/Badge.vue';
 import Button from '@/components/ui/Button.vue';
@@ -45,7 +48,9 @@ const messagesPage = ref(1);
 const messagesLimit = 30;
 const messagesLoadingMore = ref(false);
 const threadData = ref<any>(null);
-const activeTab = ref<'messages' | 'thread' | 'context'>('messages');
+const activeTab = ref<'messages' | 'thread' | 'context' | 'events'>('messages');
+const workflowDecisions = ref<EmailWorkflowDecisionListItem[]>([]);
+const workflowTotal = ref(0);
 
 // Editing state
 const editingSubject = ref(false);
@@ -68,6 +73,10 @@ const showLinkDialog = ref(false);
 const linkEmailId = ref('');
 const showDraftDialog = ref(false);
 const draftCommercialTerms = ref('');
+const showWorkflowReview = ref(false);
+const workflowReviewAction = ref<'apply' | 'reject'>('apply');
+const workflowReviewId = ref('');
+const workflowReviewReason = ref('');
 
 const email_source={
   system_detected: '系统检测历史补录',
@@ -80,11 +89,30 @@ const allowedTransitionStatuses = computed<InquiryStatus[]>(() => {
 });
 const fullSnapshot = ref<any>(null);
 const latestAiDecision = computed(() => threadData.value?.latestAiDecision ?? null);
-const latestAiConfidencePercent = computed(() => {
-  const confidence = Number(latestAiDecision.value?.confidence);
+const latestWorkflowDecision = computed(() => workflowDecisions.value[0] ?? null);
+const latestProcessDecision = computed(() => {
+  const inbound = latestAiDecision.value;
+  const outbound = latestWorkflowDecision.value;
+  if (!inbound) return outbound ? { kind: 'outbound' as const, value: outbound } : null;
+  if (!outbound) return { kind: 'inbound' as const, value: inbound };
+
+  return timestampOf(outbound.createdAt) > timestampOf(inbound.createdAt)
+    ? { kind: 'outbound' as const, value: outbound }
+    : { kind: 'inbound' as const, value: inbound };
+});
+const latestProcessConfidencePercent = computed(() => {
+  const confidence = Number(latestProcessDecision.value?.value.confidence);
   return Number.isFinite(confidence) ? Math.round(confidence * 100) : null;
 });
 const latestAiMissingFields = computed(() => normalizeStringList(latestAiDecision.value?.missingFields));
+const latestProcessSuggestedStatus = computed(() => latestProcessDecision.value?.value.suggestedStatus ?? null);
+const latestProcessCreatedAt = computed(() => latestProcessDecision.value?.value.createdAt ?? null);
+const latestProcessRiskLevel = computed(() => latestProcessDecision.value?.value.riskLevel ?? null);
+const latestProcessReason = computed(() => latestProcessDecision.value?.value.reason ?? null);
+const latestProcessExecutionStatus = computed(() => latestProcessDecision.value?.value.executionStatus ?? 'not_evaluated');
+const latestProcessFromStatus = computed(() => latestProcessDecision.value?.value.executionFromStatus ?? item.value?.status ?? null);
+const latestProcessToStatus = computed(() => latestProcessDecision.value?.value.executionToStatus
+  ?? latestProcessSuggestedStatus.value);
 
 async function load() {
   loading.value = true;
@@ -92,15 +120,18 @@ async function load() {
   try {
     const inquiryId = String(route.params.id);
     messagesPage.value = 1;
-    const [inquiryResult, messagesResult, threadResult] = await Promise.all([
+    const [inquiryResult, messagesResult, threadResult, workflowResult] = await Promise.all([
       fetchInquiry(inquiryId),
       fetchInquiryMessages(inquiryId, { page: messagesPage.value, limit: messagesLimit }),
       fetchInquiryThread(inquiryId),
+      fetchInquiryWorkflowDecisions(inquiryId, { page: 1, limit: 50 }),
     ]);
     item.value = inquiryResult;
     messages.value = messagesResult.data;
     messagesTotal.value = messagesResult.total;
     threadData.value = threadResult;
+    workflowDecisions.value = workflowResult.data;
+    workflowTotal.value = workflowResult.total;
 
     // 如果有最新快照 ID，拉取完整快照数据（含 contextPayload）
     const snapshotId = threadResult?.latestContextSnapshot?.id;
@@ -114,6 +145,55 @@ async function load() {
   } finally {
     loading.value = false;
   }
+}
+
+function openWorkflowReview(id: string, action: 'apply' | 'reject') {
+  workflowReviewId.value = id;
+  workflowReviewAction.value = action;
+  workflowReviewReason.value = '';
+  showWorkflowReview.value = true;
+}
+
+async function submitWorkflowReview() {
+  if (!workflowReviewId.value) return;
+  if (workflowReviewAction.value === 'reject' && !workflowReviewReason.value.trim()) return;
+  saving.value = true;
+  error.value = '';
+  try {
+    if (workflowReviewAction.value === 'apply') {
+      await applyWorkflowDecision(workflowReviewId.value, { reason: workflowReviewReason.value || undefined });
+    } else {
+      await rejectWorkflowDecision(workflowReviewId.value, { reason: workflowReviewReason.value });
+    }
+    showWorkflowReview.value = false;
+    showSuccess(workflowReviewAction.value === 'apply' ? '邮件事件已应用' : '邮件事件已拒绝');
+    await load();
+  } catch (err) {
+    error.value = err instanceof Error ? err.message : String(err);
+  } finally {
+    saving.value = false;
+  }
+}
+
+function workflowStatusTone(status: string): 'success' | 'warning' | 'danger' | 'muted' {
+  if (status === 'applied') return 'success';
+  if (['pending', 'dry_run', 'historical_backfill'].includes(status)) return 'warning';
+  if (['failed', 'conflict', 'rejected'].includes(status)) return 'danger';
+  return 'muted';
+}
+
+function workflowEventLabel(eventType: string) {
+  return ({
+    customer_response_requested: '等待客户回复',
+    engineer_review_acknowledgement: '工程审核确认',
+    technical_solution_sent: '已发送技术方案',
+    commercial_terms_sent: '已发送商业条件',
+    formal_quote_sent: '已发送正式报价',
+    contract_sent: '已发送合同',
+    general_correspondence: '普通往来',
+    unrelated_internal: '内部无关邮件',
+    analysis_failed: '识别失败',
+  } as Record<string, string>)[eventType] || eventType;
 }
 
 async function loadNextMessages() {
@@ -274,6 +354,12 @@ function normalizeStringList(value: unknown): string[] {
   return [];
 }
 
+function timestampOf(value: string | null | undefined): number {
+  if (!value) return 0;
+  const timestamp = Date.parse(value);
+  return Number.isFinite(timestamp) ? timestamp : 0;
+}
+
 function classificationTone(classification: string | null | undefined) {
   if (classification === 'valid_inquiry') return 'success';
   if (classification === 'invalid' || classification === 'unrelated_product' || classification === 'commercial') {
@@ -398,6 +484,9 @@ onMounted(load);
           <button class="px-3 py-2 text-sm font-medium"
             :class="activeTab === 'context' ? 'border-b-2 border-primary text-primary' : 'text-muted-foreground'"
             @click="activeTab = 'context'">上下文</button>
+          <button class="px-3 py-2 text-sm font-medium"
+            :class="activeTab === 'events' ? 'border-b-2 border-primary text-primary' : 'text-muted-foreground'"
+            @click="activeTab = 'events'">邮件事件 {{ workflowTotal }}</button>
         </div>
 
         <!-- Messages Tab -->
@@ -438,42 +527,103 @@ onMounted(load);
           </div>
         </div>
 
+        <!-- Workflow Events Tab -->
+        <div v-if="activeTab === 'events'" class="max-h-[720px] overflow-y-auto border-b border-border">
+          <div v-for="decision in workflowDecisions" :key="decision.id"
+            class="border-b border-border px-4 py-4 last:border-b-0">
+            <div class="flex flex-wrap items-start justify-between gap-3">
+              <div class="min-w-0">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="font-medium">{{ workflowEventLabel(decision.eventType) }}</span>
+                  <Badge :tone="workflowStatusTone(decision.executionStatus)">
+                    {{ decision.executionStatus }}
+                  </Badge>
+                  <Badge tone="muted">{{ decision.decisionSource === 'ai' ? 'AI 判断' : '系统规则' }}</Badge>
+                </div>
+                <div class="mt-1 truncate text-xs text-muted-foreground">
+                  {{ decision.emailMessage?.subject || '(无主题)' }} · {{ formatDateTime(decision.emailMessage?.receivedAt) }}
+                </div>
+              </div>
+              <div class="text-right text-xs text-muted-foreground">
+                <div>{{ decision.confidence == null ? '-' : `${Math.round(decision.confidence * 100)}%` }}</div>
+                <div>{{ decision.riskLevel || '-' }}</div>
+              </div>
+            </div>
+            <p class="mt-3 whitespace-pre-wrap text-sm text-muted-foreground">
+              {{ decision.reason || decision.executionReason || '暂无判断说明' }}
+            </p>
+            <div class="mt-3 flex flex-wrap items-center gap-2 text-xs">
+              <span class="text-muted-foreground">状态建议</span>
+              <span class="font-medium">
+                {{ decision.executionFromStatus || item?.status || '-' }}
+                →
+                {{ decision.suggestedStatus || '不变' }}
+              </span>
+              <Badge v-if="decision.responseExpected" tone="warning">等待客户回复</Badge>
+              <Badge v-if="decision.commercialBoundaryDetected" tone="danger">商业边界</Badge>
+              <Badge v-if="decision.humanReviewRequired" tone="muted">建议人工复核</Badge>
+            </div>
+            <div v-if="['pending', 'dry_run', 'historical_backfill', 'rejected', 'conflict'].includes(decision.executionStatus)"
+              class="mt-3 flex justify-end gap-2">
+              <Button size="sm" variant="outline" @click="openWorkflowReview(decision.id, 'reject')">拒绝</Button>
+              <Button v-if="decision.suggestedStatus" size="sm" @click="openWorkflowReview(decision.id, 'apply')">
+                应用建议
+              </Button>
+            </div>
+          </div>
+          <div v-if="workflowDecisions.length === 0" class="py-12 text-center text-sm text-muted-foreground">
+            暂无邮件业务事件
+          </div>
+        </div>
+
         <!-- Thread Tab -->
         <div v-if="activeTab === 'thread' && threadData">
           <Card class="p-4">
             <div class="flex items-center justify-between gap-3">
               <div class="flex items-center gap-2">
                 <BrainCircuit class="h-4 w-4 text-primary" />
-                <h2 class="font-semibold">最新 AI 决策</h2>
+                <h2 class="font-semibold">最新流程决策</h2>
+                <Badge v-if="latestProcessDecision" :tone="latestProcessDecision.kind === 'inbound' ? 'default' : 'warning'">
+                  {{ latestProcessDecision.kind === 'inbound' ? '客户入站分析' : '我方出站事件' }}
+                </Badge>
               </div>
-              <span v-if="latestAiDecision?.createdAt" class="text-xs text-muted-foreground">
-                {{ formatDateTime(latestAiDecision.createdAt) }}
+              <span v-if="latestProcessCreatedAt" class="text-xs text-muted-foreground">
+                {{ formatDateTime(latestProcessCreatedAt) }}
               </span>
             </div>
 
-            <div v-if="latestAiDecision" class="mt-4 space-y-4">
+            <div v-if="latestProcessDecision" class="mt-4 space-y-4">
               <div class="grid gap-3 md:grid-cols-4">
                 <div class="rounded-md border border-border bg-muted/30 p-3">
-                  <div class="text-xs text-muted-foreground">分类</div>
-                  <Badge class="mt-2" :tone="classificationTone(latestAiDecision.classification)">
-                    {{ latestAiDecision.classification || '-' }}
+                  <div class="text-xs text-muted-foreground">
+                    {{ latestProcessDecision.kind === 'inbound' ? '询盘分类' : '出站事件' }}
+                  </div>
+                  <Badge v-if="latestProcessDecision.kind === 'inbound'" class="mt-2"
+                    :tone="classificationTone(latestProcessDecision.value.classification)">
+                    {{ latestProcessDecision.value.classification || '-' }}
+                  </Badge>
+                  <div v-else class="mt-2 text-sm font-medium">
+                    {{ workflowEventLabel(latestProcessDecision.value.eventType) }}
+                  </div>
+                </div>
+                <div class="rounded-md border border-border bg-muted/30 p-3">
+                  <div class="text-xs text-muted-foreground">执行结果</div>
+                  <Badge class="mt-2" :tone="workflowStatusTone(latestProcessExecutionStatus)">
+                    {{ latestProcessExecutionStatus }}
                   </Badge>
                 </div>
                 <div class="rounded-md border border-border bg-muted/30 p-3">
                   <div class="text-xs text-muted-foreground">建议状态</div>
                   <div class="mt-2 text-sm font-medium">
-                    {{ getInquiryStatusLabel(latestAiDecision.suggestedStatus || '') }}
+                    {{ latestProcessSuggestedStatus ? getInquiryStatusLabel(latestProcessSuggestedStatus) : '保持不变' }}
                   </div>
                 </div>
                 <div class="rounded-md border border-border bg-muted/30 p-3">
                   <div class="text-xs text-muted-foreground">置信度</div>
-                  <div class="mt-2 text-sm font-medium">{{ latestAiConfidencePercent ?? '-' }}%</div>
-                </div>
-                <div class="rounded-md border border-border bg-muted/30 p-3">
-                  <div class="text-xs text-muted-foreground">风险</div>
-                  <Badge class="mt-2" :tone="riskTone(latestAiDecision.riskLevel)">
-                    {{ latestAiDecision.riskLevel || '-' }}
-                  </Badge>
+                  <div class="mt-2 flex items-center gap-2 text-sm font-medium">
+                    <span>{{ latestProcessConfidencePercent == null ? '-' : `${latestProcessConfidencePercent}%` }}</span>
+                    <Badge :tone="riskTone(latestProcessRiskLevel)">{{ latestProcessRiskLevel || '-' }}</Badge>
+                  </div>
                 </div>
               </div>
 
@@ -484,31 +634,46 @@ onMounted(load);
                     判断原因
                   </div>
                   <p class="mt-2 whitespace-pre-wrap text-sm text-muted-foreground">
-                    {{ latestAiDecision.reason || '暂无原因' }}
+                    {{ latestProcessReason || '暂无原因' }}
                   </p>
                 </div>
                 <div class="rounded-md border border-border p-3">
                   <!-- <div class="mt-2"><JsonBlock :value="threadData.latestAiDecision || {}" /></div> -->
                   <div class="flex items-center gap-2 text-sm font-medium">
                     <ShieldAlert class="h-4 w-4 text-amber-600" />
-                    下一步动作
+                    状态影响
                   </div>
-                  <p class="mt-3 whitespace-pre-wrap text-sm text-muted-foreground text-sky-500">
-                    {{ (latestAiDecision?.suggestedStatus ? INQUIRY_STATUS_LABELS[latestAiDecision.suggestedStatus as InquiryStatus] : '暂无建议') + '-->' + latestAiDecision.suggestedStatus }}
+                  <div class="mt-3 flex flex-wrap items-center gap-2 text-sm">
+                    <StatusPill v-if="latestProcessFromStatus" :status="latestProcessFromStatus" />
+                    <span class="text-muted-foreground">→</span>
+                    <StatusPill v-if="latestProcessToStatus" :status="latestProcessToStatus" />
+                    <span v-else class="text-muted-foreground">状态不变</span>
+                  </div>
+                  <p v-if="latestProcessDecision.kind === 'inbound' && latestProcessDecision.value.nextAction"
+                    class="mt-3 whitespace-pre-wrap text-sm text-muted-foreground">
+                    {{ latestProcessDecision.value.nextAction }}
                   </p>
                 </div>
               </div>
 
               <div class="flex flex-wrap items-center gap-2">
-                <Badge :tone="latestAiDecision.humanReviewRequired ? 'warning' : 'muted'">
-                  {{ latestAiDecision.humanReviewRequired ? '需要人工审核' : '无需人工审核' }}
+                <Badge :tone="latestProcessDecision.value.humanReviewRequired ? 'warning' : 'muted'">
+                  {{ latestProcessDecision.value.humanReviewRequired ? '建议人工复核' : '无需额外复核' }}
                 </Badge>
-                <Badge :tone="latestAiDecision.quoteBoundaryDetected ? 'warning' : 'muted'">
-                  {{ latestAiDecision.quoteBoundaryDetected ? '检测到报价边界' : '未检测到报价边界' }}
+                <Badge v-if="latestProcessDecision.kind === 'inbound'"
+                  :tone="latestProcessDecision.value.quoteBoundaryDetected ? 'warning' : 'muted'">
+                  {{ latestProcessDecision.value.quoteBoundaryDetected ? '检测到报价边界' : '未检测到报价边界' }}
+                </Badge>
+                <Badge v-else :tone="latestProcessDecision.value.commercialBoundaryDetected ? 'warning' : 'muted'">
+                  {{ latestProcessDecision.value.commercialBoundaryDetected ? '涉及商业边界' : '普通业务事件' }}
+                </Badge>
+                <Badge v-if="latestProcessDecision.kind === 'outbound' && latestProcessDecision.value.responseExpected"
+                  tone="warning">
+                  等待客户回复
                 </Badge>
               </div>
 
-              <div>
+              <div v-if="latestProcessDecision.kind === 'inbound'">
                 <div class="text-sm font-medium">缺失字段</div>
                 <div v-if="latestAiMissingFields.length" class="mt-2 flex flex-wrap gap-2">
                   <Badge v-for="field in latestAiMissingFields" :key="field" tone="warning">{{ field }}</Badge>
@@ -522,7 +687,10 @@ onMounted(load);
             </div>
           </Card>
           <Card class="mt-4 p-4">
-            <h2 class="font-semibold">允许的状态流转</h2>
+            <div class="flex items-center justify-between gap-3">
+              <h2 class="font-semibold">人工状态校正</h2>
+              <StatusPill v-if="item" :status="item.status" />
+            </div>
             <div v-if="allowedTransitionStatuses.length" class="mt-2 flex flex-wrap gap-2">
               <Button v-for="s in allowedTransitionStatuses" :key="s" size="sm" variant="outline"
                 @click="openTransition(s)">
@@ -590,6 +758,37 @@ onMounted(load);
                 {{ saving ? '处理中...' : '确认流转' }}
               </Button>
             </div>
+          </div>
+        </Card>
+      </div>
+    </Teleport>
+
+    <!-- Workflow Decision Review Dialog -->
+    <Teleport to="body">
+      <div v-if="showWorkflowReview" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+        @click.self="showWorkflowReview = false">
+        <Card class="w-full max-w-md p-4">
+          <h2 class="font-semibold">
+            {{ workflowReviewAction === 'apply' ? '应用邮件事件建议' : '拒绝邮件事件建议' }}
+          </h2>
+          <p class="mt-1 text-sm text-muted-foreground">
+            应用操作仍会经过后端状态机校验，并使用条件更新避免覆盖其他操作。
+          </p>
+          <div class="mt-3">
+            <label class="text-sm text-muted-foreground">
+              原因{{ workflowReviewAction === 'reject' ? '（必填）' : '（可选）' }}
+            </label>
+            <textarea v-model="workflowReviewReason" rows="3"
+              class="mt-1 w-full rounded border px-3 py-2 text-sm" />
+          </div>
+          <div class="mt-4 flex justify-end gap-2">
+            <Button variant="ghost" @click="showWorkflowReview = false">取消</Button>
+            <Button
+              :disabled="saving || (workflowReviewAction === 'reject' && !workflowReviewReason.trim())"
+              @click="submitWorkflowReview"
+            >
+              {{ saving ? '处理中...' : '确认' }}
+            </Button>
           </div>
         </Card>
       </div>

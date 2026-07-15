@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "pnpm --filter @email-inquiry/shared build && tsc -p tsconfig.build.json && node --watch dist/main.js",
-    "start": "node dist/main.js",
+    "dev": "pnpm db:migrate && pnpm --filter @email-inquiry/shared build && tsc -p tsconfig.build.json && node --watch dist/main.js",
+    "start": "pnpm db:migrate && node dist/main.js",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:pull": "prisma db pull",

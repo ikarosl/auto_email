@@ -367,6 +367,7 @@ export type AiDecisionWhereInput = {
   emailMessage?: Prisma.XOR<Prisma.EmailMessageNullableScalarRelationFilter, Prisma.EmailMessageWhereInput> | null
   inquiryCase?: Prisma.XOR<Prisma.InquiryCaseNullableScalarRelationFilter, Prisma.InquiryCaseWhereInput> | null
   replyDrafts?: Prisma.ReplyDraftListRelationFilter
+  workflowDecisions?: Prisma.EmailWorkflowDecisionListRelationFilter
 }
 
 export type AiDecisionOrderByWithRelationInput = {
@@ -398,6 +399,7 @@ export type AiDecisionOrderByWithRelationInput = {
   emailMessage?: Prisma.EmailMessageOrderByWithRelationInput
   inquiryCase?: Prisma.InquiryCaseOrderByWithRelationInput
   replyDrafts?: Prisma.ReplyDraftOrderByRelationAggregateInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionOrderByRelationAggregateInput
 }
 
 export type AiDecisionWhereUniqueInput = Prisma.AtLeast<{
@@ -432,6 +434,7 @@ export type AiDecisionWhereUniqueInput = Prisma.AtLeast<{
   emailMessage?: Prisma.XOR<Prisma.EmailMessageNullableScalarRelationFilter, Prisma.EmailMessageWhereInput> | null
   inquiryCase?: Prisma.XOR<Prisma.InquiryCaseNullableScalarRelationFilter, Prisma.InquiryCaseWhereInput> | null
   replyDrafts?: Prisma.ReplyDraftListRelationFilter
+  workflowDecisions?: Prisma.EmailWorkflowDecisionListRelationFilter
 }, "id">
 
 export type AiDecisionOrderByWithAggregationInput = {
@@ -525,6 +528,7 @@ export type AiDecisionCreateInput = {
   emailMessage?: Prisma.EmailMessageCreateNestedOneWithoutAiDecisionsInput
   inquiryCase?: Prisma.InquiryCaseCreateNestedOneWithoutAiDecisionsInput
   replyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutAiDecisionInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutAiDecisionInput
 }
 
 export type AiDecisionUncheckedCreateInput = {
@@ -554,6 +558,7 @@ export type AiDecisionUncheckedCreateInput = {
   executedAt?: Date | string | null
   createdAt?: Date | string
   replyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutAiDecisionInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutAiDecisionInput
 }
 
 export type AiDecisionUpdateInput = {
@@ -583,6 +588,7 @@ export type AiDecisionUpdateInput = {
   emailMessage?: Prisma.EmailMessageUpdateOneWithoutAiDecisionsNestedInput
   inquiryCase?: Prisma.InquiryCaseUpdateOneWithoutAiDecisionsNestedInput
   replyDrafts?: Prisma.ReplyDraftUpdateManyWithoutAiDecisionNestedInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutAiDecisionNestedInput
 }
 
 export type AiDecisionUncheckedUpdateInput = {
@@ -612,6 +618,7 @@ export type AiDecisionUncheckedUpdateInput = {
   executedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   replyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutAiDecisionNestedInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutAiDecisionNestedInput
 }
 
 export type AiDecisionCreateManyInput = {
@@ -905,6 +912,22 @@ export type AiDecisionUpdateOneWithoutReplyDraftsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AiDecisionUpdateToOneWithWhereWithoutReplyDraftsInput, Prisma.AiDecisionUpdateWithoutReplyDraftsInput>, Prisma.AiDecisionUncheckedUpdateWithoutReplyDraftsInput>
 }
 
+export type AiDecisionCreateNestedOneWithoutWorkflowDecisionsInput = {
+  create?: Prisma.XOR<Prisma.AiDecisionCreateWithoutWorkflowDecisionsInput, Prisma.AiDecisionUncheckedCreateWithoutWorkflowDecisionsInput>
+  connectOrCreate?: Prisma.AiDecisionCreateOrConnectWithoutWorkflowDecisionsInput
+  connect?: Prisma.AiDecisionWhereUniqueInput
+}
+
+export type AiDecisionUpdateOneWithoutWorkflowDecisionsNestedInput = {
+  create?: Prisma.XOR<Prisma.AiDecisionCreateWithoutWorkflowDecisionsInput, Prisma.AiDecisionUncheckedCreateWithoutWorkflowDecisionsInput>
+  connectOrCreate?: Prisma.AiDecisionCreateOrConnectWithoutWorkflowDecisionsInput
+  upsert?: Prisma.AiDecisionUpsertWithoutWorkflowDecisionsInput
+  disconnect?: Prisma.AiDecisionWhereInput | boolean
+  delete?: Prisma.AiDecisionWhereInput | boolean
+  connect?: Prisma.AiDecisionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AiDecisionUpdateToOneWithWhereWithoutWorkflowDecisionsInput, Prisma.AiDecisionUpdateWithoutWorkflowDecisionsInput>, Prisma.AiDecisionUncheckedUpdateWithoutWorkflowDecisionsInput>
+}
+
 export type AiDecisionCreateWithoutEmailMessageInput = {
   id?: string
   classification?: string | null
@@ -931,6 +954,7 @@ export type AiDecisionCreateWithoutEmailMessageInput = {
   createdAt?: Date | string
   inquiryCase?: Prisma.InquiryCaseCreateNestedOneWithoutAiDecisionsInput
   replyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutAiDecisionInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutAiDecisionInput
 }
 
 export type AiDecisionUncheckedCreateWithoutEmailMessageInput = {
@@ -959,6 +983,7 @@ export type AiDecisionUncheckedCreateWithoutEmailMessageInput = {
   executedAt?: Date | string | null
   createdAt?: Date | string
   replyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutAiDecisionInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutAiDecisionInput
 }
 
 export type AiDecisionCreateOrConnectWithoutEmailMessageInput = {
@@ -1044,6 +1069,7 @@ export type AiDecisionCreateWithoutInquiryCaseInput = {
   createdAt?: Date | string
   emailMessage?: Prisma.EmailMessageCreateNestedOneWithoutAiDecisionsInput
   replyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutAiDecisionInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutAiDecisionInput
 }
 
 export type AiDecisionUncheckedCreateWithoutInquiryCaseInput = {
@@ -1072,6 +1098,7 @@ export type AiDecisionUncheckedCreateWithoutInquiryCaseInput = {
   executedAt?: Date | string | null
   createdAt?: Date | string
   replyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutAiDecisionInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutAiDecisionInput
 }
 
 export type AiDecisionCreateOrConnectWithoutInquiryCaseInput = {
@@ -1126,6 +1153,7 @@ export type AiDecisionCreateWithoutReplyDraftsInput = {
   createdAt?: Date | string
   emailMessage?: Prisma.EmailMessageCreateNestedOneWithoutAiDecisionsInput
   inquiryCase?: Prisma.InquiryCaseCreateNestedOneWithoutAiDecisionsInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutAiDecisionInput
 }
 
 export type AiDecisionUncheckedCreateWithoutReplyDraftsInput = {
@@ -1154,6 +1182,7 @@ export type AiDecisionUncheckedCreateWithoutReplyDraftsInput = {
   executionPolicyVersion?: string | null
   executedAt?: Date | string | null
   createdAt?: Date | string
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutAiDecisionInput
 }
 
 export type AiDecisionCreateOrConnectWithoutReplyDraftsInput = {
@@ -1198,6 +1227,7 @@ export type AiDecisionUpdateWithoutReplyDraftsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   emailMessage?: Prisma.EmailMessageUpdateOneWithoutAiDecisionsNestedInput
   inquiryCase?: Prisma.InquiryCaseUpdateOneWithoutAiDecisionsNestedInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutAiDecisionNestedInput
 }
 
 export type AiDecisionUncheckedUpdateWithoutReplyDraftsInput = {
@@ -1226,6 +1256,139 @@ export type AiDecisionUncheckedUpdateWithoutReplyDraftsInput = {
   executionPolicyVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   executedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutAiDecisionNestedInput
+}
+
+export type AiDecisionCreateWithoutWorkflowDecisionsInput = {
+  id?: string
+  classification?: string | null
+  suggestedStatus?: string | null
+  confidence?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  riskLevel?: string | null
+  reason?: string | null
+  missingFields?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  extractedRequirements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  quoteBoundaryDetected?: boolean
+  humanReviewRequired?: boolean
+  nextAction?: string | null
+  rawResult?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  modelName?: string | null
+  success?: boolean
+  errorCode?: string | null
+  errorMessage?: string | null
+  executionStatus?: string
+  executionFromStatus?: string | null
+  executionToStatus?: string | null
+  executionReason?: string | null
+  executionPolicyVersion?: string | null
+  executedAt?: Date | string | null
+  createdAt?: Date | string
+  emailMessage?: Prisma.EmailMessageCreateNestedOneWithoutAiDecisionsInput
+  inquiryCase?: Prisma.InquiryCaseCreateNestedOneWithoutAiDecisionsInput
+  replyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutAiDecisionInput
+}
+
+export type AiDecisionUncheckedCreateWithoutWorkflowDecisionsInput = {
+  id?: string
+  emailMessageId?: string | null
+  inquiryCaseId?: string | null
+  classification?: string | null
+  suggestedStatus?: string | null
+  confidence?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  riskLevel?: string | null
+  reason?: string | null
+  missingFields?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  extractedRequirements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  quoteBoundaryDetected?: boolean
+  humanReviewRequired?: boolean
+  nextAction?: string | null
+  rawResult?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  modelName?: string | null
+  success?: boolean
+  errorCode?: string | null
+  errorMessage?: string | null
+  executionStatus?: string
+  executionFromStatus?: string | null
+  executionToStatus?: string | null
+  executionReason?: string | null
+  executionPolicyVersion?: string | null
+  executedAt?: Date | string | null
+  createdAt?: Date | string
+  replyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutAiDecisionInput
+}
+
+export type AiDecisionCreateOrConnectWithoutWorkflowDecisionsInput = {
+  where: Prisma.AiDecisionWhereUniqueInput
+  create: Prisma.XOR<Prisma.AiDecisionCreateWithoutWorkflowDecisionsInput, Prisma.AiDecisionUncheckedCreateWithoutWorkflowDecisionsInput>
+}
+
+export type AiDecisionUpsertWithoutWorkflowDecisionsInput = {
+  update: Prisma.XOR<Prisma.AiDecisionUpdateWithoutWorkflowDecisionsInput, Prisma.AiDecisionUncheckedUpdateWithoutWorkflowDecisionsInput>
+  create: Prisma.XOR<Prisma.AiDecisionCreateWithoutWorkflowDecisionsInput, Prisma.AiDecisionUncheckedCreateWithoutWorkflowDecisionsInput>
+  where?: Prisma.AiDecisionWhereInput
+}
+
+export type AiDecisionUpdateToOneWithWhereWithoutWorkflowDecisionsInput = {
+  where?: Prisma.AiDecisionWhereInput
+  data: Prisma.XOR<Prisma.AiDecisionUpdateWithoutWorkflowDecisionsInput, Prisma.AiDecisionUncheckedUpdateWithoutWorkflowDecisionsInput>
+}
+
+export type AiDecisionUpdateWithoutWorkflowDecisionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  classification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suggestedStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  confidence?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  riskLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  missingFields?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  extractedRequirements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  quoteBoundaryDetected?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanReviewRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  nextAction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawResult?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  modelName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  success?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  errorCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  executionFromStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionToStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionPolicyVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  emailMessage?: Prisma.EmailMessageUpdateOneWithoutAiDecisionsNestedInput
+  inquiryCase?: Prisma.InquiryCaseUpdateOneWithoutAiDecisionsNestedInput
+  replyDrafts?: Prisma.ReplyDraftUpdateManyWithoutAiDecisionNestedInput
+}
+
+export type AiDecisionUncheckedUpdateWithoutWorkflowDecisionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  emailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inquiryCaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  classification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suggestedStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  confidence?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  riskLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  missingFields?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  extractedRequirements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  quoteBoundaryDetected?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanReviewRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  nextAction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawResult?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  modelName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  success?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  errorCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  executionFromStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionToStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executionPolicyVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  executedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  replyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutAiDecisionNestedInput
 }
 
 export type AiDecisionCreateManyEmailMessageInput = {
@@ -1281,6 +1444,7 @@ export type AiDecisionUpdateWithoutEmailMessageInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   inquiryCase?: Prisma.InquiryCaseUpdateOneWithoutAiDecisionsNestedInput
   replyDrafts?: Prisma.ReplyDraftUpdateManyWithoutAiDecisionNestedInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutAiDecisionNestedInput
 }
 
 export type AiDecisionUncheckedUpdateWithoutEmailMessageInput = {
@@ -1309,6 +1473,7 @@ export type AiDecisionUncheckedUpdateWithoutEmailMessageInput = {
   executedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   replyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutAiDecisionNestedInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutAiDecisionNestedInput
 }
 
 export type AiDecisionUncheckedUpdateManyWithoutEmailMessageInput = {
@@ -1391,6 +1556,7 @@ export type AiDecisionUpdateWithoutInquiryCaseInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   emailMessage?: Prisma.EmailMessageUpdateOneWithoutAiDecisionsNestedInput
   replyDrafts?: Prisma.ReplyDraftUpdateManyWithoutAiDecisionNestedInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutAiDecisionNestedInput
 }
 
 export type AiDecisionUncheckedUpdateWithoutInquiryCaseInput = {
@@ -1419,6 +1585,7 @@ export type AiDecisionUncheckedUpdateWithoutInquiryCaseInput = {
   executedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   replyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutAiDecisionNestedInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutAiDecisionNestedInput
 }
 
 export type AiDecisionUncheckedUpdateManyWithoutInquiryCaseInput = {
@@ -1455,10 +1622,12 @@ export type AiDecisionUncheckedUpdateManyWithoutInquiryCaseInput = {
 
 export type AiDecisionCountOutputType = {
   replyDrafts: number
+  workflowDecisions: number
 }
 
 export type AiDecisionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   replyDrafts?: boolean | AiDecisionCountOutputTypeCountReplyDraftsArgs
+  workflowDecisions?: boolean | AiDecisionCountOutputTypeCountWorkflowDecisionsArgs
 }
 
 /**
@@ -1476,6 +1645,13 @@ export type AiDecisionCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.E
  */
 export type AiDecisionCountOutputTypeCountReplyDraftsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ReplyDraftWhereInput
+}
+
+/**
+ * AiDecisionCountOutputType without action
+ */
+export type AiDecisionCountOutputTypeCountWorkflowDecisionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmailWorkflowDecisionWhereInput
 }
 
 
@@ -1508,6 +1684,7 @@ export type AiDecisionSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   emailMessage?: boolean | Prisma.AiDecision$emailMessageArgs<ExtArgs>
   inquiryCase?: boolean | Prisma.AiDecision$inquiryCaseArgs<ExtArgs>
   replyDrafts?: boolean | Prisma.AiDecision$replyDraftsArgs<ExtArgs>
+  workflowDecisions?: boolean | Prisma.AiDecision$workflowDecisionsArgs<ExtArgs>
   _count?: boolean | Prisma.AiDecisionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["aiDecision"]>
 
@@ -1604,6 +1781,7 @@ export type AiDecisionInclude<ExtArgs extends runtime.Types.Extensions.InternalA
   emailMessage?: boolean | Prisma.AiDecision$emailMessageArgs<ExtArgs>
   inquiryCase?: boolean | Prisma.AiDecision$inquiryCaseArgs<ExtArgs>
   replyDrafts?: boolean | Prisma.AiDecision$replyDraftsArgs<ExtArgs>
+  workflowDecisions?: boolean | Prisma.AiDecision$workflowDecisionsArgs<ExtArgs>
   _count?: boolean | Prisma.AiDecisionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AiDecisionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1621,6 +1799,7 @@ export type $AiDecisionPayload<ExtArgs extends runtime.Types.Extensions.Internal
     emailMessage: Prisma.$EmailMessagePayload<ExtArgs> | null
     inquiryCase: Prisma.$InquiryCasePayload<ExtArgs> | null
     replyDrafts: Prisma.$ReplyDraftPayload<ExtArgs>[]
+    workflowDecisions: Prisma.$EmailWorkflowDecisionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2045,6 +2224,7 @@ export interface Prisma__AiDecisionClient<T, Null = never, ExtArgs extends runti
   emailMessage<T extends Prisma.AiDecision$emailMessageArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AiDecision$emailMessageArgs<ExtArgs>>): Prisma.Prisma__EmailMessageClient<runtime.Types.Result.GetResult<Prisma.$EmailMessagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   inquiryCase<T extends Prisma.AiDecision$inquiryCaseArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AiDecision$inquiryCaseArgs<ExtArgs>>): Prisma.Prisma__InquiryCaseClient<runtime.Types.Result.GetResult<Prisma.$InquiryCasePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   replyDrafts<T extends Prisma.AiDecision$replyDraftsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AiDecision$replyDraftsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReplyDraftPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  workflowDecisions<T extends Prisma.AiDecision$workflowDecisionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AiDecision$workflowDecisionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmailWorkflowDecisionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2559,6 +2739,30 @@ export type AiDecision$replyDraftsArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   distinct?: Prisma.ReplyDraftScalarFieldEnum | Prisma.ReplyDraftScalarFieldEnum[]
+}
+
+/**
+ * AiDecision.workflowDecisions
+ */
+export type AiDecision$workflowDecisionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmailWorkflowDecision
+   */
+  select?: Prisma.EmailWorkflowDecisionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmailWorkflowDecision
+   */
+  omit?: Prisma.EmailWorkflowDecisionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmailWorkflowDecisionInclude<ExtArgs> | null
+  where?: Prisma.EmailWorkflowDecisionWhereInput
+  orderBy?: Prisma.EmailWorkflowDecisionOrderByWithRelationInput | Prisma.EmailWorkflowDecisionOrderByWithRelationInput[]
+  cursor?: Prisma.EmailWorkflowDecisionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EmailWorkflowDecisionScalarFieldEnum | Prisma.EmailWorkflowDecisionScalarFieldEnum[]
 }
 
 /**

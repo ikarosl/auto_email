@@ -1,28 +1,15 @@
 import { EmailMessage } from '../../domain/entities/email-message.entity.js';
 import { InboundEmail } from '../../domain/value-objects/inbound-email.vo.js';
-import {
-  AnalyzeEmailWithAiResult,
-  AnalyzeEmailWithAiUseCase,
-} from './analyze-email-with-ai.use-case.js';
+import { AnalyzeEmailWithAiResult } from './analyze-email-with-ai.use-case.js';
 import { ReceiveInboundEmailUseCase } from './receive-inbound-email.use-case.js';
 import {
   ProcessedEmailIdentity,
   ProcessedEmailTracker,
 } from '../ports/processed-email-tracker.js';
 import { InquiryCase } from '../../../inquiry/domain/entities/inquiry-case.entity.js';
-import { InquiryMessageRepository } from '../../../inquiry/application/ports/inquiry-message.repository.js';
-import {
-  ApplyAiSuggestedStatusResult,
-  ApplyAiSuggestedStatusUseCase,
-} from '../../../inquiry/application/use-cases/apply-ai-suggested-status.use-case.js';
-import { UpdateCustomerStatusFromAiAnalysisUseCase } from '../../../inquiry/application/use-cases/update-customer-status-from-ai-analysis.use-case.js';
-import { UpdateInquiryStructuredFactsFromAiUseCase } from '../../../inquiry/application/use-cases/update-inquiry-structured-facts-from-ai.use-case.js';
-import { GenerateBusinessSubjectUseCase } from '../../../inquiry/application/use-cases/generate-business-subject.use-case.js';
-import { EmailMessageRepository } from '../ports/email-message.repository.js';
-import { AiDecisionRepository } from '../ports/ai-decision.repository.js';
-import { EmailDirection } from '../../domain/enums/email-direction.enum.js';
-import { InquiryStatus } from '../../../inquiry/domain/enums/inquiry-status.enum.js';
-import { GenerateReplyDraftUseCase } from './generate-reply-draft.use-case.js';
+import { ApplyAiSuggestedStatusResult } from '../../../inquiry/application/use-cases/apply-ai-suggested-status.use-case.js';
+import { ProcessInquiryEmailEventUseCase } from './process-inquiry-email-event.use-case.js';
+import { AnalyzeOutboundEmailEventResult } from './analyze-outbound-email-event.use-case.js';
 
 export interface PollEmailCandidate {
   identity: ProcessedEmailIdentity;
@@ -39,21 +26,16 @@ export interface PollEmailProcessResult {
   replyDraftId?: string;
   replyDraftError?: string;
   skippedReason?: string;
+  outboundAnalysisResult?: AnalyzeOutboundEmailEventResult;
+  workflowDecisionId?: string;
+  workflowExecutionStatus?: string;
 }
 
 export class PollEmailInboxUseCase {
   constructor(
     private readonly processedEmailTracker: ProcessedEmailTracker,
     private readonly receiveInboundEmailUseCase: ReceiveInboundEmailUseCase,
-    private readonly analyzeEmailWithAiUseCase?: AnalyzeEmailWithAiUseCase,
-    private readonly inquiryMessageRepository?: InquiryMessageRepository,
-    private readonly emailMessageRepository?: EmailMessageRepository,
-    private readonly updateCustomerStatusFromAiAnalysisUseCase?: UpdateCustomerStatusFromAiAnalysisUseCase,
-    private readonly aiDecisionRepository?: AiDecisionRepository,
-    private readonly updateInquiryStructuredFactsFromAiUseCase?: UpdateInquiryStructuredFactsFromAiUseCase,
-    private readonly applyAiSuggestedStatusUseCase?: ApplyAiSuggestedStatusUseCase,
-    private readonly generateBusinessSubjectUseCase?: GenerateBusinessSubjectUseCase,
-    private readonly generateReplyDraftUseCase?: GenerateReplyDraftUseCase,
+    private readonly processInquiryEmailEventUseCase?: ProcessInquiryEmailEventUseCase,
   ) {}
 
   async markExistingSeen(candidates: PollEmailCandidate[]): Promise<void> {
@@ -82,100 +64,12 @@ export class PollEmailInboxUseCase {
       };
     }
 
-    if (receiveResult.emailMessage.direction === EmailDirection.OUTBOUND) {
-      await this.processedEmailTracker.markProcessed(candidate.identity);
-
-      return {
-        skipped: false,
-        identity: candidate.identity,
+    const eventResult = this.processInquiryEmailEventUseCase
+      ? await this.processInquiryEmailEventUseCase.execute({
         emailMessage: receiveResult.emailMessage,
         inquiryCase: receiveResult.inquiryCase,
-        skippedReason: 'outbound_email_stored_as_context',
-      };
-    }
-
-    const recentEmailMessages = await this.listInquiryEmailMessages(receiveResult.inquiryCase.id);
-    const recentOurReplies = recentEmailMessages.filter(
-      (emailMessage) => emailMessage.direction === 'outbound',
-    );
-    const aiAnalysisResult = this.analyzeEmailWithAiUseCase
-      ? await this.analyzeEmailWithAiUseCase.execute(receiveResult.emailMessage, {
-        inquiryCase: receiveResult.inquiryCase,
-        recentEmailMessages,
-        recentOurReplies,
       })
       : undefined;
-
-    const aiDecisionId = aiAnalysisResult && this.aiDecisionRepository
-      ? await this.aiDecisionRepository.save({
-        emailMessageId: receiveResult.emailMessage.id,
-        inquiryCaseId: receiveResult.inquiryCase.id,
-        result: aiAnalysisResult.success ? aiAnalysisResult.analysis : aiAnalysisResult,
-        rawOutput: aiAnalysisResult.rawOutput,
-      })
-      : undefined;
-
-    let aiTransitionResult: ApplyAiSuggestedStatusResult | undefined;
-    let replyDraftId: string | undefined;
-    let replyDraftError: string | undefined;
-
-    if (aiAnalysisResult?.success) {
-      // 更新客户状态（active / invalid / unknown）
-      if (this.updateCustomerStatusFromAiAnalysisUseCase) {
-        await this.updateCustomerStatusFromAiAnalysisUseCase.execute({
-          customerEmail: receiveResult.inquiryCase.customerEmail,
-          analysis: aiAnalysisResult.analysis,
-        });
-      }
-
-      if (this.updateInquiryStructuredFactsFromAiUseCase) {
-        await this.updateInquiryStructuredFactsFromAiUseCase.execute({
-          inquiryCaseId: receiveResult.inquiryCase.id,
-          emailMessageId: receiveResult.emailMessage.id,
-          analysis: aiAnalysisResult.analysis,
-        });
-      }
-
-      // AI 生成业务主题（跳过已锁定/人工设置）
-      if (this.generateBusinessSubjectUseCase && receiveResult.inquiryCase) {
-        await this.generateBusinessSubjectUseCase.execute({
-          inquiryCaseId: receiveResult.inquiryCase.id,
-          currentEmail: receiveResult.emailMessage,
-          knownFacts: aiAnalysisResult.analysis.extractedRequirements,
-        });
-      }
-
-      if (aiDecisionId && this.applyAiSuggestedStatusUseCase) {
-        aiTransitionResult = await this.applyAiSuggestedStatusUseCase.execute({
-          aiDecisionId,
-          inquiryCaseId: receiveResult.inquiryCase.id,
-          analysis: aiAnalysisResult.analysis,
-        });
-        if (aiTransitionResult.status === 'applied') {
-          receiveResult.inquiryCase.status = aiTransitionResult.toStatus;
-        }
-      }
-
-      if (
-        this.generateReplyDraftUseCase &&
-        isEnabled(process.env.AI_REPLY_DRAFT_AUTO_GENERATE, true) &&
-        [InquiryStatus.NEED_CLARIFICATION, InquiryStatus.NEED_ENGINEER_REVIEW]
-          .includes(aiAnalysisResult.analysis.suggestedStatus)
-      ) {
-        try {
-          const draft = await this.generateReplyDraftUseCase.execute({
-            inquiryCaseId: receiveResult.inquiryCase.id,
-            sourceEmailMessageId: receiveResult.emailMessage.id,
-            aiDecisionId,
-            targetStatus: aiAnalysisResult.analysis.suggestedStatus,
-          });
-          replyDraftId = draft.id;
-        } catch (error) {
-          // Draft generation is secondary; email processing and AI decision persistence remain successful.
-          replyDraftError = error instanceof Error ? error.message : String(error);
-        }
-      }
-    }
 
     await this.processedEmailTracker.markProcessed(candidate.identity);
 
@@ -184,32 +78,14 @@ export class PollEmailInboxUseCase {
       identity: candidate.identity,
       emailMessage: receiveResult.emailMessage,
       inquiryCase: receiveResult.inquiryCase,
-      aiAnalysisResult,
-      aiTransitionResult,
-      replyDraftId,
-      replyDraftError,
+      aiAnalysisResult: eventResult?.aiAnalysisResult,
+      aiTransitionResult: eventResult?.aiTransitionResult,
+      replyDraftId: eventResult?.replyDraftId,
+      replyDraftError: eventResult?.replyDraftError,
+      skippedReason: eventResult?.skippedReason,
+      outboundAnalysisResult: eventResult?.outboundAnalysisResult,
+      workflowDecisionId: eventResult?.workflowDecisionId,
+      workflowExecutionStatus: eventResult?.workflowExecutionStatus,
     };
   }
-
-  private async listInquiryEmailMessages(inquiryCaseId: string): Promise<EmailMessage[]> {
-    if (!this.inquiryMessageRepository || !this.emailMessageRepository) {
-      return [];
-    }
-
-    const inquiryMessages = await this.inquiryMessageRepository.listByInquiryCaseId(inquiryCaseId);
-    const emailMessages = await Promise.all(
-      inquiryMessages.map((inquiryMessage) =>
-        this.emailMessageRepository?.findById(inquiryMessage.emailMessageId),
-      ),
-    );
-
-    return emailMessages
-      .filter((emailMessage): emailMessage is EmailMessage => Boolean(emailMessage))
-      .sort((a, b) => a.receivedAt.getTime() - b.receivedAt.getTime());
-  }
-}
-
-function isEnabled(value: string | undefined, fallback: boolean): boolean {
-  if (value === undefined) return fallback;
-  return ['1', 'true', 'yes', 'on'].includes(value.trim().toLowerCase());
 }

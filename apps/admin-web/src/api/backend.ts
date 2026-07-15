@@ -46,3 +46,9 @@ export {
 } from './ai-record';
 
 export type { ListParams } from './shared';
+
+export {
+  applyWorkflowDecision,
+  fetchInquiryWorkflowDecisions,
+  rejectWorkflowDecision,
+} from './workflow-decision';

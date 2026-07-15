@@ -138,6 +138,7 @@ model EmailMessage {
   updatedStructuredFacts InquiryStructuredFact[]
   attachments          EmailAttachment[]
   sendAttempts         EmailSendAttempt[]
+  workflowDecisions    EmailWorkflowDecision[]
 
   @@index([emailThreadId])
   @@index([fromEmail])
@@ -219,6 +220,7 @@ model InquiryCase {
   contextSummary  InquiryContextSummary?
   statusLogs      InquiryStatusLog[]
   attachments     EmailAttachment[]
+  workflowDecisions EmailWorkflowDecision[]
   sendAttempts    EmailSendAttempt[]
 
   @@index([customerId])
@@ -295,6 +297,7 @@ model AiDecision {
   emailMessage           EmailMessage? @relation(fields: [emailMessageId], references: [id], onDelete: SetNull)
   inquiryCase            InquiryCase?  @relation(fields: [inquiryCaseId], references: [id], onDelete: SetNull)
   replyDrafts            ReplyDraft[]
+  workflowDecisions      EmailWorkflowDecision[]
 
   @@index([emailMessageId])
   @@index([inquiryCaseId])
@@ -422,6 +425,43 @@ model EmailSendAttempt {
   @@index([status])
   @@index([startedAt])
   @@map("email_send_attempts")
+}
+
+model EmailWorkflowDecision {
+  id                         String      @id
+  emailMessageId             String      @map("email_message_id")
+  inquiryCaseId              String      @map("inquiry_case_id")
+  aiDecisionId               String?     @map("ai_decision_id")
+  direction                  String
+  source                     String
+  eventType                  String      @map("event_type")
+  responseExpected           Boolean     @default(false) @map("response_expected")
+  suggestedStatus            String?     @map("suggested_status")
+  confidence                 Decimal?    @db.Decimal(5, 4)
+  riskLevel                  String?     @map("risk_level")
+  reason                     String?
+  commercialBoundaryDetected Boolean     @default(false) @map("commercial_boundary_detected")
+  humanReviewRequired        Boolean     @default(true) @map("human_review_required")
+  decisionSource             String      @map("decision_source")
+  modelName                  String?     @map("model_name")
+  promptVersion              String?     @map("prompt_version")
+  rawResult                  Json        @default("{}") @map("raw_result")
+  executionStatus            String      @default("pending") @map("execution_status")
+  executionFromStatus        String?     @map("execution_from_status")
+  executionToStatus          String?     @map("execution_to_status")
+  executionReason            String?     @map("execution_reason")
+  executedAt                 DateTime?   @map("executed_at") @db.Timestamptz(6)
+  idempotencyKey             String      @unique @map("idempotency_key")
+  createdAt                  DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                  DateTime    @default(now()) @map("updated_at") @db.Timestamptz(6)
+  emailMessage               EmailMessage @relation(fields: [emailMessageId], references: [id], onDelete: Cascade)
+  inquiryCase                InquiryCase  @relation(fields: [inquiryCaseId], references: [id], onDelete: Cascade)
+  aiDecision                 AiDecision?  @relation(fields: [aiDecisionId], references: [id], onDelete: SetNull)
+
+  @@index([inquiryCaseId, createdAt])
+  @@index([emailMessageId])
+  @@index([executionStatus])
+  @@map("email_workflow_decisions")
 }
 model AiContextSnapshot {
   id               String        @id @default(dbgenerated("'context_snapshot_' || gen_random_uuid()::TEXT"))

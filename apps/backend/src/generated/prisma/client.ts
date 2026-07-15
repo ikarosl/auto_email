@@ -117,6 +117,11 @@ export type ReplyDraftAttachment = Prisma.ReplyDraftAttachmentModel
  */
 export type EmailSendAttempt = Prisma.EmailSendAttemptModel
 /**
+ * Model EmailWorkflowDecision
+ *
+ */
+export type EmailWorkflowDecision = Prisma.EmailWorkflowDecisionModel
+/**
  * Model AiContextSnapshot
  * 
  */

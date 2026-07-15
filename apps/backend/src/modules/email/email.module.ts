@@ -13,6 +13,7 @@ import { InquiryMessageRepository } from '../inquiry/application/ports/inquiry-m
 import { InquiryRepository } from '../inquiry/application/ports/inquiry.repository.js';
 import { INQUIRY_MESSAGE_REPOSITORY, INQUIRY_REPOSITORY } from '../inquiry/inquiry.tokens.js';
 import { InquiryModule } from '../inquiry/inquiry.module.js';
+import { InquiryStateMachine } from '../inquiry/domain/state-machine/inquiry-state-machine.js';
 import { ReceiveInboundEmailUseCase } from './application/use-cases/receive-inbound-email.use-case.js';
 import { SaveEmailAttachmentsUseCase } from './application/use-cases/save-email-attachments.use-case.js';
 import { AnalyzeEmailWithAiUseCase } from './application/use-cases/analyze-email-with-ai.use-case.js';
@@ -20,6 +21,10 @@ import { PollEmailInboxUseCase } from './application/use-cases/poll-email-inbox.
 import { GenerateReplyDraftUseCase } from './application/use-cases/generate-reply-draft.use-case.js';
 import { ManageReplyDraftUseCase } from './application/use-cases/manage-reply-draft.use-case.js';
 import { SendApprovedReplyUseCase } from './application/use-cases/send-approved-reply.use-case.js';
+import { AnalyzeOutboundEmailEventUseCase } from './application/use-cases/analyze-outbound-email-event.use-case.js';
+import { ApplyOutboundEmailEventUseCase } from './application/use-cases/apply-outbound-email-event.use-case.js';
+import { ProcessInquiryEmailEventUseCase } from './application/use-cases/process-inquiry-email-event.use-case.js';
+import { ReviewEmailWorkflowDecisionUseCase } from './application/use-cases/review-email-workflow-decision.use-case.js';
 import { EmailMessageRepository } from './application/ports/email-message.repository.js';
 import { EmailAttachmentRepository } from './application/ports/email-attachment.repository.js';
 import { AttachmentStorageAdapter } from './application/ports/attachment-storage.adapter.js';
@@ -56,6 +61,8 @@ import { ReplyDraftController } from './presentation/reply-draft.controller.js';
 import { MessageController } from './presentation/message.controller.js';
 import { InquiryReplyDraftController } from './presentation/inquiry-reply-draft.controller.js';
 import { MailRuntimeController } from './presentation/mail-runtime.controller.js';
+import { InquiryEmailMessageController } from './presentation/inquiry-email-message.controller.js';
+import { EmailWorkflowDecisionController } from './presentation/email-workflow-decision.controller.js';
 import {
   AI_DECISION_REPOSITORY,
   ATTACHMENT_AI_READER_ADAPTER,
@@ -80,6 +87,8 @@ import {
     InquiryReplyDraftController,
     MailRuntimeController,
     MessageController,
+    InquiryEmailMessageController,
+    EmailWorkflowDecisionController,
   ],
   providers: [
     MailRuntimeConfigService,
@@ -233,6 +242,26 @@ import {
       inject: [EMAIL_AI_ANALYSIS_ADAPTER, BuildAiContextUseCase, FileAiInteractionDebugLogger],
     },
     {
+      provide: AnalyzeOutboundEmailEventUseCase,
+      useFactory: (
+        emailAiAnalysisAdapter: EmailAiAnalysisAdapter,
+        buildAiContextUseCase: BuildAiContextUseCase,
+      ) => new AnalyzeOutboundEmailEventUseCase(emailAiAnalysisAdapter, buildAiContextUseCase),
+      inject: [EMAIL_AI_ANALYSIS_ADAPTER, BuildAiContextUseCase],
+    },
+    {
+      provide: ApplyOutboundEmailEventUseCase,
+      useFactory: (prisma: PrismaService, stateMachine: InquiryStateMachine) =>
+        new ApplyOutboundEmailEventUseCase(prisma, stateMachine),
+      inject: [PrismaService, InquiryStateMachine],
+    },
+    {
+      provide: ReviewEmailWorkflowDecisionUseCase,
+      useFactory: (prisma: PrismaService, stateMachine: InquiryStateMachine) =>
+        new ReviewEmailWorkflowDecisionUseCase(prisma, stateMachine),
+      inject: [PrismaService, InquiryStateMachine],
+    },
+    {
       provide: GenerateReplyDraftUseCase,
       useFactory: (
         prisma: PrismaService,
@@ -273,11 +302,12 @@ import {
       inject: [PrismaService, MailRuntimeConfigService, EMAIL_SENDER_ADAPTER],
     },
     {
-      provide: PollEmailInboxUseCase,
+      provide: ProcessInquiryEmailEventUseCase,
       useFactory: (
-        processedEmailTracker: ProcessedEmailTracker,
-        receiveInboundEmailUseCase: ReceiveInboundEmailUseCase,
+        prisma: PrismaService,
         analyzeEmailWithAiUseCase: AnalyzeEmailWithAiUseCase,
+        analyzeOutboundEmailEventUseCase: AnalyzeOutboundEmailEventUseCase,
+        applyOutboundEmailEventUseCase: ApplyOutboundEmailEventUseCase,
         inquiryMessageRepository: InquiryMessageRepository,
         emailMessageRepository: EmailMessageRepository,
         updateCustomerStatusFromAiAnalysisUseCase: UpdateCustomerStatusFromAiAnalysisUseCase,
@@ -286,10 +316,11 @@ import {
         applyAiSuggestedStatusUseCase: ApplyAiSuggestedStatusUseCase,
         generateBusinessSubjectUseCase: GenerateBusinessSubjectUseCase,
         generateReplyDraftUseCase: GenerateReplyDraftUseCase,
-      ) => new PollEmailInboxUseCase(
-        processedEmailTracker,
-        receiveInboundEmailUseCase,
+      ) => new ProcessInquiryEmailEventUseCase(
+        prisma,
         analyzeEmailWithAiUseCase,
+        analyzeOutboundEmailEventUseCase,
+        applyOutboundEmailEventUseCase,
         inquiryMessageRepository,
         emailMessageRepository,
         updateCustomerStatusFromAiAnalysisUseCase,
@@ -300,9 +331,10 @@ import {
         generateReplyDraftUseCase,
       ),
       inject: [
-        PROCESSED_EMAIL_TRACKER,
-        ReceiveInboundEmailUseCase,
+        PrismaService,
         AnalyzeEmailWithAiUseCase,
+        AnalyzeOutboundEmailEventUseCase,
+        ApplyOutboundEmailEventUseCase,
         INQUIRY_MESSAGE_REPOSITORY,
         EMAIL_MESSAGE_REPOSITORY,
         UpdateCustomerStatusFromAiAnalysisUseCase,
@@ -311,6 +343,23 @@ import {
         ApplyAiSuggestedStatusUseCase,
         GenerateBusinessSubjectUseCase,
         GenerateReplyDraftUseCase,
+      ],
+    },
+    {
+      provide: PollEmailInboxUseCase,
+      useFactory: (
+        processedEmailTracker: ProcessedEmailTracker,
+        receiveInboundEmailUseCase: ReceiveInboundEmailUseCase,
+        processInquiryEmailEventUseCase: ProcessInquiryEmailEventUseCase,
+      ) => new PollEmailInboxUseCase(
+        processedEmailTracker,
+        receiveInboundEmailUseCase,
+        processInquiryEmailEventUseCase,
+      ),
+      inject: [
+        PROCESSED_EMAIL_TRACKER,
+        ReceiveInboundEmailUseCase,
+        ProcessInquiryEmailEventUseCase,
       ],
     },
   ],

@@ -66,6 +66,7 @@ export const ModelName = {
   ReplyDraft: 'ReplyDraft',
   ReplyDraftAttachment: 'ReplyDraftAttachment',
   EmailSendAttempt: 'EmailSendAttempt',
+  EmailWorkflowDecision: 'EmailWorkflowDecision',
   AiContextSnapshot: 'AiContextSnapshot',
   InquiryContextSummary: 'InquiryContextSummary',
   InquiryStatusLog: 'InquiryStatusLog'
@@ -420,6 +421,38 @@ export const EmailSendAttemptScalarFieldEnum = {
 } as const
 
 export type EmailSendAttemptScalarFieldEnum = (typeof EmailSendAttemptScalarFieldEnum)[keyof typeof EmailSendAttemptScalarFieldEnum]
+
+
+export const EmailWorkflowDecisionScalarFieldEnum = {
+  id: 'id',
+  emailMessageId: 'emailMessageId',
+  inquiryCaseId: 'inquiryCaseId',
+  aiDecisionId: 'aiDecisionId',
+  direction: 'direction',
+  source: 'source',
+  eventType: 'eventType',
+  responseExpected: 'responseExpected',
+  suggestedStatus: 'suggestedStatus',
+  confidence: 'confidence',
+  riskLevel: 'riskLevel',
+  reason: 'reason',
+  commercialBoundaryDetected: 'commercialBoundaryDetected',
+  humanReviewRequired: 'humanReviewRequired',
+  decisionSource: 'decisionSource',
+  modelName: 'modelName',
+  promptVersion: 'promptVersion',
+  rawResult: 'rawResult',
+  executionStatus: 'executionStatus',
+  executionFromStatus: 'executionFromStatus',
+  executionToStatus: 'executionToStatus',
+  executionReason: 'executionReason',
+  executedAt: 'executedAt',
+  idempotencyKey: 'idempotencyKey',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmailWorkflowDecisionScalarFieldEnum = (typeof EmailWorkflowDecisionScalarFieldEnum)[keyof typeof EmailWorkflowDecisionScalarFieldEnum]
 
 
 export const AiContextSnapshotScalarFieldEnum = {

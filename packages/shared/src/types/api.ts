@@ -294,3 +294,44 @@ export interface MailRuntimeInfo {
   mailOperationMode: 'debug' | 'production';
   imapPollEnabled: boolean;
 }
+
+export type EmailWorkflowExecutionStatus =
+  | 'pending'
+  | 'dry_run'
+  | 'applied'
+  | 'rejected'
+  | 'conflict'
+  | 'no_change'
+  | 'historical_backfill'
+  | 'failed';
+
+export interface EmailWorkflowDecisionListItem {
+  id: string;
+  emailMessageId: string;
+  inquiryCaseId: string;
+  aiDecisionId?: string | null;
+  direction: 'inbound' | 'outbound';
+  source: string;
+  eventType: string;
+  responseExpected: boolean;
+  suggestedStatus?: InquiryStatus | string | null;
+  confidence?: number | null;
+  riskLevel?: 'low' | 'medium' | 'high' | null;
+  reason?: string | null;
+  commercialBoundaryDetected: boolean;
+  humanReviewRequired: boolean;
+  decisionSource: 'ai' | 'system_rule';
+  modelName?: string | null;
+  promptVersion?: string | null;
+  executionStatus: EmailWorkflowExecutionStatus;
+  executionFromStatus?: InquiryStatus | string | null;
+  executionToStatus?: InquiryStatus | string | null;
+  executionReason?: string | null;
+  executedAt?: string | null;
+  createdAt: string | null;
+  emailMessage?: {
+    subject?: string | null;
+    fromEmail: string;
+    receivedAt?: string | null;
+  };
+}

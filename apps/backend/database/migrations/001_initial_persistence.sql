@@ -421,6 +421,29 @@ CREATE TABLE IF NOT EXISTS reply_drafts (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- Keep the reset migration repeatable against databases created by older revisions.
+ALTER TABLE reply_drafts
+  ADD COLUMN IF NOT EXISTS sent_email_message_id TEXT,
+  ADD COLUMN IF NOT EXISTS context_snapshot_id TEXT,
+  ADD COLUMN IF NOT EXISTS ai_decision_id TEXT,
+  ADD COLUMN IF NOT EXISTS idempotency_key TEXT,
+  ADD COLUMN IF NOT EXISTS original_subject TEXT,
+  ADD COLUMN IF NOT EXISTS original_body_text TEXT,
+  ADD COLUMN IF NOT EXISTS language TEXT,
+  ADD COLUMN IF NOT EXISTS used_facts_json JSONB NOT NULL DEFAULT '[]'::JSONB,
+  ADD COLUMN IF NOT EXISTS unresolved_questions_json JSONB NOT NULL DEFAULT '[]'::JSONB,
+  ADD COLUMN IF NOT EXISTS warnings_json JSONB NOT NULL DEFAULT '[]'::JSONB,
+  ADD COLUMN IF NOT EXISTS requires_commercial_review BOOLEAN NOT NULL DEFAULT FALSE,
+  ADD COLUMN IF NOT EXISTS prompt_version TEXT,
+  ADD COLUMN IF NOT EXISTS version INTEGER NOT NULL DEFAULT 1,
+  ADD COLUMN IF NOT EXISTS approved_by TEXT,
+  ADD COLUMN IF NOT EXISTS approved_at TIMESTAMPTZ,
+  ADD COLUMN IF NOT EXISTS rejected_by TEXT,
+  ADD COLUMN IF NOT EXISTS rejected_at TIMESTAMPTZ,
+  ADD COLUMN IF NOT EXISTS rejection_reason TEXT,
+  ADD COLUMN IF NOT EXISTS sent_at TIMESTAMPTZ,
+  ADD COLUMN IF NOT EXISTS last_send_error TEXT;
+
 CREATE INDEX IF NOT EXISTS reply_drafts_inquiry_idx ON reply_drafts(inquiry_case_id);
 CREATE INDEX IF NOT EXISTS reply_drafts_status_idx ON reply_drafts(status);
 CREATE INDEX IF NOT EXISTS reply_drafts_source_email_idx ON reply_drafts(source_email_message_id);
@@ -462,6 +485,43 @@ CREATE INDEX IF NOT EXISTS email_send_attempts_reply_draft_id_idx ON email_send_
 CREATE INDEX IF NOT EXISTS email_send_attempts_inquiry_case_id_idx ON email_send_attempts(inquiry_case_id);
 CREATE INDEX IF NOT EXISTS email_send_attempts_status_idx ON email_send_attempts(status);
 CREATE INDEX IF NOT EXISTS email_send_attempts_started_at_idx ON email_send_attempts(started_at);
+
+CREATE TABLE IF NOT EXISTS email_workflow_decisions (
+  id TEXT PRIMARY KEY,
+  email_message_id TEXT NOT NULL REFERENCES email_messages(id) ON DELETE CASCADE,
+  inquiry_case_id TEXT NOT NULL REFERENCES inquiry_cases(id) ON DELETE CASCADE,
+  ai_decision_id TEXT REFERENCES ai_decisions(id) ON DELETE SET NULL,
+  direction TEXT NOT NULL CHECK (direction IN ('inbound', 'outbound')),
+  source TEXT NOT NULL,
+  event_type TEXT NOT NULL,
+  response_expected BOOLEAN NOT NULL DEFAULT FALSE,
+  suggested_status TEXT,
+  confidence NUMERIC(5, 4),
+  risk_level TEXT CHECK (risk_level IS NULL OR risk_level IN ('low', 'medium', 'high')),
+  reason TEXT,
+  commercial_boundary_detected BOOLEAN NOT NULL DEFAULT FALSE,
+  human_review_required BOOLEAN NOT NULL DEFAULT TRUE,
+  decision_source TEXT NOT NULL CHECK (decision_source IN ('ai', 'system_rule')),
+  model_name TEXT,
+  prompt_version TEXT,
+  raw_result JSONB NOT NULL DEFAULT '{}'::jsonb,
+  execution_status TEXT NOT NULL DEFAULT 'pending' CHECK (
+    execution_status IN ('pending', 'dry_run', 'applied', 'rejected', 'conflict', 'no_change', 'historical_backfill', 'failed')
+  ),
+  execution_from_status TEXT,
+  execution_to_status TEXT,
+  execution_reason TEXT,
+  executed_at TIMESTAMPTZ,
+  idempotency_key TEXT NOT NULL UNIQUE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS email_workflow_decisions_inquiry_created_idx
+  ON email_workflow_decisions(inquiry_case_id, created_at);
+CREATE INDEX IF NOT EXISTS email_workflow_decisions_email_idx
+  ON email_workflow_decisions(email_message_id);
+CREATE INDEX IF NOT EXISTS email_workflow_decisions_execution_status_idx
+  ON email_workflow_decisions(execution_status);
 
 CREATE TABLE IF NOT EXISTS ai_context_snapshots (
   id TEXT PRIMARY KEY DEFAULT ('context_snapshot_' || gen_random_uuid()::TEXT),

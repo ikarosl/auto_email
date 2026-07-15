@@ -1,6 +1,4 @@
-import { randomUUID } from 'node:crypto';
-
-import { BadRequestException, Body, Controller, Get, NotFoundException, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Param, Patch, Post, Query } from '@nestjs/common';
 import { API_ROUTE_SEGMENTS } from '@email-inquiry/shared';
 
 import {
@@ -13,11 +11,9 @@ import {
 } from '../../../common/http/api-response.js';
 import { PrismaService } from '../../../common/database/prisma.service.js';
 import { CreateInquiryDto } from '../application/dto/create-inquiry.dto.js';
-import { LinkInquiryMessageDto } from '../application/dto/link-inquiry-message.dto.js';
 import { TransitionInquiryStatusDto } from '../application/dto/transition-inquiry-status.dto.js';
 import { UpdateInquiryDto } from '../application/dto/update-inquiry.dto.js';
 import { CreateInquiryUseCase } from '../application/use-cases/create-inquiry.use-case.js';
-import { InquiryMessageRelationType } from '../domain/enums/inquiry-message-relation-type.enum.js';
 import { GetInquiryUseCase } from '../application/use-cases/get-inquiry.use-case.js';
 import { ListAllowedTransitionsUseCase } from '../application/use-cases/list-allowed-transitions.use-case.js';
 import { ListInquiriesUseCase } from '../application/use-cases/list-inquiries.use-case.js';
@@ -235,109 +231,6 @@ export class InquiryController {
     };
   }
 
-  @Post(':id/messages')
-  async linkMessage(@Param('id') id: string, @Body() body: LinkInquiryMessageDto) {
-    const inquiryCase = await this.prisma.inquiryCase.findUnique({ where: { id } });
-    if (!inquiryCase || inquiryCase.deletedAt) throw new NotFoundException(`Inquiry not found: ${id}`);
-
-    if (body.mode === 'create_manual_email') {
-      const now = new Date();
-      const receivedAt = new Date(body.receivedAt);
-
-      const emailId = `email_${randomUUID()}`;
-      const emailMessage = await this.prisma.emailMessage.create({
-        data: {
-          id: emailId,
-          direction: body.direction,
-          source: 'manual',
-          fromEmail: body.fromEmail,
-          fromName: body.fromName ?? null,
-          toEmails: body.toEmails ?? [],
-          ccEmails: body.ccEmails ?? [],
-          subject: body.subject,
-          bodyText: body.bodyText ?? null,
-          receivedAt,
-        },
-      });
-
-      const relationType = body.relationType ?? InquiryMessageRelationType.MANUAL_IMPORT;
-      const inquiryMessage = await this.prisma.inquiryMessage.create({
-        data: {
-          inquiryCaseId: id,
-          emailMessageId: emailId,
-          direction: body.direction,
-          relationType,
-          createdByType: 'human',
-          createdBy: body.changedBy ?? null,
-          relationReason: body.relationReason ?? null,
-          createdAt: now,
-          updatedAt: now,
-        },
-        include: { emailMessage: true, inquiryCase: true },
-      });
-
-      await this.prisma.inquiryCase.update({
-        where: { id },
-        data: { latestMessageAt: receivedAt, updatedAt: now },
-      });
-
-      return itemResponse(mapInquiryMessage(inquiryMessage));
-    }
-
-    // mode === 'link_existing_email'
-    if (!body.emailMessageId) {
-      throw new BadRequestException('emailMessageId is required when mode=link_existing_email.');
-    }
-
-    const existingEmail = await this.prisma.emailMessage.findUnique({ where: { id: body.emailMessageId } });
-    if (!existingEmail || existingEmail.deletedAt) {
-      throw new NotFoundException(`Email message not found: ${body.emailMessageId}`);
-    }
-
-    const now = new Date();
-    const relationType = body.relationType ?? InquiryMessageRelationType.MANUAL_LINK;
-    const record = await this.prisma.inquiryMessage.upsert({
-      where: {
-        inquiryCaseId_emailMessageId: {
-          inquiryCaseId: id,
-          emailMessageId: body.emailMessageId,
-        },
-      },
-      create: {
-        inquiryCaseId: id,
-        emailMessageId: body.emailMessageId,
-        direction: existingEmail.direction,
-        relationType,
-        createdByType: 'human',
-        createdBy: body.changedBy ?? null,
-        relationReason: body.relationReason ?? null,
-        createdAt: now,
-        updatedAt: now,
-      },
-      update: {
-        relationType,
-        createdByType: 'human',
-        createdBy: body.changedBy ?? null,
-        relationReason: body.relationReason ?? null,
-        updatedAt: now,
-      },
-      include: {
-        emailMessage: true,
-        inquiryCase: true,
-      },
-    });
-
-    await this.prisma.inquiryCase.update({
-      where: { id },
-      data: {
-        latestMessageAt: existingEmail.receivedAt,
-        updatedAt: now,
-      },
-    });
-
-    return itemResponse(mapInquiryMessage(record));
-  }
-
   @Get(':id/messages')
   async listMessages(
     @Param('id') id: string,
@@ -485,7 +378,13 @@ export class InquiryController {
             classification: latestAiDecision.classification,
             suggestedStatus: latestAiDecision.suggestedStatus,
             confidence: toNumber(latestAiDecision.confidence),
+            riskLevel: latestAiDecision.riskLevel,
             reason: latestAiDecision.reason,
+            missingFields: latestAiDecision.missingFields,
+            extractedRequirements: latestAiDecision.extractedRequirements,
+            quoteBoundaryDetected: latestAiDecision.quoteBoundaryDetected,
+            humanReviewRequired: latestAiDecision.humanReviewRequired,
+            nextAction: latestAiDecision.nextAction,
             executionStatus: latestAiDecision.executionStatus,
             executionFromStatus: latestAiDecision.executionFromStatus,
             executionToStatus: latestAiDecision.executionToStatus,
@@ -615,37 +514,5 @@ function mapInquiryContextSummary(record: InquiryContextSummaryRecord | undefine
     coveredTo: toDateIso(record.covered_to),
     createdAt: toDateIso(record.created_at),
     updatedAt: toDateIso(record.updated_at),
-  };
-}
-
-function mapInquiryMessage(record: any) {
-  return {
-    id: record.id,
-    inquiryCaseId: record.inquiryCaseId,
-    emailMessageId: record.emailMessageId,
-    relationType: record.relationType,
-    direction: record.direction,
-    createdByType: record.createdByType,
-    createdBy: record.createdBy,
-    relationReason: record.relationReason,
-    createdAt: toDateIso(record.createdAt),
-    updatedAt: toDateIso(record.updatedAt),
-    emailMessage: record.emailMessage
-      ? {
-          id: record.emailMessage.id,
-          fromEmail: record.emailMessage.fromEmail,
-          fromName: record.emailMessage.fromName,
-          subject: record.emailMessage.subject,
-          receivedAt: toDateIso(record.emailMessage.receivedAt),
-        }
-      : null,
-    inquiryCase: record.inquiryCase
-      ? {
-          id: record.inquiryCase.id,
-          status: record.inquiryCase.status,
-          subject: record.inquiryCase.subject,
-          businessSubject: record.inquiryCase.businessSubject,
-        }
-      : null,
   };
 }

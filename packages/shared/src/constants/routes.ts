@@ -10,6 +10,7 @@ export const API_ROUTE_SEGMENTS = {
   aiDecisions: 'ai-decisions',
   replyDrafts: 'reply-drafts',
   runtimeConfig: 'runtime-config',
+  emailWorkflowDecisions: 'email-workflow-decisions',
 } as const;
 
 export const WEB_ROUTES = {

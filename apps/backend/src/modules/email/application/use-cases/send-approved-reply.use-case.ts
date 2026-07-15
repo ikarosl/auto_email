@@ -138,7 +138,9 @@ export class SendApprovedReplyUseCase {
   }) {
     const now = new Date();
     const emailId = `email_${randomUUID()}`;
+    const workflowDecisionId = `workflow_decision_${randomUUID()}`;
     const source = input.sendStatus === 'simulated' ? 'simulated_send' : 'smtp';
+    const workflowEvent = resolveSystemDraftEvent(input.draft.draftType, input.draft.inquiryCase.status);
 
     return this.prisma.$transaction(async (tx) => {
       await tx.emailMessage.create({
@@ -183,6 +185,28 @@ export class SendApprovedReplyUseCase {
           updatedAt: now,
         },
       });
+      await tx.emailWorkflowDecision.create({
+        data: {
+          id: workflowDecisionId,
+          emailMessageId: emailId,
+          inquiryCaseId: input.draft.inquiryCaseId,
+          aiDecisionId: input.draft.aiDecisionId ?? null,
+          direction: 'outbound',
+          source,
+          eventType: workflowEvent.eventType,
+          responseExpected: workflowEvent.responseExpected,
+          suggestedStatus: workflowEvent.toStatus ?? null,
+          confidence: 1,
+          riskLevel: 'low',
+          reason: `${source} approved ${input.draft.draftType} draft was sent.`,
+          commercialBoundaryDetected: workflowEvent.commercialBoundaryDetected,
+          humanReviewRequired: true,
+          decisionSource: 'system_rule',
+          promptVersion: 'system-draft-v1',
+          rawResult: { draftType: input.draft.draftType, replyDraftId: input.draft.id },
+          idempotencyKey: `system-send-event:${input.attemptId}`,
+        },
+      });
       await tx.emailSendAttempt.update({
         where: { id: input.attemptId },
         data: {
@@ -204,7 +228,9 @@ export class SendApprovedReplyUseCase {
         },
       });
 
-      const transition = resolveSendTransition(input.draft.draftType, input.draft.inquiryCase.status);
+      const transition = workflowEvent.toStatus
+        ? { from: input.draft.inquiryCase.status, to: workflowEvent.toStatus }
+        : undefined;
       let transitionStatus: 'applied' | 'conflict' | 'not_required' = 'not_required';
       if (transition) {
         const update = await tx.inquiryCase.updateMany({
@@ -220,7 +246,7 @@ export class SendApprovedReplyUseCase {
               fromStatus: transition.from,
               toStatus: transition.to,
               reason: `${source} reply sent from approved draft`,
-              changedBy: input.attemptId,
+              changedBy: workflowDecisionId,
               changedByType: 'system',
             },
           });
@@ -228,6 +254,21 @@ export class SendApprovedReplyUseCase {
           transitionStatus = 'conflict';
         }
       }
+      await tx.emailWorkflowDecision.update({
+        where: { id: workflowDecisionId },
+        data: {
+          executionStatus: transitionStatus === 'not_required' ? 'no_change' : transitionStatus,
+          executionFromStatus: input.draft.inquiryCase.status,
+          executionToStatus: transition?.to ?? null,
+          executionReason: transitionStatus === 'applied'
+            ? `${source} approved draft send applied a deterministic status event.`
+            : transitionStatus === 'conflict'
+              ? 'Inquiry status changed before the deterministic send event was applied.'
+              : 'This approved draft type does not require a status change.',
+          executedAt: now,
+          updatedAt: now,
+        },
+      });
 
       return {
         replyDraftId: input.draft.id,
@@ -236,6 +277,7 @@ export class SendApprovedReplyUseCase {
         operationMode: this.runtimeConfig.operationMode,
         sendStatus: input.sendStatus,
         transitionStatus,
+        workflowDecisionId,
       };
     });
   }
@@ -265,14 +307,35 @@ export class SendApprovedReplyUseCase {
   }
 }
 
-function resolveSendTransition(draftType: string, currentStatus: string) {
+function resolveSystemDraftEvent(draftType: string, currentStatus: string) {
   if (draftType === 'clarification_request' && currentStatus === InquiryStatus.NEED_CLARIFICATION) {
-    return { from: InquiryStatus.NEED_CLARIFICATION, to: InquiryStatus.WAITING_CUSTOMER };
+    return {
+      eventType: 'customer_response_requested',
+      responseExpected: true,
+      commercialBoundaryDetected: false,
+      toStatus: InquiryStatus.WAITING_CUSTOMER,
+    };
   }
   if (draftType === 'quote_reply' && currentStatus === InquiryStatus.READY_FOR_QUOTE) {
-    return { from: InquiryStatus.READY_FOR_QUOTE, to: InquiryStatus.QUOTED };
+    return {
+      eventType: 'formal_quote_sent',
+      responseExpected: true,
+      commercialBoundaryDetected: true,
+      toStatus: InquiryStatus.QUOTED,
+    };
   }
-  return undefined;
+  if (draftType === 'engineer_review_acknowledgement') {
+    return {
+      eventType: 'engineer_review_acknowledgement',
+      responseExpected: false,
+      commercialBoundaryDetected: false,
+    };
+  }
+  return {
+    eventType: 'general_correspondence',
+    responseExpected: false,
+    commercialBoundaryDetected: false,
+  };
 }
 
 async function validateAttachments(inquiryCaseId: string, attachments: Array<{

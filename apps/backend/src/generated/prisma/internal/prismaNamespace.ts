@@ -399,6 +399,7 @@ export const ModelName = {
   ReplyDraft: 'ReplyDraft',
   ReplyDraftAttachment: 'ReplyDraftAttachment',
   EmailSendAttempt: 'EmailSendAttempt',
+  EmailWorkflowDecision: 'EmailWorkflowDecision',
   AiContextSnapshot: 'AiContextSnapshot',
   InquiryContextSummary: 'InquiryContextSummary',
   InquiryStatusLog: 'InquiryStatusLog'
@@ -417,7 +418,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "mailboxAccount" | "mailboxSyncState" | "customer" | "organization" | "emailThread" | "emailMessage" | "emailAttachment" | "inquiryCase" | "inquiryMessage" | "processedEmail" | "aiDecision" | "inquiryStructuredFact" | "replyDraft" | "replyDraftAttachment" | "emailSendAttempt" | "aiContextSnapshot" | "inquiryContextSummary" | "inquiryStatusLog"
+    modelProps: "mailboxAccount" | "mailboxSyncState" | "customer" | "organization" | "emailThread" | "emailMessage" | "emailAttachment" | "inquiryCase" | "inquiryMessage" | "processedEmail" | "aiDecision" | "inquiryStructuredFact" | "replyDraft" | "replyDraftAttachment" | "emailSendAttempt" | "emailWorkflowDecision" | "aiContextSnapshot" | "inquiryContextSummary" | "inquiryStatusLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1531,6 +1532,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    EmailWorkflowDecision: {
+      payload: Prisma.$EmailWorkflowDecisionPayload<ExtArgs>
+      fields: Prisma.EmailWorkflowDecisionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EmailWorkflowDecisionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailWorkflowDecisionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EmailWorkflowDecisionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailWorkflowDecisionPayload>
+        }
+        findFirst: {
+          args: Prisma.EmailWorkflowDecisionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailWorkflowDecisionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EmailWorkflowDecisionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailWorkflowDecisionPayload>
+        }
+        findMany: {
+          args: Prisma.EmailWorkflowDecisionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailWorkflowDecisionPayload>[]
+        }
+        create: {
+          args: Prisma.EmailWorkflowDecisionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailWorkflowDecisionPayload>
+        }
+        createMany: {
+          args: Prisma.EmailWorkflowDecisionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EmailWorkflowDecisionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailWorkflowDecisionPayload>[]
+        }
+        delete: {
+          args: Prisma.EmailWorkflowDecisionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailWorkflowDecisionPayload>
+        }
+        update: {
+          args: Prisma.EmailWorkflowDecisionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailWorkflowDecisionPayload>
+        }
+        deleteMany: {
+          args: Prisma.EmailWorkflowDecisionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EmailWorkflowDecisionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EmailWorkflowDecisionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailWorkflowDecisionPayload>[]
+        }
+        upsert: {
+          args: Prisma.EmailWorkflowDecisionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailWorkflowDecisionPayload>
+        }
+        aggregate: {
+          args: Prisma.EmailWorkflowDecisionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEmailWorkflowDecision>
+        }
+        groupBy: {
+          args: Prisma.EmailWorkflowDecisionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmailWorkflowDecisionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EmailWorkflowDecisionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmailWorkflowDecisionCountAggregateOutputType> | number
+        }
+      }
+    }
     AiContextSnapshot: {
       payload: Prisma.$AiContextSnapshotPayload<ExtArgs>
       fields: Prisma.AiContextSnapshotFieldRefs
@@ -2127,6 +2202,38 @@ export const EmailSendAttemptScalarFieldEnum = {
 export type EmailSendAttemptScalarFieldEnum = (typeof EmailSendAttemptScalarFieldEnum)[keyof typeof EmailSendAttemptScalarFieldEnum]
 
 
+export const EmailWorkflowDecisionScalarFieldEnum = {
+  id: 'id',
+  emailMessageId: 'emailMessageId',
+  inquiryCaseId: 'inquiryCaseId',
+  aiDecisionId: 'aiDecisionId',
+  direction: 'direction',
+  source: 'source',
+  eventType: 'eventType',
+  responseExpected: 'responseExpected',
+  suggestedStatus: 'suggestedStatus',
+  confidence: 'confidence',
+  riskLevel: 'riskLevel',
+  reason: 'reason',
+  commercialBoundaryDetected: 'commercialBoundaryDetected',
+  humanReviewRequired: 'humanReviewRequired',
+  decisionSource: 'decisionSource',
+  modelName: 'modelName',
+  promptVersion: 'promptVersion',
+  rawResult: 'rawResult',
+  executionStatus: 'executionStatus',
+  executionFromStatus: 'executionFromStatus',
+  executionToStatus: 'executionToStatus',
+  executionReason: 'executionReason',
+  executedAt: 'executedAt',
+  idempotencyKey: 'idempotencyKey',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmailWorkflowDecisionScalarFieldEnum = (typeof EmailWorkflowDecisionScalarFieldEnum)[keyof typeof EmailWorkflowDecisionScalarFieldEnum]
+
+
 export const AiContextSnapshotScalarFieldEnum = {
   id: 'id',
   inquiryCaseId: 'inquiryCaseId',
@@ -2451,6 +2558,7 @@ export type GlobalOmitConfig = {
   replyDraft?: Prisma.ReplyDraftOmit
   replyDraftAttachment?: Prisma.ReplyDraftAttachmentOmit
   emailSendAttempt?: Prisma.EmailSendAttemptOmit
+  emailWorkflowDecision?: Prisma.EmailWorkflowDecisionOmit
   aiContextSnapshot?: Prisma.AiContextSnapshotOmit
   inquiryContextSummary?: Prisma.InquiryContextSummaryOmit
   inquiryStatusLog?: Prisma.InquiryStatusLogOmit

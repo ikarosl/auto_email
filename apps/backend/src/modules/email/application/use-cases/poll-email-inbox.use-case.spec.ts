@@ -18,6 +18,7 @@ import { FindInquiryForInboundEmailUseCase } from '../../../inquiry/application/
 import { ReceiveInboundEmailUseCase } from './receive-inbound-email.use-case.js';
 import { AnalyzeEmailWithAiUseCase } from './analyze-email-with-ai.use-case.js';
 import { PollEmailInboxUseCase } from './poll-email-inbox.use-case.js';
+import { ProcessInquiryEmailEventUseCase } from './process-inquiry-email-event.use-case.js';
 
 describe('PollEmailInboxUseCase customer status updates', () => {
   it('marks high-confidence invalid sender as invalid after AI analysis', async () => {
@@ -142,15 +143,26 @@ function createPollUseCase(
   const analyzeEmailWithAiUseCase = new AnalyzeEmailWithAiUseCase(adapter);
   const updateCustomerStatusUseCase = new UpdateCustomerStatusFromAiAnalysisUseCase(customerRepository);
 
-  return new PollEmailInboxUseCase(
-    processedEmailTracker,
-    receiveInboundEmailUseCase,
-    analyzeEmailWithAiUseCase,
-    inquiryMessageRepository,
-    emailMessageRepository,
-    updateCustomerStatusUseCase,
-    aiDecisionRepository,
-  );
+  const processor = {
+    execute: async ({ emailMessage, inquiryCase }: any) => {
+      const aiAnalysisResult = await analyzeEmailWithAiUseCase.execute(emailMessage, { inquiryCase });
+      if (aiAnalysisResult.success) {
+        await updateCustomerStatusUseCase.execute({
+          customerEmail: inquiryCase.customerEmail,
+          analysis: aiAnalysisResult.analysis,
+        });
+      }
+      await aiDecisionRepository.save({
+        emailMessageId: emailMessage.id,
+        inquiryCaseId: inquiryCase.id,
+        result: aiAnalysisResult.success ? aiAnalysisResult.analysis : aiAnalysisResult,
+        rawOutput: aiAnalysisResult.rawOutput,
+      });
+      return { kind: 'inbound_analysis', aiAnalysisResult };
+    },
+  } as ProcessInquiryEmailEventUseCase;
+
+  return new PollEmailInboxUseCase(processedEmailTracker, receiveInboundEmailUseCase, processor);
 }
 
 function createInboundEmail(overrides: {

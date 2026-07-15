@@ -382,6 +382,7 @@ export type EmailMessageWhereInput = {
   updatedStructuredFacts?: Prisma.InquiryStructuredFactListRelationFilter
   attachments?: Prisma.EmailAttachmentListRelationFilter
   sendAttempts?: Prisma.EmailSendAttemptListRelationFilter
+  workflowDecisions?: Prisma.EmailWorkflowDecisionListRelationFilter
 }
 
 export type EmailMessageOrderByWithRelationInput = {
@@ -420,6 +421,7 @@ export type EmailMessageOrderByWithRelationInput = {
   updatedStructuredFacts?: Prisma.InquiryStructuredFactOrderByRelationAggregateInput
   attachments?: Prisma.EmailAttachmentOrderByRelationAggregateInput
   sendAttempts?: Prisma.EmailSendAttemptOrderByRelationAggregateInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionOrderByRelationAggregateInput
 }
 
 export type EmailMessageWhereUniqueInput = Prisma.AtLeast<{
@@ -461,6 +463,7 @@ export type EmailMessageWhereUniqueInput = Prisma.AtLeast<{
   updatedStructuredFacts?: Prisma.InquiryStructuredFactListRelationFilter
   attachments?: Prisma.EmailAttachmentListRelationFilter
   sendAttempts?: Prisma.EmailSendAttemptListRelationFilter
+  workflowDecisions?: Prisma.EmailWorkflowDecisionListRelationFilter
 }, "id">
 
 export type EmailMessageOrderByWithAggregationInput = {
@@ -561,6 +564,7 @@ export type EmailMessageCreateInput = {
   updatedStructuredFacts?: Prisma.InquiryStructuredFactCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutOutboundEmailMessageInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageUncheckedCreateInput = {
@@ -597,6 +601,7 @@ export type EmailMessageUncheckedCreateInput = {
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutOutboundEmailMessageInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageUpdateInput = {
@@ -633,6 +638,7 @@ export type EmailMessageUpdateInput = {
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutOutboundEmailMessageNestedInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateInput = {
@@ -669,6 +675,7 @@ export type EmailMessageUncheckedUpdateInput = {
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutOutboundEmailMessageNestedInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageCreateManyInput = {
@@ -1055,6 +1062,20 @@ export type EmailMessageUpdateOneWithoutSendAttemptsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.EmailMessageUpdateToOneWithWhereWithoutSendAttemptsInput, Prisma.EmailMessageUpdateWithoutSendAttemptsInput>, Prisma.EmailMessageUncheckedUpdateWithoutSendAttemptsInput>
 }
 
+export type EmailMessageCreateNestedOneWithoutWorkflowDecisionsInput = {
+  create?: Prisma.XOR<Prisma.EmailMessageCreateWithoutWorkflowDecisionsInput, Prisma.EmailMessageUncheckedCreateWithoutWorkflowDecisionsInput>
+  connectOrCreate?: Prisma.EmailMessageCreateOrConnectWithoutWorkflowDecisionsInput
+  connect?: Prisma.EmailMessageWhereUniqueInput
+}
+
+export type EmailMessageUpdateOneRequiredWithoutWorkflowDecisionsNestedInput = {
+  create?: Prisma.XOR<Prisma.EmailMessageCreateWithoutWorkflowDecisionsInput, Prisma.EmailMessageUncheckedCreateWithoutWorkflowDecisionsInput>
+  connectOrCreate?: Prisma.EmailMessageCreateOrConnectWithoutWorkflowDecisionsInput
+  upsert?: Prisma.EmailMessageUpsertWithoutWorkflowDecisionsInput
+  connect?: Prisma.EmailMessageWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EmailMessageUpdateToOneWithWhereWithoutWorkflowDecisionsInput, Prisma.EmailMessageUpdateWithoutWorkflowDecisionsInput>, Prisma.EmailMessageUncheckedUpdateWithoutWorkflowDecisionsInput>
+}
+
 export type EmailMessageCreateNestedOneWithoutContextSnapshotsInput = {
   create?: Prisma.XOR<Prisma.EmailMessageCreateWithoutContextSnapshotsInput, Prisma.EmailMessageUncheckedCreateWithoutContextSnapshotsInput>
   connectOrCreate?: Prisma.EmailMessageCreateOrConnectWithoutContextSnapshotsInput
@@ -1104,6 +1125,7 @@ export type EmailMessageCreateWithoutMailboxAccountInput = {
   updatedStructuredFacts?: Prisma.InquiryStructuredFactCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutOutboundEmailMessageInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageUncheckedCreateWithoutMailboxAccountInput = {
@@ -1139,6 +1161,7 @@ export type EmailMessageUncheckedCreateWithoutMailboxAccountInput = {
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutOutboundEmailMessageInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageCreateOrConnectWithoutMailboxAccountInput = {
@@ -1231,6 +1254,7 @@ export type EmailMessageCreateWithoutEmailThreadInput = {
   updatedStructuredFacts?: Prisma.InquiryStructuredFactCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutOutboundEmailMessageInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageUncheckedCreateWithoutEmailThreadInput = {
@@ -1266,6 +1290,7 @@ export type EmailMessageUncheckedCreateWithoutEmailThreadInput = {
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutOutboundEmailMessageInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageCreateOrConnectWithoutEmailThreadInput = {
@@ -1327,6 +1352,7 @@ export type EmailMessageCreateWithoutAttachmentsInput = {
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactCreateNestedManyWithoutUpdatedFromEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutOutboundEmailMessageInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageUncheckedCreateWithoutAttachmentsInput = {
@@ -1362,6 +1388,7 @@ export type EmailMessageUncheckedCreateWithoutAttachmentsInput = {
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedManyWithoutUpdatedFromEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutOutboundEmailMessageInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageCreateOrConnectWithoutAttachmentsInput = {
@@ -1413,6 +1440,7 @@ export type EmailMessageUpdateWithoutAttachmentsInput = {
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutOutboundEmailMessageNestedInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateWithoutAttachmentsInput = {
@@ -1448,6 +1476,7 @@ export type EmailMessageUncheckedUpdateWithoutAttachmentsInput = {
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutOutboundEmailMessageNestedInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageCreateWithoutInquiryMessagesInput = {
@@ -1483,6 +1512,7 @@ export type EmailMessageCreateWithoutInquiryMessagesInput = {
   updatedStructuredFacts?: Prisma.InquiryStructuredFactCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutOutboundEmailMessageInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageUncheckedCreateWithoutInquiryMessagesInput = {
@@ -1518,6 +1548,7 @@ export type EmailMessageUncheckedCreateWithoutInquiryMessagesInput = {
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutOutboundEmailMessageInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageCreateOrConnectWithoutInquiryMessagesInput = {
@@ -1569,6 +1600,7 @@ export type EmailMessageUpdateWithoutInquiryMessagesInput = {
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutOutboundEmailMessageNestedInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateWithoutInquiryMessagesInput = {
@@ -1604,6 +1636,7 @@ export type EmailMessageUncheckedUpdateWithoutInquiryMessagesInput = {
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutOutboundEmailMessageNestedInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageCreateWithoutAiDecisionsInput = {
@@ -1639,6 +1672,7 @@ export type EmailMessageCreateWithoutAiDecisionsInput = {
   updatedStructuredFacts?: Prisma.InquiryStructuredFactCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutOutboundEmailMessageInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageUncheckedCreateWithoutAiDecisionsInput = {
@@ -1674,6 +1708,7 @@ export type EmailMessageUncheckedCreateWithoutAiDecisionsInput = {
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutOutboundEmailMessageInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageCreateOrConnectWithoutAiDecisionsInput = {
@@ -1725,6 +1760,7 @@ export type EmailMessageUpdateWithoutAiDecisionsInput = {
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutOutboundEmailMessageNestedInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateWithoutAiDecisionsInput = {
@@ -1760,6 +1796,7 @@ export type EmailMessageUncheckedUpdateWithoutAiDecisionsInput = {
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutOutboundEmailMessageNestedInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageCreateWithoutUpdatedStructuredFactsInput = {
@@ -1795,6 +1832,7 @@ export type EmailMessageCreateWithoutUpdatedStructuredFactsInput = {
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutEmailMessageInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutOutboundEmailMessageInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageUncheckedCreateWithoutUpdatedStructuredFactsInput = {
@@ -1830,6 +1868,7 @@ export type EmailMessageUncheckedCreateWithoutUpdatedStructuredFactsInput = {
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutEmailMessageInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutOutboundEmailMessageInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageCreateOrConnectWithoutUpdatedStructuredFactsInput = {
@@ -1881,6 +1920,7 @@ export type EmailMessageUpdateWithoutUpdatedStructuredFactsInput = {
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutOutboundEmailMessageNestedInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateWithoutUpdatedStructuredFactsInput = {
@@ -1916,6 +1956,7 @@ export type EmailMessageUncheckedUpdateWithoutUpdatedStructuredFactsInput = {
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutOutboundEmailMessageNestedInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageCreateWithoutSourceReplyDraftsInput = {
@@ -1951,6 +1992,7 @@ export type EmailMessageCreateWithoutSourceReplyDraftsInput = {
   updatedStructuredFacts?: Prisma.InquiryStructuredFactCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutOutboundEmailMessageInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageUncheckedCreateWithoutSourceReplyDraftsInput = {
@@ -1986,6 +2028,7 @@ export type EmailMessageUncheckedCreateWithoutSourceReplyDraftsInput = {
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutOutboundEmailMessageInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageCreateOrConnectWithoutSourceReplyDraftsInput = {
@@ -2026,6 +2069,7 @@ export type EmailMessageCreateWithoutSentReplyDraftsInput = {
   updatedStructuredFacts?: Prisma.InquiryStructuredFactCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutOutboundEmailMessageInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageUncheckedCreateWithoutSentReplyDraftsInput = {
@@ -2061,6 +2105,7 @@ export type EmailMessageUncheckedCreateWithoutSentReplyDraftsInput = {
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutOutboundEmailMessageInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageCreateOrConnectWithoutSentReplyDraftsInput = {
@@ -2112,6 +2157,7 @@ export type EmailMessageUpdateWithoutSourceReplyDraftsInput = {
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutOutboundEmailMessageNestedInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateWithoutSourceReplyDraftsInput = {
@@ -2147,6 +2193,7 @@ export type EmailMessageUncheckedUpdateWithoutSourceReplyDraftsInput = {
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutOutboundEmailMessageNestedInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUpsertWithoutSentReplyDraftsInput = {
@@ -2193,6 +2240,7 @@ export type EmailMessageUpdateWithoutSentReplyDraftsInput = {
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutOutboundEmailMessageNestedInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateWithoutSentReplyDraftsInput = {
@@ -2228,6 +2276,7 @@ export type EmailMessageUncheckedUpdateWithoutSentReplyDraftsInput = {
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutOutboundEmailMessageNestedInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageCreateWithoutSendAttemptsInput = {
@@ -2263,6 +2312,7 @@ export type EmailMessageCreateWithoutSendAttemptsInput = {
   contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutEmailMessageInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageUncheckedCreateWithoutSendAttemptsInput = {
@@ -2298,6 +2348,7 @@ export type EmailMessageUncheckedCreateWithoutSendAttemptsInput = {
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutEmailMessageInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutEmailMessageInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageCreateOrConnectWithoutSendAttemptsInput = {
@@ -2349,6 +2400,7 @@ export type EmailMessageUpdateWithoutSendAttemptsInput = {
   contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutEmailMessageNestedInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateWithoutSendAttemptsInput = {
@@ -2384,6 +2436,167 @@ export type EmailMessageUncheckedUpdateWithoutSendAttemptsInput = {
   contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutEmailMessageNestedInput
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutEmailMessageNestedInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+}
+
+export type EmailMessageCreateWithoutWorkflowDecisionsInput = {
+  id?: string
+  direction: string
+  mailboxName?: string
+  uidValidity?: bigint | number | null
+  uid?: bigint | number | null
+  messageId?: string | null
+  inReplyTo?: string | null
+  referencesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  fromEmail: string
+  fromName?: string | null
+  toEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ccEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  subject?: string | null
+  bodyText?: string | null
+  bodyHtml?: string | null
+  hasAttachments?: boolean
+  attachmentCount?: number
+  rawSource?: string | null
+  receivedAt: Date | string
+  source?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  mailboxAccount?: Prisma.MailboxAccountCreateNestedOneWithoutEmailMessagesInput
+  emailThread?: Prisma.EmailThreadCreateNestedOneWithoutEmailMessagesInput
+  inquiryMessages?: Prisma.InquiryMessageCreateNestedManyWithoutEmailMessageInput
+  aiDecisions?: Prisma.AiDecisionCreateNestedManyWithoutEmailMessageInput
+  sourceReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSourceEmailMessageInput
+  sentReplyDrafts?: Prisma.ReplyDraftCreateNestedManyWithoutSentEmailMessageInput
+  contextSnapshots?: Prisma.AiContextSnapshotCreateNestedManyWithoutEmailMessageInput
+  updatedStructuredFacts?: Prisma.InquiryStructuredFactCreateNestedManyWithoutUpdatedFromEmailMessageInput
+  attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutEmailMessageInput
+  sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutOutboundEmailMessageInput
+}
+
+export type EmailMessageUncheckedCreateWithoutWorkflowDecisionsInput = {
+  id?: string
+  mailboxAccountId?: string | null
+  emailThreadId?: string | null
+  direction: string
+  mailboxName?: string
+  uidValidity?: bigint | number | null
+  uid?: bigint | number | null
+  messageId?: string | null
+  inReplyTo?: string | null
+  referencesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  fromEmail: string
+  fromName?: string | null
+  toEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ccEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  subject?: string | null
+  bodyText?: string | null
+  bodyHtml?: string | null
+  hasAttachments?: boolean
+  attachmentCount?: number
+  rawSource?: string | null
+  receivedAt: Date | string
+  source?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  inquiryMessages?: Prisma.InquiryMessageUncheckedCreateNestedManyWithoutEmailMessageInput
+  aiDecisions?: Prisma.AiDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
+  sourceReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSourceEmailMessageInput
+  sentReplyDrafts?: Prisma.ReplyDraftUncheckedCreateNestedManyWithoutSentEmailMessageInput
+  contextSnapshots?: Prisma.AiContextSnapshotUncheckedCreateNestedManyWithoutEmailMessageInput
+  updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedManyWithoutUpdatedFromEmailMessageInput
+  attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutEmailMessageInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutOutboundEmailMessageInput
+}
+
+export type EmailMessageCreateOrConnectWithoutWorkflowDecisionsInput = {
+  where: Prisma.EmailMessageWhereUniqueInput
+  create: Prisma.XOR<Prisma.EmailMessageCreateWithoutWorkflowDecisionsInput, Prisma.EmailMessageUncheckedCreateWithoutWorkflowDecisionsInput>
+}
+
+export type EmailMessageUpsertWithoutWorkflowDecisionsInput = {
+  update: Prisma.XOR<Prisma.EmailMessageUpdateWithoutWorkflowDecisionsInput, Prisma.EmailMessageUncheckedUpdateWithoutWorkflowDecisionsInput>
+  create: Prisma.XOR<Prisma.EmailMessageCreateWithoutWorkflowDecisionsInput, Prisma.EmailMessageUncheckedCreateWithoutWorkflowDecisionsInput>
+  where?: Prisma.EmailMessageWhereInput
+}
+
+export type EmailMessageUpdateToOneWithWhereWithoutWorkflowDecisionsInput = {
+  where?: Prisma.EmailMessageWhereInput
+  data: Prisma.XOR<Prisma.EmailMessageUpdateWithoutWorkflowDecisionsInput, Prisma.EmailMessageUncheckedUpdateWithoutWorkflowDecisionsInput>
+}
+
+export type EmailMessageUpdateWithoutWorkflowDecisionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  direction?: Prisma.StringFieldUpdateOperationsInput | string
+  mailboxName?: Prisma.StringFieldUpdateOperationsInput | string
+  uidValidity?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  uid?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  messageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inReplyTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referencesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  fromEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  fromName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  toEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ccEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  source?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mailboxAccount?: Prisma.MailboxAccountUpdateOneWithoutEmailMessagesNestedInput
+  emailThread?: Prisma.EmailThreadUpdateOneWithoutEmailMessagesNestedInput
+  inquiryMessages?: Prisma.InquiryMessageUpdateManyWithoutEmailMessageNestedInput
+  aiDecisions?: Prisma.AiDecisionUpdateManyWithoutEmailMessageNestedInput
+  sourceReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSourceEmailMessageNestedInput
+  sentReplyDrafts?: Prisma.ReplyDraftUpdateManyWithoutSentEmailMessageNestedInput
+  contextSnapshots?: Prisma.AiContextSnapshotUpdateManyWithoutEmailMessageNestedInput
+  updatedStructuredFacts?: Prisma.InquiryStructuredFactUpdateManyWithoutUpdatedFromEmailMessageNestedInput
+  attachments?: Prisma.EmailAttachmentUpdateManyWithoutEmailMessageNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutOutboundEmailMessageNestedInput
+}
+
+export type EmailMessageUncheckedUpdateWithoutWorkflowDecisionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mailboxAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailThreadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  direction?: Prisma.StringFieldUpdateOperationsInput | string
+  mailboxName?: Prisma.StringFieldUpdateOperationsInput | string
+  uidValidity?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  uid?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  messageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inReplyTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referencesJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  fromEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  fromName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  toEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ccEmails?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attachmentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  rawSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  source?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  inquiryMessages?: Prisma.InquiryMessageUncheckedUpdateManyWithoutEmailMessageNestedInput
+  aiDecisions?: Prisma.AiDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
+  sourceReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSourceEmailMessageNestedInput
+  sentReplyDrafts?: Prisma.ReplyDraftUncheckedUpdateManyWithoutSentEmailMessageNestedInput
+  contextSnapshots?: Prisma.AiContextSnapshotUncheckedUpdateManyWithoutEmailMessageNestedInput
+  updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateManyWithoutUpdatedFromEmailMessageNestedInput
+  attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutEmailMessageNestedInput
+  sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutOutboundEmailMessageNestedInput
 }
 
 export type EmailMessageCreateWithoutContextSnapshotsInput = {
@@ -2419,6 +2632,7 @@ export type EmailMessageCreateWithoutContextSnapshotsInput = {
   updatedStructuredFacts?: Prisma.InquiryStructuredFactCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptCreateNestedManyWithoutOutboundEmailMessageInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageUncheckedCreateWithoutContextSnapshotsInput = {
@@ -2454,6 +2668,7 @@ export type EmailMessageUncheckedCreateWithoutContextSnapshotsInput = {
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedCreateNestedManyWithoutUpdatedFromEmailMessageInput
   attachments?: Prisma.EmailAttachmentUncheckedCreateNestedManyWithoutEmailMessageInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedCreateNestedManyWithoutOutboundEmailMessageInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedCreateNestedManyWithoutEmailMessageInput
 }
 
 export type EmailMessageCreateOrConnectWithoutContextSnapshotsInput = {
@@ -2505,6 +2720,7 @@ export type EmailMessageUpdateWithoutContextSnapshotsInput = {
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutOutboundEmailMessageNestedInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateWithoutContextSnapshotsInput = {
@@ -2540,6 +2756,7 @@ export type EmailMessageUncheckedUpdateWithoutContextSnapshotsInput = {
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutOutboundEmailMessageNestedInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageCreateManyMailboxAccountInput = {
@@ -2602,6 +2819,7 @@ export type EmailMessageUpdateWithoutMailboxAccountInput = {
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutOutboundEmailMessageNestedInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateWithoutMailboxAccountInput = {
@@ -2637,6 +2855,7 @@ export type EmailMessageUncheckedUpdateWithoutMailboxAccountInput = {
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutOutboundEmailMessageNestedInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateManyWithoutMailboxAccountInput = {
@@ -2726,6 +2945,7 @@ export type EmailMessageUpdateWithoutEmailThreadInput = {
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUpdateManyWithoutOutboundEmailMessageNestedInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateWithoutEmailThreadInput = {
@@ -2761,6 +2981,7 @@ export type EmailMessageUncheckedUpdateWithoutEmailThreadInput = {
   updatedStructuredFacts?: Prisma.InquiryStructuredFactUncheckedUpdateManyWithoutUpdatedFromEmailMessageNestedInput
   attachments?: Prisma.EmailAttachmentUncheckedUpdateManyWithoutEmailMessageNestedInput
   sendAttempts?: Prisma.EmailSendAttemptUncheckedUpdateManyWithoutOutboundEmailMessageNestedInput
+  workflowDecisions?: Prisma.EmailWorkflowDecisionUncheckedUpdateManyWithoutEmailMessageNestedInput
 }
 
 export type EmailMessageUncheckedUpdateManyWithoutEmailThreadInput = {
@@ -2804,6 +3025,7 @@ export type EmailMessageCountOutputType = {
   updatedStructuredFacts: number
   attachments: number
   sendAttempts: number
+  workflowDecisions: number
 }
 
 export type EmailMessageCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2815,6 +3037,7 @@ export type EmailMessageCountOutputTypeSelect<ExtArgs extends runtime.Types.Exte
   updatedStructuredFacts?: boolean | EmailMessageCountOutputTypeCountUpdatedStructuredFactsArgs
   attachments?: boolean | EmailMessageCountOutputTypeCountAttachmentsArgs
   sendAttempts?: boolean | EmailMessageCountOutputTypeCountSendAttemptsArgs
+  workflowDecisions?: boolean | EmailMessageCountOutputTypeCountWorkflowDecisionsArgs
 }
 
 /**
@@ -2883,6 +3106,13 @@ export type EmailMessageCountOutputTypeCountSendAttemptsArgs<ExtArgs extends run
   where?: Prisma.EmailSendAttemptWhereInput
 }
 
+/**
+ * EmailMessageCountOutputType without action
+ */
+export type EmailMessageCountOutputTypeCountWorkflowDecisionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmailWorkflowDecisionWhereInput
+}
+
 
 export type EmailMessageSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2920,6 +3150,7 @@ export type EmailMessageSelect<ExtArgs extends runtime.Types.Extensions.Internal
   updatedStructuredFacts?: boolean | Prisma.EmailMessage$updatedStructuredFactsArgs<ExtArgs>
   attachments?: boolean | Prisma.EmailMessage$attachmentsArgs<ExtArgs>
   sendAttempts?: boolean | Prisma.EmailMessage$sendAttemptsArgs<ExtArgs>
+  workflowDecisions?: boolean | Prisma.EmailMessage$workflowDecisionsArgs<ExtArgs>
   _count?: boolean | Prisma.EmailMessageCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["emailMessage"]>
 
@@ -3023,6 +3254,7 @@ export type EmailMessageInclude<ExtArgs extends runtime.Types.Extensions.Interna
   updatedStructuredFacts?: boolean | Prisma.EmailMessage$updatedStructuredFactsArgs<ExtArgs>
   attachments?: boolean | Prisma.EmailMessage$attachmentsArgs<ExtArgs>
   sendAttempts?: boolean | Prisma.EmailMessage$sendAttemptsArgs<ExtArgs>
+  workflowDecisions?: boolean | Prisma.EmailMessage$workflowDecisionsArgs<ExtArgs>
   _count?: boolean | Prisma.EmailMessageCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type EmailMessageIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3047,6 +3279,7 @@ export type $EmailMessagePayload<ExtArgs extends runtime.Types.Extensions.Intern
     updatedStructuredFacts: Prisma.$InquiryStructuredFactPayload<ExtArgs>[]
     attachments: Prisma.$EmailAttachmentPayload<ExtArgs>[]
     sendAttempts: Prisma.$EmailSendAttemptPayload<ExtArgs>[]
+    workflowDecisions: Prisma.$EmailWorkflowDecisionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3478,6 +3711,7 @@ export interface Prisma__EmailMessageClient<T, Null = never, ExtArgs extends run
   updatedStructuredFacts<T extends Prisma.EmailMessage$updatedStructuredFactsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmailMessage$updatedStructuredFactsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InquiryStructuredFactPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   attachments<T extends Prisma.EmailMessage$attachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmailMessage$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmailAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   sendAttempts<T extends Prisma.EmailMessage$sendAttemptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmailMessage$sendAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmailSendAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  workflowDecisions<T extends Prisma.EmailMessage$workflowDecisionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmailMessage$workflowDecisionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmailWorkflowDecisionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4160,6 +4394,30 @@ export type EmailMessage$sendAttemptsArgs<ExtArgs extends runtime.Types.Extensio
   take?: number
   skip?: number
   distinct?: Prisma.EmailSendAttemptScalarFieldEnum | Prisma.EmailSendAttemptScalarFieldEnum[]
+}
+
+/**
+ * EmailMessage.workflowDecisions
+ */
+export type EmailMessage$workflowDecisionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmailWorkflowDecision
+   */
+  select?: Prisma.EmailWorkflowDecisionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmailWorkflowDecision
+   */
+  omit?: Prisma.EmailWorkflowDecisionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmailWorkflowDecisionInclude<ExtArgs> | null
+  where?: Prisma.EmailWorkflowDecisionWhereInput
+  orderBy?: Prisma.EmailWorkflowDecisionOrderByWithRelationInput | Prisma.EmailWorkflowDecisionOrderByWithRelationInput[]
+  cursor?: Prisma.EmailWorkflowDecisionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EmailWorkflowDecisionScalarFieldEnum | Prisma.EmailWorkflowDecisionScalarFieldEnum[]
 }
 
 /**

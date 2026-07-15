@@ -361,6 +361,24 @@ export class ImapPollService implements OnApplicationBootstrap, OnApplicationShu
       return;
     }
 
+    if (result.workflowDecisionId) {
+      if (result.outboundAnalysisResult?.success) {
+        const analysis = result.outboundAnalysisResult.analysis;
+        this.logger.log(
+          `出站邮件事件: event=${analysis.eventType} suggested_status=${analysis.suggestedStatus ?? 'none'} ` +
+          `confidence=${Math.round(analysis.confidence * 100)}% execution=${result.workflowExecutionStatus ?? 'pending'} ` +
+          `decision=${result.workflowDecisionId}`,
+        );
+        this.logger.log(`出站事件原因: ${analysis.reason}`);
+      } else {
+        this.logger.warn(
+          `出站邮件事件识别失败: decision=${result.workflowDecisionId} ` +
+          `reason=${result.outboundAnalysisResult?.message ?? 'unknown'}`,
+        );
+      }
+      return;
+    }
+
     this.logAiResultV2(
       result.aiAnalysisResult,
       result.inquiryCase.status,

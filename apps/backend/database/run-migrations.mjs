@@ -57,19 +57,52 @@ async function runMigrations() {
 }
 
 async function verifyCriticalSchema(client) {
-  const result = await client.query(`
-    SELECT EXISTS (
-      SELECT 1
-      FROM information_schema.columns
-      WHERE table_schema = current_schema()
-        AND table_name = 'reply_drafts'
-        AND column_name = 'context_snapshot_id'
-    ) AS reply_drafts_ready
+  const requiredReplyDraftColumns = [
+    'context_snapshot_id',
+    'ai_decision_id',
+    'idempotency_key',
+    'original_subject',
+    'original_body_text',
+    'language',
+    'used_facts_json',
+    'unresolved_questions_json',
+    'warnings_json',
+    'requires_commercial_review',
+    'prompt_version',
+    'version',
+    'approved_by',
+    'approved_at',
+    'rejected_by',
+    'rejected_at',
+    'rejection_reason',
+    'sent_at',
+    'last_send_error',
+  ];
+  const columns = await client.query(`
+    SELECT column_name
+    FROM information_schema.columns
+    WHERE table_schema = current_schema()
+      AND table_name = 'reply_drafts'
   `);
-  if (!result.rows[0]?.reply_drafts_ready) {
-    throw new Error('Migration verification failed: reply_drafts.context_snapshot_id is missing.');
+  const actualColumns = new Set(columns.rows.map((row) => row.column_name));
+  const missingColumns = requiredReplyDraftColumns.filter((column) => !actualColumns.has(column));
+  if (missingColumns.length > 0) {
+    throw new Error(`Migration verification failed: missing reply_drafts columns: ${missingColumns.join(', ')}.`);
   }
-  console.log('verified critical schema columns');
+
+  const result = await client.query(`
+    SELECT
+    EXISTS (
+      SELECT 1
+      FROM information_schema.tables
+      WHERE table_schema = current_schema()
+        AND table_name = 'email_workflow_decisions'
+    ) AS email_workflow_decisions_ready
+  `);
+  if (!result.rows[0]?.email_workflow_decisions_ready) {
+    throw new Error('Migration verification failed: email_workflow_decisions is missing.');
+  }
+  console.log('verified critical schema columns and tables');
 }
 
 function quoteIdentifier(value) {

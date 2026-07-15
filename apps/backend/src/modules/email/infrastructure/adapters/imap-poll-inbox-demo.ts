@@ -9,6 +9,7 @@ import { simpleParser } from 'mailparser';
 
 import { AnalyzeEmailWithAiUseCase } from '../../application/use-cases/analyze-email-with-ai.use-case.js';
 import { PollEmailCandidate, PollEmailInboxUseCase } from '../../application/use-cases/poll-email-inbox.use-case.js';
+import { ProcessInquiryEmailEventUseCase } from '../../application/use-cases/process-inquiry-email-event.use-case.js';
 import { ReceiveInboundEmailUseCase } from '../../application/use-cases/receive-inbound-email.use-case.js';
 import { EmailSource } from '../../domain/enums/email-source.enum.js';
 import { InboundEmail } from '../../domain/value-objects/inbound-email.vo.js';
@@ -263,12 +264,18 @@ async function run(): Promise<void> {
   const analyzeEmailWithAiUseCase = config.aiEnabled
     ? new AnalyzeEmailWithAiUseCase(new DeepseekEmailAnalysisAdapter(), buildAiContextUseCase)
     : undefined;
+  const demoProcessor = analyzeEmailWithAiUseCase
+    ? {
+      execute: async ({ emailMessage, inquiryCase }: any) => ({
+        kind: 'inbound_analysis',
+        aiAnalysisResult: await analyzeEmailWithAiUseCase.execute(emailMessage, { inquiryCase }),
+      }),
+    } as ProcessInquiryEmailEventUseCase
+    : undefined;
   const pollEmailInboxUseCase = new PollEmailInboxUseCase(
     tracker,
     receiveInboundEmailUseCase,
-    analyzeEmailWithAiUseCase,
-    inquiryMessageRepository,
-    emailRepository,
+    demoProcessor,
   );
 
   await client.connect();
