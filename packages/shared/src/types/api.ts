@@ -143,6 +143,9 @@ export interface EmailAttachmentListItem {
 export interface EmailMessageListItem {
   id: string;
   emailThreadId?: string | null;
+  messageId?: string | null;
+  inReplyTo?: string | null;
+  references?: string[];
   direction: EmailDirection | string;
   fromEmail: string;
   fromName?: string | null;

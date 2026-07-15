@@ -4,6 +4,9 @@ export type LinkInquiryMessageMode = 'link_existing_email' | 'create_manual_emai
 
 export interface CreateManualEmailFields {
   direction: 'inbound' | 'outbound';
+  messageId?: string;
+  inReplyTo?: string;
+  references?: string[];
   fromEmail: string;
   fromName?: string;
   toEmails?: string[];

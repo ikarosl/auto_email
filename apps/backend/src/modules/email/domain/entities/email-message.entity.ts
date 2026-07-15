@@ -22,6 +22,10 @@ export interface EmailMessageAttachment {
 export interface EmailMessage {
   id: string;
   externalMessageId: string;
+  /** Message-ID of the direct parent email from the RFC In-Reply-To header. */
+  inReplyTo?: string;
+  /** Ordered Message-ID chain from the RFC References header. */
+  references?: string[];
   /**
    * External thread hint from email headers, such as In-Reply-To or References.
    * This is not the database email_threads.id.

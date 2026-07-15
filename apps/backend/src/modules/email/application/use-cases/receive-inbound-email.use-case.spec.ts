@@ -25,6 +25,8 @@ describe('ReceiveInboundEmailUseCase', () => {
     const result = await receiveInboundEmailUseCase.execute({
       messageId: 'mock-message-001',
       threadId: 'mock-thread-001',
+      inReplyTo: '<parent-message@example.com>',
+      references: ['<root-message@example.com>', '<parent-message@example.com>'],
       fromEmail: 'buyer@example.com',
       fromName: 'John Smith',
       toEmails: ['sales@example.com'],
@@ -37,6 +39,11 @@ describe('ReceiveInboundEmailUseCase', () => {
     });
 
     assert.equal(result.emailMessage.externalMessageId, 'mock-message-001');
+    assert.equal(result.emailMessage.inReplyTo, '<parent-message@example.com>');
+    assert.deepEqual(result.emailMessage.references, [
+      '<root-message@example.com>',
+      '<parent-message@example.com>',
+    ]);
     const inquiryCase = expectInquiryCase(result);
     assert.equal(inquiryCase.sourceEmailMessageId, result.emailMessage.id);
     assert.equal(inquiryCase.customerEmail, 'buyer@example.com');

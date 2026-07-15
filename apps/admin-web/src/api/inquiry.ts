@@ -45,6 +45,9 @@ export async function createManualEmail(
   data: {
     mode: 'create_manual_email';
     direction: 'inbound' | 'outbound';
+    messageId?: string;
+    inReplyTo?: string;
+    references?: string[];
     fromEmail: string;
     fromName?: string;
     subject: string;

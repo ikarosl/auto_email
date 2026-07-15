@@ -13,6 +13,8 @@ export class PrismaEmailMessageRepository implements EmailMessageRepository {
     const data = {
       id: emailMessage.id,
       messageId: emailMessage.externalMessageId,
+      inReplyTo: emailMessage.inReplyTo ?? null,
+      referencesJson: emailMessage.references ?? [],
       mailboxAccountId,
       emailThreadId,
       direction: emailMessage.direction,
@@ -222,6 +224,8 @@ export class PrismaEmailMessageRepository implements EmailMessageRepository {
 type EmailMessageRecord = {
   id: string;
   messageId: string | null;
+  inReplyTo: string | null;
+  referencesJson: unknown;
   emailThreadId: string | null;
   direction: string;
   source: string;
@@ -243,7 +247,9 @@ function toDomain(record: EmailMessageRecord, attachments: EmailMessage['attachm
   return {
     id: record.id,
     externalMessageId: record.messageId ?? record.id,
-    threadId: undefined,
+    inReplyTo: record.inReplyTo ?? undefined,
+    references: Array.isArray(record.referencesJson) ? record.referencesJson as string[] : [],
+    threadId: record.inReplyTo ?? undefined,
     emailThreadId: record.emailThreadId ?? undefined,
     direction: record.direction as EmailMessage['direction'],
     source: record.source as EmailMessage['source'],

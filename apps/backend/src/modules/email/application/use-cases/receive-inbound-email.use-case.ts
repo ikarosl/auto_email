@@ -108,6 +108,8 @@ export class ReceiveInboundEmailUseCase {
     const emailMessage: EmailMessage = {
       id: emailMessageId,
       externalMessageId: inboundEmail.messageId,
+      inReplyTo: inboundEmail.inReplyTo,
+      references: inboundEmail.references,
       emailThreadId: thread.id,
       direction: resolveEmailDirection(inboundEmail),
       source: inboundEmail.source,
